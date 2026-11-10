@@ -1,0 +1,2 @@
+process_name,parent_process_name,process_path,user,dc_id,an_id,reason,expires
+MsMpEng.exe,,C:\ProgramData\Microsoft\Windows Defender\*,,,,seed: Defender engine,

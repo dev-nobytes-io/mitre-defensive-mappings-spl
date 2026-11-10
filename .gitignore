@@ -1,0 +1,12 @@
+attack/raw/
+.venv/
+venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+node_modules/
+*.egg-info/
+build/
+.DS_Store
+attack/*.slim.json.gz
+!attack/enterprise-attack-20.1.slim.json.gz

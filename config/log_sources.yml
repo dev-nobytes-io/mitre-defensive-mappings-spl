@@ -1,0 +1,812 @@
+# ---------------------------------------------------------------------------
+# ATT&CK log-source name -> feed(s) in config/stack.yml
+#
+# ATT&CK v20 names log sources as "<family>:<channel-ish>" with free-text
+# channels. This file:
+#   aliases  : collapse typos / case variants to one canonical name
+#   sources  : explicit mappings for the names that matter
+#   rules    : ordered regex fallbacks for the long tail
+#
+# A source may have several providers (e.g. NSM:Flow is Corelight conn.log and
+# Palo Alto traffic logs). Each provider yields one eventtype per data component.
+#
+# parser: how the free-text `channel` is turned into a search constraint
+#   eventcode  "EventCode=1" / "EventCode=4103, 4104"  -> EventCode IN (...)
+#   auditd     record type from the name, syscall names from the channel
+#   zeek       "conn.log, dns.log" -> Corelight sourcetypes
+#   esxi       log file from the name -> vmware:esxlog:<log>
+#   k8s        leading verb (create/get/list/delete/patch/exec)
+#   none       channel is documentation only
+# ---------------------------------------------------------------------------
+aliases:
+  "WinEventLog:Sysmon ": "WinEventLog:Sysmon"
+  "NSM:FLow": "NSM:Flow"
+  "NetFlow:Flow": "netflow:ipfix"
+  "NSM:firewall": "NSM:Firewall"
+  "esxis:vmkernel": "esxi:vmkernel"
+  "macOS:unifiedlog": "macos:unifiedlog"
+  "macos:endpointSecurity": "macos:endpointsecurity"
+  "macos:fsevents": "fs:fsevents"
+  "containerd:Events": "containerd:events"
+  "NetworkDevice:Syslog": "networkdevice:syslog"
+  "NetworkDevice:IDS": "networkdevice:IDS"
+  "networkconfig ": "networkconfig"
+  "linuxsyslog": "linux:syslog"
+  "syslog:auth": "linux:auth"
+  "syslog:daemon": "linux:syslog"
+  "casb:activity ": "casb:activity"
+  "idp:session ": "idp:session"
+  "saas:session ": "saas:session"
+  "saas:audit ": "saas:audit"
+  "idp:authentication ": "idp:authentication"
+  "firmware:integrity ": "firmware:integrity"
+  "EDR:telemetry": "EDR:Telemetry"
+  "edr:Syscall": "EDR:Syscall"
+  "edr:TelemetryCompare": "EDR:Telemetry"
+  "edr:ProcessIntegrity": "EDR:Telemetry"
+  "MobiledEDR:telemetry": "MobileEDR:telemetry"
+  "ETW": "etw:generic"
+  "ETW:Token": "etw:Token"
+  "ETW:ProcThread": "etw:Microsoft-Windows-Kernel-Process"
+  "ETW:LoadImage": "etw:Microsoft-Windows-Kernel-ImageLoad"
+  "WinEventLog:CodeIntegrity": "WinEventLog:Microsoft-Windows-CodeIntegrity/Operational"
+  "WinEventLog:Windows Defender": "WinEventLog:Microsoft-Windows-Windows Defender/Operational"
+  "Windows Firewall Log": "windows:firewalllog"
+  "wineventlog:dhcp": "WinEventLog:DhcpServer"
+  "WinEventLog:iis": "ApplicationLog:IIS"
+  "WinEventLog:Kerberos": "WinEventLog:Security"
+  "dns:querylog": "dns:query"
+  "vpxd.log": "esxi:vpxd"
+  "esxi:vob": "esxi:vobd"
+  "ESXiLogs:messages": "esxi:syslog"
+  "ESXiLogs:authlog": "esxi:auth"
+  "zeek:conn": "NSM:Connections"
+  "zeek:ssl": "NSM:Content"
+  "NSM:TLS/HTTP": "NSM:Content"
+  "NSM:Inspection": "NSM:Content"
+  "NSM:DNS": "dns:query"
+  "NIDS:Flow": "NSM:Flow"
+  "networkdevice:Flow": "NSM:Flow"
+  "NetworkProxy:HTTPSFlow": "WebProxy:AccessLogs"
+  "webproxy:applog": "WebProxy:AccessLogs"
+  "Traffic": "Network Traffic"
+  "Network": "Network Traffic"
+  "Netfilter/iptables": "iptables:LOG"
+  "auditd:FS": "auditd:PATH"
+  "auditd:file-events": "auditd:PATH"
+  "auditd:SYSCALL+PATH": "auditd:SYSCALL"
+  "auditd:AUTH": "auditd:USER_LOGIN"
+  "auditd:memprotect": "auditd:SYSCALL"
+  "auditd:MMAP": "auditd:SYSCALL"
+  "auditd:DAEMON": "auditd:CONFIG_CHANGE"
+  "auditd:USER_CMD": "auditd:EXECVE"
+  "linux:shell": "linux:cli"
+  "journald:Application": "linux:syslog"
+  "journald:boot": "linux:syslog"
+  "sar:network": "linux:procfs"
+  "ApplicationLog:WebServer": "webserver:applog"
+  "apache:access_log": "webserver:applog"
+  "ApplicationLog:MailServer": "Application:Mail"
+  "ApplicationLog:Intune/MDM Logs": "saas:MDM"
+  "Microsoft Entra ID Audit Logs": "azure:audit"
+  "Microsoft Graph API Logs": "azure:audit"
+  "azure:signin": "azure:signinlogs"
+  "azure:ad": "azure:audit"
+  "ApplicationLog:EntraIDPortal": "azure:audit"
+  "Defender for Identity": "m365:defender"
+  "M365Defender:DeviceNetworkEvents": "EDR:Telemetry"
+  "kubernetes:orchestrator": "kubernetes:apiserver"
+  "containers:osquery": "linux:osquery"
+  "containerLogs:systemd_unit_files": "systemd:unit"
+  "docker:audit": "docker:daemon"
+  "docker:api": "docker:daemon"
+  "docker:registry": "docker:daemon"
+  "docker:stats": "docker:daemon"
+  "docker:runtime": "docker:events"
+  "containerd:runtime": "containerd:events"
+  "container:proxy": "ApplicationLog:Ingress"
+  "cni:netflow": "container:cni"
+  "CloudTrail:GetObject": "AWS:CloudTrail"
+  "CloudTrail:PutObject": "AWS:CloudTrail"
+  "CloudTrail:Signin": "AWS:CloudTrail"
+  "CloudTrail:GetCallerIdentity": "AWS:CloudTrail"
+  "VPCFlowLogs:All": "AWS:VPCFlowLogs"
+  "ALB:HTTPLogs": "AWS:CloudWatch"
+  "AWS:CloudMetrics": "AWS:CloudWatch"
+  "GCPAuditLogs:login.googleapis.com": "gcp:audit"
+  "Google Admin Audit": "gcp:workspaceaudit"
+  "Okta:authn": "saas:okta"
+  "Okta:SystemLog": "saas:okta"
+  "FirmwareLogs:Update": "firmware:update"
+  "IntegrityCheck:ImageValidation": "firmware:integrity"
+  "FileIntegrity:ImageValidation": "firmware:integrity"
+  "assetinventory:FirmwareHash": "firmware:integrity"
+  "Firmware": "firmware:integrity"
+  "fim:hashcompare": "linux:fim"
+  "linux:pkgintegrity": "journald:package"
+  "gatekeeper/quarantine database": "fs:quarantine"
+  "Apple TCC Logs": "macos:unifiedlog"
+  "Firewall Audit Logs": "networkdevice:Firewall"
+  "perimeter:firewall": "NSM:Firewall"
+  "WLANLogs:Association": "WIDS:AssociationLogs"
+  "wireless:radius": "network:auth"
+  "networkdevice:aaa": "networkdevice:auth"
+  "device:auth": "networkdevice:auth"
+  "device:VendorLog": "networkdevice:syslog"
+  "SNMP:DeviceLogs": "networkdevice:snmp"
+  "snmp:syslog": "networkdevice:snmp"
+  "snmp:trap": "networkdevice:snmp"
+  "snmp:status": "networkdevice:snmp"
+  "snmp:access": "networkdevice:snmp"
+  "snmp:config": "networkdevice:snmp"
+  "network:runtime": "networkdevice:runtime"
+  "networkconfig": "networkdevice:config"
+  "Windows Registry": "Windows Registry Key"
+
+sources:
+  # ---------------------------------------------------------------- Windows
+  "WinEventLog:Sysmon":
+    parser: eventcode
+    providers: [{feed: sysmon}]
+    sigma: {product: windows, service: sysmon}
+    kql: {table: DeviceEvents}
+    elastic: {dataset: windows.sysmon_operational}
+  "WinEventLog:Security":
+    parser: eventcode
+    providers: [{feed: wineventlog, channel: Security}]
+    sigma: {product: windows, service: security}
+    kql: {table: SecurityEvent}
+    elastic: {dataset: system.security}
+  "WinEventLog:System":
+    parser: eventcode
+    providers: [{feed: wineventlog, channel: System}]
+    sigma: {product: windows, service: system}
+    kql: {table: Event}
+    elastic: {dataset: system.system}
+  "WinEventLog:Application":
+    parser: eventcode
+    providers: [{feed: wineventlog, channel: Application}]
+    sigma: {product: windows, service: application}
+    kql: {table: Event}
+    elastic: {dataset: system.application}
+  "WinEventLog:PowerShell":
+    parser: eventcode
+    providers: [{feed: powershell_logging}]
+    sigma: {product: windows, service: powershell}
+    kql: {table: Event}
+    elastic: {dataset: windows.powershell_operational}
+  "WinEventLog:TaskScheduler":
+    parser: eventcode
+    providers: [{feed: wineventlog, channel: Microsoft-Windows-TaskScheduler/Operational}]
+    sigma: {product: windows, service: taskscheduler}
+    prerequisites: [Enable the Microsoft-Windows-TaskScheduler/Operational log (disabled by default) and add it as an input.]
+  "WinEventLog:WMI":
+    parser: eventcode
+    providers: [{feed: wineventlog, channel: Microsoft-Windows-WMI-Activity/Operational}]
+    sigma: {product: windows, service: wmi}
+  "WinEventLog:Microsoft-Windows-CodeIntegrity/Operational":
+    parser: eventcode
+    providers: [{feed: wineventlog, channel: Microsoft-Windows-CodeIntegrity/Operational}]
+    sigma: {product: windows, service: codeintegrity-operational}
+  "WinEventLog:Microsoft-Windows-Windows Defender/Operational":
+    parser: eventcode
+    providers: [{feed: wineventlog, channel: Microsoft-Windows-Windows Defender/Operational}]
+    sigma: {product: windows, service: windefend}
+  "WinEventLog:Microsoft-Windows-Windows Firewall With Advanced Security/Firewall":
+    parser: eventcode
+    providers: [{feed: wineventlog, channel: Microsoft-Windows-Windows Firewall With Advanced Security/Firewall}]
+    sigma: {product: windows, service: firewall-as}
+  "WinEventLog:AppLocker":
+    parser: eventcode
+    providers: [{feed: wineventlog, channel: Microsoft-Windows-AppLocker/EXE and DLL}]
+    sigma: {product: windows, service: applocker}
+  "WinEventLog:WinRM":
+    parser: eventcode
+    providers: [{feed: wineventlog, channel: Microsoft-Windows-WinRM/Operational}]
+    sigma: {product: windows, service: winrm}
+  "WinEventLog:ADFS":
+    parser: eventcode
+    providers: [{feed: wineventlog, channel: AD FS/Admin}]
+    sigma: {product: windows, service: adfs}
+  "WinEventLog:Microsoft-Office-Alerts":
+    parser: eventcode
+    providers: [{feed: wineventlog, channel: OAlerts}]
+    sigma: {product: windows, service: oalerts}
+  "WinEventLog:Microsoft-Office/OutlookAddinMonitor":
+    parser: eventcode
+    providers: [{feed: wineventlog, channel: Microsoft-Office/OutlookAddinMonitor}]
+    sigma: {product: windows, service: outlook}
+  "WinEventLog:Microsoft-Windows-SMBServer":
+    parser: eventcode
+    providers: [{feed: wineventlog, channel: Microsoft-Windows-SMBServer/Security}]
+    sigma: {product: windows, service: smbserver}
+  "WinEventLog:DhcpServer":
+    parser: eventcode
+    providers: [{feed: windows_dhcp}]
+    sigma: {product: windows, service: dhcp}
+  "WinEventLog:Microsoft-IIS-Configuration":
+    parser: eventcode
+    providers: [{feed: wineventlog, channel: Microsoft-IIS-Configuration/Operational}]
+    sigma: {product: windows, service: iis-configuration}
+  "ApplicationLog:IIS":
+    parser: none
+    providers: [{feed: iis}]
+    sigma: {product: windows, service: iis}
+  "Windows:perfmon":
+    parser: none
+    providers: [{feed: windows_perfmon}]
+    sigma: {product: windows, service: perfmon}
+  "windows:firewalllog":
+    parser: none
+    providers: [{feed: windows_firewall_log}]
+    sigma: {product: windows, service: firewall-as}
+  "windows:osquery":
+    parser: none
+    providers: [{feed: windows_osquery}]
+    sigma: {product: windows, service: osquery}
+  "Autoruns:RegistryScan":
+    parser: none
+    providers: [{feed: autoruns}]
+    sigma: {product: windows, service: autoruns}
+  "dns:query":
+    parser: none
+    providers:
+      - {feed: sysmon, event_codes: [22]}
+      - {feed: windows_dns_server}
+      - {feed: corelight, logs: [dns]}
+    sigma: {product: windows, category: dns_query}
+  "etw:generic":
+    parser: none
+    providers: [{feed: etw}]
+    sigma: {product: windows, service: etw}
+  "etw:Microsoft-Windows-Kernel-Process":
+    parser: none
+    providers: [{feed: etw, filter: 'ProviderName="Microsoft-Windows-Kernel-Process"'}, {feed: sysmon, event_codes: [1, 5, 8, 10, 25]}]
+    sigma: {product: windows, service: etw}
+  "etw:Microsoft-Windows-Kernel-ImageLoad":
+    parser: none
+    providers: [{feed: etw, filter: 'ProviderName="Microsoft-Windows-Kernel-ImageLoad"'}, {feed: sysmon, event_codes: [7]}]
+    sigma: {product: windows, category: image_load}
+  "etw:Microsoft-Antimalware-Scan-Interface":
+    parser: none
+    providers: [{feed: etw, filter: 'ProviderName="Microsoft-Antimalware-Scan-Interface"'}, {feed: trellix_epo, filter: 'threat_type="AMSI*" OR threat_name="AMSI*"'}]
+    sigma: {product: windows, service: amsi}
+  "EDR:AMSI":
+    parser: none
+    providers: [{feed: trellix_epo, filter: 'threat_type="AMSI*" OR threat_name="AMSI*"'}, {feed: edr_telemetry}]
+    sigma: {product: windows, service: amsi}
+  "EDR:detection":
+    parser: none
+    providers: [{feed: trellix_epo}, {feed: edr_telemetry}]
+    sigma: {product: windows, service: edr}
+
+  # ---------------------------------------------------------------- network
+  "NSM:Flow":
+    parser: zeek
+    providers:
+      - {feed: corelight, logs_default: [conn]}
+      - {feed: palo_alto, logs: [traffic]}
+    sigma: {product: zeek, service: conn}
+    kql: {table: CommonSecurityLog}
+    elastic: {dataset: zeek.connection}
+  "NSM:Connections":
+    parser: zeek
+    providers:
+      - {feed: corelight, logs_default: [conn]}
+      - {feed: palo_alto, logs: [traffic]}
+    sigma: {product: zeek, service: conn}
+  "NSM:Content":
+    parser: zeek
+    providers:
+      - {feed: corelight, logs_default: [http, ssl, dns, files, smtp, ftp]}
+      - {feed: palo_alto, logs: [threat]}
+      - {feed: wireshark}
+    sigma: {product: zeek, service: http}
+  "NSM:Firewall":
+    parser: zeek
+    providers:
+      - {feed: palo_alto, logs: [traffic]}
+      - {feed: corelight, logs_default: [conn]}
+    sigma: {product: paloalto, service: traffic}
+  "netflow:ipfix":
+    parser: none
+    providers: [{feed: netflow}, {feed: corelight, logs: [conn]}, {feed: palo_alto, logs: [traffic]}]
+    sigma: {product: netflow, service: flow}
+  "Network Traffic":
+    parser: zeek
+    providers: [{feed: corelight, logs_default: [conn]}, {feed: palo_alto, logs: [traffic]}]
+    sigma: {product: zeek, service: conn}
+  "WebProxy:AccessLogs":
+    parser: none
+    providers: [{feed: palo_alto, logs: [threat], filter: 'log_subtype=url'}, {feed: corelight, logs: [http]}]
+    sigma: {product: paloalto, service: threat}
+  "IDS:TLSInspection":
+    parser: none
+    providers: [{feed: palo_alto, logs: [threat, decryption]}, {feed: corelight, logs: [ssl, x509]}]
+    sigma: {product: paloalto, service: threat}
+  "networkdevice:IDS":
+    parser: none
+    providers: [{feed: palo_alto, logs: [threat]}, {feed: corelight, logs: [notice]}]
+    sigma: {product: paloalto, service: threat}
+  "networkdevice:Firewall":
+    parser: none
+    providers: [{feed: palo_alto, logs: [config, system]}, {feed: netdev_syslog}]
+    sigma: {product: paloalto, service: config}
+  "networkdevice:syslog":
+    parser: none
+    providers: [{feed: palo_alto, logs: [system]}, {feed: netdev_syslog}]
+    sigma: {product: cisco, service: syslog}
+  "networkdevice:cli":
+    parser: none
+    providers: [{feed: palo_alto, logs: [config, system]}, {feed: netdev_syslog}]
+    sigma: {product: cisco, service: aaa}
+  "networkdevice:config":
+    parser: none
+    providers: [{feed: palo_alto, logs: [config]}, {feed: netdev_syslog}]
+    sigma: {product: paloalto, service: config}
+  "networkdevice:audit":
+    parser: none
+    providers: [{feed: palo_alto, logs: [config, system]}, {feed: netdev_syslog}]
+    sigma: {product: paloalto, service: config}
+  "networkdevice:auth":
+    parser: none
+    providers: [{feed: palo_alto, logs: [system, globalprotect]}, {feed: netdev_syslog}]
+    sigma: {product: cisco, service: aaa}
+  "network:auth":
+    parser: none
+    providers: [{feed: palo_alto, logs: [globalprotect, system]}, {feed: netdev_syslog}]
+    sigma: {product: cisco, service: aaa}
+  "vpn:authlog":
+    parser: none
+    providers: [{feed: palo_alto, logs: [globalprotect]}]
+    sigma: {product: paloalto, service: globalprotect}
+  "vpn:applog":
+    parser: none
+    providers: [{feed: palo_alto, logs: [globalprotect, system]}]
+    sigma: {product: paloalto, service: globalprotect}
+  "networkdevice:firmware":
+    parser: none
+    providers: [{feed: palo_alto, logs: [system]}, {feed: netdev_syslog}, {feed: snmp}]
+    sigma: {product: cisco, service: syslog}
+  "firmware:runtime":
+    parser: none
+    providers: [{feed: netdev_syslog}, {feed: snmp}]
+    sigma: {product: cisco, service: syslog}
+  "networkdevice:runtime":
+    parser: none
+    providers: [{feed: palo_alto, logs: [system]}, {feed: netdev_syslog}, {feed: snmp}]
+    sigma: {product: cisco, service: syslog}
+  "networkdevice:controlplane":
+    parser: none
+    providers: [{feed: netdev_syslog}]
+    sigma: {product: cisco, service: syslog}
+  "networkdevice:snmp":
+    parser: none
+    providers: [{feed: snmp}]
+    sigma: {product: cisco, service: syslog}
+  "WIDS:AssociationLogs":
+    parser: none
+    providers: [{feed: netdev_syslog}]
+    sigma: {product: cisco, service: syslog}
+  "wireless:spectrum":
+    parser: none
+    providers: [{feed: netdev_syslog}]
+    sigma: {product: cisco, service: syslog}
+
+  # ---------------------------------------------------------------- Linux
+  "auditd:SYSCALL":
+    parser: auditd
+    providers: [{feed: auditd, record_type: SYSCALL}]
+    sigma: {product: linux, service: auditd}
+    elastic: {dataset: auditd.log}
+  "auditd:EXECVE":
+    parser: auditd
+    providers: [{feed: auditd, record_type: EXECVE}]
+    sigma: {product: linux, category: process_creation}
+  "auditd:PATH":
+    parser: auditd
+    providers: [{feed: auditd, record_type: PATH}]
+    sigma: {product: linux, service: auditd}
+  "auditd:FILE":
+    parser: auditd
+    providers: [{feed: auditd, record_type: PATH}]
+    sigma: {product: linux, service: auditd}
+  "auditd:CONFIG_CHANGE":
+    parser: auditd
+    providers: [{feed: auditd, record_type: CONFIG_CHANGE}]
+    sigma: {product: linux, service: auditd}
+  "auditd:PROCTITLE":
+    parser: auditd
+    providers: [{feed: auditd, record_type: PROCTITLE}]
+    sigma: {product: linux, service: auditd}
+  "auditd:USER_LOGIN":
+    parser: auditd
+    providers: [{feed: auditd, record_type: USER_LOGIN}]
+    sigma: {product: linux, service: auditd}
+  "linux:syslog":
+    parser: none
+    providers: [{feed: linux_syslog}]
+    sigma: {product: linux, service: syslog}
+  "linux:auth":
+    parser: none
+    providers: [{feed: linux_syslog, sourcetypes: [linux_secure]}]
+    sigma: {product: linux, service: auth}
+  "linux:cron":
+    parser: none
+    providers: [{feed: linux_syslog, filter: 'process=CRON OR process=cron OR process=crond'}]
+    sigma: {product: linux, service: cron}
+  "linux:cli":
+    parser: none
+    providers: [{feed: auditd, record_type: EXECVE}, {feed: linux_syslog}]
+    sigma: {product: linux, category: process_creation}
+  "linux:osquery":
+    parser: none
+    providers: [{feed: linux_osquery}]
+    sigma: {product: linux, service: osquery}
+  "linux:Sysmon":
+    parser: eventcode
+    providers: [{feed: sysmon_linux}]
+    sigma: {product: linux, service: sysmon}
+  "linux:procfs":
+    parser: none
+    providers: [{feed: linux_osquery}]
+    sigma: {product: linux, service: osquery}
+  "linux:fim":
+    parser: none
+    providers: [{feed: auditd, record_type: PATH}, {feed: solidcore}]
+    sigma: {product: linux, service: auditd}
+  "journald:systemd":
+    parser: none
+    providers: [{feed: linux_syslog, filter: 'process=systemd'}]
+    sigma: {product: linux, service: systemd}
+  "journald:package":
+    parser: none
+    providers: [{feed: linux_syslog, filter: 'process=dpkg OR process=yum OR process=dnf OR process=rpm OR process=apt'}]
+    sigma: {product: linux, service: syslog}
+  "systemd:unit":
+    parser: none
+    providers: [{feed: linux_syslog, filter: 'process=systemd'}, {feed: auditd, record_type: PATH}]
+    sigma: {product: linux, service: systemd}
+  "iptables:LOG":
+    parser: none
+    providers: [{feed: iptables}]
+    sigma: {product: linux, service: syslog}
+  "ebpf:syscalls":
+    parser: none
+    providers: [{feed: ebpf}, {feed: auditd, record_type: SYSCALL}]
+    sigma: {product: linux, service: auditd}
+  "ebpf:tracepoints":
+    parser: none
+    providers: [{feed: ebpf}]
+    sigma: {product: linux, service: auditd}
+  "Application:Mail":
+    parser: none
+    providers: [{feed: linux_syslog, filter: 'process=postfix* OR process=sendmail OR process=exim*'}]
+    sigma: {product: linux, service: syslog}
+  "webserver:applog":
+    parser: none
+    providers: [{feed: linux_syslog, sourcetypes: [access_combined]}, {feed: iis}]
+    sigma: {product: linux, service: syslog}
+  "ApplicationLogs:SQL":
+    parser: none
+    providers: [{feed: linux_syslog}]
+    sigma: {product: linux, service: syslog}
+  "desktop:file_manager":
+    parser: none
+    providers: [{feed: auditd, record_type: PATH}]
+    sigma: {product: linux, service: auditd}
+  "fwupd:logs":
+    parser: none
+    providers: [{feed: linux_syslog, filter: 'process=fwupd'}]
+    sigma: {product: linux, service: syslog}
+
+  # ---------------------------------------------------------------- ESXi
+  "esxi:hostd":
+    parser: esxi
+    providers: [{feed: esxi_syslog, logs: [hostd]}]
+    sigma: {product: vmware, service: hostd}
+  "esxi:vmkernel":
+    parser: esxi
+    providers: [{feed: esxi_syslog, logs: [vmkernel]}]
+    sigma: {product: vmware, service: vmkernel}
+  "esxi:shell":
+    parser: esxi
+    providers: [{feed: esxi_syslog, logs: [shell]}]
+    sigma: {product: vmware, service: shell}
+  "esxi:syslog":
+    parser: esxi
+    providers: [{feed: esxi_syslog, logs: [syslog]}]
+    sigma: {product: vmware, service: syslog}
+  "esxi:auth":
+    parser: esxi
+    providers: [{feed: esxi_syslog, logs: [auth]}]
+    sigma: {product: vmware, service: auth}
+  "esxi:vobd":
+    parser: esxi
+    providers: [{feed: esxi_syslog, logs: [vobd]}]
+    sigma: {product: vmware, service: vobd}
+  "esxi:vpxa":
+    parser: esxi
+    providers: [{feed: esxi_syslog, logs: [vpxa]}]
+    sigma: {product: vmware, service: vpxa}
+  "esxi:cron":
+    parser: esxi
+    providers: [{feed: esxi_syslog, logs: [syslog], filter: 'crond'}]
+    sigma: {product: vmware, service: syslog}
+  "esxi:esxupdate":
+    parser: esxi
+    providers: [{feed: esxi_syslog, logs: [esxupdate]}]
+    sigma: {product: vmware, service: esxupdate}
+  "esxi:vpxd":
+    parser: none
+    providers: [{feed: vcenter}]
+    sigma: {product: vmware, service: vpxd}
+  "esxcli:network":
+    parser: esxi
+    providers: [{feed: esxi_syslog, logs: [shell], filter: 'esxcli network'}]
+    sigma: {product: vmware, service: shell}
+  "NSX:FlowLogs":
+    parser: none
+    providers: [{feed: netflow}, {feed: corelight, logs: [conn]}]
+    sigma: {product: vmware, service: nsx}
+
+  # ---------------------------------------------------------------- Containers
+  "kubernetes:audit":
+    parser: k8s
+    providers: [{feed: kubernetes_audit, sourcetypes: ["kube:apiserver-audit"]}]
+    sigma: {product: kubernetes, service: audit}
+  "kubernetes:apiserver":
+    parser: k8s
+    providers: [{feed: kubernetes_audit, sourcetypes: ["kube:apiserver-audit"]}]
+    sigma: {product: kubernetes, service: audit}
+  "kubernetes:events":
+    parser: none
+    providers: [{feed: kubernetes_audit, sourcetypes: ["kube:objects:events"]}]
+    sigma: {product: kubernetes, service: events}
+  "docker:events":
+    parser: none
+    providers: [{feed: container_runtime, sourcetypes: ["docker:events"]}]
+    sigma: {product: docker, service: events}
+  "docker:daemon":
+    parser: none
+    providers: [{feed: container_runtime, sourcetypes: ["docker:daemon"]}]
+    sigma: {product: docker, service: daemon}
+  "containerd:events":
+    parser: none
+    providers: [{feed: container_runtime, sourcetypes: ["containerd:events"]}]
+    sigma: {product: containerd, service: events}
+  "container:cni":
+    parser: none
+    providers: [{feed: netflow}, {feed: corelight, logs: [conn]}]
+    sigma: {product: kubernetes, service: cni}
+  "ApplicationLog:Ingress":
+    parser: none
+    providers: [{feed: kubernetes_audit, sourcetypes: ["kube:container:ingress-nginx"]}]
+    sigma: {product: kubernetes, service: ingress}
+  "ApplicationLog:API":
+    parser: none
+    providers: [{feed: kubernetes_audit, sourcetypes: ["kube:container:*"]}]
+    sigma: {product: kubernetes, service: application}
+  "prometheus:metrics":
+    parser: none
+    providers: [{feed: kubernetes_audit, sourcetypes: ["prometheus:metric"]}]
+    sigma: {product: kubernetes, service: metrics}
+  "sysdig:file":
+    parser: none
+    providers: [{feed: ebpf}]
+    sigma: {product: linux, service: sysdig}
+
+  # ---------------------------------------------------------------- Azure
+  "azure:signinlogs":
+    parser: none
+    providers: [{feed: azure_entra, sourcetypes: ["azure:aad:signin"]}]
+    sigma: {product: azure, service: signinlogs}
+    kql: {table: SigninLogs}
+    elastic: {dataset: azure.signinlogs}
+  "azure:audit":
+    parser: none
+    providers: [{feed: azure_entra, sourcetypes: ["azure:aad:audit"]}]
+    sigma: {product: azure, service: auditlogs}
+    kql: {table: AuditLogs}
+    elastic: {dataset: azure.auditlogs}
+  "azure:activity":
+    parser: none
+    providers: [{feed: azure_activity}]
+    sigma: {product: azure, service: activitylogs}
+    kql: {table: AzureActivity}
+    elastic: {dataset: azure.activitylogs}
+  "azure:policy":
+    parser: none
+    providers: [{feed: azure_activity, filter: 'category=Policy'}]
+    sigma: {product: azure, service: activitylogs}
+  "azure:resource":
+    parser: none
+    providers: [{feed: azure_resource}]
+    sigma: {product: azure, service: resource}
+  "azure:vpcflow":
+    parser: none
+    providers: [{feed: azure_resource, filter: 'category=NetworkSecurityGroupFlowEvent OR category=FlowLogFlowEvent'}]
+    sigma: {product: azure, service: nsgflow}
+  "azure:vmguest":
+    parser: none
+    providers: [{feed: azure_resource}]
+    sigma: {product: azure, service: vmguest}
+  "m365:defender":
+    parser: none
+    providers: [{feed: m365_defender}]
+    sigma: {product: m365, service: defender}
+
+  # ---------------------------------------------------------------- endpoint security
+  "EDR:Telemetry":
+    parser: none
+    providers: [{feed: edr_telemetry}]
+    sigma: {product: windows, service: edr}
+  "EDR:memory":
+    parser: none
+    providers: [{feed: edr_telemetry}, {feed: sysmon, event_codes: [8, 10, 25]}]
+    sigma: {product: windows, service: edr}
+  "EDR:hunting":
+    parser: none
+    providers: [{feed: edr_telemetry}]
+    sigma: {product: windows, service: edr}
+  "EDR:file":
+    parser: none
+    providers: [{feed: edr_telemetry}, {feed: sysmon, event_codes: [11, 23, 26]}, {feed: solidcore}]
+    sigma: {product: windows, category: file_event}
+  "EDR:cli":
+    parser: none
+    providers: [{feed: edr_telemetry}, {feed: sysmon, event_codes: [1]}]
+    sigma: {product: windows, category: process_creation}
+  "EDR:scriptblock":
+    parser: none
+    providers: [{feed: powershell_logging, event_codes: [4104]}, {feed: edr_telemetry}]
+    sigma: {product: windows, category: ps_script}
+  "EDR:Syscall":
+    parser: none
+    providers: [{feed: edr_telemetry}, {feed: auditd, record_type: SYSCALL}]
+    sigma: {product: linux, service: auditd}
+  "firmware:integrity":
+    parser: none
+    providers: [{feed: windows_osquery}, {feed: linux_osquery}, {feed: snmp}]
+    sigma: {product: windows, service: osquery}
+  "firmware:update":
+    parser: none
+    providers: [{feed: linux_syslog, filter: 'process=fwupd'}, {feed: netdev_syslog}]
+    sigma: {product: linux, service: syslog}
+  "firmware:smart":
+    parser: none
+    providers: [{feed: linux_osquery}]
+    sigma: {product: linux, service: osquery}
+  "fileserver:audit":
+    parser: none
+    providers: [{feed: wineventlog, channel: Security, event_codes: [5140, 5145, 4663]}, {feed: corelight, logs: [smb_files, smb_mapping]}]
+    sigma: {product: windows, service: security}
+  "gpo:deployment":
+    parser: none
+    providers: [{feed: wineventlog, channel: Security, event_codes: [5136, 5137, 5141]}]
+    sigma: {product: windows, service: security}
+  "Windows Registry Key":
+    parser: none
+    providers: [{feed: sysmon, event_codes: [12, 13, 14]}]
+    sigma: {product: windows, category: registry_event}
+
+  # ---------------------------------------------------------------- generic ATT&CK data-source names
+  "Process":           {parser: none, providers: [{feed: unspecified}], sigma: {product: windows, category: process_creation}}
+  "File":              {parser: none, providers: [{feed: unspecified}], sigma: {product: windows, category: file_event}}
+  "Module":            {parser: none, providers: [{feed: unspecified}], sigma: {product: windows, category: image_load}}
+  "Service":           {parser: none, providers: [{feed: unspecified}], sigma: {product: windows, service: system}}
+  "Drive":             {parser: none, providers: [{feed: unspecified}], sigma: {product: windows, service: system}}
+  "Command":           {parser: none, providers: [{feed: unspecified}], sigma: {product: windows, category: process_creation}}
+  "Script":            {parser: none, providers: [{feed: unspecified}], sigma: {product: windows, category: ps_script}}
+  "Scheduled Job":     {parser: none, providers: [{feed: unspecified}], sigma: {product: windows, service: taskscheduler}}
+  "Logon Session":     {parser: none, providers: [{feed: unspecified}], sigma: {product: windows, service: security}}
+  "User Account":      {parser: none, providers: [{feed: unspecified}], sigma: {product: windows, service: security}}
+  "Network Share":     {parser: none, providers: [{feed: unspecified}], sigma: {product: windows, service: security}}
+  "Metadata":          {parser: none, providers: [{feed: unspecified}], sigma: {product: windows, service: security}}
+  "Application Log":   {parser: none, providers: [{feed: unspecified}], sigma: {product: windows, service: application}}
+  "Sensor Health":     {parser: none, providers: [{feed: unspecified}], sigma: {product: windows, service: system}}
+  "Certificate":       {parser: none, providers: [{feed: threat_intel}], sigma: {product: none, service: none}}
+  "Domain Name":       {parser: none, providers: [{feed: threat_intel}], sigma: {product: none, service: none}}
+  "Internet Scan":     {parser: none, providers: [{feed: threat_intel}], sigma: {product: none, service: none}}
+  "Malware Repository": {parser: none, providers: [{feed: threat_intel}], sigma: {product: none, service: none}}
+  "Persona":           {parser: none, providers: [{feed: threat_intel}], sigma: {product: none, service: none}}
+  "API:ConfigRepoAudit": {parser: none, providers: [{feed: saas}], sigma: {product: none, service: none}}
+
+# Ordered fallbacks for anything not listed above.
+rules:
+  - match: '^WinEventLog:(?P<channel>.+)$'
+    parser: eventcode
+    providers: [{feed: wineventlog, channel: "{channel}"}]
+    sigma: {product: windows, service: "{channel_slug}"}
+  - match: '^etw:'
+    parser: none
+    providers: [{feed: etw}]
+    sigma: {product: windows, service: etw}
+  - match: '^EDR:'
+    parser: none
+    providers: [{feed: edr_telemetry}]
+    sigma: {product: windows, service: edr}
+  - match: '^auditd:(?P<rt>[A-Z_]+)$'
+    parser: auditd
+    providers: [{feed: auditd, record_type: "{rt}"}]
+    sigma: {product: linux, service: auditd}
+  - match: '^(linux|journald):'
+    parser: none
+    providers: [{feed: linux_syslog}]
+    sigma: {product: linux, service: syslog}
+  - match: '^(NSM|zeek):'
+    parser: zeek
+    providers: [{feed: corelight, logs_default: [conn]}]
+    sigma: {product: zeek, service: conn}
+  - match: '^esxi'
+    parser: esxi
+    providers: [{feed: esxi_syslog, logs: [syslog]}]
+    sigma: {product: vmware, service: syslog}
+  - match: '^kubernetes:'
+    parser: k8s
+    providers: [{feed: kubernetes_audit}]
+    sigma: {product: kubernetes, service: audit}
+  - match: '^(docker|containerd|container):'
+    parser: none
+    providers: [{feed: container_runtime}]
+    sigma: {product: docker, service: events}
+  - match: '^azure:'
+    parser: none
+    providers: [{feed: azure_activity}]
+    sigma: {product: azure, service: activitylogs}
+  - match: '^(networkdevice|network|snmp|WLAN|WIDS|wireless|IDS|NIDS|perimeter|Firewall)'
+    parser: none
+    providers: [{feed: netdev_syslog}]
+    sigma: {product: cisco, service: syslog}
+  - match: '^(iptables)'
+    parser: none
+    providers: [{feed: iptables}]
+    sigma: {product: linux, service: syslog}
+  - match: '^(ebpf|sysdig)'
+    parser: none
+    providers: [{feed: ebpf}]
+    sigma: {product: linux, service: auditd}
+  - match: '^(m365|idp|casb|Microsoft)'
+    parser: none
+    providers: [{feed: m365_unified}]
+    sigma: {product: m365, service: audit}
+  - match: '^(saas|saas-app|Okta|cloud:|API:)'
+    parser: none
+    providers: [{feed: saas}]
+    sigma: {product: none, service: none}
+  - match: '^(AWS|CloudTrail|VPCFlow|ALB)'
+    parser: none
+    providers: [{feed: aws}]
+    sigma: {product: aws, service: cloudtrail}
+  - match: '^(gcp|GCP|Google)'
+    parser: none
+    providers: [{feed: gcp}]
+    sigma: {product: gcp, service: gcp.audit}
+  - match: '^(macos|fs:|OpenBSM|PF:|Apple)'
+    parser: none
+    providers: [{feed: macos}]
+    sigma: {product: macos, service: unifiedlog}
+  - match: '^(mobile|Mobile|android|Android|iOS|VPN:Mobile|Telecom|OEM|MDM)'
+    parser: none
+    providers: [{feed: mobile}]
+    sigma: {product: none, service: none}
+  - match: '^(opc|opcua|scada|historian|otids|otndr|engineeringworkstation|serialgw|vendorapp|device:)'
+    parser: none
+    providers: [{feed: ot}]
+    sigma: {product: none, service: none}
+  - match: '^(firmware|Firmware|assetinventory|fim|Integrity|FileIntegrity)'
+    parser: none
+    providers: [{feed: linux_osquery}]
+    sigma: {product: linux, service: osquery}
+  - match: '^(ApplicationLog|Application)'
+    parser: none
+    providers: [{feed: unspecified}]
+    sigma: {product: windows, service: application}
+  - match: '^(dns|Domain)'
+    parser: none
+    providers: [{feed: corelight, logs: [dns]}]
+    sigma: {product: zeek, service: dns}
+  - match: '^(Social Media)'
+    parser: none
+    providers: [{feed: threat_intel}]
+    sigma: {product: none, service: none}

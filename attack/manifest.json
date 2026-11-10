@@ -1,0 +1,9 @@
+{
+  "source": "https://github.com/mitre-attack/attack-stix-data",
+  "domain": "enterprise-attack",
+  "version": "20.1",
+  "released": "2026-11-05",
+  "sha256": {
+    "enterprise-attack-20.1": "539a843a7b53ed9749740b2123dddae3726b1a4831841c32aca740b011b910b5"
+  }
+}

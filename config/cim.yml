@@ -1,0 +1,277 @@
+# Data component -> Splunk CIM data model. Used for:
+#   * tags.conf CIM tags on per-feed eventtypes, only for feeds whose TA already
+#     normalises fields for that model (compliant_feeds);
+#   * mitre_dcXXXX_dm / _dm_where macros so analytics can use tstats.
+# `where` is the datamodel constraint fragment appended after `from datamodel=...`.
+components:
+  Process Creation:
+    datamodel: Endpoint
+    dataset: Processes
+    tags: [process, report]
+    compliant_feeds: [sysmon, wineventlog, auditd, sysmon_linux]
+  Process Termination:
+    datamodel: Endpoint
+    dataset: Processes
+    tags: [process, report]
+    compliant_feeds: [sysmon]
+    where: 'Processes.action=terminated'
+  Process Access:
+    datamodel: Endpoint
+    dataset: Processes
+    tags: [process, report]
+    compliant_feeds: []
+  Process Metadata:
+    datamodel: Endpoint
+    dataset: Processes
+    tags: [process, report]
+    compliant_feeds: [sysmon]
+  Command Execution:
+    datamodel: Endpoint
+    dataset: Processes
+    tags: [process, report]
+    compliant_feeds: [sysmon, wineventlog, auditd]
+  Script Execution:
+    datamodel: Endpoint
+    dataset: Processes
+    tags: [process, report]
+    compliant_feeds: []
+  Module Load:
+    datamodel: Endpoint
+    dataset: Processes
+    tags: [process, report]
+    compliant_feeds: []
+  Driver Load:
+    datamodel: Endpoint
+    dataset: Services
+    tags: [service, report]
+    compliant_feeds: []
+  File Creation:
+    datamodel: Endpoint
+    dataset: Filesystem
+    tags: [endpoint, filesystem]
+    compliant_feeds: [sysmon]
+    where: 'Filesystem.action=created'
+  File Modification:
+    datamodel: Endpoint
+    dataset: Filesystem
+    tags: [endpoint, filesystem]
+    compliant_feeds: [sysmon]
+    where: 'Filesystem.action=modified'
+  File Deletion:
+    datamodel: Endpoint
+    dataset: Filesystem
+    tags: [endpoint, filesystem]
+    compliant_feeds: [sysmon]
+    where: 'Filesystem.action=deleted'
+  File Access:
+    datamodel: Endpoint
+    dataset: Filesystem
+    tags: [endpoint, filesystem]
+    compliant_feeds: []
+    where: 'Filesystem.action=read'
+  File Metadata:
+    datamodel: Endpoint
+    dataset: Filesystem
+    tags: [endpoint, filesystem]
+    compliant_feeds: [sysmon]
+  Windows Registry Key Creation:
+    datamodel: Endpoint
+    dataset: Registry
+    tags: [endpoint, registry]
+    compliant_feeds: [sysmon]
+    where: 'Registry.action=created'
+  Windows Registry Key Modification:
+    datamodel: Endpoint
+    dataset: Registry
+    tags: [endpoint, registry]
+    compliant_feeds: [sysmon]
+    where: 'Registry.action=modified'
+  Windows Registry Key Deletion:
+    datamodel: Endpoint
+    dataset: Registry
+    tags: [endpoint, registry]
+    compliant_feeds: [sysmon]
+    where: 'Registry.action=deleted'
+  Windows Registry Key Access:
+    datamodel: Endpoint
+    dataset: Registry
+    tags: [endpoint, registry]
+    compliant_feeds: []
+  Service Creation:
+    datamodel: Endpoint
+    dataset: Services
+    tags: [service, report]
+    compliant_feeds: [wineventlog]
+  Service Modification:
+    datamodel: Endpoint
+    dataset: Services
+    tags: [service, report]
+    compliant_feeds: [wineventlog]
+  Service Metadata:
+    datamodel: Endpoint
+    dataset: Services
+    tags: [service, report]
+    compliant_feeds: [wineventlog]
+  Network Connection Creation:
+    datamodel: Network_Traffic
+    dataset: All_Traffic
+    tags: [network, communicate]
+    compliant_feeds: [sysmon, corelight, palo_alto]
+  Network Traffic Flow:
+    datamodel: Network_Traffic
+    dataset: All_Traffic
+    tags: [network, communicate]
+    compliant_feeds: [corelight, palo_alto, netflow]
+  Network Traffic Content:
+    datamodel: Web
+    dataset: Web
+    tags: [web]
+    compliant_feeds: [corelight, palo_alto]
+  Network Share Access:
+    datamodel: Endpoint
+    dataset: Filesystem
+    tags: [endpoint, filesystem]
+    compliant_feeds: []
+  Logon Session Creation:
+    datamodel: Authentication
+    dataset: Authentication
+    tags: [authentication]
+    compliant_feeds: [wineventlog, linux_syslog, azure_entra, palo_alto]
+  Logon Session Metadata:
+    datamodel: Authentication
+    dataset: Authentication
+    tags: [authentication]
+    compliant_feeds: [wineventlog, azure_entra]
+  User Account Authentication:
+    datamodel: Authentication
+    dataset: Authentication
+    tags: [authentication]
+    compliant_feeds: [wineventlog, linux_syslog, azure_entra, palo_alto]
+  User Account Creation:
+    datamodel: Change
+    dataset: Account_Management
+    tags: [change, account]
+    compliant_feeds: [wineventlog, azure_entra]
+    where: 'All_Changes.action=created'
+  User Account Modification:
+    datamodel: Change
+    dataset: Account_Management
+    tags: [change, account]
+    compliant_feeds: [wineventlog, azure_entra]
+    where: 'All_Changes.action=modified'
+  User Account Deletion:
+    datamodel: Change
+    dataset: Account_Management
+    tags: [change, account]
+    compliant_feeds: [wineventlog, azure_entra]
+    where: 'All_Changes.action=deleted'
+  User Account Metadata:
+    datamodel: Change
+    dataset: Account_Management
+    tags: [change, account]
+    compliant_feeds: [wineventlog]
+  Group Modification:
+    datamodel: Change
+    dataset: Account_Management
+    tags: [change, account]
+    compliant_feeds: [wineventlog]
+  Active Directory Object Modification:
+    datamodel: Change
+    dataset: All_Changes
+    tags: [change]
+    compliant_feeds: [wineventlog]
+  Active Directory Object Creation:
+    datamodel: Change
+    dataset: All_Changes
+    tags: [change]
+    compliant_feeds: [wineventlog]
+  Active Directory Object Deletion:
+    datamodel: Change
+    dataset: All_Changes
+    tags: [change]
+    compliant_feeds: [wineventlog]
+  Active Directory Object Access:
+    datamodel: Change
+    dataset: All_Changes
+    tags: [change]
+    compliant_feeds: []
+  Active Directory Credential Request:
+    datamodel: Authentication
+    dataset: Authentication
+    tags: [authentication]
+    compliant_feeds: [wineventlog]
+  Scheduled Job Creation:
+    datamodel: Endpoint
+    dataset: Processes
+    tags: []
+    compliant_feeds: []
+  Firewall Rule Modification:
+    datamodel: Change
+    dataset: Network_Changes
+    tags: [change, network]
+    compliant_feeds: [palo_alto]
+  Firewall Disable:
+    datamodel: Change
+    dataset: Network_Changes
+    tags: [change, network]
+    compliant_feeds: [palo_alto]
+  Host Status:
+    datamodel: Endpoint
+    dataset: Services
+    tags: []
+    compliant_feeds: []
+  Malware Metadata:
+    datamodel: Malware
+    dataset: Malware_Attacks
+    tags: [malware, attack]
+    compliant_feeds: [trellix_epo]
+  Malware Content:
+    datamodel: Malware
+    dataset: Malware_Attacks
+    tags: [malware, attack]
+    compliant_feeds: [trellix_epo]
+  Application Log Content:
+    datamodel: null
+  Cloud Service Modification:
+    datamodel: Change
+    dataset: All_Changes
+    tags: [change]
+    compliant_feeds: [azure_activity]
+  Cloud Service Enumeration:
+    datamodel: Change
+    dataset: All_Changes
+    tags: [change]
+    compliant_feeds: [azure_activity]
+  Cloud Service Disable:
+    datamodel: Change
+    dataset: All_Changes
+    tags: [change]
+    compliant_feeds: [azure_activity]
+  Cloud Service Metadata:
+    datamodel: Change
+    dataset: All_Changes
+    tags: [change]
+    compliant_feeds: [azure_activity]
+  Drive Creation:
+    datamodel: null
+  Drive Modification:
+    datamodel: null
+  Drive Access:
+    datamodel: null
+  Named Pipe Metadata:
+    datamodel: null
+  WMI Creation:
+    datamodel: null
+  OS API Execution:
+    datamodel: null
+  Process Modification:
+    datamodel: null
+  Kernel Module Load:
+    datamodel: null
+  Web Credential Creation:
+    datamodel: null
+  Web Credential Usage:
+    datamodel: Authentication
+    dataset: Authentication
+    tags: [authentication]
+    compliant_feeds: [azure_entra]

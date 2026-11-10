@@ -1,0 +1,471 @@
+# ---------------------------------------------------------------------------
+# LOG SOURCE CHECKLIST
+#
+# Tick `have: true` for every feed that reaches your Splunk. The generator reads
+# this file to decide which data-component eventtypes are "live", which are
+# "ready when you forward the feed", and what the gaps report says.
+#
+# `index` and `sourcetypes` are substituted literally into eventtypes.conf
+# (eventtypes cannot expand macros). Change them here and rebuild, or override
+# in the app's local/eventtypes.conf.
+#
+# Feed keys are referenced from config/log_sources.yml and from
+# content/data_components/*.yml (curated.providers).
+# ---------------------------------------------------------------------------
+feeds:
+
+  # ------------------------------------------------------------ Windows host
+  wineventlog:
+    label: Windows Event Logs
+    have: true
+    platforms: [Windows]
+    index: wineventlog
+    ta: Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering
+    sourcetype_template: "XmlWinEventLog:{channel}"
+    default_channels: [Security, System, Application]
+    prerequisites:
+      - Advanced Audit Policy configured (at minimum Process Creation, Logon, Account Management, Object Access, Policy Change, Privilege Use, Detailed Tracking). Without the matching subcategory the EventCodes below never fire.
+      - 'Include command line in process creation events enabled for 4688 (Computer Configuration > Administrative Templates > System > Audit Process Creation).'
+
+      - PowerShell Script Block Logging (4104) and Module Logging (4103) enabled via GPO for the PowerShell/Operational channel.
+      - Object access events (4656/4663/4657/4660/4670) require SACLs on the files/keys of interest.
+      - Non-default channels (TaskScheduler, WMI-Activity, CodeIntegrity, Defender, Firewall, WinRM, SMBClient/Server...) must be listed as inputs in Splunk_TA_windows inputs.conf; several are disabled by default in Windows.
+    unlocks: Authentication, account management, privilege use, service install, scheduled tasks, PowerShell, AppLocker/CodeIntegrity, Defender, firewall and Windows-native object access telemetry.
+
+  sysmon:
+    label: Sysmon (Microsoft-Windows-Sysmon/Operational)
+    have: true
+    platforms: [Windows]
+    index: sysmon
+    ta: Splunk Add-on for Sysmon (TA-microsoft-sysmon)
+    sourcetype: "XmlWinEventLog:Microsoft-Windows-Sysmon/Operational"
+    prerequisites:
+      - Sysmon deployed with a maintained modular configuration (e.g. sysmon-modular or SwiftOnSecurity). Event IDs referenced by a data component only exist if the config includes that rule group (ProcessAccess=10, ImageLoad=7, DNS=22, FileDelete=23/26, ClipboardChange=24, ProcessTampering=25, FileBlock=27/28 are off in minimal configs).
+      - Hashes configured (SHA256 at least, IMPHASH useful) for File/Process metadata components.
+    unlocks: Process, image load, driver load, registry, file, named pipe, WMI, DNS and network-connection telemetry at process granularity; the single highest-yield Windows feed in ATT&CK v20 (861 analytic references).
+
+  powershell_logging:
+    label: PowerShell Operational channel (4103/4104) - part of Windows Event Logs, listed separately because it needs its own GPO and input
+    have: true
+    platforms: [Windows]
+    index: wineventlog
+    ta: Splunk Add-on for Microsoft Windows
+    sourcetype: "XmlWinEventLog:Microsoft-Windows-PowerShell/Operational"
+    prerequisites:
+      - Turn on Script Block Logging and Module Logging GPO; consider Transcription to a protected share.
+      - Add Microsoft-Windows-PowerShell/Operational as a WinEventLog input (renderXml=true).
+    unlocks: Script Execution and Command Execution components for Windows (65 analytics).
+
+  windows_firewall_log:
+    label: Windows Firewall text log (pfirewall.log)
+    have: false
+    platforms: [Windows]
+    index: wineventlog
+    ta: Splunk_TA_windows (monitor input on %systemroot%\System32\LogFiles\Firewall\pfirewall.log)
+    sourcetype: "WinFirewall"
+    prerequisites: [Enable logging of dropped and allowed connections per profile.]
+    unlocks: Host-level connection allow/drop for Network Connection Creation when Sysmon 3 is not deployed.
+
+  windows_perfmon:
+    label: Windows Performance counters
+    have: false
+    platforms: [Windows]
+    index: perfmon
+    ta: Splunk_TA_windows perfmon inputs
+    sourcetype: "Perfmon:*"
+    unlocks: Host Status (resource exhaustion, CPU/disk spikes) analytics - 4 references.
+
+  windows_dns_server:
+    label: Windows DNS Server analytical / debug log
+    have: false
+    platforms: [Windows]
+    index: wineventlog
+    ta: Splunk_TA_windows (MSAD:NT6:DNS) or Microsoft-Windows-DNS-Server/Analytical ETW
+    sourcetype: "MSAD:NT6:DNS"
+    unlocks: Server-side DNS query logging; Sysmon EventCode 22 covers client-side queries and is preferred where deployed.
+
+  windows_dhcp:
+    label: Windows DHCP server log
+    have: false
+    platforms: [Windows]
+    index: wineventlog
+    ta: Splunk_TA_windows
+    sourcetype: "DhcpSrvLog"
+    unlocks: Rogue DHCP / lease analytics (1 reference).
+
+  iis:
+    label: IIS access and configuration logs
+    have: false
+    platforms: [Windows]
+    index: web
+    ta: Splunk Add-on for Microsoft IIS
+    sourcetype: "ms:iis:auto"
+    unlocks: Web shell and IIS module persistence analytics (3 references).
+
+  etw:
+    label: ETW providers not surfaced by Sysmon (Kernel-Process, Win32k, WinINet, RPC, DotNETRuntime, AMSI, Token...)
+    have: false
+    platforms: [Windows]
+    index: etw
+    ta: Requires a user-mode ETW consumer (SilkETW/Sealighter, Splunk Stream for NDIS, or an EDR that exposes the provider). No standard Splunk TA.
+    sourcetype: "etw:json"
+    unlocks: OS API Execution, Process Modification and token-manipulation analytics that Sysmon cannot see (about 40 references). Most are also partially covered by Sysmon 10/8/25.
+
+  windows_osquery:
+    label: osquery on Windows
+    have: false
+    platforms: [Windows]
+    index: osquery
+    ta: osquery TA (osquery:results)
+    sourcetype: "osquery:results"
+    unlocks: Scheduled snapshot queries for metadata components (services, drivers, autoruns).
+
+  autoruns:
+    label: Sysinternals Autoruns scans
+    have: false
+    platforms: [Windows]
+    index: wineventlog
+    ta: TA-autoruns (scripted input)
+    sourcetype: "autoruns"
+    unlocks: Autostart persistence metadata comparisons (1 reference).
+
+  # ------------------------------------------------------------ endpoint security
+  trellix_epo:
+    label: Trellix ePO events (ENS threat/AMSI/adaptive threat protection, ePO audit)
+    have: true
+    platforms: [Windows, Linux]
+    index: epo
+    ta: Splunk Add-on for McAfee ePO (mcafee:epo). Verify the sourcetype against your installed TA version.
+    sourcetype: "mcafee:epo"
+    prerequisites:
+      - ePO configured to forward threat events to Splunk (syslog or DB pull); confirm product_name/threat_type fields populate.
+      - ENS AMSI and Exploit Prevention enabled if AMSI-type analytics are expected.
+    unlocks: Host Status (AV disabled/tamper), Malware Metadata, Application Log Content, and partial EDR:detection/EDR:AMSI references.
+
+  solidcore:
+    label: Trellix Application and Change Control (Solidcore) via ePO
+    have: true
+    platforms: [Windows, Linux]
+    index: epo
+    ta: Arrives through the ePO TA; Solidcore events carry event names such as FILE_CREATED, FILE_MODIFIED, FILE_DELETED, EXECUTION_DENIED, REG_VALUE_MODIFIED, PROCESS_HIJACK_ATTEMPTED. Verify field names (threat_name / event_description) in your data.
+    sourcetype: "mcafee:epo"
+    filter: 'product_name="Solidcore*"'
+    prerequisites:
+      - Change Control file and registry monitoring rules scoped to the paths/keys of interest; Application Control in Enabled (not Observe) mode for EXECUTION_DENIED.
+    unlocks: File Creation/Modification/Deletion, Windows Registry Key Creation/Modification, Module Load and Process Creation (denied executions) as an integrity-monitoring second source.
+
+  edr_telemetry:
+    label: EDR raw telemetry (memory, hunting, script block, syscall) - e.g. Trellix EDR, Defender for Endpoint advanced hunting
+    have: false
+    platforms: [Windows, Linux]
+    index: edr
+    ta: Vendor specific
+    sourcetype: "edr:telemetry"
+    unlocks: EDR:memory, EDR:hunting, EDR:file, EDR:cli, EDR:scriptblock, M365Defender:DeviceNetworkEvents references (about 20).
+
+  # ------------------------------------------------------------ network
+  corelight:
+    label: Corelight / Zeek network logs
+    have: true
+    platforms: [Windows, Linux, macOS, ESXi, Network Devices, Containers]
+    index: corelight
+    ta: "Corelight App for Splunk (corelight_<log>). For TA_zeek use prefix zeek: and suffix :json."
+    sourcetype_template: "corelight_{log}"
+    default_logs: [conn, dns, http, ssl, x509, files, smb_files, smb_mapping, dce_rpc, kerberos, ntlm, rdp, ssh, smtp, ftp, notice, weird, software, dhcp, ldap, pe]
+    prerequisites:
+      - Sensor placement covering east-west (DC, server VLANs) and north-south; without internal taps the lateral-movement components are blind.
+      - Enable the log set above; files/pe/smb_* and ldap/kerberos/ntlm are what distinguish Corelight from flow data.
+    unlocks: Network Traffic Flow, Network Connection Creation, Network Traffic Content, Network Share Access, Active Directory credential/object telemetry over the wire (about 500 references across platforms).
+
+  palo_alto:
+    label: Palo Alto Networks PAN-OS (traffic, threat, URL, system, config, GlobalProtect)
+    have: true
+    platforms: [Network Devices, Windows, Linux, ESXi, Containers]
+    index: pan_logs
+    ta: Splunk Add-on for Palo Alto Networks (pan:*)
+    sourcetype_template: "pan:{log}"
+    default_logs: [traffic, threat, system, config, userid, globalprotect, decryption]
+    prerequisites:
+      - Log forwarding profiles attached to every security rule (traffic start+end, threat, url, wildfire, data).
+      - System and Config logs forwarded from each firewall / Panorama; GlobalProtect logs enabled.
+      - URL filtering and Threat Prevention licensed for pan:threat subtypes url/vulnerability/virus/spyware.
+    unlocks: Firewall Rule Modification, Firewall Disable, Firewall Metadata/Enumeration, perimeter Network Traffic Flow/Content, web proxy style URL telemetry, VPN authentication (GlobalProtect), and the firewall's own config/CLI/auth audit trail for the Network Devices platform.
+
+  wireshark:
+    label: Wireshark / tshark packet captures (ad hoc)
+    have: true
+    platforms: [Windows, Linux, Network Devices]
+    index: pcap
+    ta: None standard. tshark -T ek output (wireshark:json) or Splunk Stream for continuous capture.
+    sourcetype: "wireshark:json"
+    hunt_only: true
+    unlocks: Network Traffic Content deep inspection for hunts and incident scoping. Not a scheduled detection source; eventtypes are generated disabled.
+
+  netdev_syslog:
+    label: Router / switch / non-PAN firewall syslog, config change and AAA logs
+    have: false
+    platforms: [Network Devices]
+    index: netops
+    ta: Cisco Networks Add-on (cisco:ios, cisco:asa), Juniper/Arista TAs, or generic syslog
+    sourcetypes: ["cisco:ios", "cisco:asa", "syslog"]
+    prerequisites: [Enable config-change archive logging and AAA command accounting; forward at informational level.]
+    unlocks: Network Devices platform components (Command Execution, File Modification on device, Logon Session, Firmware Modification) for non-Palo Alto gear - about 90 references.
+
+  snmp:
+    label: SNMP traps / polling
+    have: false
+    platforms: [Network Devices]
+    index: netops
+    ta: Splunk Connect for SNMP
+    sourcetype: "sc4snmp:event"
+    unlocks: Firmware, device status and access analytics (about 8 references).
+
+  netflow:
+    label: NetFlow / IPFIX (non-Zeek flow)
+    have: false
+    platforms: [Network Devices, Linux, Containers]
+    index: netflow
+    ta: Splunk Stream or Splunk Add-on for NetFlow
+    sourcetype: "stream:netflow"
+    unlocks: Flow coverage where Corelight sensors are absent (cloud VPC flow, branch sites).
+
+  # ------------------------------------------------------------ Linux
+  auditd:
+    label: Linux auditd (SYSCALL/EXECVE/PATH/CONFIG_CHANGE/USER_LOGIN...)
+    have: false
+    platforms: [Linux, Containers]
+    index: linux
+    ta: Splunk Add-on for Unix and Linux (linux:audit) or auditd -> auditbeat/syslog
+    sourcetype: "linux:audit"
+    prerequisites:
+      - audit rules for execve, connect, open/openat on sensitive paths, ptrace, module load, mount, setuid; a Neo23x0/auditd baseline or Florian Roth's rule set is a reasonable start.
+      - log_format = ENRICHED in auditd.conf so syscall names and uids resolve (otherwise syscall numbers are architecture dependent).
+    unlocks: The single largest Linux feed in ATT&CK v20 - 469 SYSCALL plus 46 EXECVE plus PATH/FILE/CONFIG_CHANGE references; Process Creation, Command Execution, File *, Network Connection Creation for Linux.
+
+  linux_syslog:
+    label: Linux syslog / journald (messages, secure/auth, cron, kernel, daemon)
+    have: false
+    platforms: [Linux, Containers]
+    index: linux
+    ta: Splunk Add-on for Unix and Linux (syslog, linux_secure, linux_messages_syslog)
+    sourcetypes: ["linux_messages_syslog", "linux_secure", "syslog"]
+    unlocks: Application Log Content, Logon Session Creation (sshd/sudo), Service Creation (systemd), Scheduled Job Creation (cron) for Linux - about 100 references.
+
+  linux_osquery:
+    label: osquery on Linux
+    have: false
+    platforms: [Linux, Containers]
+    index: osquery
+    ta: osquery TA
+    sourcetype: "osquery:results"
+    unlocks: Metadata components (processes, listening ports, kernel modules, crontab, users) on a schedule - 48 references.
+
+  sysmon_linux:
+    label: Sysmon for Linux
+    have: false
+    platforms: [Linux]
+    index: linux
+    ta: Splunk Add-on for Sysmon for Linux
+    sourcetype: "sysmon:linux"
+    unlocks: Sysmon-style process/network/file telemetry on Linux (18 references).
+
+  iptables:
+    label: iptables / nftables LOG target via kernel syslog
+    have: false
+    platforms: [Linux]
+    index: linux
+    ta: Splunk Add-on for Unix and Linux (syslog)
+    sourcetype: "syslog"
+    filter: '"IN=" "OUT="'
+    unlocks: Host firewall allow/drop on Linux (about 6 references).
+
+  ebpf:
+    label: eBPF runtime security (Falco, Tetragon, Tracee)
+    have: false
+    platforms: [Linux, Containers]
+    index: linux
+    ta: Vendor specific (falco JSON, tetragon)
+    sourcetype: "falco"
+    unlocks: Syscall and tracepoint components inside containers (about 10 references).
+
+  # ------------------------------------------------------------ Azure
+  azure_entra:
+    label: Microsoft Entra ID sign-in and audit logs
+    have: false
+    platforms: [Identity Provider, IaaS, Office Suite, Windows]
+    index: azure
+    ta: Splunk Add-on for Microsoft Azure (azure:aad:signin, azure:aad:audit) or Microsoft Cloud Services add-on via Event Hub
+    sourcetypes: ["azure:aad:signin", "azure:aad:audit"]
+    prerequisites: [Diagnostic settings on the tenant streaming SignInLogs, AuditLogs, NonInteractiveUserSignInLogs, ServicePrincipalSignInLogs to an Event Hub or direct Graph pull.]
+    unlocks: User Account Authentication, Logon Session Creation/Metadata, Active Directory Object Modification (cloud), Cloud Service Modification - about 110 references.
+
+  azure_activity:
+    label: Azure Activity Log (subscription control plane) and Azure Policy
+    have: false
+    platforms: [IaaS]
+    index: azure
+    ta: Splunk Add-on for Microsoft Cloud Services (mscs:azure:audit)
+    sourcetype: "mscs:azure:audit"
+    prerequisites: [Export Activity Log for every subscription to the Event Hub.]
+    unlocks: Instance/Snapshot/Volume/Cloud Service components for Azure IaaS - about 35 references.
+
+  azure_resource:
+    label: Azure resource diagnostic logs (NSG flow, VM guest, Key Vault, Storage)
+    have: false
+    platforms: [IaaS]
+    index: azure
+    ta: Splunk Add-on for Microsoft Cloud Services (mscs:azure:eventhub)
+    sourcetype: "mscs:azure:eventhub"
+    unlocks: azure:vpcflow, azure:vmguest, azure:resource references (3).
+
+  m365_defender:
+    label: Microsoft Defender XDR / Defender for Identity alerts and Graph API logs
+    have: false
+    platforms: [Windows, Identity Provider, Office Suite]
+    index: azure
+    ta: Splunk Add-on for Microsoft Security
+    sourcetype: "ms:m365:defender:incident:alerts"
+    unlocks: m365:defender, Defender for Identity, Microsoft Graph API Logs references (about 12).
+
+  # ------------------------------------------------------------ Containers
+  kubernetes_audit:
+    label: Kubernetes API server audit log and cluster events
+    have: false
+    platforms: [Containers]
+    index: k8s
+    ta: Splunk OpenTelemetry Collector for Kubernetes / Splunk Connect for Kubernetes
+    sourcetypes: ["kube:apiserver-audit", "kube:objects:events"]
+    prerequisites: [Audit policy at Metadata level minimum, RequestResponse for secrets/pods/exec; ship the audit log file from control-plane nodes.]
+    unlocks: Container Creation/Start, Pod Creation/Enumeration, User Account Authentication (k8s), Cloud Service Enumeration - about 30 references.
+
+  container_runtime:
+    label: Docker / containerd daemon and runtime events
+    have: false
+    platforms: [Containers]
+    index: k8s
+    ta: docker events scripted input or OpenTelemetry (docker:events, containerd)
+    sourcetypes: ["docker:events", "docker:daemon", "containerd:events"]
+    unlocks: Container Creation/Start/Enumeration, Image Creation, Process Creation inside containers - about 40 references.
+
+  # ------------------------------------------------------------ ESXi / vSphere
+  esxi_syslog:
+    label: ESXi host logs via remote syslog (hostd, vmkernel, shell, vobd, vpxa, auth, esxupdate)
+    have: false
+    platforms: [ESXi]
+    index: vmware
+    ta: Splunk Add-on for VMware ESXi Logs (vmware:esxlog:<log>)
+    sourcetype_template: "vmware:esxlog:{log}"
+    default_logs: [hostd, vmkernel, shell, vobd, vpxa, auth, esxupdate, syslog]
+    prerequisites:
+      - 'Syslog.global.logHost set on every host; ESXi Shell/SSH audit enabled; consider Syslog.global.auditRecord (ESXi 8).'
+    unlocks: "The whole ESXi platform (107 analytics): Command Execution (shell.log), File *, Process Creation, Logon Session Creation, Service Modification on hypervisors."
+
+  vcenter:
+    label: vCenter vpxd logs and events
+    have: false
+    platforms: [ESXi]
+    index: vmware
+    ta: Splunk Add-on for VMware (vmware:vclog:vpxd)
+    sourcetype: "vmware:vclog:vpxd"
+    unlocks: esxi:vpxd references (about 14) - VM lifecycle, permission changes, host add/remove.
+
+  # ------------------------------------------------------------ out of scope platforms (still tickable)
+  macos:
+    label: macOS unified log / Endpoint Security / osquery / FSEvents
+    have: false
+    render: false
+    platforms: [macOS]
+    index: macos
+    ta: Jamf Protect, Splunk UF with log stream, osquery TA; no single standard TA
+    sourcetype: "macos:unifiedlog"
+    unlocks: macOS platform (353 analytics). Out of scope for rendering in this release.
+
+  m365_unified:
+    label: Microsoft 365 unified audit log (Exchange, SharePoint, Teams, Purview)
+    have: false
+    render: false
+    platforms: [Office Suite, SaaS, Identity Provider, Windows]
+    index: o365
+    ta: Splunk Add-on for Microsoft Office 365 (o365:management:activity)
+    sourcetype: "o365:management:activity"
+    unlocks: Office Suite platform (57 analytics) plus mailbox/dirsync references used by a few Windows analytics.
+
+  aws:
+    label: AWS CloudTrail / VPC Flow / CloudWatch / Bedrock
+    have: false
+    render: false
+    platforms: [IaaS, SaaS, Containers]
+    index: aws
+    ta: Splunk Add-on for AWS
+    sourcetypes: ["aws:cloudtrail", "aws:cloudwatchlogs:vpcflow", "aws:cloudwatchlogs"]
+    unlocks: AWS IaaS analytics (about 150 references). Not in scope this release.
+
+  gcp:
+    label: Google Cloud audit / VPC flow / Workspace admin
+    have: false
+    render: false
+    platforms: [IaaS, SaaS, Identity Provider]
+    index: gcp
+    ta: Splunk Add-on for Google Cloud Platform
+    sourcetype: "google:gcp:pubsub:message"
+    unlocks: GCP references (about 50). Not in scope this release.
+
+  okta:
+    label: Okta System Log
+    have: false
+    render: false
+    platforms: [Identity Provider, SaaS]
+    index: okta
+    ta: Splunk Add-on for Okta Identity Cloud
+    sourcetype: "OktaIM2:log"
+    unlocks: Non-Azure identity provider analytics (about 45 references).
+
+  saas:
+    label: SaaS application audit logs (GitHub, Slack, Salesforce, Zoom, Box, Confluence, Google Workspace...)
+    have: false
+    render: false
+    platforms: [SaaS]
+    index: saas
+    ta: Per application
+    sourcetype: "saas:audit"
+    unlocks: SaaS platform (68 analytics). Not in scope this release.
+
+  mobile:
+    label: Mobile EDR / MDM telemetry
+    have: false
+    render: false
+    platforms: []
+    index: mobile
+    ta: n/a (Mobile ATT&CK domain)
+    sourcetype: "mobile:telemetry"
+    unlocks: Mobile-domain log sources that leak into shared data components. Not applicable to Enterprise rendering.
+
+  ot:
+    label: OT / ICS application and protocol logs
+    have: false
+    render: false
+    platforms: []
+    index: ot
+    ta: n/a (ICS ATT&CK domain)
+    sourcetype: "ot:applog"
+    unlocks: ICS-domain log sources on shared data components. Not applicable to Enterprise rendering.
+
+  threat_intel:
+    label: External reconnaissance sources (internet scan data, domain registration, malware repositories, persona monitoring)
+    have: false
+    render: false
+    platforms: [PRE]
+    index: threatintel
+    ta: Threat-intel feeds, not log sources
+    sourcetype: "ti:feed"
+    unlocks: PRE platform (97 analytics) - these are intelligence, not telemetry.
+
+  unspecified:
+    label: ATT&CK left the provider generic (e.g. "Process", "File", "Network Traffic")
+    have: false
+    platforms: []
+    index: ""
+    ta: n/a
+    sourcetype: ""
+    virtual: true
+    unlocks: Nothing by itself; the data component's other feeds cover these references.

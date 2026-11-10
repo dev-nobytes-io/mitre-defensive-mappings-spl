@@ -1,0 +1,3 @@
+dest,role,owner,notes
+dc01,domain_controller,,seed
+jump01,jump_host,,seed

@@ -1,0 +1,973 @@
+dc_id,dc_name,log_source,refs,feed,have,in_scope,eventtype,sourcetypes,constraint_origin
+DC0001,Scheduled Job Creation,WinEventLog:Security,10,wineventlog,1,1,mitre_dc0001_scheduled_job_creation__wineventlog,XmlWinEventLog:Microsoft-Windows-TaskScheduler/Operational|XmlWinEventLog:Security,defaults
+DC0001,Scheduled Job Creation,WinEventLog:TaskScheduler,4,wineventlog,1,1,mitre_dc0001_scheduled_job_creation__wineventlog,XmlWinEventLog:Microsoft-Windows-TaskScheduler/Operational|XmlWinEventLog:Security,defaults
+DC0001,Scheduled Job Creation,(added by dc_defaults/curated),,auditd,0,1,mitre_dc0001_scheduled_job_creation__auditd,linux:audit,defaults
+DC0001,Scheduled Job Creation,esxi:cron,2,esxi_syslog,0,1,mitre_dc0001_scheduled_job_creation__esxi_syslog,vmware:esxlog:syslog,defaults
+DC0001,Scheduled Job Creation,esxi:hostd,2,esxi_syslog,0,1,mitre_dc0001_scheduled_job_creation__esxi_syslog,vmware:esxlog:syslog,defaults
+DC0001,Scheduled Job Creation,esxi:vmkernel,2,esxi_syslog,0,1,mitre_dc0001_scheduled_job_creation__esxi_syslog,vmware:esxlog:syslog,defaults
+DC0001,Scheduled Job Creation,kubernetes:apiserver,2,kubernetes_audit,0,1,mitre_dc0001_scheduled_job_creation__kubernetes_audit,kube:apiserver-audit,defaults
+DC0001,Scheduled Job Creation,linux:cron,2,linux_syslog,0,1,mitre_dc0001_scheduled_job_creation__linux_syslog,linux_messages_syslog|linux_secure|syslog,defaults
+DC0001,Scheduled Job Creation,linux:syslog,2,linux_syslog,0,1,mitre_dc0001_scheduled_job_creation__linux_syslog,linux_messages_syslog|linux_secure|syslog,defaults
+DC0001,Scheduled Job Creation,macos:cron,2,macos,0,0,,macos:unifiedlog,derived
+DC0001,Scheduled Job Creation,macos:osquery,3,macos,0,0,,macos:unifiedlog,derived
+DC0001,Scheduled Job Creation,macos:unifiedlog,2,macos,0,0,,macos:unifiedlog,derived
+DC0001,Scheduled Job Creation,MobileEDR:telemetry,1,mobile,0,0,,mobile:telemetry,derived
+DC0001,Scheduled Job Creation,mobile:ForensicArtifacts,2,mobile,0,0,,mobile:telemetry,derived
+DC0002,User Account Authentication,NSM:Connections,8,corelight,1,1,mitre_dc0002_user_account_authentication__corelight,corelight_kerberos|corelight_ntlm|corelight_radius|corelight_rdp|corelight_ssh,defaults
+DC0002,User Account Authentication,NSM:Flow,2,corelight,1,1,mitre_dc0002_user_account_authentication__corelight,corelight_kerberos|corelight_ntlm|corelight_radius|corelight_rdp|corelight_ssh,defaults
+DC0002,User Account Authentication,NSM:Connections,8,palo_alto,1,1,mitre_dc0002_user_account_authentication__palo_alto,pan:globalprotect|pan:system,defaults
+DC0002,User Account Authentication,NSM:Flow,2,palo_alto,1,1,mitre_dc0002_user_account_authentication__palo_alto,pan:globalprotect|pan:system,defaults
+DC0002,User Account Authentication,network:auth,2,palo_alto,1,1,mitre_dc0002_user_account_authentication__palo_alto,pan:globalprotect|pan:system,defaults
+DC0002,User Account Authentication,networkdevice:auth,1,palo_alto,1,1,mitre_dc0002_user_account_authentication__palo_alto,pan:globalprotect|pan:system,defaults
+DC0002,User Account Authentication,networkdevice:syslog,26,palo_alto,1,1,mitre_dc0002_user_account_authentication__palo_alto,pan:globalprotect|pan:system,defaults
+DC0002,User Account Authentication,WinEventLog:Security,22,wineventlog,1,1,mitre_dc0002_user_account_authentication__wineventlog,XmlWinEventLog:Security,defaults
+DC0002,User Account Authentication,auditd:SYSCALL,4,auditd,0,1,mitre_dc0002_user_account_authentication__auditd,linux:audit,defaults
+DC0002,User Account Authentication,auditd:USER_LOGIN,4,auditd,0,1,mitre_dc0002_user_account_authentication__auditd,linux:audit,defaults
+DC0002,User Account Authentication,azure:signinlogs,36,azure_entra,0,1,mitre_dc0002_user_account_authentication__azure_entra,azure:aad:signin,defaults
+DC0002,User Account Authentication,esxi:auth,8,esxi_syslog,0,1,mitre_dc0002_user_account_authentication__esxi_syslog,vmware:esxlog:auth,defaults
+DC0002,User Account Authentication,esxi:vpxa,2,esxi_syslog,0,1,mitre_dc0002_user_account_authentication__esxi_syslog,vmware:esxlog:auth,defaults
+DC0002,User Account Authentication,kubernetes:apiserver,4,kubernetes_audit,0,1,mitre_dc0002_user_account_authentication__kubernetes_audit,kube:apiserver-audit,defaults
+DC0002,User Account Authentication,kubernetes:audit,4,kubernetes_audit,0,1,mitre_dc0002_user_account_authentication__kubernetes_audit,kube:apiserver-audit,defaults
+DC0002,User Account Authentication,linux:auth,3,linux_syslog,0,1,mitre_dc0002_user_account_authentication__linux_syslog,linux_secure,defaults
+DC0002,User Account Authentication,linux:syslog,10,linux_syslog,0,1,mitre_dc0002_user_account_authentication__linux_syslog,linux_secure,defaults
+DC0002,User Account Authentication,AWS:CloudTrail,14,aws,0,0,,aws:cloudtrail|aws:cloudwatchlogs|aws:cloudwatchlogs:vpcflow,derived
+DC0002,User Account Authentication,gcp:audit,7,gcp,0,0,,google:gcp:pubsub:message,derived
+DC0002,User Account Authentication,gcp:workspaceaudit,2,gcp,0,0,,google:gcp:pubsub:message,derived
+DC0002,User Account Authentication,idp:AuditLog,1,m365_unified,0,0,,o365:management:activity,derived
+DC0002,User Account Authentication,idp:authentication,2,m365_unified,0,0,,o365:management:activity,derived
+DC0002,User Account Authentication,m365:exchange,4,m365_unified,0,0,,o365:management:activity,derived
+DC0002,User Account Authentication,m365:signinlogs,6,m365_unified,0,0,,o365:management:activity,derived
+DC0002,User Account Authentication,m365:unified,6,m365_unified,0,0,,o365:management:activity,derived
+DC0002,User Account Authentication,macos:unifiedlog,16,macos,0,0,,macos:unifiedlog,derived
+DC0002,User Account Authentication,saas-app:auth,2,saas,0,0,,saas:audit,derived
+DC0002,User Account Authentication,saas:MDM,2,saas,0,0,,saas:audit,derived
+DC0002,User Account Authentication,saas:audit,4,saas,0,0,,saas:audit,derived
+DC0002,User Account Authentication,saas:auth,2,saas,0,0,,saas:audit,derived
+DC0002,User Account Authentication,saas:googleworkspace,8,saas,0,0,,saas:audit,derived
+DC0002,User Account Authentication,saas:okta,12,saas,0,0,,saas:audit,derived
+DC0002,User Account Authentication,saas:salesforce,4,saas,0,0,,saas:audit,derived
+DC0003,Malware Metadata,(added by dc_defaults/curated),,palo_alto,1,1,mitre_dc0003_malware_metadata__palo_alto,pan:threat,defaults
+DC0003,Malware Metadata,(added by dc_defaults/curated),,trellix_epo,1,1,mitre_dc0003_malware_metadata__trellix_epo,mcafee:epo,defaults
+DC0003,Malware Metadata,(added by dc_defaults/curated),,wineventlog,1,1,mitre_dc0003_malware_metadata__wineventlog,XmlWinEventLog:Microsoft-Windows-Windows Defender/Operational,defaults
+DC0003,Malware Metadata,Malware Repository,8,threat_intel,0,0,,ti:feed,derived
+DC0004,Firmware Modification,networkdevice:config,6,palo_alto,1,1,mitre_dc0004_firmware_modification__palo_alto,pan:system,defaults
+DC0004,Firmware Modification,networkdevice:firmware,2,palo_alto,1,1,mitre_dc0004_firmware_modification__palo_alto,pan:system,defaults
+DC0004,Firmware Modification,networkdevice:syslog,6,palo_alto,1,1,mitre_dc0004_firmware_modification__palo_alto,pan:system,defaults
+DC0004,Firmware Modification,WinEventLog:Microsoft-Windows-Kernel-Boot,2,wineventlog,1,1,mitre_dc0004_firmware_modification__wineventlog,XmlWinEventLog:Microsoft-Windows-Kernel-Boot|XmlWinEventLog:System,defaults
+DC0004,Firmware Modification,auditd:SYSCALL,4,auditd,0,1,mitre_dc0004_firmware_modification__auditd,linux:audit,defaults
+DC0004,Firmware Modification,firmware:integrity,11,linux_osquery,0,1,mitre_dc0004_firmware_modification__linux_osquery,osquery:results,derived
+DC0004,Firmware Modification,firmware:smart,1,linux_osquery,0,1,mitre_dc0004_firmware_modification__linux_osquery,osquery:results,derived
+DC0004,Firmware Modification,firmware:runtime,2,netdev_syslog,0,1,mitre_dc0004_firmware_modification__netdev_syslog,cisco:asa|cisco:ios|syslog,derived
+DC0004,Firmware Modification,networkdevice:config,6,netdev_syslog,0,1,mitre_dc0004_firmware_modification__netdev_syslog,cisco:asa|cisco:ios|syslog,derived
+DC0004,Firmware Modification,networkdevice:firmware,2,netdev_syslog,0,1,mitre_dc0004_firmware_modification__netdev_syslog,cisco:asa|cisco:ios|syslog,derived
+DC0004,Firmware Modification,networkdevice:syslog,6,netdev_syslog,0,1,mitre_dc0004_firmware_modification__netdev_syslog,cisco:asa|cisco:ios|syslog,derived
+DC0004,Firmware Modification,firmware:integrity,11,snmp,0,1,mitre_dc0004_firmware_modification__snmp,sc4snmp:event,derived
+DC0004,Firmware Modification,firmware:runtime,2,snmp,0,1,mitre_dc0004_firmware_modification__snmp,sc4snmp:event,derived
+DC0004,Firmware Modification,networkdevice:firmware,2,snmp,0,1,mitre_dc0004_firmware_modification__snmp,sc4snmp:event,derived
+DC0004,Firmware Modification,firmware:integrity,11,windows_osquery,0,1,mitre_dc0004_firmware_modification__windows_osquery,osquery:results,derived
+DC0004,Firmware Modification,macos:osquery,1,macos,0,0,,macos:unifiedlog,derived
+DC0004,Firmware Modification,macos:unifiedlog,4,macos,0,0,,macos:unifiedlog,derived
+DC0005,Scheduled Job Metadata,WinEventLog:System,2,wineventlog,1,1,mitre_dc0005_scheduled_job_metadata__wineventlog,XmlWinEventLog:Microsoft-Windows-TaskScheduler/Operational,defaults
+DC0005,Scheduled Job Metadata,WinEventLog:TaskScheduler,2,wineventlog,1,1,mitre_dc0005_scheduled_job_metadata__wineventlog,XmlWinEventLog:Microsoft-Windows-TaskScheduler/Operational,defaults
+DC0005,Scheduled Job Metadata,esxi:syslog,2,esxi_syslog,0,1,mitre_dc0005_scheduled_job_metadata__esxi_syslog,vmware:esxlog:syslog,derived
+DC0005,Scheduled Job Metadata,linux:cron,4,linux_syslog,0,1,mitre_dc0005_scheduled_job_metadata__linux_syslog,linux_messages_syslog|linux_secure|syslog,defaults
+DC0005,Scheduled Job Metadata,fs:fileevents,2,macos,0,0,,macos:unifiedlog,derived
+DC0005,Scheduled Job Metadata,macos:launchd,2,macos,0,0,,macos:unifiedlog,derived
+DC0005,Scheduled Job Metadata,macos:unifiedlog,2,macos,0,0,,macos:unifiedlog,derived
+DC0006,Web Credential Creation,WinEventLog:ADFS,2,wineventlog,1,1,mitre_dc0006_web_credential_creation__wineventlog,XmlWinEventLog:AD FS/Admin|XmlWinEventLog:Security,defaults
+DC0006,Web Credential Creation,azure:signinlogs,2,azure_entra,0,1,mitre_dc0006_web_credential_creation__azure_entra,azure:aad:audit|azure:aad:signin,defaults
+DC0006,Web Credential Creation,AWS:CloudTrail,2,aws,0,0,,aws:cloudtrail|aws:cloudwatchlogs|aws:cloudwatchlogs:vpcflow,derived
+DC0006,Web Credential Creation,m365:oauth,2,m365_unified,0,0,,o365:management:activity,derived
+DC0006,Web Credential Creation,m365:unified,2,m365_unified,0,0,,o365:management:activity,derived
+DC0007,Web Credential Usage,NSM:Connections,2,corelight,1,1,mitre_dc0007_web_credential_usage__corelight,corelight_http|corelight_ssl,defaults
+DC0007,Web Credential Usage,NSM:Connections,2,palo_alto,1,1,mitre_dc0007_web_credential_usage__palo_alto,pan:threat|pan:traffic,defaults
+DC0007,Web Credential Usage,azure:signinlogs,4,azure_entra,0,1,mitre_dc0007_web_credential_usage__azure_entra,azure:aad:signin,defaults
+DC0007,Web Credential Usage,AWS:CloudTrail,10,aws,0,0,,aws:cloudtrail|aws:cloudwatchlogs|aws:cloudwatchlogs:vpcflow,derived
+DC0007,Web Credential Usage,m365:exchange,2,m365_unified,0,0,,o365:management:activity,derived
+DC0007,Web Credential Usage,m365:unified,8,m365_unified,0,0,,o365:management:activity,derived
+DC0007,Web Credential Usage,macos:unifiedlog,4,macos,0,0,,macos:unifiedlog,derived
+DC0007,Web Credential Usage,saas:access,2,saas,0,0,,saas:audit,derived
+DC0007,Web Credential Usage,saas:auth,2,saas,0,0,,saas:audit,derived
+DC0007,Web Credential Usage,saas:googleworkspace,4,saas,0,0,,saas:audit,derived
+DC0008,WMI Creation,(added by dc_defaults/curated),,sysmon,1,1,mitre_dc0008_wmi_creation__sysmon,XmlWinEventLog:Microsoft-Windows-Sysmon/Operational,defaults
+DC0008,WMI Creation,WinEventLog:Application,2,wineventlog,1,1,mitre_dc0008_wmi_creation__wineventlog,XmlWinEventLog:Microsoft-Windows-WMI-Activity/Operational,defaults
+DC0008,WMI Creation,WinEventLog:WMI,8,wineventlog,1,1,mitre_dc0008_wmi_creation__wineventlog,XmlWinEventLog:Microsoft-Windows-WMI-Activity/Operational,defaults
+DC0009,User Account Deletion,WinEventLog:Security,2,wineventlog,1,1,mitre_dc0009_user_account_deletion__wineventlog,XmlWinEventLog:Security,defaults
+DC0009,User Account Deletion,esxi:hostd,2,esxi_syslog,0,1,mitre_dc0009_user_account_deletion__esxi_syslog,vmware:esxlog:hostd,defaults
+DC0009,User Account Deletion,m365:unified,2,m365_unified,0,0,,o365:management:activity,derived
+DC0010,User Account Modification,WinEventLog:Security,9,wineventlog,1,1,mitre_dc0010_user_account_modification__wineventlog,XmlWinEventLog:Security,defaults
+DC0010,User Account Modification,auditd:SYSCALL,6,auditd,0,1,mitre_dc0010_user_account_modification__auditd,linux:audit,defaults
+DC0010,User Account Modification,azure:policy,2,azure_activity,0,1,mitre_dc0010_user_account_modification__azure_activity,mscs:azure:audit,derived
+DC0010,User Account Modification,azure:audit,8,azure_entra,0,1,mitre_dc0010_user_account_modification__azure_entra,azure:aad:audit,defaults
+DC0010,User Account Modification,azure:signinlogs,2,azure_entra,0,1,mitre_dc0010_user_account_modification__azure_entra,azure:aad:audit,defaults
+DC0010,User Account Modification,kubernetes:audit,2,kubernetes_audit,0,1,mitre_dc0010_user_account_modification__kubernetes_audit,kube:apiserver-audit,defaults
+DC0010,User Account Modification,linux:syslog,2,linux_syslog,0,1,mitre_dc0010_user_account_modification__linux_syslog,linux_secure,defaults
+DC0010,User Account Modification,AWS:CloudTrail,10,aws,0,0,,aws:cloudtrail|aws:cloudwatchlogs|aws:cloudwatchlogs:vpcflow,derived
+DC0010,User Account Modification,gcp:audit,7,gcp,0,0,,google:gcp:pubsub:message,derived
+DC0010,User Account Modification,idp:audit,4,m365_unified,0,0,,o365:management:activity,derived
+DC0010,User Account Modification,m365:audit,2,m365_unified,0,0,,o365:management:activity,derived
+DC0010,User Account Modification,m365:unified,16,m365_unified,0,0,,o365:management:activity,derived
+DC0010,User Account Modification,macos:unifiedlog,4,macos,0,0,,macos:unifiedlog,derived
+DC0010,User Account Modification,saas:audit,2,saas,0,0,,saas:audit,derived
+DC0010,User Account Modification,saas:okta,6,saas,0,0,,saas:audit,derived
+DC0010,User Account Modification,saas:zoom,2,saas,0,0,,saas:audit,derived
+DC0011,Malware Content,(added by dc_defaults/curated),,corelight,1,1,mitre_dc0011_malware_content__corelight,corelight_files|corelight_pe,defaults
+DC0011,Malware Content,(added by dc_defaults/curated),,palo_alto,1,1,mitre_dc0011_malware_content__palo_alto,pan:threat,defaults
+DC0011,Malware Content,(added by dc_defaults/curated),,trellix_epo,1,1,mitre_dc0011_malware_content__trellix_epo,mcafee:epo,defaults
+DC0011,Malware Content,Malware Repository,5,threat_intel,0,0,,ti:feed,derived
+DC0012,Scheduled Job Modification,WinEventLog:Security,2,wineventlog,1,1,mitre_dc0012_scheduled_job_modification__wineventlog,XmlWinEventLog:Microsoft-Windows-TaskScheduler/Operational|XmlWinEventLog:Security,defaults
+DC0012,Scheduled Job Modification,auditd:CONFIG_CHANGE,2,auditd,0,1,mitre_dc0012_scheduled_job_modification__auditd,linux:audit,defaults
+DC0012,Scheduled Job Modification,m365:exchange,2,m365_unified,0,0,,o365:management:activity,derived
+DC0013,User Account Metadata,WinEventLog:Security,9,wineventlog,1,1,mitre_dc0013_user_account_metadata__wineventlog,XmlWinEventLog:Security,defaults
+DC0013,User Account Metadata,auditd:SYSCALL,2,auditd,0,1,mitre_dc0013_user_account_metadata__auditd,linux:audit,defaults
+DC0013,User Account Metadata,azure:activity,2,azure_activity,0,1,mitre_dc0013_user_account_metadata__azure_activity,mscs:azure:audit,derived
+DC0013,User Account Metadata,azure:audit,6,azure_entra,0,1,mitre_dc0013_user_account_metadata__azure_entra,azure:aad:audit,defaults
+DC0013,User Account Metadata,linux:osquery,2,linux_osquery,0,1,mitre_dc0013_user_account_metadata__linux_osquery,osquery:results,defaults
+DC0013,User Account Metadata,windows:osquery,2,windows_osquery,0,1,mitre_dc0013_user_account_metadata__windows_osquery,osquery:results,defaults
+DC0013,User Account Metadata,AWS:CloudTrail,13,aws,0,0,,aws:cloudtrail|aws:cloudwatchlogs|aws:cloudwatchlogs:vpcflow,derived
+DC0013,User Account Metadata,gcp:audit,5,gcp,0,0,,google:gcp:pubsub:message,derived
+DC0013,User Account Metadata,gcp:iam,2,gcp,0,0,,google:gcp:pubsub:message,derived
+DC0013,User Account Metadata,gcp:workspaceaudit,2,gcp,0,0,,google:gcp:pubsub:message,derived
+DC0013,User Account Metadata,m365:unified,2,m365_unified,0,0,,o365:management:activity,derived
+DC0013,User Account Metadata,macos:MDM,2,macos,0,0,,macos:unifiedlog,derived
+DC0013,User Account Metadata,macos:unifiedlog,4,macos,0,0,,macos:unifiedlog,derived
+DC0013,User Account Metadata,saas:auth,2,saas,0,0,,saas:audit,derived
+DC0013,User Account Metadata,saas:okta,4,saas,0,0,,saas:audit,derived
+DC0014,User Account Creation,networkdevice:syslog,2,palo_alto,1,1,mitre_dc0014_user_account_creation__palo_alto,pan:config,defaults
+DC0014,User Account Creation,WinEventLog:Security,6,wineventlog,1,1,mitre_dc0014_user_account_creation__wineventlog,XmlWinEventLog:Security,defaults
+DC0014,User Account Creation,auditd:SYSCALL,5,auditd,0,1,mitre_dc0014_user_account_creation__auditd,linux:audit,defaults
+DC0014,User Account Creation,azure:audit,4,azure_entra,0,1,mitre_dc0014_user_account_creation__azure_entra,azure:aad:audit,defaults
+DC0014,User Account Creation,(added by dc_defaults/curated),,linux_syslog,0,1,mitre_dc0014_user_account_creation__linux_syslog,linux_secure,defaults
+DC0014,User Account Creation,AWS:CloudTrail,3,aws,0,0,,aws:cloudtrail|aws:cloudwatchlogs|aws:cloudwatchlogs:vpcflow,derived
+DC0014,User Account Creation,m365:unified,2,m365_unified,0,0,,o365:management:activity,derived
+DC0014,User Account Creation,saas:okta,1,saas,0,0,,saas:audit,derived
+DC0014,User Account Creation,saas:slack,1,saas,0,0,,saas:audit,derived
+DC0014,User Account Creation,saas:zoom,2,saas,0,0,,saas:audit,derived
+DC0015,Image Creation,containerd:events,2,container_runtime,0,1,mitre_dc0015_image_creation__container_runtime,containerd:events|docker:daemon,defaults
+DC0015,Image Creation,docker:daemon,4,container_runtime,0,1,mitre_dc0015_image_creation__container_runtime,containerd:events|docker:daemon,defaults
+DC0015,Image Creation,kubernetes:apiserver,1,kubernetes_audit,0,1,mitre_dc0015_image_creation__kubernetes_audit,kube:apiserver-audit,defaults
+DC0015,Image Creation,kubernetes:audit,1,kubernetes_audit,0,1,mitre_dc0015_image_creation__kubernetes_audit,kube:apiserver-audit,defaults
+DC0015,Image Creation,AWS:CloudTrail,2,aws,0,0,,aws:cloudtrail|aws:cloudwatchlogs|aws:cloudwatchlogs:vpcflow,derived
+DC0016,Module Load,(added by dc_defaults/curated),,solidcore,1,1,mitre_dc0016_module_load__solidcore,mcafee:epo,defaults
+DC0016,Module Load,WinEventLog:Sysmon,105,sysmon,1,1,mitre_dc0016_module_load__sysmon,XmlWinEventLog:Microsoft-Windows-Sysmon/Operational,defaults
+DC0016,Module Load,etw:Microsoft-Windows-Kernel-ImageLoad,2,sysmon,1,1,mitre_dc0016_module_load__sysmon,XmlWinEventLog:Microsoft-Windows-Sysmon/Operational,defaults
+DC0016,Module Load,WinEventLog:Application,2,wineventlog,1,1,mitre_dc0016_module_load__wineventlog,XmlWinEventLog:Application|XmlWinEventLog:Microsoft-Windows-CodeIntegrity/Operational|XmlWinEventLog:Security,defaults
+DC0016,Module Load,WinEventLog:Security,3,wineventlog,1,1,mitre_dc0016_module_load__wineventlog,XmlWinEventLog:Application|XmlWinEventLog:Microsoft-Windows-CodeIntegrity/Operational|XmlWinEventLog:Security,defaults
+DC0016,Module Load,auditd:PATH,2,auditd,0,1,mitre_dc0016_module_load__auditd,linux:audit,defaults
+DC0016,Module Load,auditd:SYSCALL,13,auditd,0,1,mitre_dc0016_module_load__auditd,linux:audit,defaults
+DC0016,Module Load,etw:Microsoft-Windows-Kernel-ImageLoad,2,etw,0,1,mitre_dc0016_module_load__etw,etw:json,derived
+DC0016,Module Load,linux:Sysmon,2,sysmon_linux,0,1,mitre_dc0016_module_load__sysmon_linux,sysmon:linux,defaults
+DC0016,Module Load,m365:unified,2,m365_unified,0,0,,o365:management:activity,derived
+DC0016,Module Load,macos:endpointsecurity,2,macos,0,0,,macos:unifiedlog,derived
+DC0016,Module Load,macos:osquery,1,macos,0,0,,macos:unifiedlog,derived
+DC0016,Module Load,macos:syslog,2,macos,0,0,,macos:unifiedlog,derived
+DC0016,Module Load,macos:unifiedlog,24,macos,0,0,,macos:unifiedlog,derived
+DC0016,Module Load,android:logcat,4,mobile,0,0,,mobile:telemetry,derived
+DC0016,Module Load,iOS:unifiedlog,2,mobile,0,0,,mobile:telemetry,derived
+DC0016,Module Load,mobile:DynamicAnalysis,4,mobile,0,0,,mobile:telemetry,derived
+DC0017,Cloud Storage Enumeration,azure:activity,1,azure_activity,0,1,mitre_dc0017_cloud_storage_enumeration__azure_activity,mscs:azure:audit,derived
+DC0017,Cloud Storage Enumeration,AWS:CloudTrail,5,aws,0,0,,aws:cloudtrail|aws:cloudwatchlogs|aws:cloudwatchlogs:vpcflow,derived
+DC0017,Cloud Storage Enumeration,gcp:storage,1,gcp,0,0,,google:gcp:pubsub:message,derived
+DC0018,Host Status,NSM:Flow,2,palo_alto,1,1,mitre_dc0018_host_status__palo_alto,pan:system,defaults
+DC0018,Host Status,networkdevice:syslog,4,palo_alto,1,1,mitre_dc0018_host_status__palo_alto,pan:system,defaults
+DC0018,Host Status,WinEventLog:Sysmon,2,sysmon,1,1,mitre_dc0018_host_status__sysmon,XmlWinEventLog:Microsoft-Windows-Sysmon/Operational,defaults
+DC0018,Host Status,(added by dc_defaults/curated),,trellix_epo,1,1,mitre_dc0018_host_status__trellix_epo,mcafee:epo,defaults
+DC0018,Host Status,WinEventLog:Microsoft-Windows-TCPIP,2,wineventlog,1,1,mitre_dc0018_host_status__wineventlog,XmlWinEventLog:Microsoft-Windows-Windows Defender/Operational|XmlWinEventLog:Security|XmlWinEventLog:System,defaults
+DC0018,Host Status,WinEventLog:Security,5,wineventlog,1,1,mitre_dc0018_host_status__wineventlog,XmlWinEventLog:Microsoft-Windows-Windows Defender/Operational|XmlWinEventLog:Security|XmlWinEventLog:System,defaults
+DC0018,Host Status,WinEventLog:System,2,wineventlog,1,1,mitre_dc0018_host_status__wineventlog,XmlWinEventLog:Microsoft-Windows-Windows Defender/Operational|XmlWinEventLog:Security|XmlWinEventLog:System,defaults
+DC0018,Host Status,auditd:SYSCALL,2,auditd,0,1,mitre_dc0018_host_status__auditd,linux:audit,defaults
+DC0018,Host Status,esxi:hostd,2,esxi_syslog,0,1,mitre_dc0018_host_status__esxi_syslog,vmware:esxlog:hostd|vmware:esxlog:vobd,defaults
+DC0018,Host Status,kubernetes:events,2,kubernetes_audit,0,1,mitre_dc0018_host_status__kubernetes_audit,kube:objects:events,defaults
+DC0018,Host Status,prometheus:metrics,2,kubernetes_audit,0,1,mitre_dc0018_host_status__kubernetes_audit,kube:objects:events,defaults
+DC0018,Host Status,linux:syslog,7,linux_syslog,0,1,mitre_dc0018_host_status__linux_syslog,linux_messages_syslog|linux_secure|syslog,defaults
+DC0018,Host Status,Windows:perfmon,8,windows_perfmon,0,1,mitre_dc0018_host_status__windows_perfmon,Perfmon:*,derived
+DC0018,Host Status,AWS:CloudWatch,14,aws,0,0,,aws:cloudtrail|aws:cloudwatchlogs|aws:cloudwatchlogs:vpcflow,derived
+DC0018,Host Status,macos:osquery,2,macos,0,0,,macos:unifiedlog,derived
+DC0018,Host Status,macos:syslog,1,macos,0,0,,macos:unifiedlog,derived
+DC0018,Host Status,macos:unifiedlog,14,macos,0,0,,macos:unifiedlog,derived
+DC0018,Host Status,AndroidAttestation:SafetyNet,1,mobile,0,0,,mobile:telemetry,derived
+DC0018,Host Status,AndroidAttestation:VerifiedBoot,1,mobile,0,0,,mobile:telemetry,derived
+DC0018,Host Status,AndroidLogs:Crash,2,mobile,0,0,,mobile:telemetry,derived
+DC0018,Host Status,MDM:DeviceIntegrity,1,mobile,0,0,,mobile:telemetry,derived
+DC0018,Host Status,OEMAttestation:Knox,1,mobile,0,0,,mobile:telemetry,derived
+DC0018,Host Status,android:DevicePolicyManager,1,mobile,0,0,,mobile:telemetry,derived
+DC0018,Host Status,android:appops,1,mobile,0,0,,mobile:telemetry,derived
+DC0018,Host Status,iOS:MDM,1,mobile,0,0,,mobile:telemetry,derived
+DC0018,Host Status,iOS:MDMLog,2,mobile,0,0,,mobile:telemetry,derived
+DC0018,Host Status,iOS:unifiedlog,2,mobile,0,0,,mobile:telemetry,derived
+DC0019,Pod Creation,kubernetes:audit,2,kubernetes_audit,0,1,mitre_dc0019_pod_creation__kubernetes_audit,kube:apiserver-audit,defaults
+DC0019,Pod Creation,AWS:CloudTrail,2,aws,0,0,,aws:cloudtrail|aws:cloudwatchlogs|aws:cloudwatchlogs:vpcflow,derived
+DC0020,Process Modification,WinEventLog:Sysmon,11,sysmon,1,1,mitre_dc0020_process_modification__sysmon,XmlWinEventLog:Microsoft-Windows-Sysmon/Operational,defaults
+DC0020,Process Modification,etw:Microsoft-Windows-Kernel-Process,2,sysmon,1,1,mitre_dc0020_process_modification__sysmon,XmlWinEventLog:Microsoft-Windows-Sysmon/Operational,defaults
+DC0020,Process Modification,auditd:SYSCALL,15,auditd,0,1,mitre_dc0020_process_modification__auditd,linux:audit,defaults
+DC0020,Process Modification,ebpf:tracepoints,2,ebpf,0,1,mitre_dc0020_process_modification__ebpf,falco,derived
+DC0020,Process Modification,etw:Microsoft-Windows-Kernel-Process,2,etw,0,1,mitre_dc0020_process_modification__etw,etw:json,derived
+DC0020,Process Modification,macos:endpointsecurity,5,macos,0,0,,macos:unifiedlog,derived
+DC0020,Process Modification,macos:osquery,2,macos,0,0,,macos:unifiedlog,derived
+DC0020,Process Modification,macos:unifiedlog,7,macos,0,0,,macos:unifiedlog,derived
+DC0021,OS API Execution,EDR:file,2,sysmon,1,1,mitre_dc0021_os_api_execution__sysmon,XmlWinEventLog:Microsoft-Windows-Sysmon/Operational,defaults
+DC0021,OS API Execution,EDR:memory,6,sysmon,1,1,mitre_dc0021_os_api_execution__sysmon,XmlWinEventLog:Microsoft-Windows-Sysmon/Operational,defaults
+DC0021,OS API Execution,etw:Microsoft-Windows-Kernel-Process,23,sysmon,1,1,mitre_dc0021_os_api_execution__sysmon,XmlWinEventLog:Microsoft-Windows-Sysmon/Operational,defaults
+DC0021,OS API Execution,WinEventLog:Application,2,wineventlog,1,1,mitre_dc0021_os_api_execution__wineventlog,XmlWinEventLog:Security,defaults
+DC0021,OS API Execution,WinEventLog:Microsoft-Windows-COM/Operational,2,wineventlog,1,1,mitre_dc0021_os_api_execution__wineventlog,XmlWinEventLog:Security,defaults
+DC0021,OS API Execution,WinEventLog:Security,2,wineventlog,1,1,mitre_dc0021_os_api_execution__wineventlog,XmlWinEventLog:Security,defaults
+DC0021,OS API Execution,EDR:Syscall,1,auditd,0,1,mitre_dc0021_os_api_execution__auditd,linux:audit,defaults
+DC0021,OS API Execution,auditd:SYSCALL,29,auditd,0,1,mitre_dc0021_os_api_execution__auditd,linux:audit,defaults
+DC0021,OS API Execution,EDR:Syscall,1,edr_telemetry,0,1,mitre_dc0021_os_api_execution__edr_telemetry,edr:telemetry,derived
+DC0021,OS API Execution,EDR:file,2,edr_telemetry,0,1,mitre_dc0021_os_api_execution__edr_telemetry,edr:telemetry,derived
+DC0021,OS API Execution,EDR:memory,6,edr_telemetry,0,1,mitre_dc0021_os_api_execution__edr_telemetry,edr:telemetry,derived
+DC0021,OS API Execution,etw:Microsoft-Windows-Directory-Services-SAM,2,etw,0,1,mitre_dc0021_os_api_execution__etw,etw:json,derived
+DC0021,OS API Execution,etw:Microsoft-Windows-DotNETRuntime,2,etw,0,1,mitre_dc0021_os_api_execution__etw,etw:json,derived
+DC0021,OS API Execution,etw:Microsoft-Windows-Kernel-Base,2,etw,0,1,mitre_dc0021_os_api_execution__etw,etw:json,derived
+DC0021,OS API Execution,etw:Microsoft-Windows-Kernel-File,2,etw,0,1,mitre_dc0021_os_api_execution__etw,etw:json,derived
+DC0021,OS API Execution,etw:Microsoft-Windows-Kernel-Process,23,etw,0,1,mitre_dc0021_os_api_execution__etw,etw:json,derived
+DC0021,OS API Execution,etw:Microsoft-Windows-RPC,2,etw,0,1,mitre_dc0021_os_api_execution__etw,etw:json,derived
+DC0021,OS API Execution,etw:Microsoft-Windows-Security-Auditing,2,etw,0,1,mitre_dc0021_os_api_execution__etw,etw:json,derived
+DC0021,OS API Execution,etw:Microsoft-Windows-Win32k,4,etw,0,1,mitre_dc0021_os_api_execution__etw,etw:json,derived
+DC0021,OS API Execution,etw:Token,4,etw,0,1,mitre_dc0021_os_api_execution__etw,etw:json,derived
+DC0021,OS API Execution,etw:generic,2,etw,0,1,mitre_dc0021_os_api_execution__etw,etw:json,derived
+DC0021,OS API Execution,AWS:CloudTrail,6,aws,0,0,,aws:cloudtrail|aws:cloudwatchlogs|aws:cloudwatchlogs:vpcflow,derived
+DC0021,OS API Execution,fs:fsusage,2,macos,0,0,,macos:unifiedlog,derived
+DC0021,OS API Execution,macos:osquery,4,macos,0,0,,macos:unifiedlog,derived
+DC0021,OS API Execution,macos:unifiedlog,24,macos,0,0,,macos:unifiedlog,derived
+DC0021,OS API Execution,AndroidLogs:Kernel,1,mobile,0,0,,mobile:telemetry,derived
+DC0021,OS API Execution,MobileEDR:telemetry,74,mobile,0,0,,mobile:telemetry,derived
+DC0021,OS API Execution,android:logcat,21,mobile,0,0,,mobile:telemetry,derived
+DC0021,OS API Execution,iOS:unifiedlog,14,mobile,0,0,,mobile:telemetry,derived
+DC0021,OS API Execution,mobile:DynamicAnalysis,61,mobile,0,0,,mobile:telemetry,derived
+DC0022,Cloud Storage Deletion,AWS:CloudTrail,3,aws,0,0,,aws:cloudtrail|aws:cloudwatchlogs|aws:cloudwatchlogs:vpcflow,derived
+DC0023,Cloud Storage Modification,AWS:CloudTrail,6,aws,0,0,,aws:cloudtrail|aws:cloudwatchlogs|aws:cloudwatchlogs:vpcflow,derived
+DC0023,Cloud Storage Modification,m365:unified,2,m365_unified,0,0,,o365:management:activity,derived
+DC0023,Cloud Storage Modification,saas:googledrive,2,saas,0,0,,saas:audit,derived
+DC0024,Cloud Storage Creation,AWS:CloudTrail,2,aws,0,0,,aws:cloudtrail|aws:cloudwatchlogs|aws:cloudwatchlogs:vpcflow,derived
+DC0025,Cloud Storage Access,AWS:CloudTrail,10,aws,0,0,,aws:cloudtrail|aws:cloudwatchlogs|aws:cloudwatchlogs:vpcflow,derived
+DC0025,Cloud Storage Access,gcp:workspaceaudit,1,gcp,0,0,,google:gcp:pubsub:message,derived
+DC0025,Cloud Storage Access,m365:sharepoint,2,m365_unified,0,0,,o365:management:activity,derived
+DC0025,Cloud Storage Access,m365:unified,6,m365_unified,0,0,,o365:management:activity,derived
+DC0025,Cloud Storage Access,saas:github,2,saas,0,0,,saas:audit,derived
+DC0027,Cloud Storage Metadata,AWS:CloudTrail,2,aws,0,0,,aws:cloudtrail|aws:cloudwatchlogs|aws:cloudwatchlogs:vpcflow,derived
+DC0027,Cloud Storage Metadata,m365:unified,2,m365_unified,0,0,,o365:management:activity,derived
+DC0027,Cloud Storage Metadata,saas:box,2,saas,0,0,,saas:audit,derived
+DC0027,Cloud Storage Metadata,saas:dropbox,1,saas,0,0,,saas:audit,derived
+DC0028,Image Metadata,docker:events,2,container_runtime,0,1,mitre_dc0028_image_metadata__container_runtime,docker:events,defaults
+DC0029,Script Execution,EDR:scriptblock,2,powershell_logging,1,1,mitre_dc0029_script_execution__powershell_logging,XmlWinEventLog:Microsoft-Windows-PowerShell/Operational,defaults
+DC0029,Script Execution,WinEventLog:PowerShell,9,powershell_logging,1,1,mitre_dc0029_script_execution__powershell_logging,XmlWinEventLog:Microsoft-Windows-PowerShell/Operational,defaults
+DC0029,Script Execution,EDR:AMSI,2,trellix_epo,1,1,mitre_dc0029_script_execution__trellix_epo,mcafee:epo,derived
+DC0029,Script Execution,etw:Microsoft-Antimalware-Scan-Interface,2,trellix_epo,1,1,mitre_dc0029_script_execution__trellix_epo,mcafee:epo,derived
+DC0029,Script Execution,WinEventLog:Application,2,wineventlog,1,1,mitre_dc0029_script_execution__wineventlog,XmlWinEventLog:Application|XmlWinEventLog:System,defaults
+DC0029,Script Execution,WinEventLog:System,4,wineventlog,1,1,mitre_dc0029_script_execution__wineventlog,XmlWinEventLog:Application|XmlWinEventLog:System,defaults
+DC0029,Script Execution,auditd:PROCTITLE,2,auditd,0,1,mitre_dc0029_script_execution__auditd,linux:audit,defaults
+DC0029,Script Execution,auditd:SYSCALL,1,auditd,0,1,mitre_dc0029_script_execution__auditd,linux:audit,defaults
+DC0029,Script Execution,EDR:AMSI,2,edr_telemetry,0,1,mitre_dc0029_script_execution__edr_telemetry,edr:telemetry,derived
+DC0029,Script Execution,EDR:scriptblock,2,edr_telemetry,0,1,mitre_dc0029_script_execution__edr_telemetry,edr:telemetry,derived
+DC0029,Script Execution,esxi:shell,2,esxi_syslog,0,1,mitre_dc0029_script_execution__esxi_syslog,vmware:esxlog:shell,defaults
+DC0029,Script Execution,esxi:vmkernel,2,esxi_syslog,0,1,mitre_dc0029_script_execution__esxi_syslog,vmware:esxlog:shell,defaults
+DC0029,Script Execution,etw:Microsoft-Antimalware-Scan-Interface,2,etw,0,1,mitre_dc0029_script_execution__etw,etw:json,derived
+DC0029,Script Execution,m365:office,2,m365_unified,0,0,,o365:management:activity,derived
+DC0029,Script Execution,m365:unified,2,m365_unified,0,0,,o365:management:activity,derived
+DC0029,Script Execution,macos:osquery,2,macos,0,0,,macos:unifiedlog,derived
+DC0029,Script Execution,macos:syslog,2,macos,0,0,,macos:unifiedlog,derived
+DC0029,Script Execution,macos:unifiedlog,18,macos,0,0,,macos:unifiedlog,derived
+DC0030,Pod Modification,(added by dc_defaults/curated),,kubernetes_audit,0,1,mitre_dc0030_pod_modification__kubernetes_audit,kube:apiserver-audit|kube:objects:events,defaults
+DC0031,Kernel Module Load,(added by dc_defaults/curated),,auditd,0,1,mitre_dc0031_kernel_module_load__auditd,linux:audit,defaults
+DC0031,Kernel Module Load,esxi:vmkernel,2,esxi_syslog,0,1,mitre_dc0031_kernel_module_load__esxi_syslog,vmware:esxlog:vmkernel,defaults
+DC0031,Kernel Module Load,(added by dc_defaults/curated),,linux_syslog,0,1,mitre_dc0031_kernel_module_load__linux_syslog,linux_messages_syslog|linux_secure|syslog,defaults
+DC0031,Kernel Module Load,macos:osquery,2,macos,0,0,,macos:unifiedlog,derived
+DC0032,Process Creation,(added by dc_defaults/curated),,powershell_logging,1,1,mitre_dc0032_process_creation__powershell_logging,XmlWinEventLog:Microsoft-Windows-PowerShell/Operational,defaults
+DC0032,Process Creation,(added by dc_defaults/curated),,solidcore,1,1,mitre_dc0032_process_creation__solidcore,mcafee:epo,defaults
+DC0032,Process Creation,WinEventLog:Sysmon,290,sysmon,1,1,mitre_dc0032_process_creation__sysmon,XmlWinEventLog:Microsoft-Windows-Sysmon/Operational,defaults
+DC0032,Process Creation,etw:Microsoft-Windows-Kernel-Process,1,sysmon,1,1,mitre_dc0032_process_creation__sysmon,XmlWinEventLog:Microsoft-Windows-Sysmon/Operational,defaults
+DC0032,Process Creation,WinEventLog:AppLocker,1,wineventlog,1,1,mitre_dc0032_process_creation__wineventlog,XmlWinEventLog:Security,defaults
+DC0032,Process Creation,WinEventLog:Microsoft-Windows-DotNETRuntime,1,wineventlog,1,1,mitre_dc0032_process_creation__wineventlog,XmlWinEventLog:Security,defaults
+DC0032,Process Creation,WinEventLog:Security,110,wineventlog,1,1,mitre_dc0032_process_creation__wineventlog,XmlWinEventLog:Security,defaults
+DC0032,Process Creation,WinEventLog:System,1,wineventlog,1,1,mitre_dc0032_process_creation__wineventlog,XmlWinEventLog:Security,defaults
+DC0032,Process Creation,auditd:EXECVE,40,auditd,0,1,mitre_dc0032_process_creation__auditd,linux:audit,defaults
+DC0032,Process Creation,auditd:SYSCALL,275,auditd,0,1,mitre_dc0032_process_creation__auditd,linux:audit,defaults
+DC0032,Process Creation,ebpf:syscalls,4,auditd,0,1,mitre_dc0032_process_creation__auditd,linux:audit,defaults
+DC0032,Process Creation,containerd:events,6,container_runtime,0,1,mitre_dc0032_process_creation__container_runtime,containerd:events|docker:daemon|docker:events,defaults
+DC0032,Process Creation,docker:daemon,1,container_runtime,0,1,mitre_dc0032_process_creation__container_runtime,containerd:events|docker:daemon|docker:events,defaults
+DC0032,Process Creation,docker:events,2,container_runtime,0,1,mitre_dc0032_process_creation__container_runtime,containerd:events|docker:daemon|docker:events,defaults
+DC0032,Process Creation,ebpf:syscalls,4,ebpf,0,1,mitre_dc0032_process_creation__ebpf,falco,derived
+DC0032,Process Creation,esxi:cron,2,esxi_syslog,0,1,mitre_dc0032_process_creation__esxi_syslog,vmware:esxlog:shell,defaults
+DC0032,Process Creation,esxi:hostd,8,esxi_syslog,0,1,mitre_dc0032_process_creation__esxi_syslog,vmware:esxlog:shell,defaults
+DC0032,Process Creation,esxi:shell,14,esxi_syslog,0,1,mitre_dc0032_process_creation__esxi_syslog,vmware:esxlog:shell,defaults
+DC0032,Process Creation,esxi:vmkernel,5,esxi_syslog,0,1,mitre_dc0032_process_creation__esxi_syslog,vmware:esxlog:shell,defaults
+DC0032,Process Creation,esxi:vobd,2,esxi_syslog,0,1,mitre_dc0032_process_creation__esxi_syslog,vmware:esxlog:shell,defaults
+DC0032,Process Creation,etw:Microsoft-Windows-Kernel-Process,1,etw,0,1,mitre_dc0032_process_creation__etw,etw:json,derived
+DC0032,Process Creation,kubernetes:apiserver,4,kubernetes_audit,0,1,mitre_dc0032_process_creation__kubernetes_audit,kube:apiserver-audit,defaults
+DC0032,Process Creation,linux:osquery,25,linux_osquery,0,1,mitre_dc0032_process_creation__linux_osquery,osquery:results,defaults
+DC0032,Process Creation,linux:Sysmon,9,sysmon_linux,0,1,mitre_dc0032_process_creation__sysmon_linux,sysmon:linux,defaults
+DC0032,Process Creation,OpenBSM:AuditTrail,3,macos,0,0,,macos:unifiedlog,derived
+DC0032,Process Creation,fs:fsusage,3,macos,0,0,,macos:unifiedlog,derived
+DC0032,Process Creation,macos:endpointsecurity,36,macos,0,0,,macos:unifiedlog,derived
+DC0032,Process Creation,macos:osquery,68,macos,0,0,,macos:unifiedlog,derived
+DC0032,Process Creation,macos:unifiedlog,316,macos,0,0,,macos:unifiedlog,derived
+DC0032,Process Creation,AndroidLogs:Framework,1,mobile,0,0,,mobile:telemetry,derived
+DC0032,Process Creation,AndroidLogs:Kernel,1,mobile,0,0,,mobile:telemetry,derived
+DC0032,Process Creation,MobileEDR:telemetry,6,mobile,0,0,,mobile:telemetry,derived
+DC0032,Process Creation,android:logcat,3,mobile,0,0,,mobile:telemetry,derived
+DC0032,Process Creation,iOS:unifiedlog,2,mobile,0,0,,mobile:telemetry,derived
+DC0032,Process Creation,mobile:DynamicAnalysis,13,mobile,0,0,,mobile:telemetry,derived
+DC0033,Process Termination,WinEventLog:Sysmon,3,sysmon,1,1,mitre_dc0033_process_termination__sysmon,XmlWinEventLog:Microsoft-Windows-Sysmon/Operational,defaults
+DC0033,Process Termination,auditd:SYSCALL,7,auditd,0,1,mitre_dc0033_process_termination__auditd,linux:audit,defaults
+DC0033,Process Termination,docker:events,2,container_runtime,0,1,mitre_dc0033_process_termination__container_runtime,docker:events,defaults
+DC0033,Process Termination,esxi:hostd,2,esxi_syslog,0,1,mitre_dc0033_process_termination__esxi_syslog,vmware:esxlog:hostd,derived
+DC0033,Process Termination,macos:osquery,2,macos,0,0,,macos:unifiedlog,derived
+DC0033,Process Termination,macos:unifiedlog,7,macos,0,0,,macos:unifiedlog,derived
+DC0034,Process Metadata,WinEventLog:PowerShell,3,powershell_logging,1,1,mitre_dc0034_process_metadata__powershell_logging,XmlWinEventLog:Microsoft-Windows-PowerShell/Operational,defaults
+DC0034,Process Metadata,WinEventLog:Sysmon,1,sysmon,1,1,mitre_dc0034_process_metadata__sysmon,XmlWinEventLog:Microsoft-Windows-Sysmon/Operational,defaults
+DC0034,Process Metadata,etw:Microsoft-Windows-Kernel-Process,2,sysmon,1,1,mitre_dc0034_process_metadata__sysmon,XmlWinEventLog:Microsoft-Windows-Sysmon/Operational,defaults
+DC0034,Process Metadata,WinEventLog:AppLocker,2,wineventlog,1,1,mitre_dc0034_process_metadata__wineventlog,XmlWinEventLog:Microsoft-Windows-AppLocker/EXE and DLL|XmlWinEventLog:Microsoft-Windows-CodeIntegrity/Operational|XmlWinEventLog:Microsoft-Windows-DeviceGuard/Operational|XmlWinEventLog:Security,defaults
+DC0034,Process Metadata,WinEventLog:Microsoft-Windows-CodeIntegrity/Operational,6,wineventlog,1,1,mitre_dc0034_process_metadata__wineventlog,XmlWinEventLog:Microsoft-Windows-AppLocker/EXE and DLL|XmlWinEventLog:Microsoft-Windows-CodeIntegrity/Operational|XmlWinEventLog:Microsoft-Windows-DeviceGuard/Operational|XmlWinEventLog:Security,defaults
+DC0034,Process Metadata,WinEventLog:Microsoft-Windows-DeviceGuard/Operational,1,wineventlog,1,1,mitre_dc0034_process_metadata__wineventlog,XmlWinEventLog:Microsoft-Windows-AppLocker/EXE and DLL|XmlWinEventLog:Microsoft-Windows-CodeIntegrity/Operational|XmlWinEventLog:Microsoft-Windows-DeviceGuard/Operational|XmlWinEventLog:Security,defaults
+DC0034,Process Metadata,WinEventLog:Microsoft-Windows-Security-Mitigations/KernelMode,2,wineventlog,1,1,mitre_dc0034_process_metadata__wineventlog,XmlWinEventLog:Microsoft-Windows-AppLocker/EXE and DLL|XmlWinEventLog:Microsoft-Windows-CodeIntegrity/Operational|XmlWinEventLog:Microsoft-Windows-DeviceGuard/Operational|XmlWinEventLog:Security,defaults
+DC0034,Process Metadata,WinEventLog:Microsoft-Windows-SmartAppControl/Operational,1,wineventlog,1,1,mitre_dc0034_process_metadata__wineventlog,XmlWinEventLog:Microsoft-Windows-AppLocker/EXE and DLL|XmlWinEventLog:Microsoft-Windows-CodeIntegrity/Operational|XmlWinEventLog:Microsoft-Windows-DeviceGuard/Operational|XmlWinEventLog:Security,defaults
+DC0034,Process Metadata,WinEventLog:Microsoft-Windows-Windows Camera Frame Server/Operational,2,wineventlog,1,1,mitre_dc0034_process_metadata__wineventlog,XmlWinEventLog:Microsoft-Windows-AppLocker/EXE and DLL|XmlWinEventLog:Microsoft-Windows-CodeIntegrity/Operational|XmlWinEventLog:Microsoft-Windows-DeviceGuard/Operational|XmlWinEventLog:Security,defaults
+DC0034,Process Metadata,auditd:SYSCALL,15,auditd,0,1,mitre_dc0034_process_metadata__auditd,linux:audit,defaults
+DC0034,Process Metadata,EDR:Telemetry,3,edr_telemetry,0,1,mitre_dc0034_process_metadata__edr_telemetry,edr:telemetry,derived
+DC0034,Process Metadata,EDR:hunting,1,edr_telemetry,0,1,mitre_dc0034_process_metadata__edr_telemetry,edr:telemetry,derived
+DC0034,Process Metadata,etw:Microsoft-Windows-ClickOnce,1,etw,0,1,mitre_dc0034_process_metadata__etw,etw:json,derived
+DC0034,Process Metadata,etw:Microsoft-Windows-Kernel-Process,2,etw,0,1,mitre_dc0034_process_metadata__etw,etw:json,derived
+DC0034,Process Metadata,linux:osquery,9,linux_osquery,0,1,mitre_dc0034_process_metadata__linux_osquery,osquery:results,defaults
+DC0034,Process Metadata,AWS:CloudTrail,2,aws,0,0,,aws:cloudtrail|aws:cloudwatchlogs|aws:cloudwatchlogs:vpcflow,derived
+DC0034,Process Metadata,macos:endpointsecurity,2,macos,0,0,,macos:unifiedlog,derived
+DC0034,Process Metadata,macos:osquery,4,macos,0,0,,macos:unifiedlog,derived
+DC0034,Process Metadata,macos:unifiedlog,23,macos,0,0,,macos:unifiedlog,derived
+DC0034,Process Metadata,mobile:DynamicAnalysis,2,mobile,0,0,,mobile:telemetry,derived
+DC0035,Process Access,WinEventLog:Sysmon,75,sysmon,1,1,mitre_dc0035_process_access__sysmon,XmlWinEventLog:Microsoft-Windows-Sysmon/Operational,defaults
+DC0035,Process Access,WinEventLog:Security,2,wineventlog,1,1,mitre_dc0035_process_access__wineventlog,XmlWinEventLog:Security,defaults
+DC0035,Process Access,auditd:SYSCALL,17,auditd,0,1,mitre_dc0035_process_access__auditd,linux:audit,defaults
+DC0035,Process Access,EDR:Telemetry,1,edr_telemetry,0,1,mitre_dc0035_process_access__edr_telemetry,edr:telemetry,derived
+DC0035,Process Access,macos:endpointsecurity,2,macos,0,0,,macos:unifiedlog,derived
+DC0035,Process Access,macos:osquery,4,macos,0,0,,macos:unifiedlog,derived
+DC0035,Process Access,macos:unifiedlog,12,macos,0,0,,macos:unifiedlog,derived
+DC0035,Process Access,android:logcat,6,mobile,0,0,,mobile:telemetry,derived
+DC0035,Process Access,iOS:unifiedlog,6,mobile,0,0,,mobile:telemetry,derived
+DC0035,Process Access,mobile:DynamicAnalysis,4,mobile,0,0,,mobile:telemetry,derived
+DC0036,Image Modification,docker:daemon,2,container_runtime,0,1,mitre_dc0036_image_modification__container_runtime,docker:daemon,defaults
+DC0036,Image Modification,AWS:CloudTrail,2,aws,0,0,,aws:cloudtrail|aws:cloudwatchlogs|aws:cloudwatchlogs:vpcflow,derived
+DC0037,Pod Enumeration,kubernetes:apiserver,2,kubernetes_audit,0,1,mitre_dc0037_pod_enumeration__kubernetes_audit,kube:apiserver-audit,defaults
+DC0038,Application Log Content,NSM:Connections,4,corelight,1,1,mitre_dc0038_application_log_content__corelight,corelight_http|corelight_notice|corelight_smtp|corelight_ssh,defaults
+DC0038,Application Log Content,WebProxy:AccessLogs,1,corelight,1,1,mitre_dc0038_application_log_content__corelight,corelight_http|corelight_notice|corelight_smtp|corelight_ssh,defaults
+DC0038,Application Log Content,NSM:Connections,4,palo_alto,1,1,mitre_dc0038_application_log_content__palo_alto,pan:globalprotect|pan:system|pan:threat,defaults
+DC0038,Application Log Content,WebProxy:AccessLogs,1,palo_alto,1,1,mitre_dc0038_application_log_content__palo_alto,pan:globalprotect|pan:system|pan:threat,defaults
+DC0038,Application Log Content,networkdevice:syslog,25,palo_alto,1,1,mitre_dc0038_application_log_content__palo_alto,pan:globalprotect|pan:system|pan:threat,defaults
+DC0038,Application Log Content,vpn:applog,1,palo_alto,1,1,mitre_dc0038_application_log_content__palo_alto,pan:globalprotect|pan:system|pan:threat,defaults
+DC0038,Application Log Content,EDR:detection,3,trellix_epo,1,1,mitre_dc0038_application_log_content__trellix_epo,mcafee:epo,defaults
+DC0038,Application Log Content,WinEventLog:Application,36,wineventlog,1,1,mitre_dc0038_application_log_content__wineventlog,XmlWinEventLog:Application|XmlWinEventLog:Security|XmlWinEventLog:System,defaults
+DC0038,Application Log Content,WinEventLog:Security,8,wineventlog,1,1,mitre_dc0038_application_log_content__wineventlog,XmlWinEventLog:Application|XmlWinEventLog:Security|XmlWinEventLog:System,defaults
+DC0038,Application Log Content,WinEventLog:System,10,wineventlog,1,1,mitre_dc0038_application_log_content__wineventlog,XmlWinEventLog:Application|XmlWinEventLog:Security|XmlWinEventLog:System,defaults
+DC0038,Application Log Content,azure:activity,1,azure_activity,0,1,mitre_dc0038_application_log_content__azure_activity,mscs:azure:audit,derived
+DC0038,Application Log Content,azure:audit,4,azure_entra,0,1,mitre_dc0038_application_log_content__azure_entra,azure:aad:audit|azure:aad:signin,defaults
+DC0038,Application Log Content,azure:signinlogs,7,azure_entra,0,1,mitre_dc0038_application_log_content__azure_entra,azure:aad:audit|azure:aad:signin,defaults
+DC0038,Application Log Content,docker:daemon,2,container_runtime,0,1,mitre_dc0038_application_log_content__container_runtime,docker:daemon|docker:events,derived
+DC0038,Application Log Content,docker:events,4,container_runtime,0,1,mitre_dc0038_application_log_content__container_runtime,docker:daemon|docker:events,derived
+DC0038,Application Log Content,esxi:esxupdate,2,esxi_syslog,0,1,mitre_dc0038_application_log_content__esxi_syslog,vmware:esxlog:esxupdate|vmware:esxlog:hostd|vmware:esxlog:vmkernel,defaults
+DC0038,Application Log Content,esxi:hostd,14,esxi_syslog,0,1,mitre_dc0038_application_log_content__esxi_syslog,vmware:esxlog:esxupdate|vmware:esxlog:hostd|vmware:esxlog:vmkernel,defaults
+DC0038,Application Log Content,esxi:vmkernel,1,esxi_syslog,0,1,mitre_dc0038_application_log_content__esxi_syslog,vmware:esxlog:esxupdate|vmware:esxlog:hostd|vmware:esxlog:vmkernel,defaults
+DC0038,Application Log Content,ApplicationLog:IIS,2,iis,0,1,mitre_dc0038_application_log_content__iis,ms:iis:auto,derived
+DC0038,Application Log Content,webserver:applog,4,iis,0,1,mitre_dc0038_application_log_content__iis,ms:iis:auto,derived
+DC0038,Application Log Content,ApplicationLog:API,2,kubernetes_audit,0,1,mitre_dc0038_application_log_content__kubernetes_audit,kube:apiserver-audit|kube:container:*|kube:container:ingress-nginx,derived
+DC0038,Application Log Content,ApplicationLog:Ingress,2,kubernetes_audit,0,1,mitre_dc0038_application_log_content__kubernetes_audit,kube:apiserver-audit|kube:container:*|kube:container:ingress-nginx,derived
+DC0038,Application Log Content,kubernetes:apiserver,2,kubernetes_audit,0,1,mitre_dc0038_application_log_content__kubernetes_audit,kube:apiserver-audit|kube:container:*|kube:container:ingress-nginx,derived
+DC0038,Application Log Content,Application:Mail,14,linux_syslog,0,1,mitre_dc0038_application_log_content__linux_syslog,access_combined|linux_messages_syslog|linux_secure,defaults
+DC0038,Application Log Content,journald:systemd,2,linux_syslog,0,1,mitre_dc0038_application_log_content__linux_syslog,access_combined|linux_messages_syslog|linux_secure,defaults
+DC0038,Application Log Content,linux:auth,2,linux_syslog,0,1,mitre_dc0038_application_log_content__linux_syslog,access_combined|linux_messages_syslog|linux_secure,defaults
+DC0038,Application Log Content,linux:cli,2,linux_syslog,0,1,mitre_dc0038_application_log_content__linux_syslog,access_combined|linux_messages_syslog|linux_secure,defaults
+DC0038,Application Log Content,linux:syslog,41,linux_syslog,0,1,mitre_dc0038_application_log_content__linux_syslog,access_combined|linux_messages_syslog|linux_secure,defaults
+DC0038,Application Log Content,webserver:applog,4,linux_syslog,0,1,mitre_dc0038_application_log_content__linux_syslog,access_combined|linux_messages_syslog|linux_secure,defaults
+DC0038,Application Log Content,esxi:vpxd,4,vcenter,0,1,mitre_dc0038_application_log_content__vcenter,vmware:vclog:vpxd,derived
+DC0038,Application Log Content,AWS:CloudTrail,9,aws,0,0,,aws:cloudtrail|aws:cloudwatchlogs|aws:cloudwatchlogs:vpcflow,derived
+DC0038,Application Log Content,AWS:CloudWatch,4,aws,0,0,,aws:cloudtrail|aws:cloudwatchlogs|aws:cloudwatchlogs:vpcflow,derived
+DC0038,Application Log Content,AWS:bedrock,15,aws,0,0,,aws:cloudtrail|aws:cloudwatchlogs|aws:cloudwatchlogs:vpcflow,derived
+DC0038,Application Log Content,gcp:workspaceaudit,2,gcp,0,0,,google:gcp:pubsub:message,derived
+DC0038,Application Log Content,casb:activity,1,m365_unified,0,0,,o365:management:activity,derived
+DC0038,Application Log Content,m365:exchange,13,m365_unified,0,0,,o365:management:activity,derived
+DC0038,Application Log Content,m365:mailboxaudit,2,m365_unified,0,0,,o365:management:activity,derived
+DC0038,Application Log Content,m365:messagetrace,4,m365_unified,0,0,,o365:management:activity,derived
+DC0038,Application Log Content,m365:purview,4,m365_unified,0,0,,o365:management:activity,derived
+DC0038,Application Log Content,m365:teams,2,m365_unified,0,0,,o365:management:activity,derived
+DC0038,Application Log Content,m365:unified,88,m365_unified,0,0,,o365:management:activity,derived
+DC0038,Application Log Content,macos:jamf,2,macos,0,0,,macos:unifiedlog,derived
+DC0038,Application Log Content,macos:unifiedlog,50,macos,0,0,,macos:unifiedlog,derived
+DC0038,Application Log Content,android:logcat,7,mobile,0,0,,mobile:telemetry,derived
+DC0038,Application Log Content,iOS:unifiedlog,9,mobile,0,0,,mobile:telemetry,derived
+DC0038,Application Log Content,engineeringworkstation:ApplicationLog,9,ot,0,0,,ot:applog,derived
+DC0038,Application Log Content,historian:applog,1,ot,0,0,,ot:applog,derived
+DC0038,Application Log Content,opc:applog,7,ot,0,0,,ot:applog,derived
+DC0038,Application Log Content,opcua:AuditEvent,1,ot,0,0,,ot:applog,derived
+DC0038,Application Log Content,otndr:BehaviorAlert,1,ot,0,0,,ot:applog,derived
+DC0038,Application Log Content,scada:applog,4,ot,0,0,,ot:applog,derived
+DC0038,Application Log Content,serialgw:syslog,1,ot,0,0,,ot:applog,derived
+DC0038,Application Log Content,vendorapp:ApplicationLog,1,ot,0,0,,ot:applog,derived
+DC0038,Application Log Content,saas:MDM,2,saas,0,0,,saas:audit,derived
+DC0038,Application Log Content,saas:Snowflake,2,saas,0,0,,saas:audit,derived
+DC0038,Application Log Content,saas:application,4,saas,0,0,,saas:audit,derived
+DC0038,Application Log Content,saas:audit,5,saas,0,0,,saas:audit,derived
+DC0038,Application Log Content,saas:box,2,saas,0,0,,saas:audit,derived
+DC0038,Application Log Content,saas:collaboration,2,saas,0,0,,saas:audit,derived
+DC0038,Application Log Content,saas:confluence,3,saas,0,0,,saas:audit,derived
+DC0038,Application Log Content,saas:email,2,saas,0,0,,saas:audit,derived
+DC0038,Application Log Content,saas:finance,2,saas,0,0,,saas:audit,derived
+DC0038,Application Log Content,saas:github,2,saas,0,0,,saas:audit,derived
+DC0038,Application Log Content,saas:gmail,1,saas,0,0,,saas:audit,derived
+DC0038,Application Log Content,saas:googledrive,2,saas,0,0,,saas:audit,derived
+DC0038,Application Log Content,saas:googleworkspace,2,saas,0,0,,saas:audit,derived
+DC0038,Application Log Content,saas:hubspot,1,saas,0,0,,saas:audit,derived
+DC0038,Application Log Content,saas:okta,12,saas,0,0,,saas:audit,derived
+DC0038,Application Log Content,saas:openai,1,saas,0,0,,saas:audit,derived
+DC0038,Application Log Content,saas:salesforce,2,saas,0,0,,saas:audit,derived
+DC0038,Application Log Content,saas:slack,10,saas,0,0,,saas:audit,derived
+DC0038,Application Log Content,saas:teams,1,saas,0,0,,saas:audit,derived
+DC0038,Application Log Content,saas:zoom,4,saas,0,0,,saas:audit,derived
+DC0039,File Creation,(added by dc_defaults/curated),,solidcore,1,1,mitre_dc0039_file_creation__solidcore,mcafee:epo,defaults
+DC0039,File Creation,WinEventLog:Sysmon,165,sysmon,1,1,mitre_dc0039_file_creation__sysmon,XmlWinEventLog:Microsoft-Windows-Sysmon/Operational,defaults
+DC0039,File Creation,WinEventLog:Microsoft-Windows-Shell-Core,2,wineventlog,1,1,mitre_dc0039_file_creation__wineventlog,XmlWinEventLog:Security,defaults
+DC0039,File Creation,auditd:FILE,14,auditd,0,1,mitre_dc0039_file_creation__auditd,linux:audit,defaults
+DC0039,File Creation,auditd:PATH,10,auditd,0,1,mitre_dc0039_file_creation__auditd,linux:audit,defaults
+DC0039,File Creation,auditd:SYSCALL,49,auditd,0,1,mitre_dc0039_file_creation__auditd,linux:audit,defaults
+DC0039,File Creation,esxi:vmkernel,4,esxi_syslog,0,1,mitre_dc0039_file_creation__esxi_syslog,vmware:esxlog:hostd|vmware:esxlog:vmkernel,defaults
+DC0039,File Creation,linux:Sysmon,2,sysmon_linux,0,1,mitre_dc0039_file_creation__sysmon_linux,sysmon:linux,defaults
+DC0039,File Creation,AWS:CloudTrail,4,aws,0,0,,aws:cloudtrail|aws:cloudwatchlogs|aws:cloudwatchlogs:vpcflow,derived
+DC0039,File Creation,gcp:workspaceaudit,2,gcp,0,0,,google:gcp:pubsub:message,derived
+DC0039,File Creation,fs:fileevents,4,macos,0,0,,macos:unifiedlog,derived
+DC0039,File Creation,fs:fsevents,6,macos,0,0,,macos:unifiedlog,derived
+DC0039,File Creation,fs:fsusage,17,macos,0,0,,macos:unifiedlog,derived
+DC0039,File Creation,fs:launchdaemons,2,macos,0,0,,macos:unifiedlog,derived
+DC0039,File Creation,macos:endpointsecurity,3,macos,0,0,,macos:unifiedlog,derived
+DC0039,File Creation,macos:osquery,8,macos,0,0,,macos:unifiedlog,derived
+DC0039,File Creation,macos:unifiedlog,52,macos,0,0,,macos:unifiedlog,derived
+DC0039,File Creation,MobileEDR:telemetry,21,mobile,0,0,,mobile:telemetry,derived
+DC0039,File Creation,android:logcat,11,mobile,0,0,,mobile:telemetry,derived
+DC0039,File Creation,iOS:unifiedlog,10,mobile,0,0,,mobile:telemetry,derived
+DC0039,File Creation,mobile:ForensicArtifacts,24,mobile,0,0,,mobile:telemetry,derived
+DC0040,File Deletion,(added by dc_defaults/curated),,solidcore,1,1,mitre_dc0040_file_deletion__solidcore,mcafee:epo,defaults
+DC0040,File Deletion,WinEventLog:Sysmon,11,sysmon,1,1,mitre_dc0040_file_deletion__sysmon,XmlWinEventLog:Microsoft-Windows-Sysmon/Operational,defaults
+DC0040,File Deletion,WinEventLog:Microsoft-Windows-Backup,2,wineventlog,1,1,mitre_dc0040_file_deletion__wineventlog,XmlWinEventLog:Security,defaults
+DC0040,File Deletion,WinEventLog:System,1,wineventlog,1,1,mitre_dc0040_file_deletion__wineventlog,XmlWinEventLog:Security,defaults
+DC0040,File Deletion,auditd:CONFIG_CHANGE,2,auditd,0,1,mitre_dc0040_file_deletion__auditd,linux:audit,defaults
+DC0040,File Deletion,auditd:SYSCALL,18,auditd,0,1,mitre_dc0040_file_deletion__auditd,linux:audit,defaults
+DC0040,File Deletion,esxi:hostd,4,esxi_syslog,0,1,mitre_dc0040_file_deletion__esxi_syslog,vmware:esxlog:hostd|vmware:esxlog:shell,defaults
+DC0040,File Deletion,esxi:shell,5,esxi_syslog,0,1,mitre_dc0040_file_deletion__esxi_syslog,vmware:esxlog:hostd|vmware:esxlog:shell,defaults
+DC0040,File Deletion,linux:Sysmon,1,sysmon_linux,0,1,mitre_dc0040_file_deletion__sysmon_linux,sysmon:linux,defaults
+DC0040,File Deletion,fs:fsusage,2,macos,0,0,,macos:unifiedlog,derived
+DC0040,File Deletion,macos:osquery,5,macos,0,0,,macos:unifiedlog,derived
+DC0040,File Deletion,macos:unifiedlog,2,macos,0,0,,macos:unifiedlog,derived
+DC0040,File Deletion,MobileEDR:telemetry,3,mobile,0,0,,mobile:telemetry,derived
+DC0040,File Deletion,mobile:ForensicArtifacts,3,mobile,0,0,,mobile:telemetry,derived
+DC0041,Service Metadata,networkdevice:config,2,palo_alto,1,1,mitre_dc0041_service_metadata__palo_alto,pan:system,defaults
+DC0041,Service Metadata,WinEventLog:Sysmon,2,sysmon,1,1,mitre_dc0041_service_metadata__sysmon,XmlWinEventLog:Microsoft-Windows-Sysmon/Operational,defaults
+DC0041,Service Metadata,WinEventLog:System,7,wineventlog,1,1,mitre_dc0041_service_metadata__wineventlog,XmlWinEventLog:System,defaults
+DC0041,Service Metadata,WinEventLog:WinRM,2,wineventlog,1,1,mitre_dc0041_service_metadata__wineventlog,XmlWinEventLog:System,defaults
+DC0041,Service Metadata,auditd:CONFIG_CHANGE,4,auditd,0,1,mitre_dc0041_service_metadata__auditd,linux:audit,derived
+DC0041,Service Metadata,esxi:hostd,6,esxi_syslog,0,1,mitre_dc0041_service_metadata__esxi_syslog,vmware:esxlog:hostd,derived
+DC0041,Service Metadata,linux:osquery,2,linux_osquery,0,1,mitre_dc0041_service_metadata__linux_osquery,osquery:results,defaults
+DC0041,Service Metadata,macos:osquery,2,macos,0,0,,macos:unifiedlog,derived
+DC0041,Service Metadata,macos:unifiedlog,8,macos,0,0,,macos:unifiedlog,derived
+DC0042,Drive Creation,WinEventLog:System,14,wineventlog,1,1,mitre_dc0042_drive_creation__wineventlog,XmlWinEventLog:Security|XmlWinEventLog:System,defaults
+DC0042,Drive Creation,auditd:SYSCALL,10,auditd,0,1,mitre_dc0042_drive_creation__auditd,linux:audit,defaults
+DC0042,Drive Creation,journald:systemd,2,linux_syslog,0,1,mitre_dc0042_drive_creation__linux_syslog,linux_messages_syslog|linux_secure|syslog,defaults
+DC0042,Drive Creation,linux:syslog,3,linux_syslog,0,1,mitre_dc0042_drive_creation__linux_syslog,linux_messages_syslog|linux_secure|syslog,defaults
+DC0042,Drive Creation,macos:osquery,1,macos,0,0,,macos:unifiedlog,derived
+DC0042,Drive Creation,macos:unifiedlog,14,macos,0,0,,macos:unifiedlog,derived
+DC0043,Firewall Disable,(added by dc_defaults/curated),,palo_alto,1,1,mitre_dc0043_firewall_disable__palo_alto,pan:config|pan:system,defaults
+DC0043,Firewall Disable,(added by dc_defaults/curated),,wineventlog,1,1,mitre_dc0043_firewall_disable__wineventlog,XmlWinEventLog:Microsoft-Windows-Windows Firewall With Advanced Security/Firewall|XmlWinEventLog:Security,defaults
+DC0043,Firewall Disable,esxi:vmkernel,2,esxi_syslog,0,1,mitre_dc0043_firewall_disable__esxi_syslog,vmware:esxlog:hostd,defaults
+DC0043,Firewall Disable,AWS:CloudTrail,2,aws,0,0,,aws:cloudtrail|aws:cloudwatchlogs|aws:cloudwatchlogs:vpcflow,derived
+DC0044,Firewall Enumeration,(added by dc_defaults/curated),,palo_alto,1,1,mitre_dc0044_firewall_enumeration__palo_alto,pan:config|pan:system,defaults
+DC0044,Firewall Enumeration,(added by dc_defaults/curated),,wineventlog,1,1,mitre_dc0044_firewall_enumeration__wineventlog,XmlWinEventLog:Security,defaults
+DC0045,Windows Registry Key Deletion,(added by dc_defaults/curated),,solidcore,1,1,mitre_dc0045_windows_registry_key_deletion__solidcore,mcafee:epo,defaults
+DC0045,Windows Registry Key Deletion,Windows Registry Key,1,sysmon,1,1,mitre_dc0045_windows_registry_key_deletion__sysmon,XmlWinEventLog:Microsoft-Windows-Sysmon/Operational,defaults
+DC0045,Windows Registry Key Deletion,(added by dc_defaults/curated),,wineventlog,1,1,mitre_dc0045_windows_registry_key_deletion__wineventlog,XmlWinEventLog:Security,defaults
+DC0046,Drive Modification,WinEventLog:Sysmon,6,sysmon,1,1,mitre_dc0046_drive_modification__sysmon,XmlWinEventLog:Microsoft-Windows-Sysmon/Operational,defaults
+DC0046,Drive Modification,(added by dc_defaults/curated),,wineventlog,1,1,mitre_dc0046_drive_modification__wineventlog,XmlWinEventLog:System,defaults
+DC0046,Drive Modification,macos:unifiedlog,6,macos,0,0,,macos:unifiedlog,derived
+DC0048,Named Pipe Metadata,WinEventLog:Sysmon,4,sysmon,1,1,mitre_dc0048_named_pipe_metadata__sysmon,XmlWinEventLog:Microsoft-Windows-Sysmon/Operational,defaults
+DC0048,Named Pipe Metadata,macos:unifiedlog,2,macos,0,0,,macos:unifiedlog,derived
+DC0049,Snapshot Deletion,(added by dc_defaults/curated),,azure_activity,0,1,mitre_dc0049_snapshot_deletion__azure_activity,mscs:azure:audit,defaults
+DC0049,Snapshot Deletion,esxi:hostd,2,esxi_syslog,0,1,mitre_dc0049_snapshot_deletion__esxi_syslog,vmware:esxlog:hostd,defaults
+DC0049,Snapshot Deletion,AWS:CloudTrail,3,aws,0,0,,aws:cloudtrail|aws:cloudwatchlogs|aws:cloudwatchlogs:vpcflow,derived
+DC0050,Windows Registry Key Access,WinEventLog:Security,6,wineventlog,1,1,mitre_dc0050_windows_registry_key_access__wineventlog,XmlWinEventLog:Security,defaults
+DC0050,Windows Registry Key Access,Autoruns:RegistryScan,2,autoruns,0,1,mitre_dc0050_windows_registry_key_access__autoruns,autoruns,derived
+DC0051,Firewall Rule Modification,NSM:Firewall,4,palo_alto,1,1,mitre_dc0051_firewall_rule_modification__palo_alto,pan:config,defaults
+DC0051,Firewall Rule Modification,networkdevice:Firewall,6,palo_alto,1,1,mitre_dc0051_firewall_rule_modification__palo_alto,pan:config,defaults
+DC0051,Firewall Rule Modification,networkdevice:cli,2,palo_alto,1,1,mitre_dc0051_firewall_rule_modification__palo_alto,pan:config,defaults
+DC0051,Firewall Rule Modification,WinEventLog:Microsoft-Windows-Windows Firewall With Advanced Security/Firewall,2,wineventlog,1,1,mitre_dc0051_firewall_rule_modification__wineventlog,XmlWinEventLog:Microsoft-Windows-Windows Firewall With Advanced Security/Firewall|XmlWinEventLog:Security,defaults
+DC0051,Firewall Rule Modification,WinEventLog:Security,4,wineventlog,1,1,mitre_dc0051_firewall_rule_modification__wineventlog,XmlWinEventLog:Microsoft-Windows-Windows Firewall With Advanced Security/Firewall|XmlWinEventLog:Security,defaults
+DC0051,Firewall Rule Modification,esxi:hostd,2,esxi_syslog,0,1,mitre_dc0051_firewall_rule_modification__esxi_syslog,vmware:esxlog:hostd,defaults
+DC0051,Firewall Rule Modification,linux:syslog,2,linux_syslog,0,1,mitre_dc0051_firewall_rule_modification__linux_syslog,linux_messages_syslog|linux_secure|syslog,defaults
+DC0051,Firewall Rule Modification,networkdevice:Firewall,6,netdev_syslog,0,1,mitre_dc0051_firewall_rule_modification__netdev_syslog,cisco:asa|cisco:ios|syslog,derived
+DC0051,Firewall Rule Modification,networkdevice:cli,2,netdev_syslog,0,1,mitre_dc0051_firewall_rule_modification__netdev_syslog,cisco:asa|cisco:ios|syslog,derived
+DC0051,Firewall Rule Modification,AWS:CloudTrail,8,aws,0,0,,aws:cloudtrail|aws:cloudwatchlogs|aws:cloudwatchlogs:vpcflow,derived
+DC0052,Social Media,Persona,5,threat_intel,0,0,,ti:feed,derived
+DC0053,Firewall Metadata,(added by dc_defaults/curated),,palo_alto,1,1,mitre_dc0053_firewall_metadata__palo_alto,pan:config|pan:system,defaults
+DC0053,Firewall Metadata,WinEventLog:Security,1,wineventlog,1,1,mitre_dc0053_firewall_metadata__wineventlog,XmlWinEventLog:Microsoft-Windows-Windows Firewall With Advanced Security/Firewall|XmlWinEventLog:Security,defaults
+DC0054,Drive Access,WinEventLog:Sysmon,4,sysmon,1,1,mitre_dc0054_drive_access__sysmon,XmlWinEventLog:Microsoft-Windows-Sysmon/Operational,defaults
+DC0054,Drive Access,auditd:SYSCALL,6,auditd,0,1,mitre_dc0054_drive_access__auditd,linux:audit,defaults
+DC0054,Drive Access,fs:fsusage,2,macos,0,0,,macos:unifiedlog,derived
+DC0054,Drive Access,macos:osquery,2,macos,0,0,,macos:unifiedlog,derived
+DC0055,File Access,(added by dc_defaults/curated),,solidcore,1,1,mitre_dc0055_file_access__solidcore,mcafee:epo,defaults
+DC0055,File Access,WinEventLog:Microsoft-Windows-Windows Defender/Operational,2,wineventlog,1,1,mitre_dc0055_file_access__wineventlog,XmlWinEventLog:Security,defaults
+DC0055,File Access,WinEventLog:Security,35,wineventlog,1,1,mitre_dc0055_file_access__wineventlog,XmlWinEventLog:Security,defaults
+DC0055,File Access,auditd:FILE,4,auditd,0,1,mitre_dc0055_file_access__auditd,linux:audit,defaults
+DC0055,File Access,auditd:PATH,11,auditd,0,1,mitre_dc0055_file_access__auditd,linux:audit,defaults
+DC0055,File Access,auditd:SYSCALL,88,auditd,0,1,mitre_dc0055_file_access__auditd,linux:audit,defaults
+DC0055,File Access,desktop:file_manager,2,auditd,0,1,mitre_dc0055_file_access__auditd,linux:audit,defaults
+DC0055,File Access,ebpf:syscalls,4,auditd,0,1,mitre_dc0055_file_access__auditd,linux:audit,defaults
+DC0055,File Access,ebpf:syscalls,4,ebpf,0,1,mitre_dc0055_file_access__ebpf,falco,derived
+DC0055,File Access,esxi:hostd,12,esxi_syslog,0,1,mitre_dc0055_file_access__esxi_syslog,vmware:esxlog:hostd|vmware:esxlog:vmkernel,defaults
+DC0055,File Access,esxi:syslog,2,esxi_syslog,0,1,mitre_dc0055_file_access__esxi_syslog,vmware:esxlog:hostd|vmware:esxlog:vmkernel,defaults
+DC0055,File Access,esxi:vmkernel,4,esxi_syslog,0,1,mitre_dc0055_file_access__esxi_syslog,vmware:esxlog:hostd|vmware:esxlog:vmkernel,defaults
+DC0055,File Access,kubernetes:audit,2,kubernetes_audit,0,1,mitre_dc0055_file_access__kubernetes_audit,kube:apiserver-audit,defaults
+DC0055,File Access,AWS:CloudTrail,2,aws,0,0,,aws:cloudtrail|aws:cloudwatchlogs|aws:cloudwatchlogs:vpcflow,derived
+DC0055,File Access,gcp:audit,2,gcp,0,0,,google:gcp:pubsub:message,derived
+DC0055,File Access,m365:unified,4,m365_unified,0,0,,o365:management:activity,derived
+DC0055,File Access,fs:fileevents,2,macos,0,0,,macos:unifiedlog,derived
+DC0055,File Access,fs:fsevents,2,macos,0,0,,macos:unifiedlog,derived
+DC0055,File Access,fs:fsusage,16,macos,0,0,,macos:unifiedlog,derived
+DC0055,File Access,fs:quarantine,2,macos,0,0,,macos:unifiedlog,derived
+DC0055,File Access,macos:endpointsecurity,8,macos,0,0,,macos:unifiedlog,derived
+DC0055,File Access,macos:keychain,4,macos,0,0,,macos:unifiedlog,derived
+DC0055,File Access,macos:osquery,6,macos,0,0,,macos:unifiedlog,derived
+DC0055,File Access,macos:unifiedlog,51,macos,0,0,,macos:unifiedlog,derived
+DC0055,File Access,MobileEDR:telemetry,3,mobile,0,0,,mobile:telemetry,derived
+DC0055,File Access,android:logcat,3,mobile,0,0,,mobile:telemetry,derived
+DC0055,File Access,iOS:unifiedlog,2,mobile,0,0,,mobile:telemetry,derived
+DC0055,File Access,mobile:ForensicArtifacts,7,mobile,0,0,,mobile:telemetry,derived
+DC0056,Windows Registry Key Creation,(added by dc_defaults/curated),,solidcore,1,1,mitre_dc0056_windows_registry_key_creation__solidcore,mcafee:epo,defaults
+DC0056,Windows Registry Key Creation,WinEventLog:Sysmon,13,sysmon,1,1,mitre_dc0056_windows_registry_key_creation__sysmon,XmlWinEventLog:Microsoft-Windows-Sysmon/Operational,defaults
+DC0056,Windows Registry Key Creation,(added by dc_defaults/curated),,wineventlog,1,1,mitre_dc0056_windows_registry_key_creation__wineventlog,XmlWinEventLog:Security,defaults
+DC0057,Snapshot Creation,azure:activity,1,azure_activity,0,1,mitre_dc0057_snapshot_creation__azure_activity,mscs:azure:audit,defaults
+DC0057,Snapshot Creation,esxi:vmkernel,2,esxi_syslog,0,1,mitre_dc0057_snapshot_creation__esxi_syslog,vmware:esxlog:hostd|vmware:esxlog:vmkernel,defaults
+DC0057,Snapshot Creation,AWS:CloudTrail,4,aws,0,0,,aws:cloudtrail|aws:cloudwatchlogs|aws:cloudwatchlogs:vpcflow,derived
+DC0058,Snapshot Modification,AWS:CloudTrail,3,aws,0,0,,aws:cloudtrail|aws:cloudwatchlogs|aws:cloudwatchlogs:vpcflow,derived
+DC0059,File Metadata,NSM:Flow,2,corelight,1,1,mitre_dc0059_file_metadata__corelight,corelight_files|corelight_pe,defaults
+DC0059,File Metadata,NSM:Flow,2,palo_alto,1,1,mitre_dc0059_file_metadata__palo_alto,pan:threat,defaults
+DC0059,File Metadata,networkdevice:syslog,2,palo_alto,1,1,mitre_dc0059_file_metadata__palo_alto,pan:threat,defaults
+DC0059,File Metadata,EDR:file,4,solidcore,1,1,mitre_dc0059_file_metadata__solidcore,mcafee:epo,defaults
+DC0059,File Metadata,linux:fim,1,solidcore,1,1,mitre_dc0059_file_metadata__solidcore,mcafee:epo,defaults
+DC0059,File Metadata,EDR:file,4,sysmon,1,1,mitre_dc0059_file_metadata__sysmon,XmlWinEventLog:Microsoft-Windows-Sysmon/Operational,defaults
+DC0059,File Metadata,WinEventLog:Sysmon,24,sysmon,1,1,mitre_dc0059_file_metadata__sysmon,XmlWinEventLog:Microsoft-Windows-Sysmon/Operational,defaults
+DC0059,File Metadata,EDR:detection,2,trellix_epo,1,1,mitre_dc0059_file_metadata__trellix_epo,mcafee:epo,derived
+DC0059,File Metadata,WinEventLog:Microsoft-Windows-CodeIntegrity/Operational,8,wineventlog,1,1,mitre_dc0059_file_metadata__wineventlog,XmlWinEventLog:Microsoft-Windows-CodeIntegrity/Operational|XmlWinEventLog:Microsoft-Windows-Windows Defender/Operational|XmlWinEventLog:Security,defaults
+DC0059,File Metadata,WinEventLog:Microsoft-Windows-Windows Defender/Operational,5,wineventlog,1,1,mitre_dc0059_file_metadata__wineventlog,XmlWinEventLog:Microsoft-Windows-CodeIntegrity/Operational|XmlWinEventLog:Microsoft-Windows-Windows Defender/Operational|XmlWinEventLog:Security,defaults
+DC0059,File Metadata,WinEventLog:Security,4,wineventlog,1,1,mitre_dc0059_file_metadata__wineventlog,XmlWinEventLog:Microsoft-Windows-CodeIntegrity/Operational|XmlWinEventLog:Microsoft-Windows-Windows Defender/Operational|XmlWinEventLog:Security,defaults
+DC0059,File Metadata,WinEventLog:Setup,1,wineventlog,1,1,mitre_dc0059_file_metadata__wineventlog,XmlWinEventLog:Microsoft-Windows-CodeIntegrity/Operational|XmlWinEventLog:Microsoft-Windows-Windows Defender/Operational|XmlWinEventLog:Security,defaults
+DC0059,File Metadata,auditd:CONFIG_CHANGE,2,auditd,0,1,mitre_dc0059_file_metadata__auditd,linux:audit,defaults
+DC0059,File Metadata,auditd:PATH,5,auditd,0,1,mitre_dc0059_file_metadata__auditd,linux:audit,defaults
+DC0059,File Metadata,auditd:SYSCALL,20,auditd,0,1,mitre_dc0059_file_metadata__auditd,linux:audit,defaults
+DC0059,File Metadata,ebpf:syscalls,2,auditd,0,1,mitre_dc0059_file_metadata__auditd,linux:audit,defaults
+DC0059,File Metadata,linux:fim,1,auditd,0,1,mitre_dc0059_file_metadata__auditd,linux:audit,defaults
+DC0059,File Metadata,ebpf:syscalls,2,ebpf,0,1,mitre_dc0059_file_metadata__ebpf,falco,derived
+DC0059,File Metadata,EDR:detection,2,edr_telemetry,0,1,mitre_dc0059_file_metadata__edr_telemetry,edr:telemetry,derived
+DC0059,File Metadata,EDR:file,4,edr_telemetry,0,1,mitre_dc0059_file_metadata__edr_telemetry,edr:telemetry,derived
+DC0059,File Metadata,linux:osquery,21,linux_osquery,0,1,mitre_dc0059_file_metadata__linux_osquery,osquery:results,defaults
+DC0059,File Metadata,OpenBSM:AuditTrail,3,macos,0,0,,macos:unifiedlog,derived
+DC0059,File Metadata,fs:fileevents,2,macos,0,0,,macos:unifiedlog,derived
+DC0059,File Metadata,fs:filesystem,1,macos,0,0,,macos:unifiedlog,derived
+DC0059,File Metadata,fs:fsevents,2,macos,0,0,,macos:unifiedlog,derived
+DC0059,File Metadata,fs:fsusage,2,macos,0,0,,macos:unifiedlog,derived
+DC0059,File Metadata,fs:quarantine,2,macos,0,0,,macos:unifiedlog,derived
+DC0059,File Metadata,macos:endpointsecurity,4,macos,0,0,,macos:unifiedlog,derived
+DC0059,File Metadata,macos:osquery,7,macos,0,0,,macos:unifiedlog,derived
+DC0059,File Metadata,macos:unifiedlog,37,macos,0,0,,macos:unifiedlog,derived
+DC0059,File Metadata,AndroidLogs:Framework,1,mobile,0,0,,mobile:telemetry,derived
+DC0059,File Metadata,mobile:ForensicArtifacts,9,mobile,0,0,,mobile:telemetry,derived
+DC0059,File Metadata,saas:RepoEvents,2,saas,0,0,,saas:audit,derived
+DC0060,Service Creation,WinEventLog:Security,6,wineventlog,1,1,mitre_dc0060_service_creation__wineventlog,XmlWinEventLog:Security|XmlWinEventLog:System,defaults
+DC0060,Service Creation,WinEventLog:System,22,wineventlog,1,1,mitre_dc0060_service_creation__wineventlog,XmlWinEventLog:Security|XmlWinEventLog:System,defaults
+DC0060,Service Creation,auditd:CONFIG_CHANGE,2,auditd,0,1,mitre_dc0060_service_creation__auditd,linux:audit,defaults
+DC0060,Service Creation,systemd:unit,1,auditd,0,1,mitre_dc0060_service_creation__auditd,linux:audit,defaults
+DC0060,Service Creation,kubernetes:audit,2,kubernetes_audit,0,1,mitre_dc0060_service_creation__kubernetes_audit,kube:apiserver-audit,defaults
+DC0060,Service Creation,linux:syslog,2,linux_syslog,0,1,mitre_dc0060_service_creation__linux_syslog,linux_messages_syslog|linux_secure|syslog,defaults
+DC0060,Service Creation,systemd:unit,1,linux_syslog,0,1,mitre_dc0060_service_creation__linux_syslog,linux_messages_syslog|linux_secure|syslog,defaults
+DC0060,Service Creation,macos:osquery,6,macos,0,0,,macos:unifiedlog,derived
+DC0060,Service Creation,macos:unifiedlog,4,macos,0,0,,macos:unifiedlog,derived
+DC0061,File Modification,networkdevice:audit,2,palo_alto,1,1,mitre_dc0061_file_modification__palo_alto,pan:config,defaults
+DC0061,File Modification,networkdevice:config,18,palo_alto,1,1,mitre_dc0061_file_modification__palo_alto,pan:config,defaults
+DC0061,File Modification,networkdevice:firmware,1,palo_alto,1,1,mitre_dc0061_file_modification__palo_alto,pan:config,defaults
+DC0061,File Modification,networkdevice:runtime,1,palo_alto,1,1,mitre_dc0061_file_modification__palo_alto,pan:config,defaults
+DC0061,File Modification,networkdevice:syslog,6,palo_alto,1,1,mitre_dc0061_file_modification__palo_alto,pan:config,defaults
+DC0061,File Modification,linux:fim,2,solidcore,1,1,mitre_dc0061_file_modification__solidcore,mcafee:epo,defaults
+DC0061,File Modification,WinEventLog:Sysmon,15,sysmon,1,1,mitre_dc0061_file_modification__sysmon,XmlWinEventLog:Microsoft-Windows-Sysmon/Operational,defaults
+DC0061,File Modification,WinEventLog:Microsoft-Windows-CodeIntegrity/Operational,2,wineventlog,1,1,mitre_dc0061_file_modification__wineventlog,XmlWinEventLog:Security,defaults
+DC0061,File Modification,WinEventLog:Security,13,wineventlog,1,1,mitre_dc0061_file_modification__wineventlog,XmlWinEventLog:Security,defaults
+DC0061,File Modification,WinEventLog:System,2,wineventlog,1,1,mitre_dc0061_file_modification__wineventlog,XmlWinEventLog:Security,defaults
+DC0061,File Modification,auditd:FILE,4,auditd,0,1,mitre_dc0061_file_modification__auditd,linux:audit,defaults
+DC0061,File Modification,auditd:PATH,9,auditd,0,1,mitre_dc0061_file_modification__auditd,linux:audit,defaults
+DC0061,File Modification,auditd:SYSCALL,92,auditd,0,1,mitre_dc0061_file_modification__auditd,linux:audit,defaults
+DC0061,File Modification,ebpf:syscalls,2,auditd,0,1,mitre_dc0061_file_modification__auditd,linux:audit,defaults
+DC0061,File Modification,linux:fim,2,auditd,0,1,mitre_dc0061_file_modification__auditd,linux:audit,defaults
+DC0061,File Modification,ebpf:syscalls,2,ebpf,0,1,mitre_dc0061_file_modification__ebpf,falco,derived
+DC0061,File Modification,sysdig:file,1,ebpf,0,1,mitre_dc0061_file_modification__ebpf,falco,derived
+DC0061,File Modification,esxi:cron,2,esxi_syslog,0,1,mitre_dc0061_file_modification__esxi_syslog,vmware:esxlog:hostd|vmware:esxlog:shell|vmware:esxlog:vmkernel,defaults
+DC0061,File Modification,esxi:hostd,6,esxi_syslog,0,1,mitre_dc0061_file_modification__esxi_syslog,vmware:esxlog:hostd|vmware:esxlog:shell|vmware:esxlog:vmkernel,defaults
+DC0061,File Modification,esxi:shell,4,esxi_syslog,0,1,mitre_dc0061_file_modification__esxi_syslog,vmware:esxlog:hostd|vmware:esxlog:shell|vmware:esxlog:vmkernel,defaults
+DC0061,File Modification,esxi:syslog,2,esxi_syslog,0,1,mitre_dc0061_file_modification__esxi_syslog,vmware:esxlog:hostd|vmware:esxlog:shell|vmware:esxlog:vmkernel,defaults
+DC0061,File Modification,esxi:vmkernel,6,esxi_syslog,0,1,mitre_dc0061_file_modification__esxi_syslog,vmware:esxlog:hostd|vmware:esxlog:shell|vmware:esxlog:vmkernel,defaults
+DC0061,File Modification,firmware:update,3,linux_syslog,0,1,mitre_dc0061_file_modification__linux_syslog,linux_messages_syslog|linux_secure|syslog,derived
+DC0061,File Modification,linux:syslog,3,linux_syslog,0,1,mitre_dc0061_file_modification__linux_syslog,linux_messages_syslog|linux_secure|syslog,derived
+DC0061,File Modification,firmware:update,3,netdev_syslog,0,1,mitre_dc0061_file_modification__netdev_syslog,cisco:asa|cisco:ios|syslog,derived
+DC0061,File Modification,networkdevice:audit,2,netdev_syslog,0,1,mitre_dc0061_file_modification__netdev_syslog,cisco:asa|cisco:ios|syslog,derived
+DC0061,File Modification,networkdevice:config,18,netdev_syslog,0,1,mitre_dc0061_file_modification__netdev_syslog,cisco:asa|cisco:ios|syslog,derived
+DC0061,File Modification,networkdevice:firmware,1,netdev_syslog,0,1,mitre_dc0061_file_modification__netdev_syslog,cisco:asa|cisco:ios|syslog,derived
+DC0061,File Modification,networkdevice:runtime,1,netdev_syslog,0,1,mitre_dc0061_file_modification__netdev_syslog,cisco:asa|cisco:ios|syslog,derived
+DC0061,File Modification,networkdevice:syslog,6,netdev_syslog,0,1,mitre_dc0061_file_modification__netdev_syslog,cisco:asa|cisco:ios|syslog,derived
+DC0061,File Modification,gcp:audit,2,gcp,0,0,,google:gcp:pubsub:message,derived
+DC0061,File Modification,m365:office,2,m365_unified,0,0,,o365:management:activity,derived
+DC0061,File Modification,fs:fileevents,4,macos,0,0,,macos:unifiedlog,derived
+DC0061,File Modification,fs:filesystem,2,macos,0,0,,macos:unifiedlog,derived
+DC0061,File Modification,fs:fsevents,6,macos,0,0,,macos:unifiedlog,derived
+DC0061,File Modification,fs:fsusage,15,macos,0,0,,macos:unifiedlog,derived
+DC0061,File Modification,fs:launchdaemons,2,macos,0,0,,macos:unifiedlog,derived
+DC0061,File Modification,fs:plist,2,macos,0,0,,macos:unifiedlog,derived
+DC0061,File Modification,fs:plist_monitoring,2,macos,0,0,,macos:unifiedlog,derived
+DC0061,File Modification,macos:auth,2,macos,0,0,,macos:unifiedlog,derived
+DC0061,File Modification,macos:endpointsecurity,4,macos,0,0,,macos:unifiedlog,derived
+DC0061,File Modification,macos:osquery,15,macos,0,0,,macos:unifiedlog,derived
+DC0061,File Modification,macos:unifiedlog,66,macos,0,0,,macos:unifiedlog,derived
+DC0061,File Modification,AndroidLogs:FileSystem,1,mobile,0,0,,mobile:telemetry,derived
+DC0061,File Modification,MobileEDR:telemetry,2,mobile,0,0,,mobile:telemetry,derived
+DC0061,File Modification,android:logcat,1,mobile,0,0,,mobile:telemetry,derived
+DC0061,File Modification,iOS:unifiedlog,1,mobile,0,0,,mobile:telemetry,derived
+DC0061,File Modification,mobile:ForensicArtifacts,6,mobile,0,0,,mobile:telemetry,derived
+DC0062,Snapshot Metadata,AWS:CloudTrail,4,aws,0,0,,aws:cloudtrail|aws:cloudwatchlogs|aws:cloudwatchlogs:vpcflow,derived
+DC0062,Snapshot Metadata,gcp:audit,1,gcp,0,0,,google:gcp:pubsub:message,derived
+DC0063,Windows Registry Key Modification,(added by dc_defaults/curated),,solidcore,1,1,mitre_dc0063_windows_registry_key_modification__solidcore,mcafee:epo,defaults
+DC0063,Windows Registry Key Modification,WinEventLog:Sysmon,58,sysmon,1,1,mitre_dc0063_windows_registry_key_modification__sysmon,XmlWinEventLog:Microsoft-Windows-Sysmon/Operational,defaults
+DC0063,Windows Registry Key Modification,WinEventLog:Security,37,wineventlog,1,1,mitre_dc0063_windows_registry_key_modification__wineventlog,XmlWinEventLog:Security,defaults
+DC0063,Windows Registry Key Modification,m365:unified,2,m365_unified,0,0,,o365:management:activity,derived
+DC0063,Windows Registry Key Modification,macos:unifiedlog,2,macos,0,0,,macos:unifiedlog,derived
+DC0063,Windows Registry Key Modification,opc:applog,1,ot,0,0,,ot:applog,derived
+DC0064,Command Execution,networkdevice:Firewall,2,palo_alto,1,1,mitre_dc0064_command_execution__palo_alto,pan:config|pan:system,defaults
+DC0064,Command Execution,networkdevice:cli,40,palo_alto,1,1,mitre_dc0064_command_execution__palo_alto,pan:config|pan:system,defaults
+DC0064,Command Execution,networkdevice:config,3,palo_alto,1,1,mitre_dc0064_command_execution__palo_alto,pan:config|pan:system,defaults
+DC0064,Command Execution,networkdevice:syslog,36,palo_alto,1,1,mitre_dc0064_command_execution__palo_alto,pan:config|pan:system,defaults
+DC0064,Command Execution,WinEventLog:PowerShell,72,powershell_logging,1,1,mitre_dc0064_command_execution__powershell_logging,XmlWinEventLog:Microsoft-Windows-PowerShell/Operational,defaults
+DC0064,Command Execution,EDR:cli,2,sysmon,1,1,mitre_dc0064_command_execution__sysmon,XmlWinEventLog:Microsoft-Windows-Sysmon/Operational,defaults
+DC0064,Command Execution,EDR:AMSI,2,trellix_epo,1,1,mitre_dc0064_command_execution__trellix_epo,mcafee:epo,defaults
+DC0064,Command Execution,WinEventLog:Microsoft-Office-Alerts,4,wineventlog,1,1,mitre_dc0064_command_execution__wineventlog,XmlWinEventLog:Security,defaults
+DC0064,Command Execution,WinEventLog:Microsoft-Office/OutlookAddinMonitor,2,wineventlog,1,1,mitre_dc0064_command_execution__wineventlog,XmlWinEventLog:Security,defaults
+DC0064,Command Execution,WinEventLog:Security,3,wineventlog,1,1,mitre_dc0064_command_execution__wineventlog,XmlWinEventLog:Security,defaults
+DC0064,Command Execution,gpo:deployment,1,wineventlog,1,1,mitre_dc0064_command_execution__wineventlog,XmlWinEventLog:Security,defaults
+DC0064,Command Execution,auditd:CONFIG_CHANGE,2,auditd,0,1,mitre_dc0064_command_execution__auditd,linux:audit,defaults
+DC0064,Command Execution,auditd:EXECVE,43,auditd,0,1,mitre_dc0064_command_execution__auditd,linux:audit,defaults
+DC0064,Command Execution,auditd:PROCTITLE,7,auditd,0,1,mitre_dc0064_command_execution__auditd,linux:audit,defaults
+DC0064,Command Execution,auditd:SYSCALL,94,auditd,0,1,mitre_dc0064_command_execution__auditd,linux:audit,defaults
+DC0064,Command Execution,ebpf:syscalls,2,auditd,0,1,mitre_dc0064_command_execution__auditd,linux:audit,defaults
+DC0064,Command Execution,linux:cli,10,auditd,0,1,mitre_dc0064_command_execution__auditd,linux:audit,defaults
+DC0064,Command Execution,docker:daemon,4,container_runtime,0,1,mitre_dc0064_command_execution__container_runtime,docker:daemon|docker:events,defaults
+DC0064,Command Execution,docker:events,2,container_runtime,0,1,mitre_dc0064_command_execution__container_runtime,docker:daemon|docker:events,defaults
+DC0064,Command Execution,ebpf:syscalls,2,ebpf,0,1,mitre_dc0064_command_execution__ebpf,falco,derived
+DC0064,Command Execution,EDR:AMSI,2,edr_telemetry,0,1,mitre_dc0064_command_execution__edr_telemetry,edr:telemetry,derived
+DC0064,Command Execution,EDR:cli,2,edr_telemetry,0,1,mitre_dc0064_command_execution__edr_telemetry,edr:telemetry,derived
+DC0064,Command Execution,esxi:hostd,31,esxi_syslog,0,1,mitre_dc0064_command_execution__esxi_syslog,vmware:esxlog:shell,defaults
+DC0064,Command Execution,esxi:shell,49,esxi_syslog,0,1,mitre_dc0064_command_execution__esxi_syslog,vmware:esxlog:shell,defaults
+DC0064,Command Execution,esxi:syslog,2,esxi_syslog,0,1,mitre_dc0064_command_execution__esxi_syslog,vmware:esxlog:shell,defaults
+DC0064,Command Execution,esxi:vmkernel,11,esxi_syslog,0,1,mitre_dc0064_command_execution__esxi_syslog,vmware:esxlog:shell,defaults
+DC0064,Command Execution,esxi:vobd,2,esxi_syslog,0,1,mitre_dc0064_command_execution__esxi_syslog,vmware:esxlog:shell,defaults
+DC0064,Command Execution,kubernetes:audit,4,kubernetes_audit,0,1,mitre_dc0064_command_execution__kubernetes_audit,kube:apiserver-audit,defaults
+DC0064,Command Execution,networkdevice:Firewall,2,netdev_syslog,0,1,mitre_dc0064_command_execution__netdev_syslog,cisco:asa|cisco:ios|syslog,derived
+DC0064,Command Execution,networkdevice:cli,40,netdev_syslog,0,1,mitre_dc0064_command_execution__netdev_syslog,cisco:asa|cisco:ios|syslog,derived
+DC0064,Command Execution,networkdevice:config,3,netdev_syslog,0,1,mitre_dc0064_command_execution__netdev_syslog,cisco:asa|cisco:ios|syslog,derived
+DC0064,Command Execution,networkdevice:syslog,36,netdev_syslog,0,1,mitre_dc0064_command_execution__netdev_syslog,cisco:asa|cisco:ios|syslog,derived
+DC0064,Command Execution,esxi:vpxd,3,vcenter,0,1,mitre_dc0064_command_execution__vcenter,vmware:vclog:vpxd,derived
+DC0064,Command Execution,AWS:CloudTrail,14,aws,0,0,,aws:cloudtrail|aws:cloudwatchlogs|aws:cloudwatchlogs:vpcflow,derived
+DC0064,Command Execution,gcp:audit,3,gcp,0,0,,google:gcp:pubsub:message,derived
+DC0064,Command Execution,m365:exchange,3,m365_unified,0,0,,o365:management:activity,derived
+DC0064,Command Execution,m365:messagetrace,6,m365_unified,0,0,,o365:management:activity,derived
+DC0064,Command Execution,m365:office,3,m365_unified,0,0,,o365:management:activity,derived
+DC0064,Command Execution,m365:unified,8,m365_unified,0,0,,o365:management:activity,derived
+DC0064,Command Execution,fs:fsusage,4,macos,0,0,,macos:unifiedlog,derived
+DC0064,Command Execution,macos:osquery,4,macos,0,0,,macos:unifiedlog,derived
+DC0064,Command Execution,macos:syslog,5,macos,0,0,,macos:unifiedlog,derived
+DC0064,Command Execution,macos:unifiedlog,122,macos,0,0,,macos:unifiedlog,derived
+DC0064,Command Execution,MobileEDR:telemetry,2,mobile,0,0,,mobile:telemetry,derived
+DC0064,Command Execution,android:logcat,1,mobile,0,0,,mobile:telemetry,derived
+DC0064,Command Execution,mobile:DynamicAnalysis,5,mobile,0,0,,mobile:telemetry,derived
+DC0064,Command Execution,historian:applog,1,ot,0,0,,ot:applog,derived
+DC0064,Command Execution,saas:PRMetadata,2,saas,0,0,,saas:audit,derived
+DC0065,Service Modification,WinEventLog:Microsoft-IIS-Configuration,2,wineventlog,1,1,mitre_dc0065_service_modification__wineventlog,XmlWinEventLog:Security|XmlWinEventLog:System,defaults
+DC0065,Service Modification,WinEventLog:System,2,wineventlog,1,1,mitre_dc0065_service_modification__wineventlog,XmlWinEventLog:Security|XmlWinEventLog:System,defaults
+DC0065,Service Modification,esxi:hostd,2,esxi_syslog,0,1,mitre_dc0065_service_modification__esxi_syslog,vmware:esxlog:hostd,defaults
+DC0066,Active Directory Object Modification,WinEventLog:Security,15,wineventlog,1,1,mitre_dc0066_active_directory_object_modification__wineventlog,XmlWinEventLog:Security,defaults
+DC0066,Active Directory Object Modification,azure:signinlogs,2,azure_entra,0,1,mitre_dc0066_active_directory_object_modification__azure_entra,azure:aad:audit,defaults
+DC0066,Active Directory Object Modification,m365:dirsync,2,m365_unified,0,0,,o365:management:activity,derived
+DC0066,Active Directory Object Modification,m365:unified,4,m365_unified,0,0,,o365:management:activity,derived
+DC0067,Logon Session Creation,NSM:Connections,8,corelight,1,1,mitre_dc0067_logon_session_creation__corelight,corelight_kerberos|corelight_ntlm|corelight_rdp|corelight_ssh,defaults
+DC0067,Logon Session Creation,NSM:Connections,8,palo_alto,1,1,mitre_dc0067_logon_session_creation__palo_alto,pan:globalprotect|pan:system,defaults
+DC0067,Logon Session Creation,network:auth,1,palo_alto,1,1,mitre_dc0067_logon_session_creation__palo_alto,pan:globalprotect|pan:system,defaults
+DC0067,Logon Session Creation,networkdevice:Firewall,2,palo_alto,1,1,mitre_dc0067_logon_session_creation__palo_alto,pan:globalprotect|pan:system,defaults
+DC0067,Logon Session Creation,networkdevice:auth,2,palo_alto,1,1,mitre_dc0067_logon_session_creation__palo_alto,pan:globalprotect|pan:system,defaults
+DC0067,Logon Session Creation,WinEventLog:Security,45,wineventlog,1,1,mitre_dc0067_logon_session_creation__wineventlog,XmlWinEventLog:Security,defaults
+DC0067,Logon Session Creation,auditd:SYSCALL,3,auditd,0,1,mitre_dc0067_logon_session_creation__auditd,linux:audit,defaults
+DC0067,Logon Session Creation,azure:audit,2,azure_entra,0,1,mitre_dc0067_logon_session_creation__azure_entra,azure:aad:signin,defaults
+DC0067,Logon Session Creation,azure:signinlogs,16,azure_entra,0,1,mitre_dc0067_logon_session_creation__azure_entra,azure:aad:signin,defaults
+DC0067,Logon Session Creation,esxi:auth,2,esxi_syslog,0,1,mitre_dc0067_logon_session_creation__esxi_syslog,vmware:esxlog:auth|vmware:esxlog:hostd,defaults
+DC0067,Logon Session Creation,esxi:vmkernel,2,esxi_syslog,0,1,mitre_dc0067_logon_session_creation__esxi_syslog,vmware:esxlog:auth|vmware:esxlog:hostd,defaults
+DC0067,Logon Session Creation,linux:auth,5,linux_syslog,0,1,mitre_dc0067_logon_session_creation__linux_syslog,linux_secure,defaults
+DC0067,Logon Session Creation,linux:syslog,11,linux_syslog,0,1,mitre_dc0067_logon_session_creation__linux_syslog,linux_secure,defaults
+DC0067,Logon Session Creation,AWS:CloudTrail,22,aws,0,0,,aws:cloudtrail|aws:cloudwatchlogs|aws:cloudwatchlogs:vpcflow,derived
+DC0067,Logon Session Creation,gcp:audit,4,gcp,0,0,,google:gcp:pubsub:message,derived
+DC0067,Logon Session Creation,idp:session,2,m365_unified,0,0,,o365:management:activity,derived
+DC0067,Logon Session Creation,m365:sharepoint,2,m365_unified,0,0,,o365:management:activity,derived
+DC0067,Logon Session Creation,m365:signinlogs,9,m365_unified,0,0,,o365:management:activity,derived
+DC0067,Logon Session Creation,m365:unified,5,m365_unified,0,0,,o365:management:activity,derived
+DC0067,Logon Session Creation,macos:unifiedlog,18,macos,0,0,,macos:unifiedlog,derived
+DC0067,Logon Session Creation,saas:access,2,saas,0,0,,saas:audit,derived
+DC0067,Logon Session Creation,saas:auth,4,saas,0,0,,saas:audit,derived
+DC0067,Logon Session Creation,saas:confluence,2,saas,0,0,,saas:audit,derived
+DC0067,Logon Session Creation,saas:github,2,saas,0,0,,saas:audit,derived
+DC0067,Logon Session Creation,saas:okta,6,saas,0,0,,saas:audit,derived
+DC0067,Logon Session Creation,saas:session,2,saas,0,0,,saas:audit,derived
+DC0067,Logon Session Creation,saas:zoom,2,saas,0,0,,saas:audit,derived
+DC0068,Active Directory Object Deletion,WinEventLog:Security,2,wineventlog,1,1,mitre_dc0068_active_directory_object_deletion__wineventlog,XmlWinEventLog:Security,defaults
+DC0069,Cloud Service Modification,azure:activity,4,azure_activity,0,1,mitre_dc0069_cloud_service_modification__azure_activity,mscs:azure:audit,defaults
+DC0069,Cloud Service Modification,azure:policy,4,azure_activity,0,1,mitre_dc0069_cloud_service_modification__azure_activity,mscs:azure:audit,defaults
+DC0069,Cloud Service Modification,azure:audit,3,azure_entra,0,1,mitre_dc0069_cloud_service_modification__azure_entra,azure:aad:audit,defaults
+DC0069,Cloud Service Modification,AWS:CloudTrail,26,aws,0,0,,aws:cloudtrail|aws:cloudwatchlogs|aws:cloudwatchlogs:vpcflow,derived
+DC0069,Cloud Service Modification,gcp:audit,2,gcp,0,0,,google:gcp:pubsub:message,derived
+DC0069,Cloud Service Modification,gcp:config,2,gcp,0,0,,google:gcp:pubsub:message,derived
+DC0069,Cloud Service Modification,m365:unified,6,m365_unified,0,0,,o365:management:activity,derived
+DC0069,Cloud Service Modification,saas:appsscript,2,saas,0,0,,saas:audit,derived
+DC0069,Cloud Service Modification,saas:github,2,saas,0,0,,saas:audit,derived
+DC0069,Cloud Service Modification,saas:integration,2,saas,0,0,,saas:audit,derived
+DC0069,Cloud Service Modification,saas:slack,2,saas,0,0,,saas:audit,derived
+DC0070,Cloud Service Metadata,AWS:CloudTrail,8,aws,0,0,,aws:cloudtrail|aws:cloudwatchlogs|aws:cloudwatchlogs:vpcflow,derived
+DC0070,Cloud Service Metadata,AWS:CloudWatch,2,aws,0,0,,aws:cloudtrail|aws:cloudwatchlogs|aws:cloudwatchlogs:vpcflow,derived
+DC0070,Cloud Service Metadata,m365:exchange,2,m365_unified,0,0,,o365:management:activity,derived
+DC0070,Cloud Service Metadata,m365:sharepoint,2,m365_unified,0,0,,o365:management:activity,derived
+DC0070,Cloud Service Metadata,m365:unified,2,m365_unified,0,0,,o365:management:activity,derived
+DC0070,Cloud Service Metadata,saas:github,4,saas,0,0,,saas:audit,derived
+DC0071,Active Directory Object Access,WinEventLog:Security,8,wineventlog,1,1,mitre_dc0071_active_directory_object_access__wineventlog,XmlWinEventLog:Security,defaults
+DC0072,Container Creation,containerd:events,2,container_runtime,0,1,mitre_dc0072_container_creation__container_runtime,containerd:events|docker:daemon|docker:events,defaults
+DC0072,Container Creation,docker:daemon,2,container_runtime,0,1,mitre_dc0072_container_creation__container_runtime,containerd:events|docker:daemon|docker:events,defaults
+DC0072,Container Creation,docker:events,4,container_runtime,0,1,mitre_dc0072_container_creation__container_runtime,containerd:events|docker:daemon|docker:events,defaults
+DC0072,Container Creation,kubernetes:apiserver,2,kubernetes_audit,0,1,mitre_dc0072_container_creation__kubernetes_audit,kube:apiserver-audit|kube:objects:events,defaults
+DC0072,Container Creation,kubernetes:audit,2,kubernetes_audit,0,1,mitre_dc0072_container_creation__kubernetes_audit,kube:apiserver-audit|kube:objects:events,defaults
+DC0072,Container Creation,kubernetes:events,2,kubernetes_audit,0,1,mitre_dc0072_container_creation__kubernetes_audit,kube:apiserver-audit|kube:objects:events,defaults
+DC0073,Instance Modification,azure:activity,1,azure_activity,0,1,mitre_dc0073_instance_modification__azure_activity,mscs:azure:audit,derived
+DC0073,Instance Modification,AWS:CloudTrail,4,aws,0,0,,aws:cloudtrail|aws:cloudwatchlogs|aws:cloudwatchlogs:vpcflow,derived
+DC0073,Instance Modification,gcp:audit,1,gcp,0,0,,google:gcp:pubsub:message,derived
+DC0074,Driver Metadata,macos:unifiedlog,2,macos,0,0,,macos:unifiedlog,derived
+DC0075,Instance Enumeration,azure:activity,2,azure_activity,0,1,mitre_dc0075_instance_enumeration__azure_activity,mscs:azure:audit,derived
+DC0075,Instance Enumeration,AWS:CloudTrail,4,aws,0,0,,aws:cloudtrail|aws:cloudwatchlogs|aws:cloudwatchlogs:vpcflow,derived
+DC0075,Instance Enumeration,gcp:audit,1,gcp,0,0,,google:gcp:pubsub:message,derived
+DC0076,Instance Creation,azure:activity,4,azure_activity,0,1,mitre_dc0076_instance_creation__azure_activity,mscs:azure:audit,derived
+DC0076,Instance Creation,AWS:CloudTrail,2,aws,0,0,,aws:cloudtrail|aws:cloudwatchlogs|aws:cloudwatchlogs:vpcflow,derived
+DC0076,Instance Creation,gcp:audit,2,gcp,0,0,,google:gcp:pubsub:message,derived
+DC0077,Container Start,containerd:events,2,container_runtime,0,1,mitre_dc0077_container_start__container_runtime,containerd:events|docker:events,defaults
+DC0077,Container Start,docker:events,4,container_runtime,0,1,mitre_dc0077_container_start__container_runtime,containerd:events|docker:events,defaults
+DC0077,Container Start,kubernetes:events,2,kubernetes_audit,0,1,mitre_dc0077_container_start__kubernetes_audit,kube:objects:events,defaults
+DC0078,Network Traffic Flow,NSM:Connections,17,corelight,1,1,mitre_dc0078_network_traffic_flow__corelight,corelight_conn,defaults
+DC0078,Network Traffic Flow,NSM:Content,6,corelight,1,1,mitre_dc0078_network_traffic_flow__corelight,corelight_conn,defaults
+DC0078,Network Traffic Flow,NSM:Firewall,7,corelight,1,1,mitre_dc0078_network_traffic_flow__corelight,corelight_conn,defaults
+DC0078,Network Traffic Flow,NSM:Flow,150,corelight,1,1,mitre_dc0078_network_traffic_flow__corelight,corelight_conn,defaults
+DC0078,Network Traffic Flow,NSX:FlowLogs,2,corelight,1,1,mitre_dc0078_network_traffic_flow__corelight,corelight_conn,defaults
+DC0078,Network Traffic Flow,Network Traffic,8,corelight,1,1,mitre_dc0078_network_traffic_flow__corelight,corelight_conn,defaults
+DC0078,Network Traffic Flow,WebProxy:AccessLogs,1,corelight,1,1,mitre_dc0078_network_traffic_flow__corelight,corelight_conn,defaults
+DC0078,Network Traffic Flow,container:cni,2,corelight,1,1,mitre_dc0078_network_traffic_flow__corelight,corelight_conn,defaults
+DC0078,Network Traffic Flow,dns:query,2,corelight,1,1,mitre_dc0078_network_traffic_flow__corelight,corelight_conn,defaults
+DC0078,Network Traffic Flow,netflow:ipfix,22,corelight,1,1,mitre_dc0078_network_traffic_flow__corelight,corelight_conn,defaults
+DC0078,Network Traffic Flow,NSM:Connections,17,palo_alto,1,1,mitre_dc0078_network_traffic_flow__palo_alto,pan:traffic,defaults
+DC0078,Network Traffic Flow,NSM:Content,6,palo_alto,1,1,mitre_dc0078_network_traffic_flow__palo_alto,pan:traffic,defaults
+DC0078,Network Traffic Flow,NSM:Firewall,7,palo_alto,1,1,mitre_dc0078_network_traffic_flow__palo_alto,pan:traffic,defaults
+DC0078,Network Traffic Flow,NSM:Flow,150,palo_alto,1,1,mitre_dc0078_network_traffic_flow__palo_alto,pan:traffic,defaults
+DC0078,Network Traffic Flow,Network Traffic,8,palo_alto,1,1,mitre_dc0078_network_traffic_flow__palo_alto,pan:traffic,defaults
+DC0078,Network Traffic Flow,WebProxy:AccessLogs,1,palo_alto,1,1,mitre_dc0078_network_traffic_flow__palo_alto,pan:traffic,defaults
+DC0078,Network Traffic Flow,netflow:ipfix,22,palo_alto,1,1,mitre_dc0078_network_traffic_flow__palo_alto,pan:traffic,defaults
+DC0078,Network Traffic Flow,networkdevice:syslog,8,palo_alto,1,1,mitre_dc0078_network_traffic_flow__palo_alto,pan:traffic,defaults
+DC0078,Network Traffic Flow,dns:query,2,sysmon,1,1,mitre_dc0078_network_traffic_flow__sysmon,XmlWinEventLog:Microsoft-Windows-Sysmon/Operational,defaults
+DC0078,Network Traffic Flow,WinEventLog:Microsoft-Windows-Windows Firewall With Advanced Security/Firewall,3,wineventlog,1,1,mitre_dc0078_network_traffic_flow__wineventlog,XmlWinEventLog:Security,defaults
+DC0078,Network Traffic Flow,WinEventLog:Security,2,wineventlog,1,1,mitre_dc0078_network_traffic_flow__wineventlog,XmlWinEventLog:Security,defaults
+DC0078,Network Traffic Flow,NSM:Content,6,wireshark,1,1,mitre_dc0078_network_traffic_flow__wireshark,wireshark:json,derived
+DC0078,Network Traffic Flow,auditd:SYSCALL,10,auditd,0,1,mitre_dc0078_network_traffic_flow__auditd,linux:audit,defaults
+DC0078,Network Traffic Flow,EDR:Telemetry,2,edr_telemetry,0,1,mitre_dc0078_network_traffic_flow__edr_telemetry,edr:telemetry,derived
+DC0078,Network Traffic Flow,esxi:hostd,3,esxi_syslog,0,1,mitre_dc0078_network_traffic_flow__esxi_syslog,vmware:esxlog:hostd|vmware:esxlog:vmkernel|vmware:esxlog:vobd,defaults
+DC0078,Network Traffic Flow,esxi:syslog,10,esxi_syslog,0,1,mitre_dc0078_network_traffic_flow__esxi_syslog,vmware:esxlog:hostd|vmware:esxlog:vmkernel|vmware:esxlog:vobd,defaults
+DC0078,Network Traffic Flow,esxi:vmkernel,16,esxi_syslog,0,1,mitre_dc0078_network_traffic_flow__esxi_syslog,vmware:esxlog:hostd|vmware:esxlog:vmkernel|vmware:esxlog:vobd,defaults
+DC0078,Network Traffic Flow,esxi:vobd,2,esxi_syslog,0,1,mitre_dc0078_network_traffic_flow__esxi_syslog,vmware:esxlog:hostd|vmware:esxlog:vmkernel|vmware:esxlog:vobd,defaults
+DC0078,Network Traffic Flow,esxi:vpxa,2,esxi_syslog,0,1,mitre_dc0078_network_traffic_flow__esxi_syslog,vmware:esxlog:hostd|vmware:esxlog:vmkernel|vmware:esxlog:vobd,defaults
+DC0078,Network Traffic Flow,iptables:LOG,5,iptables,0,1,mitre_dc0078_network_traffic_flow__iptables,syslog,derived
+DC0078,Network Traffic Flow,WIDS:AssociationLogs,2,netdev_syslog,0,1,mitre_dc0078_network_traffic_flow__netdev_syslog,cisco:asa|cisco:ios|syslog,derived
+DC0078,Network Traffic Flow,networkdevice:syslog,8,netdev_syslog,0,1,mitre_dc0078_network_traffic_flow__netdev_syslog,cisco:asa|cisco:ios|syslog,derived
+DC0078,Network Traffic Flow,wireless:spectrum,1,netdev_syslog,0,1,mitre_dc0078_network_traffic_flow__netdev_syslog,cisco:asa|cisco:ios|syslog,derived
+DC0078,Network Traffic Flow,NSX:FlowLogs,2,netflow,0,1,mitre_dc0078_network_traffic_flow__netflow,stream:netflow,derived
+DC0078,Network Traffic Flow,container:cni,2,netflow,0,1,mitre_dc0078_network_traffic_flow__netflow,stream:netflow,derived
+DC0078,Network Traffic Flow,netflow:ipfix,22,netflow,0,1,mitre_dc0078_network_traffic_flow__netflow,stream:netflow,derived
+DC0078,Network Traffic Flow,esxi:vpxd,10,vcenter,0,1,mitre_dc0078_network_traffic_flow__vcenter,vmware:vclog:vpxd,derived
+DC0078,Network Traffic Flow,windows:firewalllog,2,windows_firewall_log,0,1,mitre_dc0078_network_traffic_flow__windows_firewall_log,WinFirewall,derived
+DC0078,Network Traffic Flow,AWS:CloudTrail,2,aws,0,0,,aws:cloudtrail|aws:cloudwatchlogs|aws:cloudwatchlogs:vpcflow,derived
+DC0078,Network Traffic Flow,AWS:VPCFlowLogs,16,aws,0,0,,aws:cloudtrail|aws:cloudwatchlogs|aws:cloudwatchlogs:vpcflow,derived
+DC0078,Network Traffic Flow,PF:Logs,6,macos,0,0,,macos:unifiedlog,derived
+DC0078,Network Traffic Flow,macos:osquery,12,macos,0,0,,macos:unifiedlog,derived
+DC0078,Network Traffic Flow,macos:unifiedlog,37,macos,0,0,,macos:unifiedlog,derived
+DC0078,Network Traffic Flow,TelecomLogs:MobilityEvents,2,mobile,0,0,,mobile:telemetry,derived
+DC0078,Network Traffic Flow,android:EnterpriseNetworkLog,1,mobile,0,0,,mobile:telemetry,derived
+DC0078,Network Traffic Flow,iOS:NetworkExtension,1,mobile,0,0,,mobile:telemetry,derived
+DC0078,Network Traffic Flow,saas:api,2,saas,0,0,,saas:audit,derived
+DC0079,Driver Load,WinEventLog:Sysmon,19,sysmon,1,1,mitre_dc0079_driver_load__sysmon,XmlWinEventLog:Microsoft-Windows-Sysmon/Operational,defaults
+DC0079,Driver Load,(added by dc_defaults/curated),,wineventlog,1,1,mitre_dc0079_driver_load__wineventlog,XmlWinEventLog:Microsoft-Windows-CodeIntegrity/Operational|XmlWinEventLog:System,defaults
+DC0079,Driver Load,(added by dc_defaults/curated),,auditd,0,1,mitre_dc0079_driver_load__auditd,linux:audit,defaults
+DC0079,Driver Load,linux:syslog,4,linux_syslog,0,1,mitre_dc0079_driver_load__linux_syslog,linux_messages_syslog|linux_secure|syslog,defaults
+DC0080,Instance Start,AWS:CloudTrail,13,aws,0,0,,aws:cloudtrail|aws:cloudwatchlogs|aws:cloudwatchlogs:vpcflow,derived
+DC0081,Instance Deletion,azure:activity,2,azure_activity,0,1,mitre_dc0081_instance_deletion__azure_activity,mscs:azure:audit,derived
+DC0081,Instance Deletion,gcp:audit,1,gcp,0,0,,google:gcp:pubsub:message,derived
+DC0082,Network Connection Creation,NSM:Connections,13,corelight,1,1,mitre_dc0082_network_connection_creation__corelight,corelight_conn,defaults
+DC0082,Network Connection Creation,NSM:Firewall,4,corelight,1,1,mitre_dc0082_network_connection_creation__corelight,corelight_conn,defaults
+DC0082,Network Connection Creation,NSM:Flow,63,corelight,1,1,mitre_dc0082_network_connection_creation__corelight,corelight_conn,defaults
+DC0082,Network Connection Creation,Network Traffic,2,corelight,1,1,mitre_dc0082_network_connection_creation__corelight,corelight_conn,defaults
+DC0082,Network Connection Creation,container:cni,2,corelight,1,1,mitre_dc0082_network_connection_creation__corelight,corelight_conn,defaults
+DC0082,Network Connection Creation,NSM:Connections,13,palo_alto,1,1,mitre_dc0082_network_connection_creation__palo_alto,pan:traffic,defaults
+DC0082,Network Connection Creation,NSM:Firewall,4,palo_alto,1,1,mitre_dc0082_network_connection_creation__palo_alto,pan:traffic,defaults
+DC0082,Network Connection Creation,NSM:Flow,63,palo_alto,1,1,mitre_dc0082_network_connection_creation__palo_alto,pan:traffic,defaults
+DC0082,Network Connection Creation,Network Traffic,2,palo_alto,1,1,mitre_dc0082_network_connection_creation__palo_alto,pan:traffic,defaults
+DC0082,Network Connection Creation,networkdevice:syslog,3,palo_alto,1,1,mitre_dc0082_network_connection_creation__palo_alto,pan:traffic,defaults
+DC0082,Network Connection Creation,WinEventLog:Sysmon,150,sysmon,1,1,mitre_dc0082_network_connection_creation__sysmon,XmlWinEventLog:Microsoft-Windows-Sysmon/Operational,defaults
+DC0082,Network Connection Creation,WinEventLog:Microsoft-Windows-Bits-Client/Operational,1,wineventlog,1,1,mitre_dc0082_network_connection_creation__wineventlog,XmlWinEventLog:Microsoft-Windows-Windows Firewall With Advanced Security/Firewall|XmlWinEventLog:Security,defaults
+DC0082,Network Connection Creation,WinEventLog:Microsoft-Windows-WLAN-AutoConfig,2,wineventlog,1,1,mitre_dc0082_network_connection_creation__wineventlog,XmlWinEventLog:Microsoft-Windows-Windows Firewall With Advanced Security/Firewall|XmlWinEventLog:Security,defaults
+DC0082,Network Connection Creation,WinEventLog:Security,6,wineventlog,1,1,mitre_dc0082_network_connection_creation__wineventlog,XmlWinEventLog:Microsoft-Windows-Windows Firewall With Advanced Security/Firewall|XmlWinEventLog:Security,defaults
+DC0082,Network Connection Creation,WinEventLog:System,2,wineventlog,1,1,mitre_dc0082_network_connection_creation__wineventlog,XmlWinEventLog:Microsoft-Windows-Windows Firewall With Advanced Security/Firewall|XmlWinEventLog:Security,defaults
+DC0082,Network Connection Creation,auditd:SYSCALL,42,auditd,0,1,mitre_dc0082_network_connection_creation__auditd,linux:audit,defaults
+DC0082,Network Connection Creation,ebpf:syscalls,2,auditd,0,1,mitre_dc0082_network_connection_creation__auditd,linux:audit,defaults
+DC0082,Network Connection Creation,ebpf:syscalls,2,ebpf,0,1,mitre_dc0082_network_connection_creation__ebpf,falco,derived
+DC0082,Network Connection Creation,esxi:esxupdate,2,esxi_syslog,0,1,mitre_dc0082_network_connection_creation__esxi_syslog,vmware:esxlog:hostd|vmware:esxlog:vmkernel,defaults
+DC0082,Network Connection Creation,esxi:hostd,6,esxi_syslog,0,1,mitre_dc0082_network_connection_creation__esxi_syslog,vmware:esxlog:hostd|vmware:esxlog:vmkernel,defaults
+DC0082,Network Connection Creation,esxi:vmkernel,8,esxi_syslog,0,1,mitre_dc0082_network_connection_creation__esxi_syslog,vmware:esxlog:hostd|vmware:esxlog:vmkernel,defaults
+DC0082,Network Connection Creation,linux:osquery,6,linux_osquery,0,1,mitre_dc0082_network_connection_creation__linux_osquery,osquery:results,defaults
+DC0082,Network Connection Creation,networkdevice:syslog,3,netdev_syslog,0,1,mitre_dc0082_network_connection_creation__netdev_syslog,cisco:asa|cisco:ios|syslog,derived
+DC0082,Network Connection Creation,container:cni,2,netflow,0,1,mitre_dc0082_network_connection_creation__netflow,stream:netflow,derived
+DC0082,Network Connection Creation,linux:Sysmon,3,sysmon_linux,0,1,mitre_dc0082_network_connection_creation__sysmon_linux,sysmon:linux,defaults
+DC0082,Network Connection Creation,AWS:VPCFlowLogs,10,aws,0,0,,aws:cloudtrail|aws:cloudwatchlogs|aws:cloudwatchlogs:vpcflow,derived
+DC0082,Network Connection Creation,macos:endpointsecurity,2,macos,0,0,,macos:unifiedlog,derived
+DC0082,Network Connection Creation,macos:osquery,14,macos,0,0,,macos:unifiedlog,derived
+DC0082,Network Connection Creation,macos:unifiedlog,25,macos,0,0,,macos:unifiedlog,derived
+DC0082,Network Connection Creation,android:EnterpriseNetworkLog,1,mobile,0,0,,mobile:telemetry,derived
+DC0082,Network Connection Creation,iOS:NetworkExtension,1,mobile,0,0,,mobile:telemetry,derived
+DC0083,Cloud Service Enumeration,(added by dc_defaults/curated),,azure_activity,0,1,mitre_dc0083_cloud_service_enumeration__azure_activity,mscs:azure:audit,defaults
+DC0083,Cloud Service Enumeration,azure:audit,3,azure_entra,0,1,mitre_dc0083_cloud_service_enumeration__azure_entra,azure:aad:audit,defaults
+DC0083,Cloud Service Enumeration,azure:signinlogs,2,azure_entra,0,1,mitre_dc0083_cloud_service_enumeration__azure_entra,azure:aad:audit,defaults
+DC0083,Cloud Service Enumeration,AWS:CloudTrail,11,aws,0,0,,aws:cloudtrail|aws:cloudwatchlogs|aws:cloudwatchlogs:vpcflow,derived
+DC0083,Cloud Service Enumeration,gcp:secrets,1,gcp,0,0,,google:gcp:pubsub:message,derived
+DC0083,Cloud Service Enumeration,m365:unified,2,m365_unified,0,0,,o365:management:activity,derived
+DC0083,Cloud Service Enumeration,cloud:AuditLog,1,saas,0,0,,saas:audit,derived
+DC0083,Cloud Service Enumeration,saas:MDM,1,saas,0,0,,saas:audit,derived
+DC0083,Cloud Service Enumeration,saas:adminapi,2,saas,0,0,,saas:audit,derived
+DC0084,Active Directory Credential Request,(added by dc_defaults/curated),,corelight,1,1,mitre_dc0084_active_directory_credential_request__corelight,corelight_kerberos,defaults
+DC0084,Active Directory Credential Request,WinEventLog:Security,12,wineventlog,1,1,mitre_dc0084_active_directory_credential_request__wineventlog,XmlWinEventLog:Security,defaults
+DC0085,Network Traffic Content,IDS:TLSInspection,2,corelight,1,1,mitre_dc0085_network_traffic_content__corelight,corelight_dce_rpc|corelight_dns|corelight_files|corelight_ftp|corelight_http|corelight_kerberos|corelight_ldap|corelight_notice|corelight_ntlm|corelight_rdp|corelight_smb_files|corelight_smtp|corelight_ssh|corelight_ssl|corelight_weird|corelight_x509,defaults
+DC0085,Network Traffic Content,NSM:Connections,10,corelight,1,1,mitre_dc0085_network_traffic_content__corelight,corelight_dce_rpc|corelight_dns|corelight_files|corelight_ftp|corelight_http|corelight_kerberos|corelight_ldap|corelight_notice|corelight_ntlm|corelight_rdp|corelight_smb_files|corelight_smtp|corelight_ssh|corelight_ssl|corelight_weird|corelight_x509,defaults
+DC0085,Network Traffic Content,NSM:Content,72,corelight,1,1,mitre_dc0085_network_traffic_content__corelight,corelight_dce_rpc|corelight_dns|corelight_files|corelight_ftp|corelight_http|corelight_kerberos|corelight_ldap|corelight_notice|corelight_ntlm|corelight_rdp|corelight_smb_files|corelight_smtp|corelight_ssh|corelight_ssl|corelight_weird|corelight_x509,defaults
+DC0085,Network Traffic Content,NSM:Firewall,10,corelight,1,1,mitre_dc0085_network_traffic_content__corelight,corelight_dce_rpc|corelight_dns|corelight_files|corelight_ftp|corelight_http|corelight_kerberos|corelight_ldap|corelight_notice|corelight_ntlm|corelight_rdp|corelight_smb_files|corelight_smtp|corelight_ssh|corelight_ssl|corelight_weird|corelight_x509,defaults
+DC0085,Network Traffic Content,NSM:Flow,291,corelight,1,1,mitre_dc0085_network_traffic_content__corelight,corelight_dce_rpc|corelight_dns|corelight_files|corelight_ftp|corelight_http|corelight_kerberos|corelight_ldap|corelight_notice|corelight_ntlm|corelight_rdp|corelight_smb_files|corelight_smtp|corelight_ssh|corelight_ssl|corelight_weird|corelight_x509,defaults
+DC0085,Network Traffic Content,Network Traffic,17,corelight,1,1,mitre_dc0085_network_traffic_content__corelight,corelight_dce_rpc|corelight_dns|corelight_files|corelight_ftp|corelight_http|corelight_kerberos|corelight_ldap|corelight_notice|corelight_ntlm|corelight_rdp|corelight_smb_files|corelight_smtp|corelight_ssh|corelight_ssl|corelight_weird|corelight_x509,defaults
+DC0085,Network Traffic Content,WebProxy:AccessLogs,2,corelight,1,1,mitre_dc0085_network_traffic_content__corelight,corelight_dce_rpc|corelight_dns|corelight_files|corelight_ftp|corelight_http|corelight_kerberos|corelight_ldap|corelight_notice|corelight_ntlm|corelight_rdp|corelight_smb_files|corelight_smtp|corelight_ssh|corelight_ssl|corelight_weird|corelight_x509,defaults
+DC0085,Network Traffic Content,dns:query,5,corelight,1,1,mitre_dc0085_network_traffic_content__corelight,corelight_dce_rpc|corelight_dns|corelight_files|corelight_ftp|corelight_http|corelight_kerberos|corelight_ldap|corelight_notice|corelight_ntlm|corelight_rdp|corelight_smb_files|corelight_smtp|corelight_ssh|corelight_ssl|corelight_weird|corelight_x509,defaults
+DC0085,Network Traffic Content,networkdevice:IDS,3,corelight,1,1,mitre_dc0085_network_traffic_content__corelight,corelight_dce_rpc|corelight_dns|corelight_files|corelight_ftp|corelight_http|corelight_kerberos|corelight_ldap|corelight_notice|corelight_ntlm|corelight_rdp|corelight_smb_files|corelight_smtp|corelight_ssh|corelight_ssl|corelight_weird|corelight_x509,defaults
+DC0085,Network Traffic Content,IDS:TLSInspection,2,palo_alto,1,1,mitre_dc0085_network_traffic_content__palo_alto,pan:decryption|pan:threat,defaults
+DC0085,Network Traffic Content,NSM:Connections,10,palo_alto,1,1,mitre_dc0085_network_traffic_content__palo_alto,pan:decryption|pan:threat,defaults
+DC0085,Network Traffic Content,NSM:Content,72,palo_alto,1,1,mitre_dc0085_network_traffic_content__palo_alto,pan:decryption|pan:threat,defaults
+DC0085,Network Traffic Content,NSM:Firewall,10,palo_alto,1,1,mitre_dc0085_network_traffic_content__palo_alto,pan:decryption|pan:threat,defaults
+DC0085,Network Traffic Content,NSM:Flow,291,palo_alto,1,1,mitre_dc0085_network_traffic_content__palo_alto,pan:decryption|pan:threat,defaults
+DC0085,Network Traffic Content,Network Traffic,17,palo_alto,1,1,mitre_dc0085_network_traffic_content__palo_alto,pan:decryption|pan:threat,defaults
+DC0085,Network Traffic Content,WebProxy:AccessLogs,2,palo_alto,1,1,mitre_dc0085_network_traffic_content__palo_alto,pan:decryption|pan:threat,defaults
+DC0085,Network Traffic Content,networkdevice:IDS,3,palo_alto,1,1,mitre_dc0085_network_traffic_content__palo_alto,pan:decryption|pan:threat,defaults
+DC0085,Network Traffic Content,networkdevice:config,2,palo_alto,1,1,mitre_dc0085_network_traffic_content__palo_alto,pan:decryption|pan:threat,defaults
+DC0085,Network Traffic Content,networkdevice:syslog,8,palo_alto,1,1,mitre_dc0085_network_traffic_content__palo_alto,pan:decryption|pan:threat,defaults
+DC0085,Network Traffic Content,WinEventLog:Sysmon,2,sysmon,1,1,mitre_dc0085_network_traffic_content__sysmon,XmlWinEventLog:Microsoft-Windows-Sysmon/Operational,defaults
+DC0085,Network Traffic Content,dns:query,5,sysmon,1,1,mitre_dc0085_network_traffic_content__sysmon,XmlWinEventLog:Microsoft-Windows-Sysmon/Operational,defaults
+DC0085,Network Traffic Content,WinEventLog:Microsoft-Windows-Windows Defender/Operational,2,wineventlog,1,1,mitre_dc0085_network_traffic_content__wineventlog,XmlWinEventLog:Microsoft-Windows-Windows Defender/Operational,defaults
+DC0085,Network Traffic Content,WinEventLog:System,2,wineventlog,1,1,mitre_dc0085_network_traffic_content__wineventlog,XmlWinEventLog:Microsoft-Windows-Windows Defender/Operational,defaults
+DC0085,Network Traffic Content,NSM:Content,72,wireshark,1,1,mitre_dc0085_network_traffic_content__wireshark,wireshark:json,derived
+DC0085,Network Traffic Content,auditd:SYSCALL,2,auditd,0,1,mitre_dc0085_network_traffic_content__auditd,linux:audit,defaults
+DC0085,Network Traffic Content,ebpf:syscalls,2,auditd,0,1,mitre_dc0085_network_traffic_content__auditd,linux:audit,defaults
+DC0085,Network Traffic Content,azure:vpcflow,2,azure_resource,0,1,mitre_dc0085_network_traffic_content__azure_resource,mscs:azure:eventhub,derived
+DC0085,Network Traffic Content,ebpf:syscalls,2,ebpf,0,1,mitre_dc0085_network_traffic_content__ebpf,falco,derived
+DC0085,Network Traffic Content,EDR:hunting,2,edr_telemetry,0,1,mitre_dc0085_network_traffic_content__edr_telemetry,edr:telemetry,derived
+DC0085,Network Traffic Content,ApplicationLog:IIS,2,iis,0,1,mitre_dc0085_network_traffic_content__iis,ms:iis:auto,derived
+DC0085,Network Traffic Content,webserver:applog,2,iis,0,1,mitre_dc0085_network_traffic_content__iis,ms:iis:auto,derived
+DC0085,Network Traffic Content,ApplicationLog:Ingress,2,kubernetes_audit,0,1,mitre_dc0085_network_traffic_content__kubernetes_audit,kube:container:ingress-nginx,derived
+DC0085,Network Traffic Content,linux:syslog,12,linux_syslog,0,1,mitre_dc0085_network_traffic_content__linux_syslog,access_combined,defaults
+DC0085,Network Traffic Content,webserver:applog,2,linux_syslog,0,1,mitre_dc0085_network_traffic_content__linux_syslog,access_combined,defaults
+DC0085,Network Traffic Content,dns:query,5,windows_dns_server,0,1,mitre_dc0085_network_traffic_content__windows_dns_server,MSAD:NT6:DNS,derived
+DC0085,Network Traffic Content,AWS:CloudWatch,2,aws,0,0,,aws:cloudtrail|aws:cloudwatchlogs|aws:cloudwatchlogs:vpcflow,derived
+DC0085,Network Traffic Content,AWS:VPCFlowLogs,8,aws,0,0,,aws:cloudtrail|aws:cloudwatchlogs|aws:cloudwatchlogs:vpcflow,derived
+DC0085,Network Traffic Content,gcp:audit,1,gcp,0,0,,google:gcp:pubsub:message,derived
+DC0085,Network Traffic Content,gcp:vpcflow,2,gcp,0,0,,google:gcp:pubsub:message,derived
+DC0085,Network Traffic Content,m365:office,2,m365_unified,0,0,,o365:management:activity,derived
+DC0085,Network Traffic Content,macos:unifiedlog,64,macos,0,0,,macos:unifiedlog,derived
+DC0085,Network Traffic Content,TelecomLogs:SS7Signaling,2,mobile,0,0,,mobile:telemetry,derived
+DC0085,Network Traffic Content,VPN:MobileProxy,18,mobile,0,0,,mobile:telemetry,derived
+DC0085,Network Traffic Content,iOS:unifiedlog,3,mobile,0,0,,mobile:telemetry,derived
+DC0085,Network Traffic Content,otids:ProtocolDecoder,5,ot,0,0,,ot:applog,derived
+DC0085,Network Traffic Content,API:ConfigRepoAudit,1,saas,0,0,,saas:audit,derived
+DC0085,Network Traffic Content,saas:box,2,saas,0,0,,saas:audit,derived
+DC0085,Network Traffic Content,saas:confluence,2,saas,0,0,,saas:audit,derived
+DC0086,Instance Metadata,AWS:CloudTrail,4,aws,0,0,,aws:cloudtrail|aws:cloudwatchlogs|aws:cloudwatchlogs:vpcflow,derived
+DC0087,Active Directory Object Creation,WinEventLog:Security,4,wineventlog,1,1,mitre_dc0087_active_directory_object_creation__wineventlog,XmlWinEventLog:Security,defaults
+DC0087,Active Directory Object Creation,azure:audit,2,azure_entra,0,1,mitre_dc0087_active_directory_object_creation__azure_entra,azure:aad:audit,defaults
+DC0087,Active Directory Object Creation,AWS:CloudTrail,2,aws,0,0,,aws:cloudtrail|aws:cloudwatchlogs|aws:cloudwatchlogs:vpcflow,derived
+DC0088,Logon Session Metadata,NSM:Connections,2,corelight,1,1,mitre_dc0088_logon_session_metadata__corelight,corelight_ssh,derived
+DC0088,Logon Session Metadata,NSM:Connections,2,palo_alto,1,1,mitre_dc0088_logon_session_metadata__palo_alto,pan:globalprotect,defaults
+DC0088,Logon Session Metadata,vpn:authlog,1,palo_alto,1,1,mitre_dc0088_logon_session_metadata__palo_alto,pan:globalprotect,defaults
+DC0088,Logon Session Metadata,WinEventLog:Security,29,wineventlog,1,1,mitre_dc0088_logon_session_metadata__wineventlog,XmlWinEventLog:Security,defaults
+DC0088,Logon Session Metadata,auditd:SYSCALL,4,auditd,0,1,mitre_dc0088_logon_session_metadata__auditd,linux:audit,defaults
+DC0088,Logon Session Metadata,auditd:USER_LOGIN,3,auditd,0,1,mitre_dc0088_logon_session_metadata__auditd,linux:audit,defaults
+DC0088,Logon Session Metadata,azure:audit,2,azure_entra,0,1,mitre_dc0088_logon_session_metadata__azure_entra,azure:aad:signin,defaults
+DC0088,Logon Session Metadata,azure:signinlogs,2,azure_entra,0,1,mitre_dc0088_logon_session_metadata__azure_entra,azure:aad:signin,defaults
+DC0088,Logon Session Metadata,esxi:auth,2,esxi_syslog,0,1,mitre_dc0088_logon_session_metadata__esxi_syslog,vmware:esxlog:auth|vmware:esxlog:hostd,defaults
+DC0088,Logon Session Metadata,esxi:hostd,2,esxi_syslog,0,1,mitre_dc0088_logon_session_metadata__esxi_syslog,vmware:esxlog:auth|vmware:esxlog:hostd,defaults
+DC0088,Logon Session Metadata,linux:auth,2,linux_syslog,0,1,mitre_dc0088_logon_session_metadata__linux_syslog,linux_secure,defaults
+DC0088,Logon Session Metadata,linux:syslog,4,linux_syslog,0,1,mitre_dc0088_logon_session_metadata__linux_syslog,linux_secure,defaults
+DC0088,Logon Session Metadata,gcp:audit,2,gcp,0,0,,google:gcp:pubsub:message,derived
+DC0088,Logon Session Metadata,m365:signinlogs,2,m365_unified,0,0,,o365:management:activity,derived
+DC0088,Logon Session Metadata,m365:unified,4,m365_unified,0,0,,o365:management:activity,derived
+DC0088,Logon Session Metadata,macos:unifiedlog,18,macos,0,0,,macos:unifiedlog,derived
+DC0088,Logon Session Metadata,saas:okta,3,saas,0,0,,saas:audit,derived
+DC0088,Logon Session Metadata,saas:salesforce,2,saas,0,0,,saas:audit,derived
+DC0089,Instance Stop,AWS:CloudTrail,6,aws,0,0,,aws:cloudtrail|aws:cloudwatchlogs|aws:cloudwatchlogs:vpcflow,derived
+DC0090,Cloud Service Disable,azure:activity,1,azure_activity,0,1,mitre_dc0090_cloud_service_disable__azure_activity,mscs:azure:audit,derived
+DC0090,Cloud Service Disable,AWS:CloudTrail,6,aws,0,0,,aws:cloudtrail|aws:cloudwatchlogs|aws:cloudwatchlogs:vpcflow,derived
+DC0090,Cloud Service Disable,saas:audit,2,saas,0,0,,saas:audit,derived
+DC0091,Container Enumeration,containerd:events,2,container_runtime,0,1,mitre_dc0091_container_enumeration__container_runtime,containerd:events|docker:daemon,defaults
+DC0091,Container Enumeration,docker:daemon,2,container_runtime,0,1,mitre_dc0091_container_enumeration__container_runtime,containerd:events|docker:daemon,defaults
+DC0091,Container Enumeration,AWS:CloudTrail,1,aws,0,0,,aws:cloudtrail|aws:cloudwatchlogs|aws:cloudwatchlogs:vpcflow,derived
+DC0092,Volume Modification,kubernetes:apiserver,2,kubernetes_audit,0,1,mitre_dc0092_volume_modification__kubernetes_audit,kube:apiserver-audit,defaults
+DC0092,Volume Modification,AWS:CloudTrail,2,aws,0,0,,aws:cloudtrail|aws:cloudwatchlogs|aws:cloudwatchlogs:vpcflow,derived
+DC0093,Certificate Registration,Certificate,3,threat_intel,0,0,,ti:feed,derived
+DC0094,Group Modification,(added by dc_defaults/curated),,wineventlog,1,1,mitre_dc0094_group_modification__wineventlog,XmlWinEventLog:Security,defaults
+DC0094,Group Modification,m365:unified,2,m365_unified,0,0,,o365:management:activity,derived
+DC0096,Passive DNS,Domain Name,6,threat_intel,0,0,,ti:feed,derived
+DC0097,Volume Creation,WinEventLog:Microsoft-Windows-VSS,2,wineventlog,1,1,mitre_dc0097_volume_creation__wineventlog,XmlWinEventLog:Microsoft-Windows-VSS|XmlWinEventLog:System,defaults
+DC0097,Volume Creation,(added by dc_defaults/curated),,esxi_syslog,0,1,mitre_dc0097_volume_creation__esxi_syslog,vmware:esxlog:hostd|vmware:esxlog:vmkernel,defaults
+DC0097,Volume Creation,(added by dc_defaults/curated),,kubernetes_audit,0,1,mitre_dc0097_volume_creation__kubernetes_audit,kube:apiserver-audit|kube:objects:events,defaults
+DC0097,Volume Creation,AWS:CloudTrail,2,aws,0,0,,aws:cloudtrail|aws:cloudwatchlogs|aws:cloudwatchlogs:vpcflow,derived
+DC0098,Volume Deletion,esxi:vmkernel,2,esxi_syslog,0,1,mitre_dc0098_volume_deletion__esxi_syslog,vmware:esxlog:hostd|vmware:esxlog:vmkernel,defaults
+DC0098,Volume Deletion,AWS:CloudTrail,2,aws,0,0,,aws:cloudtrail|aws:cloudwatchlogs|aws:cloudwatchlogs:vpcflow,derived
+DC0099,Group Enumeration,WinEventLog:Security,2,wineventlog,1,1,mitre_dc0099_group_enumeration__wineventlog,XmlWinEventLog:Security,defaults
+DC0099,Group Enumeration,azure:audit,1,azure_entra,0,1,mitre_dc0099_group_enumeration__azure_entra,azure:aad:audit,defaults
+DC0099,Group Enumeration,AWS:CloudTrail,2,aws,0,0,,aws:cloudtrail|aws:cloudwatchlogs|aws:cloudwatchlogs:vpcflow,derived
+DC0099,Group Enumeration,gcp:audit,1,gcp,0,0,,google:gcp:pubsub:message,derived
+DC0099,Group Enumeration,saas:github,1,saas,0,0,,saas:audit,derived
+DC0099,Group Enumeration,saas:salesforce,2,saas,0,0,,saas:audit,derived
+DC0101,Domain Registration,dns:query,2,corelight,1,1,mitre_dc0101_domain_registration__corelight,corelight_dns|corelight_x509,defaults
+DC0101,Domain Registration,dns:query,2,sysmon,1,1,mitre_dc0101_domain_registration__sysmon,XmlWinEventLog:Microsoft-Windows-Sysmon/Operational,defaults
+DC0101,Domain Registration,dns:query,2,windows_dns_server,0,1,mitre_dc0101_domain_registration__windows_dns_server,MSAD:NT6:DNS,derived
+DC0101,Domain Registration,Domain Name,5,threat_intel,0,0,,ti:feed,derived
+DC0102,Network Share Access,NSM:Flow,2,corelight,1,1,mitre_dc0102_network_share_access__corelight,corelight_smb_files|corelight_smb_mapping,defaults
+DC0102,Network Share Access,fileserver:audit,1,corelight,1,1,mitre_dc0102_network_share_access__corelight,corelight_smb_files|corelight_smb_mapping,defaults
+DC0102,Network Share Access,NSM:Flow,2,palo_alto,1,1,mitre_dc0102_network_share_access__palo_alto,pan:traffic,defaults
+DC0102,Network Share Access,WinEventLog:Microsoft-Windows-SMBClient/Security,2,wineventlog,1,1,mitre_dc0102_network_share_access__wineventlog,XmlWinEventLog:Microsoft-Windows-SMBClient/Security|XmlWinEventLog:Microsoft-Windows-SMBServer/Security|XmlWinEventLog:Security,defaults
+DC0102,Network Share Access,WinEventLog:Microsoft-Windows-SMBServer,1,wineventlog,1,1,mitre_dc0102_network_share_access__wineventlog,XmlWinEventLog:Microsoft-Windows-SMBClient/Security|XmlWinEventLog:Microsoft-Windows-SMBServer/Security|XmlWinEventLog:Security,defaults
+DC0102,Network Share Access,WinEventLog:Security,11,wineventlog,1,1,mitre_dc0102_network_share_access__wineventlog,XmlWinEventLog:Microsoft-Windows-SMBClient/Security|XmlWinEventLog:Microsoft-Windows-SMBServer/Security|XmlWinEventLog:Security,defaults
+DC0102,Network Share Access,fileserver:audit,1,wineventlog,1,1,mitre_dc0102_network_share_access__wineventlog,XmlWinEventLog:Microsoft-Windows-SMBClient/Security|XmlWinEventLog:Microsoft-Windows-SMBServer/Security|XmlWinEventLog:Security,defaults
+DC0102,Network Share Access,m365:unified,2,m365_unified,0,0,,o365:management:activity,derived
+DC0103,Active DNS,Domain Name,6,threat_intel,0,0,,ti:feed,derived
+DC0104,Response Content,NSM:Flow,2,corelight,1,1,mitre_dc0104_response_content__corelight,corelight_dns|corelight_http|corelight_ssl,defaults
+DC0104,Response Content,NSM:Flow,2,palo_alto,1,1,mitre_dc0104_response_content__palo_alto,pan:threat,defaults
+DC0104,Response Content,Internet Scan,28,threat_intel,0,0,,ti:feed,derived
+DC0105,Group Metadata,(added by dc_defaults/curated),,wineventlog,1,1,mitre_dc0105_group_metadata__wineventlog,XmlWinEventLog:Security,defaults
+DC0105,Group Metadata,m365:sharepoint,2,m365_unified,0,0,,o365:management:activity,derived
+DC0106,Response Metadata,NSM:Flow,2,corelight,1,1,mitre_dc0106_response_metadata__corelight,corelight_dns|corelight_http|corelight_ssl|corelight_x509,defaults
+DC0106,Response Metadata,NSM:Flow,2,palo_alto,1,1,mitre_dc0106_response_metadata__palo_alto,pan:threat|pan:traffic,defaults
+DC0106,Response Metadata,Internet Scan,7,threat_intel,0,0,,ti:feed,derived
