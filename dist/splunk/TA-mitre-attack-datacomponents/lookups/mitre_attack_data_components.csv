@@ -1,0 +1,107 @@
+dc_id,dc_name,eventtype,in_scope,live_feeds,ready_feeds,cim_datamodel,analytics,detection_strategies,techniques,attack_version,url
+DC0001,Scheduled Job Creation,mitre_dc0001_scheduled_job_creation,1,wineventlog,auditd|esxi_syslog|kubernetes_audit|linux_syslog,Endpoint.Processes,21,15,15,20.1,https://attack.mitre.org/datacomponents/DC0001
+DC0002,User Account Authentication,mitre_dc0002_user_account_authentication,1,corelight|palo_alto|wineventlog,auditd|azure_entra|esxi_syslog|kubernetes_audit|linux_syslog,Authentication.Authentication,112,55,55,20.1,https://attack.mitre.org/datacomponents/DC0002
+DC0003,Malware Metadata,mitre_dc0003_malware_metadata,1,palo_alto|trellix_epo|wineventlog,,Malware.Malware_Attacks,7,7,7,20.1,https://attack.mitre.org/datacomponents/DC0003
+DC0004,Firmware Modification,mitre_dc0004_firmware_modification,1,palo_alto|wineventlog,auditd|linux_osquery|netdev_syslog|snmp|windows_osquery,,15,10,10,20.1,https://attack.mitre.org/datacomponents/DC0004
+DC0005,Scheduled Job Metadata,mitre_dc0005_scheduled_job_metadata,1,wineventlog,esxi_syslog|linux_syslog,,9,3,3,20.1,https://attack.mitre.org/datacomponents/DC0005
+DC0006,Web Credential Creation,mitre_dc0006_web_credential_creation,1,wineventlog,azure_entra,,5,2,2,20.1,https://attack.mitre.org/datacomponents/DC0006
+DC0007,Web Credential Usage,mitre_dc0007_web_credential_usage,1,corelight|palo_alto,azure_entra,Authentication.Authentication,20,6,6,20.1,https://attack.mitre.org/datacomponents/DC0007
+DC0008,WMI Creation,mitre_dc0008_wmi_creation,1,sysmon|wineventlog,,,7,7,7,20.1,https://attack.mitre.org/datacomponents/DC0008
+DC0009,User Account Deletion,mitre_dc0009_user_account_deletion,1,wineventlog,esxi_syslog,Change.Account_Management,3,2,2,20.1,https://attack.mitre.org/datacomponents/DC0009
+DC0010,User Account Modification,mitre_dc0010_user_account_modification,1,wineventlog,auditd|azure_activity|azure_entra|kubernetes_audit|linux_syslog,Change.Account_Management,40,21,21,20.1,https://attack.mitre.org/datacomponents/DC0010
+DC0011,Malware Content,mitre_dc0011_malware_content,1,corelight|palo_alto|trellix_epo,,Malware.Malware_Attacks,4,4,4,20.1,https://attack.mitre.org/datacomponents/DC0011
+DC0012,Scheduled Job Modification,mitre_dc0012_scheduled_job_modification,1,wineventlog,auditd,,3,3,3,20.1,https://attack.mitre.org/datacomponents/DC0012
+DC0013,User Account Metadata,mitre_dc0013_user_account_metadata,1,wineventlog,auditd|azure_activity|azure_entra|linux_osquery|windows_osquery,Change.Account_Management,33,20,20,20.1,https://attack.mitre.org/datacomponents/DC0013
+DC0014,User Account Creation,mitre_dc0014_user_account_creation,1,palo_alto|wineventlog,auditd|azure_entra|linux_syslog,Change.Account_Management,17,6,6,20.1,https://attack.mitre.org/datacomponents/DC0014
+DC0015,Image Creation,mitre_dc0015_image_creation,1,,container_runtime|kubernetes_audit,,4,3,3,20.1,https://attack.mitre.org/datacomponents/DC0015
+DC0016,Module Load,mitre_dc0016_module_load,1,solidcore|sysmon|wineventlog,auditd|etw|sysmon_linux,Endpoint.Processes,130,110,110,20.1,https://attack.mitre.org/datacomponents/DC0016
+DC0017,Cloud Storage Enumeration,mitre_dc0017_cloud_storage_enumeration,1,,azure_activity,,3,3,3,20.1,https://attack.mitre.org/datacomponents/DC0017
+DC0018,Host Status,mitre_dc0018_host_status,1,palo_alto|sysmon|trellix_epo|wineventlog,auditd|esxi_syslog|kubernetes_audit|linux_syslog|windows_perfmon,Endpoint.Services,36,14,14,20.1,https://attack.mitre.org/datacomponents/DC0018
+DC0019,Pod Creation,mitre_dc0019_pod_creation,1,,kubernetes_audit,,2,2,2,20.1,https://attack.mitre.org/datacomponents/DC0019
+DC0020,Process Modification,mitre_dc0020_process_modification,1,sysmon,auditd|ebpf|etw,,29,24,24,20.1,https://attack.mitre.org/datacomponents/DC0020
+DC0021,OS API Execution,mitre_dc0021_os_api_execution,1,sysmon|wineventlog,auditd|edr_telemetry|etw,,66,54,54,20.1,https://attack.mitre.org/datacomponents/DC0021
+DC0022,Cloud Storage Deletion,,0,,,,2,2,2,20.1,https://attack.mitre.org/datacomponents/DC0022
+DC0023,Cloud Storage Modification,,0,,,,5,3,3,20.1,https://attack.mitre.org/datacomponents/DC0023
+DC0024,Cloud Storage Creation,,0,,,,1,1,1,20.1,https://attack.mitre.org/datacomponents/DC0024
+DC0025,Cloud Storage Access,,0,,,,13,11,11,20.1,https://attack.mitre.org/datacomponents/DC0025
+DC0026,Image Deletion,,0,,,,0,0,0,20.1,https://attack.mitre.org/datacomponents/DC0026
+DC0027,Cloud Storage Metadata,,0,,,,3,2,2,20.1,https://attack.mitre.org/datacomponents/DC0027
+DC0028,Image Metadata,mitre_dc0028_image_metadata,1,,container_runtime,,3,3,3,20.1,https://attack.mitre.org/datacomponents/DC0028
+DC0029,Script Execution,mitre_dc0029_script_execution,1,powershell_logging|trellix_epo|wineventlog,auditd|edr_telemetry|esxi_syslog|etw,Endpoint.Processes,36,30,30,20.1,https://attack.mitre.org/datacomponents/DC0029
+DC0030,Pod Modification,mitre_dc0030_pod_modification,1,,kubernetes_audit,,0,0,0,20.1,https://attack.mitre.org/datacomponents/DC0030
+DC0031,Kernel Module Load,mitre_dc0031_kernel_module_load,1,,auditd|esxi_syslog|linux_syslog,,2,2,2,20.1,https://attack.mitre.org/datacomponents/DC0031
+DC0032,Process Creation,mitre_dc0032_process_creation,1,powershell_logging|solidcore|sysmon|wineventlog,auditd|container_runtime|ebpf|esxi_syslog|etw|kubernetes_audit|linux_osquery|sysmon_linux,Endpoint.Processes,860,456,456,20.1,https://attack.mitre.org/datacomponents/DC0032
+DC0033,Process Termination,mitre_dc0033_process_termination,1,sysmon,auditd|container_runtime|esxi_syslog,Endpoint.Processes,14,7,7,20.1,https://attack.mitre.org/datacomponents/DC0033
+DC0034,Process Metadata,mitre_dc0034_process_metadata,1,powershell_logging|sysmon|wineventlog,auditd|edr_telemetry|etw|linux_osquery,Endpoint.Processes,40,31,31,20.1,https://attack.mitre.org/datacomponents/DC0034
+DC0035,Process Access,mitre_dc0035_process_access,1,sysmon|wineventlog,auditd|edr_telemetry,Endpoint.Processes,93,77,77,20.1,https://attack.mitre.org/datacomponents/DC0035
+DC0036,Image Modification,mitre_dc0036_image_modification,1,,container_runtime,,2,1,1,20.1,https://attack.mitre.org/datacomponents/DC0036
+DC0037,Pod Enumeration,mitre_dc0037_pod_enumeration,1,,kubernetes_audit,,1,1,1,20.1,https://attack.mitre.org/datacomponents/DC0037
+DC0038,Application Log Content,mitre_dc0038_application_log_content,1,corelight|palo_alto|trellix_epo|wineventlog,azure_activity|azure_entra|container_runtime|esxi_syslog|iis|kubernetes_audit|linux_syslog|vcenter,,209,104,104,20.1,https://attack.mitre.org/datacomponents/DC0038
+DC0039,File Creation,mitre_dc0039_file_creation,1,solidcore|sysmon|wineventlog,auditd|esxi_syslog|sysmon_linux,Endpoint.Filesystem,254,176,176,20.1,https://attack.mitre.org/datacomponents/DC0039
+DC0040,File Deletion,mitre_dc0040_file_deletion,1,solidcore|sysmon|wineventlog,auditd|esxi_syslog|sysmon_linux,Endpoint.Filesystem,29,12,12,20.1,https://attack.mitre.org/datacomponents/DC0040
+DC0041,Service Metadata,mitre_dc0041_service_metadata,1,palo_alto|sysmon|wineventlog,auditd|esxi_syslog|linux_osquery,Endpoint.Services,22,13,13,20.1,https://attack.mitre.org/datacomponents/DC0041
+DC0042,Drive Creation,mitre_dc0042_drive_creation,1,wineventlog,auditd|linux_syslog,,22,8,8,20.1,https://attack.mitre.org/datacomponents/DC0042
+DC0043,Firewall Disable,mitre_dc0043_firewall_disable,1,palo_alto|wineventlog,esxi_syslog,Change.Network_Changes,2,1,1,20.1,https://attack.mitre.org/datacomponents/DC0043
+DC0044,Firewall Enumeration,mitre_dc0044_firewall_enumeration,1,palo_alto|wineventlog,,,0,0,0,20.1,https://attack.mitre.org/datacomponents/DC0044
+DC0045,Windows Registry Key Deletion,mitre_dc0045_windows_registry_key_deletion,1,solidcore|sysmon|wineventlog,,Endpoint.Registry,0,0,0,20.1,https://attack.mitre.org/datacomponents/DC0045
+DC0046,Drive Modification,mitre_dc0046_drive_modification,1,sysmon|wineventlog,,,9,6,6,20.1,https://attack.mitre.org/datacomponents/DC0046
+DC0047,Snapshot Enumeration,,0,,,,0,0,0,20.1,https://attack.mitre.org/datacomponents/DC0047
+DC0048,Named Pipe Metadata,mitre_dc0048_named_pipe_metadata,1,sysmon,,,4,4,4,20.1,https://attack.mitre.org/datacomponents/DC0048
+DC0049,Snapshot Deletion,mitre_dc0049_snapshot_deletion,1,,azure_activity|esxi_syslog,,3,2,2,20.1,https://attack.mitre.org/datacomponents/DC0049
+DC0050,Windows Registry Key Access,mitre_dc0050_windows_registry_key_access,1,wineventlog,autoruns,Endpoint.Registry,6,6,6,20.1,https://attack.mitre.org/datacomponents/DC0050
+DC0051,Firewall Rule Modification,mitre_dc0051_firewall_rule_modification,1,palo_alto|wineventlog,esxi_syslog|linux_syslog|netdev_syslog,Change.Network_Changes,14,12,12,20.1,https://attack.mitre.org/datacomponents/DC0051
+DC0052,Social Media,,0,,,,4,4,4,20.1,https://attack.mitre.org/datacomponents/DC0052
+DC0053,Firewall Metadata,mitre_dc0053_firewall_metadata,1,palo_alto|wineventlog,,,0,0,0,20.1,https://attack.mitre.org/datacomponents/DC0053
+DC0054,Drive Access,mitre_dc0054_drive_access,1,sysmon,auditd,,10,8,8,20.1,https://attack.mitre.org/datacomponents/DC0054
+DC0055,File Access,mitre_dc0055_file_access,1,solidcore|wineventlog,auditd|ebpf|esxi_syslog|kubernetes_audit,Endpoint.Filesystem,168,94,94,20.1,https://attack.mitre.org/datacomponents/DC0055
+DC0056,Windows Registry Key Creation,mitre_dc0056_windows_registry_key_creation,1,solidcore|sysmon|wineventlog,,Endpoint.Registry,12,11,11,20.1,https://attack.mitre.org/datacomponents/DC0056
+DC0057,Snapshot Creation,mitre_dc0057_snapshot_creation,1,,azure_activity|esxi_syslog,,4,4,4,20.1,https://attack.mitre.org/datacomponents/DC0057
+DC0058,Snapshot Modification,,0,,,,2,2,2,20.1,https://attack.mitre.org/datacomponents/DC0058
+DC0059,File Metadata,mitre_dc0059_file_metadata,1,corelight|palo_alto|solidcore|sysmon|trellix_epo|wineventlog,auditd|ebpf|edr_telemetry|linux_osquery,Endpoint.Filesystem,95,65,65,20.1,https://attack.mitre.org/datacomponents/DC0059
+DC0060,Service Creation,mitre_dc0060_service_creation,1,wineventlog,auditd|kubernetes_audit|linux_syslog,Endpoint.Services,31,28,28,20.1,https://attack.mitre.org/datacomponents/DC0060
+DC0061,File Modification,mitre_dc0061_file_modification,1,palo_alto|solidcore|sysmon|wineventlog,auditd|ebpf|esxi_syslog|linux_syslog|netdev_syslog,Endpoint.Filesystem,179,116,116,20.1,https://attack.mitre.org/datacomponents/DC0061
+DC0062,Snapshot Metadata,,0,,,,2,2,2,20.1,https://attack.mitre.org/datacomponents/DC0062
+DC0063,Windows Registry Key Modification,mitre_dc0063_windows_registry_key_modification,1,solidcore|sysmon|wineventlog,,Endpoint.Registry,89,86,86,20.1,https://attack.mitre.org/datacomponents/DC0063
+DC0064,Command Execution,mitre_dc0064_command_execution,1,palo_alto|powershell_logging|sysmon|trellix_epo|wineventlog,auditd|container_runtime|ebpf|edr_telemetry|esxi_syslog|kubernetes_audit|netdev_syslog|vcenter,Endpoint.Processes,339,211,211,20.1,https://attack.mitre.org/datacomponents/DC0064
+DC0065,Service Modification,mitre_dc0065_service_modification,1,wineventlog,esxi_syslog,Endpoint.Services,3,3,3,20.1,https://attack.mitre.org/datacomponents/DC0065
+DC0066,Active Directory Object Modification,mitre_dc0066_active_directory_object_modification,1,wineventlog,azure_entra,Change.All_Changes,18,17,17,20.1,https://attack.mitre.org/datacomponents/DC0066
+DC0067,Logon Session Creation,mitre_dc0067_logon_session_creation,1,corelight|palo_alto|wineventlog,auditd|azure_entra|esxi_syslog|linux_syslog,Authentication.Authentication,97,58,58,20.1,https://attack.mitre.org/datacomponents/DC0067
+DC0068,Active Directory Object Deletion,mitre_dc0068_active_directory_object_deletion,1,wineventlog,,Change.All_Changes,1,1,1,20.1,https://attack.mitre.org/datacomponents/DC0068
+DC0069,Cloud Service Modification,mitre_dc0069_cloud_service_modification,1,,azure_activity|azure_entra,Change.All_Changes,24,18,18,20.1,https://attack.mitre.org/datacomponents/DC0069
+DC0070,Cloud Service Metadata,,0,,,Change.All_Changes,10,9,9,20.1,https://attack.mitre.org/datacomponents/DC0070
+DC0071,Active Directory Object Access,mitre_dc0071_active_directory_object_access,1,wineventlog,,Change.All_Changes,6,6,6,20.1,https://attack.mitre.org/datacomponents/DC0071
+DC0072,Container Creation,mitre_dc0072_container_creation,1,,container_runtime|kubernetes_audit,,8,8,8,20.1,https://attack.mitre.org/datacomponents/DC0072
+DC0073,Instance Modification,mitre_dc0073_instance_modification,1,,azure_activity,,2,2,2,20.1,https://attack.mitre.org/datacomponents/DC0073
+DC0074,Driver Metadata,,0,,,,1,1,1,20.1,https://attack.mitre.org/datacomponents/DC0074
+DC0075,Instance Enumeration,mitre_dc0075_instance_enumeration,1,,azure_activity,,2,2,2,20.1,https://attack.mitre.org/datacomponents/DC0075
+DC0076,Instance Creation,mitre_dc0076_instance_creation,1,,azure_activity,,3,3,3,20.1,https://attack.mitre.org/datacomponents/DC0076
+DC0077,Container Start,mitre_dc0077_container_start,1,,container_runtime|kubernetes_audit,,4,4,4,20.1,https://attack.mitre.org/datacomponents/DC0077
+DC0078,Network Traffic Flow,mitre_dc0078_network_traffic_flow,1,corelight|palo_alto|sysmon|wineventlog|wireshark,auditd|edr_telemetry|esxi_syslog|iptables|netdev_syslog|netflow|vcenter|windows_firewall_log,Network_Traffic.All_Traffic,176,92,92,20.1,https://attack.mitre.org/datacomponents/DC0078
+DC0079,Driver Load,mitre_dc0079_driver_load,1,sysmon|wineventlog,auditd|linux_syslog,Endpoint.Services,16,15,15,20.1,https://attack.mitre.org/datacomponents/DC0079
+DC0080,Instance Start,,0,,,,11,11,11,20.1,https://attack.mitre.org/datacomponents/DC0080
+DC0081,Instance Deletion,mitre_dc0081_instance_deletion,1,,azure_activity,,1,1,1,20.1,https://attack.mitre.org/datacomponents/DC0081
+DC0082,Network Connection Creation,mitre_dc0082_network_connection_creation,1,corelight|palo_alto|sysmon|wineventlog,auditd|ebpf|esxi_syslog|linux_osquery|netdev_syslog|netflow|sysmon_linux,Network_Traffic.All_Traffic,246,155,155,20.1,https://attack.mitre.org/datacomponents/DC0082
+DC0083,Cloud Service Enumeration,mitre_dc0083_cloud_service_enumeration,1,,azure_activity|azure_entra,Change.All_Changes,10,6,6,20.1,https://attack.mitre.org/datacomponents/DC0083
+DC0084,Active Directory Credential Request,mitre_dc0084_active_directory_credential_request,1,corelight|wineventlog,,Authentication.Authentication,9,9,9,20.1,https://attack.mitre.org/datacomponents/DC0084
+DC0085,Network Traffic Content,mitre_dc0085_network_traffic_content,1,corelight|palo_alto|sysmon|wineventlog|wireshark,auditd|azure_resource|ebpf|edr_telemetry|iis|kubernetes_audit|linux_syslog|windows_dns_server,Web.Web,253,140,140,20.1,https://attack.mitre.org/datacomponents/DC0085
+DC0086,Instance Metadata,,0,,,,3,3,3,20.1,https://attack.mitre.org/datacomponents/DC0086
+DC0087,Active Directory Object Creation,mitre_dc0087_active_directory_object_creation,1,wineventlog,azure_entra,Change.All_Changes,4,3,3,20.1,https://attack.mitre.org/datacomponents/DC0087
+DC0088,Logon Session Metadata,mitre_dc0088_logon_session_metadata,1,corelight|palo_alto|wineventlog,auditd|azure_entra|esxi_syslog|linux_syslog,Authentication.Authentication,47,30,30,20.1,https://attack.mitre.org/datacomponents/DC0088
+DC0089,Instance Stop,,0,,,,4,4,4,20.1,https://attack.mitre.org/datacomponents/DC0089
+DC0090,Cloud Service Disable,mitre_dc0090_cloud_service_disable,1,,azure_activity,Change.All_Changes,4,2,2,20.1,https://attack.mitre.org/datacomponents/DC0090
+DC0091,Container Enumeration,mitre_dc0091_container_enumeration,1,,container_runtime,,2,2,2,20.1,https://attack.mitre.org/datacomponents/DC0091
+DC0092,Volume Modification,mitre_dc0092_volume_modification,1,,kubernetes_audit,,2,2,2,20.1,https://attack.mitre.org/datacomponents/DC0092
+DC0093,Certificate Registration,,0,,,,2,2,2,20.1,https://attack.mitre.org/datacomponents/DC0093
+DC0094,Group Modification,mitre_dc0094_group_modification,1,wineventlog,,Change.Account_Management,1,1,1,20.1,https://attack.mitre.org/datacomponents/DC0094
+DC0095,Volume Enumeration,,0,,,,0,0,0,20.1,https://attack.mitre.org/datacomponents/DC0095
+DC0096,Passive DNS,,0,,,,5,5,5,20.1,https://attack.mitre.org/datacomponents/DC0096
+DC0097,Volume Creation,mitre_dc0097_volume_creation,1,wineventlog,esxi_syslog|kubernetes_audit,,2,2,2,20.1,https://attack.mitre.org/datacomponents/DC0097
+DC0098,Volume Deletion,mitre_dc0098_volume_deletion,1,,esxi_syslog,,2,2,2,20.1,https://attack.mitre.org/datacomponents/DC0098
+DC0099,Group Enumeration,mitre_dc0099_group_enumeration,1,wineventlog,azure_entra,,3,2,2,20.1,https://attack.mitre.org/datacomponents/DC0099
+DC0100,Volume Metadata,,0,,,,0,0,0,20.1,https://attack.mitre.org/datacomponents/DC0100
+DC0101,Domain Registration,mitre_dc0101_domain_registration,1,corelight|sysmon,windows_dns_server,,6,5,5,20.1,https://attack.mitre.org/datacomponents/DC0101
+DC0102,Network Share Access,mitre_dc0102_network_share_access,1,corelight|palo_alto|wineventlog,,Endpoint.Filesystem,11,9,9,20.1,https://attack.mitre.org/datacomponents/DC0102
+DC0103,Active DNS,,0,,,,5,5,5,20.1,https://attack.mitre.org/datacomponents/DC0103
+DC0104,Response Content,mitre_dc0104_response_content,1,corelight|palo_alto,,,28,28,28,20.1,https://attack.mitre.org/datacomponents/DC0104
+DC0105,Group Metadata,mitre_dc0105_group_metadata,1,wineventlog,,,1,1,1,20.1,https://attack.mitre.org/datacomponents/DC0105
+DC0106,Response Metadata,mitre_dc0106_response_metadata,1,corelight|palo_alto,,,7,7,7,20.1,https://attack.mitre.org/datacomponents/DC0106

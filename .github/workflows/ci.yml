@@ -1,0 +1,18 @@
+name: build-and-validate
+on:
+  push:
+  pull_request:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -e ".[sigma,dev]"
+      - name: Rebuild generated content and fail on drift
+        run: |
+          make build
+          git diff --exit-code -- content dist docs || (echo "::error::generated output is out of date; run make build and commit" && exit 1)
+      - run: make test

@@ -1,0 +1,2 @@
+domain,dc_id,an_id,reason,expires
+*.windowsupdate.com,,,seed: Windows Update,

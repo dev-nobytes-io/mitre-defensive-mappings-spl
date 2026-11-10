@@ -1,0 +1,22 @@
+# Platform scope for rendering. Every data component is still scaffolded and
+# documented; eventtypes/Sigma pipeline entries are rendered only for log sources
+# used by analytics on these platforms (or declared directly on the DC).
+in_scope:
+  - Windows
+  - Linux
+  - Network Devices
+  - ESXi
+  - Containers
+  - IaaS            # Azure only, see azure_only_for below
+  - Identity Provider   # Azure Entra only
+
+# For these platforms, only log sources whose feed is in this list count as in scope.
+restrict_platform_to_feeds:
+  IaaS: [azure_entra, azure_activity, azure_resource, m365_defender]
+  Identity Provider: [azure_entra, azure_activity, m365_defender]
+
+out_of_scope:
+  - macOS
+  - SaaS
+  - Office Suite
+  - PRE

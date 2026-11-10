@@ -1,0 +1,45 @@
+feed,label,have,render,platforms,index,sourcetypes,ta
+wineventlog,Windows Event Logs,1,1,Windows,wineventlog,XmlWinEventLog:{channel},"Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering"
+sysmon,Sysmon (Microsoft-Windows-Sysmon/Operational),1,1,Windows,sysmon,XmlWinEventLog:Microsoft-Windows-Sysmon/Operational,Splunk Add-on for Sysmon (TA-microsoft-sysmon)
+powershell_logging,"PowerShell Operational channel (4103/4104) - part of Windows Event Logs, listed separately because it needs its own GPO and input",1,1,Windows,wineventlog,XmlWinEventLog:Microsoft-Windows-PowerShell/Operational,Splunk Add-on for Microsoft Windows
+windows_firewall_log,Windows Firewall text log (pfirewall.log),0,1,Windows,wineventlog,WinFirewall,Splunk_TA_windows (monitor input on %systemroot%\System32\LogFiles\Firewall\pfirewall.log)
+windows_perfmon,Windows Performance counters,0,1,Windows,perfmon,Perfmon:*,Splunk_TA_windows perfmon inputs
+windows_dns_server,Windows DNS Server analytical / debug log,0,1,Windows,wineventlog,MSAD:NT6:DNS,Splunk_TA_windows (MSAD:NT6:DNS) or Microsoft-Windows-DNS-Server/Analytical ETW
+windows_dhcp,Windows DHCP server log,0,1,Windows,wineventlog,DhcpSrvLog,Splunk_TA_windows
+iis,IIS access and configuration logs,0,1,Windows,web,ms:iis:auto,Splunk Add-on for Microsoft IIS
+etw,"ETW providers not surfaced by Sysmon (Kernel-Process, Win32k, WinINet, RPC, DotNETRuntime, AMSI, Token...)",0,1,Windows,etw,etw:json,"Requires a user-mode ETW consumer (SilkETW/Sealighter, Splunk Stream for NDIS, or an EDR that exposes the provider). No standard Splunk TA."
+windows_osquery,osquery on Windows,0,1,Windows,osquery,osquery:results,osquery TA (osquery:results)
+autoruns,Sysinternals Autoruns scans,0,1,Windows,wineventlog,autoruns,TA-autoruns (scripted input)
+trellix_epo,"Trellix ePO events (ENS threat/AMSI/adaptive threat protection, ePO audit)",1,1,Windows|Linux,epo,mcafee:epo,Splunk Add-on for McAfee ePO (mcafee:epo). Verify the sourcetype against your installed TA version.
+solidcore,Trellix Application and Change Control (Solidcore) via ePO,1,1,Windows|Linux,epo,mcafee:epo,"Arrives through the ePO TA; Solidcore events carry event names such as FILE_CREATED, FILE_MODIFIED, FILE_DELETED, EXECUTION_DENIED, REG_VALUE_MODIFIED, PROCESS_HIJACK_ATTEMPTED. Verify field names (threat_name / event_description) in your data."
+edr_telemetry,"EDR raw telemetry (memory, hunting, script block, syscall) - e.g. Trellix EDR, Defender for Endpoint advanced hunting",0,1,Windows|Linux,edr,edr:telemetry,Vendor specific
+corelight,Corelight / Zeek network logs,1,1,Windows|Linux|macOS|ESXi|Network Devices|Containers,corelight,corelight_{log},Corelight App for Splunk (corelight_<log>). For TA_zeek use prefix zeek: and suffix :json.
+palo_alto,"Palo Alto Networks PAN-OS (traffic, threat, URL, system, config, GlobalProtect)",1,1,Network Devices|Windows|Linux|ESXi|Containers,pan_logs,pan:{log},Splunk Add-on for Palo Alto Networks (pan:*)
+wireshark,Wireshark / tshark packet captures (ad hoc),1,1,Windows|Linux|Network Devices,pcap,wireshark:json,None standard. tshark -T ek output (wireshark:json) or Splunk Stream for continuous capture.
+netdev_syslog,"Router / switch / non-PAN firewall syslog, config change and AAA logs",0,1,Network Devices,netops,cisco:ios|cisco:asa|syslog,"Cisco Networks Add-on (cisco:ios, cisco:asa), Juniper/Arista TAs, or generic syslog"
+snmp,SNMP traps / polling,0,1,Network Devices,netops,sc4snmp:event,Splunk Connect for SNMP
+netflow,NetFlow / IPFIX (non-Zeek flow),0,1,Network Devices|Linux|Containers,netflow,stream:netflow,Splunk Stream or Splunk Add-on for NetFlow
+auditd,Linux auditd (SYSCALL/EXECVE/PATH/CONFIG_CHANGE/USER_LOGIN...),0,1,Linux|Containers,linux,linux:audit,Splunk Add-on for Unix and Linux (linux:audit) or auditd -> auditbeat/syslog
+linux_syslog,"Linux syslog / journald (messages, secure/auth, cron, kernel, daemon)",0,1,Linux|Containers,linux,linux_messages_syslog|linux_secure|syslog,"Splunk Add-on for Unix and Linux (syslog, linux_secure, linux_messages_syslog)"
+linux_osquery,osquery on Linux,0,1,Linux|Containers,osquery,osquery:results,osquery TA
+sysmon_linux,Sysmon for Linux,0,1,Linux,linux,sysmon:linux,Splunk Add-on for Sysmon for Linux
+iptables,iptables / nftables LOG target via kernel syslog,0,1,Linux,linux,syslog,Splunk Add-on for Unix and Linux (syslog)
+ebpf,"eBPF runtime security (Falco, Tetragon, Tracee)",0,1,Linux|Containers,linux,falco,"Vendor specific (falco JSON, tetragon)"
+azure_entra,Microsoft Entra ID sign-in and audit logs,0,1,Identity Provider|IaaS|Office Suite|Windows,azure,azure:aad:signin|azure:aad:audit,"Splunk Add-on for Microsoft Azure (azure:aad:signin, azure:aad:audit) or Microsoft Cloud Services add-on via Event Hub"
+azure_activity,Azure Activity Log (subscription control plane) and Azure Policy,0,1,IaaS,azure,mscs:azure:audit,Splunk Add-on for Microsoft Cloud Services (mscs:azure:audit)
+azure_resource,"Azure resource diagnostic logs (NSG flow, VM guest, Key Vault, Storage)",0,1,IaaS,azure,mscs:azure:eventhub,Splunk Add-on for Microsoft Cloud Services (mscs:azure:eventhub)
+m365_defender,Microsoft Defender XDR / Defender for Identity alerts and Graph API logs,0,1,Windows|Identity Provider|Office Suite,azure,ms:m365:defender:incident:alerts,Splunk Add-on for Microsoft Security
+kubernetes_audit,Kubernetes API server audit log and cluster events,0,1,Containers,k8s,kube:apiserver-audit|kube:objects:events,Splunk OpenTelemetry Collector for Kubernetes / Splunk Connect for Kubernetes
+container_runtime,Docker / containerd daemon and runtime events,0,1,Containers,k8s,docker:events|docker:daemon|containerd:events,"docker events scripted input or OpenTelemetry (docker:events, containerd)"
+esxi_syslog,"ESXi host logs via remote syslog (hostd, vmkernel, shell, vobd, vpxa, auth, esxupdate)",0,1,ESXi,vmware,vmware:esxlog:{log},Splunk Add-on for VMware ESXi Logs (vmware:esxlog:<log>)
+vcenter,vCenter vpxd logs and events,0,1,ESXi,vmware,vmware:vclog:vpxd,Splunk Add-on for VMware (vmware:vclog:vpxd)
+macos,macOS unified log / Endpoint Security / osquery / FSEvents,0,0,macOS,macos,macos:unifiedlog,"Jamf Protect, Splunk UF with log stream, osquery TA; no single standard TA"
+m365_unified,"Microsoft 365 unified audit log (Exchange, SharePoint, Teams, Purview)",0,0,Office Suite|SaaS|Identity Provider|Windows,o365,o365:management:activity,Splunk Add-on for Microsoft Office 365 (o365:management:activity)
+aws,AWS CloudTrail / VPC Flow / CloudWatch / Bedrock,0,0,IaaS|SaaS|Containers,aws,aws:cloudtrail|aws:cloudwatchlogs:vpcflow|aws:cloudwatchlogs,Splunk Add-on for AWS
+gcp,Google Cloud audit / VPC flow / Workspace admin,0,0,IaaS|SaaS|Identity Provider,gcp,google:gcp:pubsub:message,Splunk Add-on for Google Cloud Platform
+okta,Okta System Log,0,0,Identity Provider|SaaS,okta,OktaIM2:log,Splunk Add-on for Okta Identity Cloud
+saas,"SaaS application audit logs (GitHub, Slack, Salesforce, Zoom, Box, Confluence, Google Workspace...)",0,0,SaaS,saas,saas:audit,Per application
+mobile,Mobile EDR / MDM telemetry,0,0,,mobile,mobile:telemetry,n/a (Mobile ATT&CK domain)
+ot,OT / ICS application and protocol logs,0,0,,ot,ot:applog,n/a (ICS ATT&CK domain)
+threat_intel,"External reconnaissance sources (internet scan data, domain registration, malware repositories, persona monitoring)",0,0,PRE,threatintel,ti:feed,"Threat-intel feeds, not log sources"
+unspecified,"ATT&CK left the provider generic (e.g. ""Process"", ""File"", ""Network Traffic"")",0,1,,,,n/a

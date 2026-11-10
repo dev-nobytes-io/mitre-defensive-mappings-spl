@@ -1,0 +1,107 @@
+# Sigma logsource mapping.
+#   products: feed -> Sigma product
+#   categories: Sigma generic category -> data components whose umbrella eventtypes
+#               scope that category when a rule is converted to SPL through the
+#               pipeline in dist/sigma/pipelines/splunk_mitre_dc.yml.
+products:
+  sysmon: windows
+  wineventlog: windows
+  powershell_logging: windows
+  windows_firewall_log: windows
+  windows_perfmon: windows
+  windows_dns_server: windows
+  windows_dhcp: windows
+  iis: windows
+  etw: windows
+  windows_osquery: windows
+  autoruns: windows
+  trellix_epo: windows
+  solidcore: windows
+  edr_telemetry: windows
+  corelight: zeek
+  palo_alto: paloalto
+  wireshark: zeek
+  netdev_syslog: cisco
+  snmp: cisco
+  netflow: netflow
+  auditd: linux
+  linux_syslog: linux
+  linux_osquery: linux
+  sysmon_linux: linux
+  iptables: linux
+  ebpf: linux
+  azure_entra: azure
+  azure_activity: azure
+  azure_resource: azure
+  m365_defender: m365
+  kubernetes_audit: kubernetes
+  container_runtime: docker
+  esxi_syslog: vmware
+  vcenter: vmware
+
+categories:
+  process_creation:
+    windows: [Process Creation]
+    linux: [Process Creation]
+  process_access:
+    windows: [Process Access]
+  process_termination:
+    windows: [Process Termination]
+  process_tampering:
+    windows: [Process Modification]
+  image_load:
+    windows: [Module Load]
+  driver_load:
+    windows: [Driver Load]
+  file_event:
+    windows: [File Creation, File Modification]
+    linux: [File Creation, File Modification]
+  file_change:
+    windows: [File Modification]
+  file_delete:
+    windows: [File Deletion]
+    linux: [File Deletion]
+  file_access:
+    windows: [File Access]
+    linux: [File Access]
+  file_rename:
+    windows: [File Modification]
+  registry_event:
+    windows: [Windows Registry Key Creation, Windows Registry Key Modification, Windows Registry Key Deletion]
+  registry_add:
+    windows: [Windows Registry Key Creation]
+  registry_set:
+    windows: [Windows Registry Key Modification]
+  registry_delete:
+    windows: [Windows Registry Key Deletion]
+  network_connection:
+    windows: [Network Connection Creation]
+    linux: [Network Connection Creation]
+  dns_query:
+    windows: [Network Traffic Content]
+  create_remote_thread:
+    windows: [Process Access]
+  pipe_created:
+    windows: [Named Pipe Metadata]
+  wmi_event:
+    windows: [WMI Creation]
+  ps_script:
+    windows: [Script Execution]
+  ps_module:
+    windows: [Script Execution]
+  create_stream_hash:
+    windows: [File Creation]
+  clipboard_capture:
+    windows: [OS API Execution]
+  raw_access_thread:
+    windows: [Drive Access]
+  sysmon_status:
+    windows: [Host Status]
+  firewall:
+    paloalto: [Network Traffic Flow, Network Connection Creation]
+  proxy:
+    paloalto: [Network Traffic Content]
+  webserver:
+    windows: [Application Log Content]
+  antivirus:
+    windows: [Malware Metadata]

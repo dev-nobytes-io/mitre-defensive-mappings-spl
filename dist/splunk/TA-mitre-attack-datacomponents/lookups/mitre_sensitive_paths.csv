@@ -1,0 +1,13 @@
+path,category,platform
+C:\Windows\System32\config\SAM,credential_store,Windows
+C:\Windows\NTDS\ntds.dit,credential_store,Windows
+/etc/shadow,credential_store,Linux
+/etc/passwd,account_db,Linux
+/etc/sudoers,privilege,Linux
+/etc/cron.d/*,persistence,Linux
+/etc/systemd/system/*,persistence,Linux
+/root/.ssh/*,credential_store,Linux
+C:\Users\*\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup\*,persistence,Windows
+/etc/vmware/*,config,ESXi
+/vmfs/volumes/*,datastore,ESXi
+/var/run/secrets/kubernetes.io/*,credential_store,Containers

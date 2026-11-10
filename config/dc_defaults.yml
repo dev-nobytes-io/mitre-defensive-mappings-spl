@@ -1,0 +1,476 @@
+# ---------------------------------------------------------------------------
+# Per data-component, per-feed constraints that take precedence over what the
+# channel parser derives from ATT&CK's free-text channels.
+#
+# Precedence (highest first):
+#   1. content/data_components/DCxxxx.yml  curated.overrides.feeds / exclude_feeds
+#   2. this file
+#   3. derived union of parsed channels (shown in the DC page for review)
+#
+# Keys per feed: sourcetypes, event_codes, record_types, syscalls, verbs, filter.
+# `exclude` drops feeds whose mapping for this component is noise.
+# ---------------------------------------------------------------------------
+defaults:
+
+  Process Creation:
+    sysmon: {event_codes: [1]}
+    wineventlog: {sourcetypes: ["XmlWinEventLog:Security"], event_codes: [4688]}
+    powershell_logging: {event_codes: [4103, 4104]}
+    auditd: {record_types: [SYSCALL, EXECVE], syscalls: [execve, execveat]}
+    sysmon_linux: {event_codes: [1]}
+    linux_osquery: {filter: 'name=process_events OR name=processes'}
+    esxi_syslog: {sourcetypes: ["vmware:esxlog:shell"]}
+    kubernetes_audit: {filter: 'objectRef.subresource=exec OR (verb=create objectRef.resource=pods)'}
+    container_runtime: {filter: 'status IN (create, start, exec_create, exec_start)'}
+    solidcore: {filter: 'threat_name=EXECUTION_DENIED OR event_description=EXECUTION_DENIED'}
+    exclude: [azure_resource, linux_syslog, m365_defender]
+
+  Process Termination:
+    sysmon: {event_codes: [5]}
+    auditd: {record_types: [SYSCALL], syscalls: [kill, tkill, tgkill, exit_group]}
+    container_runtime: {filter: 'status IN (die, kill, stop)'}
+    exclude: [linux_syslog, linux_osquery]
+
+  Process Access:
+    sysmon: {event_codes: [8, 10]}
+    wineventlog: {sourcetypes: ["XmlWinEventLog:Security"], event_codes: [4656, 4663]}
+    auditd: {record_types: [SYSCALL], syscalls: [ptrace, process_vm_readv, process_vm_writev]}
+    exclude: [linux_syslog, linux_osquery]
+
+  Process Modification:
+    sysmon: {event_codes: [8, 10, 25]}
+    auditd: {record_types: [SYSCALL], syscalls: [ptrace, mprotect, process_vm_writev, memfd_create]}
+    exclude: [linux_osquery]
+
+  Process Metadata:
+    sysmon: {event_codes: [1, 5]}
+    wineventlog: {sourcetypes: ["XmlWinEventLog:Microsoft-Windows-CodeIntegrity/Operational", "XmlWinEventLog:Microsoft-Windows-AppLocker/EXE and DLL", "XmlWinEventLog:Microsoft-Windows-DeviceGuard/Operational", "XmlWinEventLog:Security"]}
+    powershell_logging: {event_codes: [400, 403]}
+    auditd: {record_types: [SYSCALL, PROCTITLE], syscalls: [execve, setuid, setgid, prctl]}
+    linux_osquery: {filter: 'name=processes OR name=process_open_sockets OR name=process_memory_map'}
+    exclude: [palo_alto, linux_syslog, container_runtime, esxi_syslog, netdev_syslog]
+
+  Command Execution:
+    sysmon: {event_codes: [1]}
+    wineventlog: {sourcetypes: ["XmlWinEventLog:Security"], event_codes: [4688]}
+    powershell_logging: {event_codes: [4103, 4104]}
+    auditd: {record_types: [EXECVE, SYSCALL, PROCTITLE], syscalls: [execve, execveat]}
+    esxi_syslog: {sourcetypes: ["vmware:esxlog:shell"]}
+    palo_alto: {sourcetypes: ["pan:config", "pan:system"]}
+    kubernetes_audit: {filter: 'objectRef.subresource=exec OR objectRef.subresource=attach'}
+    container_runtime: {filter: 'status IN (exec_create, exec_start)'}
+    trellix_epo: {filter: 'threat_type="AMSI*" OR threat_name="AMSI*"'}
+    exclude: [azure_activity, azure_entra, m365_defender, linux_syslog, linux_osquery]
+
+  Script Execution:
+    powershell_logging: {event_codes: [4103, 4104]}
+    wineventlog: {sourcetypes: ["XmlWinEventLog:Application", "XmlWinEventLog:System"], event_codes: [1502, 1503, 4016, 5312]}
+    auditd: {record_types: [EXECVE, SYSCALL], syscalls: [execve, execveat], filter: 'exe IN ("/bin/bash", "/bin/sh", "/usr/bin/python*", "/usr/bin/perl", "/bin/dash", "/bin/zsh")'}
+    esxi_syslog: {sourcetypes: ["vmware:esxlog:shell"]}
+    exclude: [palo_alto, azure_activity, m365_defender, linux_syslog, netdev_syslog, snmp]
+
+  Module Load:
+    sysmon: {event_codes: [7]}
+    wineventlog: {sourcetypes: ["XmlWinEventLog:Microsoft-Windows-CodeIntegrity/Operational", "XmlWinEventLog:Security", "XmlWinEventLog:Application"], event_codes: [3033, 3063, 3077, 8001]}
+    auditd: {record_types: [SYSCALL, PATH], syscalls: [open, openat, mmap], filter: 'name="*.so" OR name="*.so.*"'}
+    sysmon_linux: {event_codes: [7]}
+    solidcore: {filter: 'threat_name=PROCESS_HIJACK_ATTEMPTED OR event_description=PROCESS_HIJACK_ATTEMPTED'}
+    exclude: [linux_syslog, linux_osquery, snmp, esxi_syslog]
+
+  Driver Load:
+    sysmon: {event_codes: [6]}
+    wineventlog: {sourcetypes: ["XmlWinEventLog:System", "XmlWinEventLog:Microsoft-Windows-CodeIntegrity/Operational"], event_codes: [7045, 3033, 3077]}
+    linux_syslog: {filter: 'kernel'}
+    auditd: {record_types: [SYSCALL], syscalls: [init_module, finit_module]}
+
+  Kernel Module Load:
+    auditd: {record_types: [SYSCALL], syscalls: [init_module, finit_module, delete_module]}
+    linux_syslog: {filter: 'kernel'}
+    esxi_syslog: {sourcetypes: ["vmware:esxlog:vmkernel"]}
+
+  File Creation:
+    sysmon: {event_codes: [11, 15]}
+    wineventlog: {sourcetypes: ["XmlWinEventLog:Security"], event_codes: [4663, 4656]}
+    auditd: {record_types: [SYSCALL, PATH], syscalls: [open, openat, openat2, creat, mkdir, mkdirat, rename, renameat, link, symlink]}
+    sysmon_linux: {event_codes: [11]}
+    solidcore: {filter: 'threat_name IN (FILE_CREATED, FILE_RENAMED) OR event_description IN (FILE_CREATED, FILE_RENAMED)'}
+    esxi_syslog: {sourcetypes: ["vmware:esxlog:vmkernel", "vmware:esxlog:hostd"]}
+    exclude: [snmp, linux_osquery]
+
+  File Modification:
+    sysmon: {event_codes: [2, 11, 15]}
+    wineventlog: {sourcetypes: ["XmlWinEventLog:Security"], event_codes: [4663, 4670]}
+    auditd: {record_types: [SYSCALL, PATH], syscalls: [write, pwrite, truncate, ftruncate, rename, renameat, chmod, fchmod, fchmodat, chown, fchown, setxattr]}
+    solidcore: {filter: 'threat_name IN (FILE_MODIFIED, FILE_ATTR_MODIFIED, FILE_RENAMED, WRITE_DENIED, OWNERSHIP_DENIED) OR event_description IN (FILE_MODIFIED, FILE_ATTR_MODIFIED, FILE_RENAMED, WRITE_DENIED, OWNERSHIP_DENIED)'}
+    palo_alto: {sourcetypes: ["pan:config"]}
+    esxi_syslog: {sourcetypes: ["vmware:esxlog:shell", "vmware:esxlog:vmkernel", "vmware:esxlog:hostd"]}
+    exclude: [azure_resource, m365_defender, snmp, linux_osquery, windows_osquery, container_runtime]
+
+  File Deletion:
+    sysmon: {event_codes: [23, 26]}
+    wineventlog: {sourcetypes: ["XmlWinEventLog:Security"], event_codes: [4660, 4663]}
+    auditd: {record_types: [SYSCALL, PATH], syscalls: [unlink, unlinkat, rmdir, rename, renameat]}
+    sysmon_linux: {event_codes: [23]}
+    solidcore: {filter: 'threat_name=FILE_DELETED OR event_description=FILE_DELETED'}
+    esxi_syslog: {sourcetypes: ["vmware:esxlog:shell", "vmware:esxlog:hostd"]}
+    exclude: [container_runtime]
+
+  File Access:
+    wineventlog: {sourcetypes: ["XmlWinEventLog:Security"], event_codes: [4656, 4663]}
+    auditd: {record_types: [SYSCALL, PATH], syscalls: [open, openat, openat2, read, readlink, stat, access]}
+    solidcore: {filter: 'threat_name=READ_DENIED OR event_description=READ_DENIED'}
+    esxi_syslog: {sourcetypes: ["vmware:esxlog:hostd", "vmware:esxlog:vmkernel"]}
+    kubernetes_audit: {verbs: [get, list], filter: 'objectRef.resource=secrets OR objectRef.resource=configmaps'}
+    exclude: [sysmon, azure_activity, linux_osquery, linux_syslog]
+
+  File Metadata:
+    sysmon: {event_codes: [11, 15, 2]}
+    wineventlog: {sourcetypes: ["XmlWinEventLog:Security", "XmlWinEventLog:Microsoft-Windows-CodeIntegrity/Operational", "XmlWinEventLog:Microsoft-Windows-Windows Defender/Operational"], event_codes: [4663, 4670, 3033, 1116, 1117]}
+    auditd: {record_types: [SYSCALL, PATH], syscalls: [chmod, fchmod, fchmodat, chown, fchown, fchownat, lchown, setxattr, lsetxattr, fsetxattr, removexattr]}
+    solidcore: {filter: 'threat_name IN (FILE_ATTR_MODIFIED, FILE_SOLIDIFIED, FILE_UNSOLIDIFIED) OR event_description IN (FILE_ATTR_MODIFIED, FILE_SOLIDIFIED, FILE_UNSOLIDIFIED)'}
+    linux_osquery: {filter: 'name=file OR name=hash OR name=file_events'}
+    corelight: {sourcetypes: ["corelight_files", "corelight_pe"]}
+    palo_alto: {sourcetypes: ["pan:threat"], filter: 'log_subtype=wildfire OR log_subtype=virus'}
+    exclude: [netdev_syslog, esxi_syslog, linux_syslog]
+
+  Windows Registry Key Creation:
+    sysmon: {event_codes: [12]}
+    wineventlog: {sourcetypes: ["XmlWinEventLog:Security"], event_codes: [4657, 4663]}
+    solidcore: {filter: 'threat_name=REG_KEY_CREATED OR event_description=REG_KEY_CREATED'}
+
+  Windows Registry Key Modification:
+    sysmon: {event_codes: [13, 14]}
+    wineventlog: {sourcetypes: ["XmlWinEventLog:Security"], event_codes: [4657, 4663, 4670]}
+    solidcore: {filter: 'threat_name IN (REG_VALUE_MODIFIED, REG_KEY_MODIFIED) OR event_description IN (REG_VALUE_MODIFIED, REG_KEY_MODIFIED)'}
+
+  Windows Registry Key Deletion:
+    sysmon: {event_codes: [12]}
+    wineventlog: {sourcetypes: ["XmlWinEventLog:Security"], event_codes: [4657, 4660, 4663]}
+    solidcore: {filter: 'threat_name IN (REG_KEY_DELETED, REG_VALUE_DELETED) OR event_description IN (REG_KEY_DELETED, REG_VALUE_DELETED)'}
+
+  Windows Registry Key Access:
+    wineventlog: {sourcetypes: ["XmlWinEventLog:Security"], event_codes: [4656, 4663]}
+    exclude: [edr_telemetry]
+
+  Service Creation:
+    wineventlog: {sourcetypes: ["XmlWinEventLog:System", "XmlWinEventLog:Security"], event_codes: [7045, 4697]}
+    auditd: {record_types: [PATH, CONFIG_CHANGE], filter: 'name="/etc/systemd/system/*" OR name="/usr/lib/systemd/system/*" OR name="/etc/init.d/*"'}
+    linux_syslog: {filter: 'process=systemd'}
+    kubernetes_audit: {verbs: [create], filter: 'objectRef.resource IN (daemonsets, deployments, cronjobs, services)'}
+    exclude: [linux_osquery]
+
+  Service Modification:
+    wineventlog: {sourcetypes: ["XmlWinEventLog:System", "XmlWinEventLog:Security"], event_codes: [7040, 7036, 4657]}
+    esxi_syslog: {sourcetypes: ["vmware:esxlog:hostd"]}
+
+  Service Metadata:
+    wineventlog: {sourcetypes: ["XmlWinEventLog:System"], event_codes: [7034, 7035, 7036, 7040]}
+    sysmon: {event_codes: [4]}
+    linux_osquery: {filter: 'name=systemd_units OR name=startup_items'}
+    palo_alto: {sourcetypes: ["pan:system"]}
+    exclude: [kubernetes_audit, linux_syslog, netdev_syslog]
+
+  Scheduled Job Creation:
+    wineventlog: {sourcetypes: ["XmlWinEventLog:Security", "XmlWinEventLog:Microsoft-Windows-TaskScheduler/Operational"], event_codes: [4698, 106]}
+    auditd: {record_types: [PATH, SYSCALL], syscalls: [open, openat, rename], filter: 'name="/etc/cron*" OR name="/var/spool/cron/*" OR name="/etc/systemd/system/*.timer"'}
+    linux_syslog: {filter: 'process=CRON OR process=cron OR process=crond OR process=systemd'}
+    esxi_syslog: {sourcetypes: ["vmware:esxlog:syslog"], filter: 'crond'}
+    kubernetes_audit: {verbs: [create], filter: 'objectRef.resource=cronjobs'}
+    exclude: [linux_osquery]
+
+  Scheduled Job Modification:
+    wineventlog: {sourcetypes: ["XmlWinEventLog:Security", "XmlWinEventLog:Microsoft-Windows-TaskScheduler/Operational"], event_codes: [4702, 140]}
+    auditd: {record_types: [PATH, CONFIG_CHANGE], filter: 'name="/etc/cron*" OR name="/var/spool/cron/*"'}
+
+  Scheduled Job Metadata:
+    wineventlog: {sourcetypes: ["XmlWinEventLog:Microsoft-Windows-TaskScheduler/Operational"], event_codes: [106, 140, 200, 201]}
+    linux_syslog: {filter: 'process=CRON OR process=cron OR process=crond'}
+
+  WMI Creation:
+    wineventlog: {sourcetypes: ["XmlWinEventLog:Microsoft-Windows-WMI-Activity/Operational"], event_codes: [5857, 5858, 5859, 5860, 5861]}
+    sysmon: {event_codes: [19, 20, 21]}
+
+  Named Pipe Metadata:
+    sysmon: {event_codes: [17, 18]}
+
+  OS API Execution:
+    sysmon: {event_codes: [8, 10, 25]}
+    wineventlog: {sourcetypes: ["XmlWinEventLog:Security"], event_codes: [4656, 4663]}
+    auditd: {record_types: [SYSCALL], syscalls: [ptrace, process_vm_writev, mmap, mprotect, keyctl, setns, unshare, bpf]}
+    exclude: [corelight, palo_alto, solidcore, linux_syslog, netdev_syslog, snmp, esxi_syslog]
+
+  Network Connection Creation:
+    sysmon: {event_codes: [3]}
+    wineventlog: {sourcetypes: ["XmlWinEventLog:Security", "XmlWinEventLog:Microsoft-Windows-Windows Firewall With Advanced Security/Firewall"], event_codes: [5156, 5158, 5157]}
+    corelight: {sourcetypes: ["corelight_conn"]}
+    palo_alto: {sourcetypes: ["pan:traffic"]}
+    auditd: {record_types: [SYSCALL], syscalls: [connect, bind, listen, accept, accept4, socket]}
+    sysmon_linux: {event_codes: [3]}
+    linux_osquery: {filter: 'name=process_open_sockets OR name=socket_events OR name=listening_ports'}
+    esxi_syslog: {sourcetypes: ["vmware:esxlog:vmkernel", "vmware:esxlog:hostd"]}
+    exclude: [linux_syslog, snmp]
+
+  Network Traffic Flow:
+    corelight: {sourcetypes: ["corelight_conn"]}
+    palo_alto: {sourcetypes: ["pan:traffic"]}
+    sysmon: {event_codes: [3]}
+    wineventlog: {sourcetypes: ["XmlWinEventLog:Security"], event_codes: [5156, 5157]}
+    auditd: {record_types: [SYSCALL], syscalls: [connect, sendto, sendmsg, recvfrom]}
+    esxi_syslog: {sourcetypes: ["vmware:esxlog:vmkernel", "vmware:esxlog:hostd", "vmware:esxlog:vobd"]}
+    exclude: [m365_defender, snmp, linux_syslog, linux_osquery, container_runtime, windows_dhcp, windows_dns_server]
+
+  Network Traffic Content:
+    corelight: {sourcetypes: ["corelight_http", "corelight_dns", "corelight_ssl", "corelight_x509", "corelight_files", "corelight_smtp", "corelight_ftp", "corelight_ssh", "corelight_rdp", "corelight_smb_files", "corelight_dce_rpc", "corelight_kerberos", "corelight_ntlm", "corelight_ldap", "corelight_notice", "corelight_weird"]}
+    palo_alto: {sourcetypes: ["pan:threat", "pan:decryption"]}
+    sysmon: {event_codes: [22]}
+    wineventlog: {sourcetypes: ["XmlWinEventLog:Microsoft-Windows-Windows Defender/Operational"], event_codes: [1116, 1117]}
+    auditd: {record_types: [SYSCALL], syscalls: [sendto, sendmsg, recvfrom, recvmsg]}
+    linux_syslog: {sourcetypes: ["access_combined"]}
+    exclude: [azure_activity, container_runtime, etw, esxi_syslog, netdev_syslog, iptables]
+
+  Network Share Access:
+    wineventlog: {sourcetypes: ["XmlWinEventLog:Security", "XmlWinEventLog:Microsoft-Windows-SMBClient/Security", "XmlWinEventLog:Microsoft-Windows-SMBServer/Security"], event_codes: [5140, 5145, 5142, 5144, 31001]}
+    corelight: {sourcetypes: ["corelight_smb_files", "corelight_smb_mapping"]}
+    palo_alto: {sourcetypes: ["pan:traffic"], filter: 'app=ms-ds-smb OR app=ms-ds-smbv3 OR app=ms-ds-smbv2'}
+
+  Logon Session Creation:
+    wineventlog: {sourcetypes: ["XmlWinEventLog:Security"], event_codes: [4624, 4625, 4648, 4778]}
+    auditd: {record_types: [USER_LOGIN, USER_START, USER_AUTH]}
+    linux_syslog: {sourcetypes: ["linux_secure"]}
+    palo_alto: {sourcetypes: ["pan:globalprotect", "pan:system"]}
+    esxi_syslog: {sourcetypes: ["vmware:esxlog:auth", "vmware:esxlog:hostd"]}
+    azure_entra: {sourcetypes: ["azure:aad:signin"]}
+    corelight: {sourcetypes: ["corelight_ssh", "corelight_rdp", "corelight_kerberos", "corelight_ntlm"]}
+    exclude: [netdev_syslog]
+
+  Logon Session Metadata:
+    wineventlog: {sourcetypes: ["XmlWinEventLog:Security"], event_codes: [4624, 4634, 4647, 4672, 4778, 4779, 4800, 4801, 4802, 4803]}
+    auditd: {record_types: [USER_LOGIN, USER_END, CRED_ACQ, CRED_DISP]}
+    linux_syslog: {sourcetypes: ["linux_secure"]}
+    palo_alto: {sourcetypes: ["pan:globalprotect"]}
+    azure_entra: {sourcetypes: ["azure:aad:signin"]}
+    esxi_syslog: {sourcetypes: ["vmware:esxlog:auth", "vmware:esxlog:hostd"]}
+    exclude: [kubernetes_audit]
+
+  User Account Authentication:
+    wineventlog: {sourcetypes: ["XmlWinEventLog:Security"], event_codes: [4624, 4625, 4648, 4768, 4769, 4770, 4771, 4776, 4777]}
+    auditd: {record_types: [USER_LOGIN, USER_AUTH, USER_ACCT, CRED_ACQ]}
+    linux_syslog: {sourcetypes: ["linux_secure"]}
+    palo_alto: {sourcetypes: ["pan:globalprotect", "pan:system"]}
+    azure_entra: {sourcetypes: ["azure:aad:signin"]}
+    esxi_syslog: {sourcetypes: ["vmware:esxlog:auth"]}
+    corelight: {sourcetypes: ["corelight_kerberos", "corelight_ntlm", "corelight_ssh", "corelight_rdp", "corelight_radius"]}
+    kubernetes_audit: {filter: 'responseStatus.code=401 OR responseStatus.code=403'}
+    exclude: [netdev_syslog, vcenter]
+
+  User Account Creation:
+    wineventlog: {sourcetypes: ["XmlWinEventLog:Security"], event_codes: [4720]}
+    auditd: {record_types: [ADD_USER, SYSCALL, EXECVE], filter: 'exe="/usr/sbin/useradd" OR exe="/usr/sbin/adduser" OR type=ADD_USER'}
+    linux_syslog: {sourcetypes: ["linux_secure"], filter: 'useradd OR adduser'}
+    azure_entra: {sourcetypes: ["azure:aad:audit"], filter: 'operationName="Add user"'}
+    palo_alto: {sourcetypes: ["pan:config"]}
+    exclude: [container_runtime, netdev_syslog]
+
+  User Account Modification:
+    wineventlog: {sourcetypes: ["XmlWinEventLog:Security"], event_codes: [4722, 4723, 4724, 4725, 4738, 4740, 4767, 4728, 4732, 4756, 4729, 4733, 4757, 4704, 4670]}
+    auditd: {record_types: [USER_MGMT, USER_CHAUTHTOK, SYSCALL, EXECVE], filter: 'exe="/usr/sbin/usermod" OR exe="/usr/bin/passwd" OR exe="/usr/sbin/chpasswd" OR type=USER_CHAUTHTOK OR type=USER_MGMT'}
+    linux_syslog: {sourcetypes: ["linux_secure"]}
+    azure_entra: {sourcetypes: ["azure:aad:audit"]}
+    kubernetes_audit: {verbs: [create, patch, update], filter: 'objectRef.resource IN (rolebindings, clusterrolebindings, serviceaccounts)'}
+
+  User Account Deletion:
+    wineventlog: {sourcetypes: ["XmlWinEventLog:Security"], event_codes: [4726]}
+    esxi_syslog: {sourcetypes: ["vmware:esxlog:hostd"]}
+
+  User Account Metadata:
+    wineventlog: {sourcetypes: ["XmlWinEventLog:Security"], event_codes: [4720, 4738, 4672, 4673, 4674]}
+    auditd: {record_types: [SYSCALL, PATH], syscalls: [open, openat, read], filter: 'name="/etc/passwd" OR name="/etc/shadow" OR name="/etc/group" OR name="/etc/sudoers*"'}
+    azure_entra: {sourcetypes: ["azure:aad:audit"]}
+    linux_osquery: {filter: 'name=users OR name=groups OR name=sudoers OR name=shadow'}
+    windows_osquery: {filter: 'name=users OR name=groups OR name=logged_in_users'}
+    exclude: [vcenter, m365_defender]
+
+  Group Enumeration:
+    wineventlog: {sourcetypes: ["XmlWinEventLog:Security"], event_codes: [4798, 4799]}
+    azure_entra: {sourcetypes: ["azure:aad:audit"]}
+
+  Group Modification:
+    wineventlog: {sourcetypes: ["XmlWinEventLog:Security"], event_codes: [4728, 4729, 4732, 4733, 4756, 4757, 4735, 4737, 4755]}
+
+  Group Metadata:
+    wineventlog: {sourcetypes: ["XmlWinEventLog:Security"], event_codes: [4798, 4799, 4731, 4734, 4727, 4730, 4754, 4758]}
+
+  Active Directory Object Modification:
+    wineventlog: {sourcetypes: ["XmlWinEventLog:Security"], event_codes: [5136, 5137, 5139, 5141, 4739, 4662, 5163]}
+    azure_entra: {sourcetypes: ["azure:aad:audit"]}
+    exclude: [azure_activity, esxi_syslog, vcenter]
+
+  Active Directory Object Creation:
+    wineventlog: {sourcetypes: ["XmlWinEventLog:Security"], event_codes: [5137, 4928]}
+    azure_entra: {sourcetypes: ["azure:aad:audit"]}
+
+  Active Directory Object Deletion:
+    wineventlog: {sourcetypes: ["XmlWinEventLog:Security"], event_codes: [5141, 4929]}
+
+  Active Directory Object Access:
+    wineventlog: {sourcetypes: ["XmlWinEventLog:Security"], event_codes: [4661, 4662]}
+
+  Active Directory Credential Request:
+    wineventlog: {sourcetypes: ["XmlWinEventLog:Security"], event_codes: [4768, 4769, 4770, 4771, 4773]}
+    corelight: {sourcetypes: ["corelight_kerberos"]}
+    exclude: [linux_syslog]
+
+  Host Status:
+    wineventlog: {sourcetypes: ["XmlWinEventLog:System", "XmlWinEventLog:Security", "XmlWinEventLog:Microsoft-Windows-Windows Defender/Operational"], event_codes: [1074, 6005, 6006, 6008, 7036, 7045, 1100, 1102, 104, 5001, 5004, 5007, 5010, 5012, 1001]}
+    sysmon: {event_codes: [4, 16, 255]}
+    trellix_epo: {}
+    palo_alto: {sourcetypes: ["pan:system"]}
+    linux_syslog: {filter: 'process=auditd OR process=systemd OR process=kernel OR rsyslogd'}
+    auditd: {record_types: [DAEMON_START, DAEMON_END, DAEMON_ABORT, CONFIG_CHANGE, SERVICE_START, SERVICE_STOP]}
+    esxi_syslog: {sourcetypes: ["vmware:esxlog:hostd", "vmware:esxlog:vobd"]}
+    kubernetes_audit: {sourcetypes: ["kube:objects:events"]}
+    exclude: [corelight, linux_osquery, netdev_syslog]
+
+  Malware Metadata:
+    trellix_epo: {}
+    wineventlog: {sourcetypes: ["XmlWinEventLog:Microsoft-Windows-Windows Defender/Operational"], event_codes: [1006, 1007, 1008, 1009, 1010, 1011, 1015, 1116, 1117, 1118, 1119]}
+    palo_alto: {sourcetypes: ["pan:threat"], filter: 'log_subtype IN (virus, wildfire, spyware, vulnerability)'}
+
+  Malware Content:
+    trellix_epo: {}
+    palo_alto: {sourcetypes: ["pan:threat"], filter: 'log_subtype IN (virus, wildfire)'}
+    corelight: {sourcetypes: ["corelight_files", "corelight_pe"]}
+
+  Application Log Content:
+    wineventlog: {sourcetypes: ["XmlWinEventLog:Application", "XmlWinEventLog:System", "XmlWinEventLog:Security"], event_codes: [1102, 104, 6416, 1000, 1020, 1063, 1341, 1342]}
+    trellix_epo: {}
+    palo_alto: {sourcetypes: ["pan:system", "pan:threat", "pan:globalprotect"]}
+    corelight: {sourcetypes: ["corelight_http", "corelight_smtp", "corelight_notice", "corelight_ssh"]}
+    linux_syslog: {sourcetypes: ["linux_messages_syslog", "linux_secure", "access_combined"]}
+    esxi_syslog: {sourcetypes: ["vmware:esxlog:hostd", "vmware:esxlog:esxupdate", "vmware:esxlog:vmkernel"]}
+    azure_entra: {sourcetypes: ["azure:aad:audit", "azure:aad:signin"]}
+    exclude: [auditd, netdev_syslog, snmp, edr_telemetry]
+
+  Drive Creation:
+    wineventlog: {sourcetypes: ["XmlWinEventLog:System", "XmlWinEventLog:Security"], event_codes: [1006, 2003, 2100, 2101, 2102, 2105, 2106, 6416, 10000, 10001, 20001, 20003]}
+    auditd: {record_types: [SYSCALL], syscalls: [mount]}
+    linux_syslog: {filter: 'kernel usb OR process=udisksd OR "New USB device"'}
+    exclude: [linux_osquery]
+
+  Drive Modification:
+    sysmon: {event_codes: [9]}
+    wineventlog: {sourcetypes: ["XmlWinEventLog:System"], event_codes: [1006, 2003, 20001]}
+    exclude: [palo_alto, netdev_syslog, snmp, linux_syslog]
+
+  Drive Access:
+    sysmon: {event_codes: [9]}
+    auditd: {record_types: [SYSCALL, PATH], syscalls: [open, openat, read, write], filter: 'name="/dev/sd*" OR name="/dev/nvme*" OR name="/dev/mapper/*"'}
+    exclude: [linux_osquery, linux_syslog]
+
+  Firewall Rule Modification:
+    palo_alto: {sourcetypes: ["pan:config"]}
+    wineventlog: {sourcetypes: ["XmlWinEventLog:Microsoft-Windows-Windows Firewall With Advanced Security/Firewall", "XmlWinEventLog:Security"], event_codes: [2004, 2005, 2006, 2033, 4946, 4947, 4948, 4950]}
+    linux_syslog: {filter: 'iptables OR nftables OR ufw OR firewalld'}
+    esxi_syslog: {sourcetypes: ["vmware:esxlog:hostd"], filter: 'firewall'}
+    exclude: [corelight]
+
+  Firewall Disable:
+    palo_alto: {sourcetypes: ["pan:config", "pan:system"]}
+    wineventlog: {sourcetypes: ["XmlWinEventLog:Microsoft-Windows-Windows Firewall With Advanced Security/Firewall", "XmlWinEventLog:Security"], event_codes: [2003, 2008, 4950, 5025]}
+    esxi_syslog: {sourcetypes: ["vmware:esxlog:hostd"], filter: 'firewall'}
+
+  Firewall Metadata:
+    palo_alto: {sourcetypes: ["pan:config", "pan:system"]}
+    wineventlog: {sourcetypes: ["XmlWinEventLog:Microsoft-Windows-Windows Firewall With Advanced Security/Firewall", "XmlWinEventLog:Security"], event_codes: [2004, 2005, 2006, 4946, 4947, 4948]}
+
+  Firewall Enumeration:
+    palo_alto: {sourcetypes: ["pan:config", "pan:system"]}
+    wineventlog: {sourcetypes: ["XmlWinEventLog:Security"], event_codes: [4688]}
+
+  Firmware Modification:
+    wineventlog: {sourcetypes: ["XmlWinEventLog:Microsoft-Windows-Kernel-Boot", "XmlWinEventLog:System"], event_codes: [12, 13, 20, 1001]}
+    palo_alto: {sourcetypes: ["pan:system"]}
+    auditd: {record_types: [SYSCALL], syscalls: [ioctl, write], filter: 'name="/dev/mem" OR name="/dev/mtd*" OR exe="*flashrom*" OR exe="*fwupd*"'}
+    exclude: [etw]
+
+  Container Creation:
+    kubernetes_audit: {verbs: [create], filter: 'objectRef.resource=pods'}
+    container_runtime: {filter: 'status=create'}
+    exclude: [auditd, linux_syslog]
+
+  Container Start:
+    kubernetes_audit: {sourcetypes: ["kube:objects:events"], filter: 'reason=Started OR reason=Pulled OR reason=Created'}
+    container_runtime: {filter: 'status=start'}
+
+  Container Enumeration:
+    container_runtime: {filter: 'status=list OR method=GET uri="/containers/json*"'}
+
+  Pod Creation:
+    kubernetes_audit: {verbs: [create], filter: 'objectRef.resource=pods'}
+
+  Pod Modification:
+    kubernetes_audit: {verbs: [patch, update], filter: 'objectRef.resource=pods'}
+
+  Pod Enumeration:
+    kubernetes_audit: {verbs: [list, get, watch], filter: 'objectRef.resource=pods'}
+
+  Image Creation:
+    container_runtime: {filter: 'status IN (commit, build, import, pull, tag)'}
+    kubernetes_audit: {verbs: [create], filter: 'objectRef.resource=pods'}
+
+  Image Metadata:
+    container_runtime: {filter: 'status IN (pull, tag)'}
+    exclude: [kubernetes_audit, esxi_syslog]
+
+  Image Modification:
+    container_runtime: {filter: 'status IN (tag, untag, push)'}
+
+  Volume Creation:
+    wineventlog: {sourcetypes: ["XmlWinEventLog:Microsoft-Windows-VSS", "XmlWinEventLog:System"], event_codes: [8224, 12, 7036]}
+    kubernetes_audit: {verbs: [create], filter: 'objectRef.resource IN (persistentvolumes, persistentvolumeclaims)'}
+    esxi_syslog: {sourcetypes: ["vmware:esxlog:vmkernel", "vmware:esxlog:hostd"]}
+
+  Volume Deletion:
+    esxi_syslog: {sourcetypes: ["vmware:esxlog:vmkernel", "vmware:esxlog:hostd"]}
+
+  Volume Modification:
+    kubernetes_audit: {verbs: [patch, update], filter: 'objectRef.resource IN (persistentvolumes, persistentvolumeclaims)'}
+
+  Snapshot Creation:
+    esxi_syslog: {sourcetypes: ["vmware:esxlog:vmkernel", "vmware:esxlog:hostd"], filter: 'snapshot'}
+    azure_activity: {filter: 'operationName="Microsoft.Compute/snapshots/write"'}
+
+  Snapshot Deletion:
+    esxi_syslog: {sourcetypes: ["vmware:esxlog:hostd"], filter: 'snapshot'}
+    azure_activity: {filter: 'operationName="Microsoft.Compute/snapshots/delete"'}
+
+  Cloud Service Modification:
+    azure_activity: {}
+    azure_entra: {sourcetypes: ["azure:aad:audit"]}
+
+  Cloud Service Enumeration:
+    azure_entra: {sourcetypes: ["azure:aad:audit"]}
+    azure_activity: {}
+
+  Web Credential Creation:
+    wineventlog: {sourcetypes: ["XmlWinEventLog:AD FS/Admin", "XmlWinEventLog:Security"], event_codes: [1200, 1202, 4769, 4662]}
+    azure_entra: {sourcetypes: ["azure:aad:audit", "azure:aad:signin"]}
+
+  Web Credential Usage:
+    azure_entra: {sourcetypes: ["azure:aad:signin"]}
+    corelight: {sourcetypes: ["corelight_http", "corelight_ssl"]}
+    palo_alto: {sourcetypes: ["pan:traffic", "pan:threat"]}
+    exclude: [kubernetes_audit]
+
+  Domain Registration:
+    corelight: {sourcetypes: ["corelight_dns", "corelight_x509"]}
+    sysmon: {event_codes: [22]}
+    exclude: [esxi_syslog]
+
+  Response Content:
+    corelight: {sourcetypes: ["corelight_http", "corelight_dns", "corelight_ssl"]}
+    palo_alto: {sourcetypes: ["pan:threat"]}
+
+  Response Metadata:
+    corelight: {sourcetypes: ["corelight_http", "corelight_dns", "corelight_ssl", "corelight_x509"]}
+    palo_alto: {sourcetypes: ["pan:threat", "pan:traffic"]}
