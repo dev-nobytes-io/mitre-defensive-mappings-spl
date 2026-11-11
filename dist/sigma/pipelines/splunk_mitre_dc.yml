@@ -8,7 +8,6 @@ transformations:
   type: add_condition
   conditions:
     eventtype:
-    - mitre_dc0032_process_creation__powershell_logging
     - mitre_dc0032_process_creation__solidcore
     - mitre_dc0032_process_creation__sysmon
     - mitre_dc0032_process_creation__wineventlog
@@ -392,6 +391,330 @@ transformations:
   - type: logsource
     product: windows
     category: antivirus
+- id: svc_zeek_conn
+  type: add_condition
+  conditions:
+    index: corelight
+    sourcetype: corelight_conn
+  rule_conditions:
+  - type: logsource
+    product: zeek
+    service: conn
+- id: svc_zeek_dns
+  type: add_condition
+  conditions:
+    index: corelight
+    sourcetype: corelight_dns
+  rule_conditions:
+  - type: logsource
+    product: zeek
+    service: dns
+- id: svc_zeek_http
+  type: add_condition
+  conditions:
+    index: corelight
+    sourcetype: corelight_http
+  rule_conditions:
+  - type: logsource
+    product: zeek
+    service: http
+- id: svc_zeek_ssl
+  type: add_condition
+  conditions:
+    index: corelight
+    sourcetype: corelight_ssl
+  rule_conditions:
+  - type: logsource
+    product: zeek
+    service: ssl
+- id: svc_zeek_x509
+  type: add_condition
+  conditions:
+    index: corelight
+    sourcetype: corelight_x509
+  rule_conditions:
+  - type: logsource
+    product: zeek
+    service: x509
+- id: svc_zeek_files
+  type: add_condition
+  conditions:
+    index: corelight
+    sourcetype: corelight_files
+  rule_conditions:
+  - type: logsource
+    product: zeek
+    service: files
+- id: svc_zeek_smb_files
+  type: add_condition
+  conditions:
+    index: corelight
+    sourcetype: corelight_smb_files
+  rule_conditions:
+  - type: logsource
+    product: zeek
+    service: smb_files
+- id: svc_zeek_smb_mapping
+  type: add_condition
+  conditions:
+    index: corelight
+    sourcetype: corelight_smb_mapping
+  rule_conditions:
+  - type: logsource
+    product: zeek
+    service: smb_mapping
+- id: svc_zeek_dce_rpc
+  type: add_condition
+  conditions:
+    index: corelight
+    sourcetype: corelight_dce_rpc
+  rule_conditions:
+  - type: logsource
+    product: zeek
+    service: dce_rpc
+- id: svc_zeek_kerberos
+  type: add_condition
+  conditions:
+    index: corelight
+    sourcetype: corelight_kerberos
+  rule_conditions:
+  - type: logsource
+    product: zeek
+    service: kerberos
+- id: svc_zeek_ntlm
+  type: add_condition
+  conditions:
+    index: corelight
+    sourcetype: corelight_ntlm
+  rule_conditions:
+  - type: logsource
+    product: zeek
+    service: ntlm
+- id: svc_zeek_rdp
+  type: add_condition
+  conditions:
+    index: corelight
+    sourcetype: corelight_rdp
+  rule_conditions:
+  - type: logsource
+    product: zeek
+    service: rdp
+- id: svc_zeek_ssh
+  type: add_condition
+  conditions:
+    index: corelight
+    sourcetype: corelight_ssh
+  rule_conditions:
+  - type: logsource
+    product: zeek
+    service: ssh
+- id: svc_zeek_smtp
+  type: add_condition
+  conditions:
+    index: corelight
+    sourcetype: corelight_smtp
+  rule_conditions:
+  - type: logsource
+    product: zeek
+    service: smtp
+- id: svc_zeek_ftp
+  type: add_condition
+  conditions:
+    index: corelight
+    sourcetype: corelight_ftp
+  rule_conditions:
+  - type: logsource
+    product: zeek
+    service: ftp
+- id: svc_zeek_notice
+  type: add_condition
+  conditions:
+    index: corelight
+    sourcetype: corelight_notice
+  rule_conditions:
+  - type: logsource
+    product: zeek
+    service: notice
+- id: svc_zeek_weird
+  type: add_condition
+  conditions:
+    index: corelight
+    sourcetype: corelight_weird
+  rule_conditions:
+  - type: logsource
+    product: zeek
+    service: weird
+- id: svc_zeek_software
+  type: add_condition
+  conditions:
+    index: corelight
+    sourcetype: corelight_software
+  rule_conditions:
+  - type: logsource
+    product: zeek
+    service: software
+- id: svc_zeek_dhcp
+  type: add_condition
+  conditions:
+    index: corelight
+    sourcetype: corelight_dhcp
+  rule_conditions:
+  - type: logsource
+    product: zeek
+    service: dhcp
+- id: svc_zeek_ldap
+  type: add_condition
+  conditions:
+    index: corelight
+    sourcetype: corelight_ldap
+  rule_conditions:
+  - type: logsource
+    product: zeek
+    service: ldap
+- id: svc_zeek_pe
+  type: add_condition
+  conditions:
+    index: corelight
+    sourcetype: corelight_pe
+  rule_conditions:
+  - type: logsource
+    product: zeek
+    service: pe
+- id: svc_paloalto_traffic
+  type: add_condition
+  conditions:
+    index: pan_logs
+    sourcetype: pan:traffic
+  rule_conditions:
+  - type: logsource
+    product: paloalto
+    service: traffic
+- id: svc_paloalto_threat
+  type: add_condition
+  conditions:
+    index: pan_logs
+    sourcetype: pan:threat
+  rule_conditions:
+  - type: logsource
+    product: paloalto
+    service: threat
+- id: svc_paloalto_system
+  type: add_condition
+  conditions:
+    index: pan_logs
+    sourcetype: pan:system
+  rule_conditions:
+  - type: logsource
+    product: paloalto
+    service: system
+- id: svc_paloalto_config
+  type: add_condition
+  conditions:
+    index: pan_logs
+    sourcetype: pan:config
+  rule_conditions:
+  - type: logsource
+    product: paloalto
+    service: config
+- id: svc_paloalto_userid
+  type: add_condition
+  conditions:
+    index: pan_logs
+    sourcetype: pan:userid
+  rule_conditions:
+  - type: logsource
+    product: paloalto
+    service: userid
+- id: svc_paloalto_globalprotect
+  type: add_condition
+  conditions:
+    index: pan_logs
+    sourcetype: pan:globalprotect
+  rule_conditions:
+  - type: logsource
+    product: paloalto
+    service: globalprotect
+- id: svc_paloalto_decryption
+  type: add_condition
+  conditions:
+    index: pan_logs
+    sourcetype: pan:decryption
+  rule_conditions:
+  - type: logsource
+    product: paloalto
+    service: decryption
+- id: svc_vmware_hostd
+  type: add_condition
+  conditions:
+    index: vmware
+    sourcetype: vmware:esxlog:hostd
+  rule_conditions:
+  - type: logsource
+    product: vmware
+    service: hostd
+- id: svc_vmware_vmkernel
+  type: add_condition
+  conditions:
+    index: vmware
+    sourcetype: vmware:esxlog:vmkernel
+  rule_conditions:
+  - type: logsource
+    product: vmware
+    service: vmkernel
+- id: svc_vmware_shell
+  type: add_condition
+  conditions:
+    index: vmware
+    sourcetype: vmware:esxlog:shell
+  rule_conditions:
+  - type: logsource
+    product: vmware
+    service: shell
+- id: svc_vmware_vobd
+  type: add_condition
+  conditions:
+    index: vmware
+    sourcetype: vmware:esxlog:vobd
+  rule_conditions:
+  - type: logsource
+    product: vmware
+    service: vobd
+- id: svc_vmware_vpxa
+  type: add_condition
+  conditions:
+    index: vmware
+    sourcetype: vmware:esxlog:vpxa
+  rule_conditions:
+  - type: logsource
+    product: vmware
+    service: vpxa
+- id: svc_vmware_auth
+  type: add_condition
+  conditions:
+    index: vmware
+    sourcetype: vmware:esxlog:auth
+  rule_conditions:
+  - type: logsource
+    product: vmware
+    service: auth
+- id: svc_vmware_esxupdate
+  type: add_condition
+  conditions:
+    index: vmware
+    sourcetype: vmware:esxlog:esxupdate
+  rule_conditions:
+  - type: logsource
+    product: vmware
+    service: esxupdate
+- id: svc_vmware_syslog
+  type: add_condition
+  conditions:
+    index: vmware
+    sourcetype: vmware:esxlog:syslog
+  rule_conditions:
+  - type: logsource
+    product: vmware
+    service: syslog
 - id: svc_windows_sysmon
   type: add_condition
   conditions:
@@ -617,39 +940,6 @@ transformations:
   - type: logsource
     product: windows
     service: edr
-- id: svc_zeek_conn
-  type: add_condition
-  conditions:
-    index: corelight
-    sourcetype: corelight_conn
-  rule_conditions:
-  - type: logsource
-    product: zeek
-    service: conn
-- id: svc_zeek_http
-  type: add_condition
-  conditions:
-    index: corelight
-    sourcetype:
-    - corelight_http
-    - corelight_ssl
-    - corelight_dns
-    - corelight_files
-    - corelight_smtp
-    - corelight_ftp
-  rule_conditions:
-  - type: logsource
-    product: zeek
-    service: http
-- id: svc_paloalto_traffic
-  type: add_condition
-  conditions:
-    index: pan_logs
-    sourcetype: pan:traffic
-  rule_conditions:
-  - type: logsource
-    product: paloalto
-    service: traffic
 - id: svc_netflow_flow
   type: add_condition
   conditions:
@@ -659,31 +949,14 @@ transformations:
   - type: logsource
     product: netflow
     service: flow
-- id: svc_paloalto_threat
-  type: add_condition
-  conditions:
-    index: pan_logs
-    sourcetype: pan:threat
-  rule_conditions:
-  - type: logsource
-    product: paloalto
-    service: threat
-- id: svc_paloalto_config
-  type: add_condition
-  conditions:
-    index: pan_logs
-    sourcetype:
-    - pan:config
-    - pan:system
-  rule_conditions:
-  - type: logsource
-    product: paloalto
-    service: config
 - id: svc_cisco_syslog
   type: add_condition
   conditions:
-    index: pan_logs
-    sourcetype: pan:system
+    index: netops
+    sourcetype:
+    - cisco:ios
+    - cisco:asa
+    - syslog
   rule_conditions:
   - type: logsource
     product: cisco
@@ -691,23 +964,15 @@ transformations:
 - id: svc_cisco_aaa
   type: add_condition
   conditions:
-    index: pan_logs
+    index: netops
     sourcetype:
-    - pan:config
-    - pan:system
+    - cisco:ios
+    - cisco:asa
+    - syslog
   rule_conditions:
   - type: logsource
     product: cisco
     service: aaa
-- id: svc_paloalto_globalprotect
-  type: add_condition
-  conditions:
-    index: pan_logs
-    sourcetype: pan:globalprotect
-  rule_conditions:
-  - type: logsource
-    product: paloalto
-    service: globalprotect
 - id: svc_linux_auditd
   type: add_condition
   conditions:
@@ -780,78 +1045,6 @@ transformations:
   - type: logsource
     product: linux
     service: systemd
-- id: svc_vmware_hostd
-  type: add_condition
-  conditions:
-    index: vmware
-    sourcetype: vmware:esxlog:hostd
-  rule_conditions:
-  - type: logsource
-    product: vmware
-    service: hostd
-- id: svc_vmware_vmkernel
-  type: add_condition
-  conditions:
-    index: vmware
-    sourcetype: vmware:esxlog:vmkernel
-  rule_conditions:
-  - type: logsource
-    product: vmware
-    service: vmkernel
-- id: svc_vmware_shell
-  type: add_condition
-  conditions:
-    index: vmware
-    sourcetype: vmware:esxlog:shell
-  rule_conditions:
-  - type: logsource
-    product: vmware
-    service: shell
-- id: svc_vmware_syslog
-  type: add_condition
-  conditions:
-    index: vmware
-    sourcetype: vmware:esxlog:syslog
-  rule_conditions:
-  - type: logsource
-    product: vmware
-    service: syslog
-- id: svc_vmware_auth
-  type: add_condition
-  conditions:
-    index: vmware
-    sourcetype: vmware:esxlog:auth
-  rule_conditions:
-  - type: logsource
-    product: vmware
-    service: auth
-- id: svc_vmware_vobd
-  type: add_condition
-  conditions:
-    index: vmware
-    sourcetype: vmware:esxlog:vobd
-  rule_conditions:
-  - type: logsource
-    product: vmware
-    service: vobd
-- id: svc_vmware_vpxa
-  type: add_condition
-  conditions:
-    index: vmware
-    sourcetype: vmware:esxlog:vpxa
-  rule_conditions:
-  - type: logsource
-    product: vmware
-    service: vpxa
-- id: svc_vmware_esxupdate
-  type: add_condition
-  conditions:
-    index: vmware
-    sourcetype: vmware:esxlog:esxupdate
-  rule_conditions:
-  - type: logsource
-    product: vmware
-    service: esxupdate
 - id: svc_vmware_vpxd
   type: add_condition
   conditions:

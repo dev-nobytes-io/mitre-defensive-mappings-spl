@@ -721,18 +721,6 @@ DC0032:
   name: Process Creation
   umbrella_eventtype: mitre_dc0032_process_creation
   logsources:
-  - feed: powershell_logging
-    eventtype: mitre_dc0032_process_creation__powershell_logging
-    product: windows
-    categories:
-    - process_creation
-    services:
-    - applocker
-    - etw
-    - microsoft-windows-dotnetruntime
-    - security
-    - sysmon
-    - system
   - feed: solidcore
     eventtype: mitre_dc0032_process_creation__solidcore
     product: windows

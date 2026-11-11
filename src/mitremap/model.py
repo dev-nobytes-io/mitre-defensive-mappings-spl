@@ -55,6 +55,13 @@ class Technique:
     tactics: list[str]            # kill-chain shortnames
     parent_id: str | None = None  # for sub-techniques
     det_ids: list[str] = field(default_factory=list)
+    usage: dict = field(default_factory=dict)  # {"groups": n, "software": n, "campaigns": n}
+
+    @property
+    def usage_score(self) -> int:
+        """Prevalence weight: groups and campaigns count double (observed operations), software once."""
+        u = self.usage
+        return 2 * u.get("groups", 0) + 2 * u.get("campaigns", 0) + u.get("software", 0)
 
 
 @dataclass
@@ -144,6 +151,10 @@ class AttackModel:
                 ds = DetectionStrategy(o["id"], _ext_id(o), o["name"], _ext_url(o), list(o.get("x_mitre_analytic_refs", [])))
                 self.detection_strategies[ds.id] = ds
                 self._by_stix[o["id"]] = ds
+
+        usage = bundle.get("x_mitremap_usage", {})
+        for te in self.techniques.values():
+            te.usage = usage.get(te.stix_id, {"groups": 0, "software": 0, "campaigns": 0})
 
         # resolve stix refs -> ATT&CK ids
         for an in self.analytics.values():

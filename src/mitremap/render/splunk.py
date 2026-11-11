@@ -82,6 +82,12 @@ ENV_MACROS: list[tuple[str, str, str]] = [
     ("mitre_script_interpreters", '(process_name IN ("powershell.exe", "pwsh.exe", "cscript.exe", "wscript.exe", "mshta.exe", "python.exe", "python3.exe", "perl.exe", "ruby.exe", "node.exe", "bash", "sh", "zsh", "python", "python3", "perl"))', "Script interpreter process names across Windows and Linux."),
     ("mitre_shells", '(process_name IN ("cmd.exe", "powershell.exe", "pwsh.exe", "bash", "sh", "zsh", "dash", "ksh", "fish"))', "Interactive shell process names."),
     ("mitre_attack_version", '"20.1"', "ATT&CK release this content was generated from."),
+    ("mitre_summariesonly", "summariesonly=false allow_old_summaries=true", "tstats arguments for data model searches. Set summariesonly=true once the Endpoint, Network_Traffic, Authentication and Change models are accelerated."),
+    ("mitre_ctime(1)", 'convert timeformat="%Y-%m-%dT%H:%M:%S" ctime($field$)', "Render an epoch field as a timestamp. Args: field."),
+    ("mitre_normalize_host", "eval dest=coalesce(dest, Computer, dvc, host), user=coalesce(user, User, SubjectUserName, TargetUserName)", "Normalise host and user for raw Windows/Sysmon searches when the source TA has not aliased them. Edit to match your field extractions."),
+    ("mitre_normalize_zeek", "eval src=coalesce(src, src_ip, 'id.orig_h'), dest=coalesce(dest, dest_ip, 'id.resp_h'), dest_port=coalesce(dest_port, 'id.resp_p'), bytes_out=coalesce(bytes_out, orig_bytes, orig_ip_bytes), bytes_in=coalesce(bytes_in, resp_bytes, resp_ip_bytes)", "Normalise Corelight/Zeek connection fields to CIM names whichever TA is installed."),
+    ("mitre_normalize_zeek_http", "eval http_user_agent=coalesce(http_user_agent, user_agent), http_host=coalesce(http_host, url_domain, dest_host, site), uri=coalesce(uri, uri_path, url)", "Normalise Corelight/Zeek HTTP fields. The Zeek 'host' header collides with Splunk's host field; point http_host at whatever your TA extracts it as."),
+    ("mitre_normalize_pan", "eval src=coalesce(src, src_ip), dest=coalesce(dest, dest_ip), user=coalesce(user, src_user, admin)", "Normalise Palo Alto fields to CIM names."),
 ]
 
 
@@ -177,12 +183,19 @@ class SplunkRenderer:
             if f.get("virtual") or not f.get("index"):
                 continue
             lines += [f"[mitre_idx_{name}]", f"definition = index={f['index']}", f"description = Index for feed {name}: {f['label']}", ""]
+        lines.append("# ---- sourcetype macros for feeds that ship several logs (so analytics do not hard-code sourcetype names)")
+        for name, f in config.stack().items():
+            tmpl = f.get("sourcetype_template")
+            if not tmpl or "{log}" not in tmpl or f.get("render") is False:
+                continue
+            for log in f.get("default_logs", []):
+                lines += [f"[mitre_st_{name}_{log}]", f'definition = sourcetype="{tmpl.format(log=log)}"', f"description = {f['label'].split(' (')[0]}: {log} log", ""]
         lines.append("# ---- environment / tuning macros")
         for stanza, definition, desc in ENV_MACROS:
             lines.append(f"[{stanza}]")
             if "(" in stanza:
                 n = int(stanza[stanza.index("(") + 1:-1])
-                args = {"mitre_time_window(1)": "span", "mitre_is_internal(1)": "ip", "mitre_hosts_with_role(1)": "role", "mitre_accounts_with_role(1)": "role"}.get(stanza)
+                args = {"mitre_time_window(1)": "span", "mitre_is_internal(1)": "ip", "mitre_hosts_with_role(1)": "role", "mitre_accounts_with_role(1)": "role", "mitre_ctime(1)": "field"}.get(stanza)
                 if args:
                     lines.append(f"args = {args}")
             lines += [f"definition = {definition}", f"description = {desc}", "iseval = 0", ""]
@@ -253,12 +266,16 @@ class SplunkRenderer:
         p = lookups / "mitre_attack_analytics.csv"
         with p.open("w", newline="", encoding="utf-8") as fh:
             w = csv.writer(fh)
-            w.writerow(["an_id", "an_name", "det_id", "technique_id", "technique_name", "tactics", "platforms", "dc_ids", "log_sources", "mutable_elements", "url"])
-            for an in sorted(m.analytics.values(), key=lambda a: a.id):
-                te = m.technique_for_analytic(an)
+            from ..analytics import all_views
+            w.writerow(["an_id", "an_name", "det_id", "technique_id", "technique_name", "tactics", "platforms", "dc_ids", "log_sources", "mutable_elements",
+                        "coverage", "status", "content_type", "suggested_content_type", "detection_title", "technique_usage_score", "url"])
+            for v in all_views(m):
+                an, te = v.an, v.technique
                 w.writerow([an.id, an.name, an.det_id, te.id if te else "", te.name if te else "", "|".join(te.tactics) if te else "",
                             "|".join(an.platforms), "|".join(sorted({r.dc_id for r in an.log_source_refs if r.dc_id})),
-                            "|".join(sorted({r.name.strip() for r in an.log_source_refs})), "|".join(me.get("field", "") for me in an.mutable_elements), an.url])
+                            "|".join(sorted({r.name.strip() for r in an.log_source_refs})), "|".join(me.get("field", "") for me in an.mutable_elements),
+                            v.coverage, v.status if v.status != "none" else "backlog", v.content_type if v.implemented else "", v.suggested_content_type,
+                            v.title if v.implemented else "", v.priority, an.url])
         out.append(p)
         p = lookups / "mitre_attack_detection_strategies.csv"
         with p.open("w", newline="", encoding="utf-8") as fh:

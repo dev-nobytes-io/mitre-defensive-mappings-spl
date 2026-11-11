@@ -273,7 +273,6 @@ DC0031,Kernel Module Load,(added by dc_defaults/curated),,auditd,0,1,mitre_dc003
 DC0031,Kernel Module Load,esxi:vmkernel,2,esxi_syslog,0,1,mitre_dc0031_kernel_module_load__esxi_syslog,vmware:esxlog:vmkernel,defaults
 DC0031,Kernel Module Load,(added by dc_defaults/curated),,linux_syslog,0,1,mitre_dc0031_kernel_module_load__linux_syslog,linux_messages_syslog|linux_secure|syslog,defaults
 DC0031,Kernel Module Load,macos:osquery,2,macos,0,0,,macos:unifiedlog,derived
-DC0032,Process Creation,(added by dc_defaults/curated),,powershell_logging,1,1,mitre_dc0032_process_creation__powershell_logging,XmlWinEventLog:Microsoft-Windows-PowerShell/Operational,defaults
 DC0032,Process Creation,(added by dc_defaults/curated),,solidcore,1,1,mitre_dc0032_process_creation__solidcore,mcafee:epo,defaults
 DC0032,Process Creation,WinEventLog:Sysmon,290,sysmon,1,1,mitre_dc0032_process_creation__sysmon,XmlWinEventLog:Microsoft-Windows-Sysmon/Operational,defaults
 DC0032,Process Creation,etw:Microsoft-Windows-Kernel-Process,1,sysmon,1,1,mitre_dc0032_process_creation__sysmon,XmlWinEventLog:Microsoft-Windows-Sysmon/Operational,defaults
@@ -455,7 +454,7 @@ DC0040,File Deletion,macos:osquery,5,macos,0,0,,macos:unifiedlog,derived
 DC0040,File Deletion,macos:unifiedlog,2,macos,0,0,,macos:unifiedlog,derived
 DC0040,File Deletion,MobileEDR:telemetry,3,mobile,0,0,,mobile:telemetry,derived
 DC0040,File Deletion,mobile:ForensicArtifacts,3,mobile,0,0,,mobile:telemetry,derived
-DC0041,Service Metadata,networkdevice:config,2,palo_alto,1,1,mitre_dc0041_service_metadata__palo_alto,pan:system,defaults
+DC0041,Service Metadata,networkdevice:config,2,palo_alto,1,1,mitre_dc0041_service_metadata__palo_alto,pan:config|pan:system,defaults
 DC0041,Service Metadata,WinEventLog:Sysmon,2,sysmon,1,1,mitre_dc0041_service_metadata__sysmon,XmlWinEventLog:Microsoft-Windows-Sysmon/Operational,defaults
 DC0041,Service Metadata,WinEventLog:System,7,wineventlog,1,1,mitre_dc0041_service_metadata__wineventlog,XmlWinEventLog:System,defaults
 DC0041,Service Metadata,WinEventLog:WinRM,2,wineventlog,1,1,mitre_dc0041_service_metadata__wineventlog,XmlWinEventLog:System,defaults

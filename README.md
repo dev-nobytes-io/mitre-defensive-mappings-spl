@@ -11,24 +11,27 @@ flowchart LR
   LS --> FEED["Feed in your stack<br/>config/stack.yml"]
   FEED --> ET["Splunk eventtype<br/>mitre_dcXXXX_name__feed"]
   ET --> UMB["Umbrella eventtype<br/>mitre_dcXXXX_name"]
-  UMB -. phase 2 .-> RULE["Analytic as ES detection<br/>TTP / Anomaly / Hunting / Baseline"]
+  UMB --> RULE["Analytic as ES detection + Sigma rule<br/>TTP / Anomaly / Hunting (+ baselines)<br/>49 implemented"]
   RULE -. phase 3 .-> CORR["Detection strategy as<br/>correlation / risk incident rule"]
   classDef done fill:#d4edda,stroke:#2e7d32,color:#1b1b1b
+  classDef part fill:#fff3cd,stroke:#b26a00,color:#1b1b1b
   classDef later fill:#eeeeee,stroke:#888,color:#1b1b1b,stroke-dasharray: 4 4
   class DC,LS,FEED,ET,UMB done
-  class RULE,CORR later
+  class RULE part
+  class CORR later
 ```
 
-Green is what this phase delivers. The analytic and detection-strategy layers are reserved: their metadata is already shipped as lookups and the tuning surface (macros and lookups) they will consume exists today.
+Green is complete for every data component. Amber is in progress: 49 analytics are implemented as ES detections and Sigma rules, chosen by technique prevalence on the ticked feeds; the [backlog](docs/analytics/backlog.md) ranks the rest. The detection-strategy layer is next.
 
 ## What you get
 
 | Output | Where | Notes |
 |---|---|---|
 | Splunk TA | `dist/splunk/TA-mitre-attack-datacomponents/` | `eventtypes.conf` (one per component per feed, plus umbrella), `tags.conf` (ATT&CK tags + CIM tags where safe), `macros.conf` (index, per-component, `_dm`, `_filter`, environment tunables), `transforms.conf` + `lookups/` (ATT&CK metadata, tuning allowlists with seed rows). |
-| Sigma | `dist/sigma/` | `logsources.yml` (component ↔ Sigma logsource) and `pipelines/splunk_mitre_dc.yml`, a pySigma pipeline that scopes converted rules with the component eventtypes. |
-| Docs | `docs/` | One page per component ([index](docs/data-components/README.md)), [coverage](docs/coverage.md), [gaps](docs/gaps.md), [checklist](docs/checklist.md), [model](docs/model.md), [Splunk implementation guidance](docs/splunk-implementation.md), [data sources](docs/data-sources.md), [roadmap](docs/roadmap.md), [changelog 20.0→20.1](docs/changelog/attack-20.0-to-20.1.md). |
-| Content | `content/data_components/*.yml` | One YAML per component: regenerated `derived` block plus a hand-written `curated` block (justification, requirements, overrides). |
+| Detections app | `dist/splunk/DA-ESS-mitre-attack-detections/` | One ES 8 detection per implemented analytic, all disabled. Content type decides the action: TTP → finding + risk, Anomaly → risk only, Hunting → none. Per-analytic `mitre_anXXXX_filter` macro and tunables bound to ATT&CK mutable elements; baseline searches and their lookups. |
+| Sigma | `dist/sigma/` | `logsources.yml` (component ↔ Sigma logsource), `pipelines/splunk_mitre_dc.yml` (pySigma pipeline that scopes converted rules with the component eventtypes) and `rules/` (one file per implemented analytic, with correlation rules where needed). |
+| Docs | `docs/` | One page per component ([index](docs/data-components/README.md)) and per analytic ([index](docs/analytics/README.md), [backlog](docs/analytics/backlog.md)), [coverage](docs/coverage.md), [gaps](docs/gaps.md), [checklist](docs/checklist.md), [model](docs/model.md), [Splunk implementation guidance](docs/splunk-implementation.md), [data sources](docs/data-sources.md), [roadmap](docs/roadmap.md), [changelog 20.0→20.1](docs/changelog/attack-20.0-to-20.1.md). |
+| Content | `content/data_components/*.yml`, `content/analytics/*.yml` | One YAML per component and per implemented analytic: regenerated ATT&CK/derived blocks plus a hand-written `curated` block (for analytics: content type, SPL, risk, tuning bindings, Sigma). |
 
 ## The checklist
 
@@ -41,6 +44,7 @@ python3 -m venv .venv && .venv/bin/pip install -e ".[sigma,dev]"
 make build      # scaffold -> render -> validate (idempotent; CI fails on drift)
 make test
 make diff FROM=20.0 TO=20.1
+python -m mitremap new-analytic AN0123   # scaffold the next analytic from the backlog
 ```
 
 To move to a new ATT&CK release: `python -m mitremap fetch --version 20.2`, then `make build`, review `docs/changelog/` and the `derived` diffs in `content/`.
@@ -54,9 +58,9 @@ For each (component, feed) eventtype the search constraint comes from, in order:
 ```
 attack/        manifest + slim gzipped STIX extract (pinned 20.1)
 config/        stack.yml (checklist), log_sources.yml (name -> feeds), dc_defaults.yml, cim.yml, sigma.yml, platforms.yml
-content/       data_components/*.yml (curated + derived); analytics/ and detection_strategies/ hold phase-2/3 schemas
-src/mitremap/  fetch, model, logsources (resolver + channel parsers), build, scaffold, render/{splunk,sigma,docs,kql,esql}, validate, diff, cli
-dist/          rendered Splunk app and Sigma pipeline (committed)
+content/       data_components/*.yml and analytics/*.yml (curated + derived); detection_strategies/ holds the phase-3 schema
+src/mitremap/  fetch, model, logsources (resolver + channel parsers), build, scaffold, analytics, render/{splunk,detections,sigma,docs,docs_analytics,kql,esql}, validate, diff, cli
+dist/          rendered Splunk apps (TA + detections), Sigma pipeline and rules (committed)
 docs/          rendered + hand-written documentation
 tests/         pytest
 ```

@@ -35,7 +35,7 @@ One page per component: justification, requirements per feed, rendered eventtype
 | DC0029 | [Script Execution](DC0029-script-execution.md) | live | powershell_logging, trellix_epo, wineventlog | auditd, edr_telemetry, esxi_syslog, etw | 36 | 30 | Endpoint |
 | DC0030 | [Pod Modification](DC0030-pod-modification.md) | ready |  | kubernetes_audit | 0 | 0 |  |
 | DC0031 | [Kernel Module Load](DC0031-kernel-module-load.md) | ready |  | auditd, esxi_syslog, linux_syslog | 2 | 2 |  |
-| DC0032 | [Process Creation](DC0032-process-creation.md) | live | powershell_logging, solidcore, sysmon, wineventlog | auditd, container_runtime, ebpf, esxi_syslog, etw, kubernetes_audit, linux_osquery, sysmon_linux | 860 | 456 | Endpoint |
+| DC0032 | [Process Creation](DC0032-process-creation.md) | live | solidcore, sysmon, wineventlog | auditd, container_runtime, ebpf, esxi_syslog, etw, kubernetes_audit, linux_osquery, sysmon_linux | 860 | 456 | Endpoint |
 | DC0033 | [Process Termination](DC0033-process-termination.md) | live | sysmon | auditd, container_runtime, esxi_syslog | 14 | 7 | Endpoint |
 | DC0034 | [Process Metadata](DC0034-process-metadata.md) | live | powershell_logging, sysmon, wineventlog | auditd, edr_telemetry, etw, linux_osquery | 40 | 31 | Endpoint |
 | DC0035 | [Process Access](DC0035-process-access.md) | live | sysmon, wineventlog | auditd, edr_telemetry | 93 | 77 | Endpoint |
