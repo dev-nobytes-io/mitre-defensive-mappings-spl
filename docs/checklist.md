@@ -6,7 +6,7 @@ This is the checklist behind `config/stack.yml`. Tick `have: true` for what reac
 |---|---|---|---|---|---|---|---|---|
 | ☑ | `wineventlog` | Windows Event Logs | Windows | `wineventlog` | `XmlWinEventLog:{channel}` | 55 | 332 | yes |
 | ☑ | `sysmon` | Sysmon (Microsoft-Windows-Sysmon/Operational) | Windows | `sysmon` | `XmlWinEventLog:Microsoft-Windows-Sysmon/Operational` | 26 | 438 | yes |
-| ☑ | `powershell_logging` | PowerShell Operational channel (4103/4104) - part of Windows Event Logs, listed separately because it needs its own GPO and input | Windows | `wineventlog` | `XmlWinEventLog:Microsoft-Windows-PowerShell/Operational` | 4 | 67 | yes |
+| ☑ | `powershell_logging` | PowerShell Operational channel (4103/4104) - part of Windows Event Logs, listed separately because it needs its own GPO and input | Windows | `wineventlog` | `XmlWinEventLog:Microsoft-Windows-PowerShell/Operational` | 3 | 67 | yes |
 | ☐ | `windows_firewall_log` | Windows Firewall text log (pfirewall.log) | Windows | `wineventlog` | `WinFirewall` | 1 | 1 | yes |
 | ☐ | `windows_perfmon` | Windows Performance counters | Windows | `perfmon` | `Perfmon:*` | 1 | 4 | yes |
 | ☐ | `windows_dns_server` | Windows DNS Server analytical / debug log | Windows | `wineventlog` | `MSAD:NT6:DNS` | 2 | 2 | yes |

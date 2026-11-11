@@ -69,7 +69,7 @@ Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
 | Feed | Status | Sourcetypes | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `palo_alto` | live | `pan:system` | `(whole feed)` | defaults | Splunk Add-on for Palo Alto Networks (pan:*) |
+| `palo_alto` | live | `pan:config`, `pan:system` | `(whole feed)` | defaults | Splunk Add-on for Palo Alto Networks (pan:*) |
 | `sysmon` | live | `XmlWinEventLog:Microsoft-Windows-Sysmon/Operational` | `EventCode IN (4)` | defaults | Splunk Add-on for Sysmon (TA-microsoft-sysmon) |
 | `wineventlog` | live | `XmlWinEventLog:System` | `EventCode IN (7034, 7035, 7036, 7040)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering |
 | `auditd` | ready (tick in stack.yml) | `linux:audit` | `type IN (CONFIG_CHANGE)` | derived | Splunk Add-on for Unix and Linux (linux:audit) or auditd -> auditbeat/syslog |
@@ -81,6 +81,7 @@ Collection prerequisites:
 - **palo_alto**: Log forwarding profiles attached to every security rule (traffic start+end, threat, url, wildfire, data).
 - **palo_alto**: System and Config logs forwarded from each firewall / Panorama; GlobalProtect logs enabled.
 - **palo_alto**: URL filtering and Threat Prevention licensed for pan:threat subtypes url/vulnerability/virus/spyware.
+- **palo_alto**: Operational (show/debug) commands are not in config or system logs by default. Enable administrator activity audit tracking (Device > Setup > Management > Logging and Reporting, PAN-OS 10.1+) and forward the audit log if you want CLI discovery analytics for the firewall.
 - **sysmon**: Sysmon deployed with a maintained modular configuration (e.g. sysmon-modular or SwiftOnSecurity). Event IDs referenced by a data component only exist if the config includes that rule group (ProcessAccess=10, ImageLoad=7, DNS=22, FileDelete=23/26, ClipboardChange=24, ProcessTampering=25, FileBlock=27/28 are off in minimal configs).
 - **sysmon**: Hashes configured (SHA256 at least, IMPHASH useful) for File/Process metadata components.
 - **wineventlog**: Advanced Audit Policy configured (at minimum Process Creation, Logon, Account Management, Object Access, Policy Change, Privilege Use, Detailed Tracking). Without the matching subcategory the EventCodes below never fire.
@@ -100,7 +101,7 @@ Eventtypes (literal constraints, see `dist/splunk/TA-mitre-attack-datacomponents
 
 ```ini
 [mitre_dc0041_service_metadata__palo_alto]
-search = index=pan_logs sourcetype=pan:system
+search = index=pan_logs sourcetype IN ("pan:config", "pan:system")
 
 [mitre_dc0041_service_metadata__sysmon]
 search = index=sysmon sourcetype=XmlWinEventLog:Microsoft-Windows-Sysmon/Operational EventCode IN (4)

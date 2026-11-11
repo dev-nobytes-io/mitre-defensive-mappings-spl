@@ -590,17 +590,6 @@ derived:
     channels:
     - System crash or unexpected halt occurring within wiper crash window of the bulk deletion event
   feeds:
-  - feed: powershell_logging
-    have: true
-    in_scope: true
-    eventtype: mitre_dc0032_process_creation__powershell_logging
-    search: >-
-      index=wineventlog sourcetype=XmlWinEventLog:Microsoft-Windows-PowerShell/Operational EventCode IN (4103, 4104)
-    constraint_origin: defaults
-    broad_refs: 0
-    sources:
-    - (added by dc_defaults/curated)
-    cim_tags: false
   - feed: solidcore
     have: true
     in_scope: true

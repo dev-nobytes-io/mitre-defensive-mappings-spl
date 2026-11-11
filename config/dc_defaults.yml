@@ -15,7 +15,6 @@ defaults:
   Process Creation:
     sysmon: {event_codes: [1]}
     wineventlog: {sourcetypes: ["XmlWinEventLog:Security"], event_codes: [4688]}
-    powershell_logging: {event_codes: [4103, 4104]}
     auditd: {record_types: [SYSCALL, EXECVE], syscalls: [execve, execveat]}
     sysmon_linux: {event_codes: [1]}
     linux_osquery: {filter: 'name=process_events OR name=processes'}
@@ -167,7 +166,7 @@ defaults:
     wineventlog: {sourcetypes: ["XmlWinEventLog:System"], event_codes: [7034, 7035, 7036, 7040]}
     sysmon: {event_codes: [4]}
     linux_osquery: {filter: 'name=systemd_units OR name=startup_items'}
-    palo_alto: {sourcetypes: ["pan:system"]}
+    palo_alto: {sourcetypes: ["pan:config", "pan:system"]}
     exclude: [kubernetes_audit, linux_syslog, netdev_syslog]
 
   Scheduled Job Creation:

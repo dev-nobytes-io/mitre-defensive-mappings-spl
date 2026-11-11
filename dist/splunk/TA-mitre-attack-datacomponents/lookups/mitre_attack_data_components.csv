@@ -30,7 +30,7 @@ DC0028,Image Metadata,mitre_dc0028_image_metadata,1,,container_runtime,,3,3,3,20
 DC0029,Script Execution,mitre_dc0029_script_execution,1,powershell_logging|trellix_epo|wineventlog,auditd|edr_telemetry|esxi_syslog|etw,Endpoint.Processes,36,30,30,20.1,https://attack.mitre.org/datacomponents/DC0029
 DC0030,Pod Modification,mitre_dc0030_pod_modification,1,,kubernetes_audit,,0,0,0,20.1,https://attack.mitre.org/datacomponents/DC0030
 DC0031,Kernel Module Load,mitre_dc0031_kernel_module_load,1,,auditd|esxi_syslog|linux_syslog,,2,2,2,20.1,https://attack.mitre.org/datacomponents/DC0031
-DC0032,Process Creation,mitre_dc0032_process_creation,1,powershell_logging|solidcore|sysmon|wineventlog,auditd|container_runtime|ebpf|esxi_syslog|etw|kubernetes_audit|linux_osquery|sysmon_linux,Endpoint.Processes,860,456,456,20.1,https://attack.mitre.org/datacomponents/DC0032
+DC0032,Process Creation,mitre_dc0032_process_creation,1,solidcore|sysmon|wineventlog,auditd|container_runtime|ebpf|esxi_syslog|etw|kubernetes_audit|linux_osquery|sysmon_linux,Endpoint.Processes,860,456,456,20.1,https://attack.mitre.org/datacomponents/DC0032
 DC0033,Process Termination,mitre_dc0033_process_termination,1,sysmon,auditd|container_runtime|esxi_syslog,Endpoint.Processes,14,7,7,20.1,https://attack.mitre.org/datacomponents/DC0033
 DC0034,Process Metadata,mitre_dc0034_process_metadata,1,powershell_logging|sysmon|wineventlog,auditd|edr_telemetry|etw|linux_osquery,Endpoint.Processes,40,31,31,20.1,https://attack.mitre.org/datacomponents/DC0034
 DC0035,Process Access,mitre_dc0035_process_access,1,sysmon|wineventlog,auditd|edr_telemetry,Endpoint.Processes,93,77,77,20.1,https://attack.mitre.org/datacomponents/DC0035

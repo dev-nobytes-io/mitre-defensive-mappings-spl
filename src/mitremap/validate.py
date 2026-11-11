@@ -145,6 +145,10 @@ def validate(m: AttackModel) -> list[str]:
     except Exception as e:  # pragma: no cover
         errors.append(f"sigma pipeline failed to load: {e}")
 
+    # ---- analytics
+    from .analytics import validate_analytics
+    errors += validate_analytics(m)
+
     # ---- docs exist
     for v in views:
         from .render.docs import dc_page_name

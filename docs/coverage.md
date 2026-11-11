@@ -95,7 +95,7 @@ Live feeds per component, for in-scope platforms.
 | [DC0029](data-components/DC0029-script-execution.md) Script Execution | ✅ powershell_logging, trellix_epo, wineventlog | ✅ trellix_epo |  | ⏳ esxi_syslog | ⏳ auditd |  |  |
 | [DC0030](data-components/DC0030-pod-modification.md) Pod Modification |  |  |  |  | ⏳ kubernetes_audit |  |  |
 | [DC0031](data-components/DC0031-kernel-module-load.md) Kernel Module Load |  | ⏳ auditd, linux_syslog |  | ⏳ esxi_syslog | ⏳ auditd, linux_syslog |  |  |
-| [DC0032](data-components/DC0032-process-creation.md) Process Creation | ✅ powershell_logging, solidcore, sysmon, wineventlog | ✅ solidcore |  | ⏳ esxi_syslog | ⏳ auditd, container_runtime, ebpf, kubernetes_audit, linux_osquery |  |  |
+| [DC0032](data-components/DC0032-process-creation.md) Process Creation | ✅ solidcore, sysmon, wineventlog | ✅ solidcore |  | ⏳ esxi_syslog | ⏳ auditd, container_runtime, ebpf, kubernetes_audit, linux_osquery |  |  |
 | [DC0033](data-components/DC0033-process-termination.md) Process Termination | ✅ sysmon | ⏳ auditd |  | ⏳ esxi_syslog | ⏳ auditd, container_runtime |  |  |
 | [DC0034](data-components/DC0034-process-metadata.md) Process Metadata | ✅ powershell_logging, sysmon, wineventlog | ⏳ auditd, edr_telemetry, linux_osquery |  |  | ⏳ auditd, linux_osquery |  |  |
 | [DC0035](data-components/DC0035-process-access.md) Process Access | ✅ sysmon, wineventlog | ⏳ auditd, edr_telemetry |  |  | ⏳ auditd |  |  |

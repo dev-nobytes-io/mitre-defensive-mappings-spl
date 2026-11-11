@@ -183,7 +183,7 @@ derived:
     have: true
     in_scope: true
     eventtype: mitre_dc0041_service_metadata__palo_alto
-    search: index=pan_logs sourcetype=pan:system
+    search: index=pan_logs sourcetype IN ("pan:config", "pan:system")
     constraint_origin: defaults
     broad_refs: 0
     sources:

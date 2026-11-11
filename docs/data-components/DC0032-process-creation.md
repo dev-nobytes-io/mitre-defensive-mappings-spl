@@ -78,7 +78,6 @@ Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
 | Feed | Status | Sourcetypes | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `powershell_logging` | live | `XmlWinEventLog:Microsoft-Windows-PowerShell/Operational` | `EventCode IN (4103, 4104)` | defaults | Splunk Add-on for Microsoft Windows |
 | `solidcore` | live | `mcafee:epo` | `(threat_name=EXECUTION_DENIED OR event_description=EXECUTION_DENIED) (product_name="Solidcore*")` | defaults | Arrives through the ePO TA; Solidcore events carry event names such as FILE_CREATED, FILE_MODIFIED, FILE_DELETED, EXECUTION_DENIED, REG_VALUE_MODIFIED, PROCESS_HIJACK_ATTEMPTED. Verify field names (threat_name / event_description) in your data. |
 | `sysmon` | live | `XmlWinEventLog:Microsoft-Windows-Sysmon/Operational` | `EventCode IN (1)` | defaults | Splunk Add-on for Sysmon (TA-microsoft-sysmon) |
 | `wineventlog` | live | `XmlWinEventLog:Security` | `EventCode IN (4688)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering |
@@ -93,8 +92,6 @@ Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
 Collection prerequisites:
 
-- **powershell_logging**: Turn on Script Block Logging and Module Logging GPO; consider Transcription to a protected share.
-- **powershell_logging**: Add Microsoft-Windows-PowerShell/Operational as a WinEventLog input (renderXml=true).
 - **solidcore**: Change Control file and registry monitoring rules scoped to the paths/keys of interest; Application Control in Enabled (not Observe) mode for EXECUTION_DENIED.
 - **sysmon**: Sysmon deployed with a maintained modular configuration (e.g. sysmon-modular or SwiftOnSecurity). Event IDs referenced by a data component only exist if the config includes that rule group (ProcessAccess=10, ImageLoad=7, DNS=22, FileDelete=23/26, ClipboardChange=24, ProcessTampering=25, FileBlock=27/28 are off in minimal configs).
 - **sysmon**: Hashes configured (SHA256 at least, IMPHASH useful) for File/Process metadata components.
@@ -116,9 +113,6 @@ Review notes: `wineventlog` has 2 ATT&CK reference(s) with no usable event filte
 Eventtypes (literal constraints, see `dist/splunk/TA-mitre-attack-datacomponents/default/eventtypes.conf`):
 
 ```ini
-[mitre_dc0032_process_creation__powershell_logging]
-search = index=wineventlog sourcetype=XmlWinEventLog:Microsoft-Windows-PowerShell/Operational EventCode IN (4103, 4104)
-
 [mitre_dc0032_process_creation__solidcore]
 search = index=epo sourcetype=mcafee:epo (threat_name=EXECUTION_DENIED OR event_description=EXECUTION_DENIED) (product_name="Solidcore*")
 
@@ -161,10 +155,10 @@ search = index=linux sourcetype=sysmon:linux EventCode IN (1)
 disabled = 1
 
 [mitre_dc0032_process_creation]
-search = eventtype=mitre_dc0032_process_creation__powershell_logging OR eventtype=mitre_dc0032_process_creation__solidcore OR eventtype=mitre_dc0032_process_creation__sysmon OR eventtype=mitre_dc0032_process_creation__wineventlog OR eventtype=mitre_dc0032_process_creation__auditd OR eventtype=mitre_dc0032_process_creation__container_runtime OR eventtype=mitre_dc0032_process_creation__ebpf OR eventtype=mitre_dc0032_process_creation__esxi_syslog OR eventtype=mitre_dc0032_process_creation__etw OR eventtype=mitre_dc0032_process_creation__kubernetes_audit OR eventtype=mitre_dc0032_process_creation__linux_osquery OR eventtype=mitre_dc0032_process_creation__sysmon_linux
+search = eventtype=mitre_dc0032_process_creation__solidcore OR eventtype=mitre_dc0032_process_creation__sysmon OR eventtype=mitre_dc0032_process_creation__wineventlog OR eventtype=mitre_dc0032_process_creation__auditd OR eventtype=mitre_dc0032_process_creation__container_runtime OR eventtype=mitre_dc0032_process_creation__ebpf OR eventtype=mitre_dc0032_process_creation__esxi_syslog OR eventtype=mitre_dc0032_process_creation__etw OR eventtype=mitre_dc0032_process_creation__kubernetes_audit OR eventtype=mitre_dc0032_process_creation__linux_osquery OR eventtype=mitre_dc0032_process_creation__sysmon_linux
 ```
 
-Macros for analytics: `` `mitre_dc0032` `` (umbrella), `` `mitre_dc0032_powershell_logging` ``, `` `mitre_dc0032_solidcore` ``, `` `mitre_dc0032_sysmon` ``, `` `mitre_dc0032_wineventlog` ``, `` `mitre_dc0032_auditd` ``, `` `mitre_dc0032_container_runtime` ``, `` `mitre_dc0032_ebpf` ``, `` `mitre_dc0032_esxi_syslog` ``, `` `mitre_dc0032_etw` ``, `` `mitre_dc0032_kubernetes_audit` ``, `` `mitre_dc0032_linux_osquery` ``, `` `mitre_dc0032_sysmon_linux` ``, `` `mitre_dc0032_filter` `` (site exclusions).
+Macros for analytics: `` `mitre_dc0032` `` (umbrella), `` `mitre_dc0032_solidcore` ``, `` `mitre_dc0032_sysmon` ``, `` `mitre_dc0032_wineventlog` ``, `` `mitre_dc0032_auditd` ``, `` `mitre_dc0032_container_runtime` ``, `` `mitre_dc0032_ebpf` ``, `` `mitre_dc0032_esxi_syslog` ``, `` `mitre_dc0032_etw` ``, `` `mitre_dc0032_kubernetes_audit` ``, `` `mitre_dc0032_linux_osquery` ``, `` `mitre_dc0032_sysmon_linux` ``, `` `mitre_dc0032_filter` `` (site exclusions).
 CIM: `Endpoint.Processes` via `` `mitre_dc0032_dm` `` / `` `mitre_dc0032_dm_where` `` for `tstats`. CIM tags emitted for: `sysmon`, `wineventlog`, `auditd`, `sysmon_linux`.
 
 ## Sigma

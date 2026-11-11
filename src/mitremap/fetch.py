@@ -63,13 +63,35 @@ def download(domain: str, version: str, expected_sha256: str | None = None) -> P
     return dest
 
 
+def usage_counts(bundle: dict) -> dict:
+    """Per technique (STIX id): how many groups, software and campaigns `use` it.
+
+    The `uses` relationships are ~18k objects, so the slim extract keeps only this
+    summary. It drives analytic prioritisation.
+    """
+    kind = {"intrusion-set": "groups", "malware": "software", "tool": "software", "campaign": "campaigns"}
+    dead = {o["id"] for o in bundle["objects"] if o.get("revoked") or o.get("x_mitre_deprecated")}
+    out: dict[str, dict[str, int]] = {}
+    for o in bundle["objects"]:
+        if o["type"] != "relationship" or o.get("relationship_type") != "uses" or o.get("revoked") or o.get("x_mitre_deprecated"):
+            continue
+        src, tgt = o["source_ref"], o["target_ref"]
+        k = kind.get(src.split("--")[0])
+        if not k or not tgt.startswith("attack-pattern--") or src in dead or tgt in dead:
+            continue
+        c = out.setdefault(tgt, {"groups": 0, "software": 0, "campaigns": 0})
+        c[k] += 1
+    return dict(sorted(out.items()))
+
+
 def slim(bundle: dict) -> dict:
     out = []
     for o in bundle["objects"]:
         t = o["type"]
         if t in SLIM_TYPES or (t == "relationship" and o.get("relationship_type") in SLIM_RELATIONSHIPS):
             out.append({k: v for k, v in o.items() if k not in DROP_FIELDS})
-    return {"type": "bundle", "id": bundle["id"], "spec_version": bundle.get("spec_version", "2.1"), "objects": out}
+    return {"type": "bundle", "id": bundle["id"], "spec_version": bundle.get("spec_version", "2.1"),
+            "x_mitremap_usage": usage_counts(bundle), "objects": out}
 
 
 def write_slim(domain: str, version: str) -> Path:

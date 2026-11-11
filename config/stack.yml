@@ -189,6 +189,7 @@ feeds:
       - Log forwarding profiles attached to every security rule (traffic start+end, threat, url, wildfire, data).
       - System and Config logs forwarded from each firewall / Panorama; GlobalProtect logs enabled.
       - URL filtering and Threat Prevention licensed for pan:threat subtypes url/vulnerability/virus/spyware.
+      - 'Operational (show/debug) commands are not in config or system logs by default. Enable administrator activity audit tracking (Device > Setup > Management > Logging and Reporting, PAN-OS 10.1+) and forward the audit log if you want CLI discovery analytics for the firewall.'
     unlocks: Firewall Rule Modification, Firewall Disable, Firewall Metadata/Enumeration, perimeter Network Traffic Flow/Content, web proxy style URL telemetry, VPN authentication (GlobalProtect), and the firewall's own config/CLI/auth audit trail for the Network Devices platform.
 
   wireshark:
