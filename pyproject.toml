@@ -10,7 +10,7 @@ requires-python = ">=3.10"
 dependencies = ["PyYAML>=6.0"]
 
 [project.optional-dependencies]
-sigma = ["pysigma>=0.11", "pysigma-backend-splunk>=1.1"]
+sigma = ["pysigma>=0.11", "pysigma-backend-splunk>=1.1", "pysigma-pipeline-sysmon>=1.0"]
 dev = ["pytest>=8"]
 
 [project.scripts]
