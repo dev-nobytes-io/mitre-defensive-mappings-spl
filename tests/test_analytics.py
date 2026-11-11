@@ -88,5 +88,5 @@ def test_sigma_rules_parse_and_convert(model):
         out = backend.convert(coll)
         assert out and all(isinstance(q, str) and q.strip() and q.strip() != "*" for q in out), p.name
         for q in out:
-            assert "index=" in q, f"{p.name}: converted query is not scoped to a feed: {q[:120]}"
+            assert "index=" in q or "eventtype" in q, f"{p.name}: converted query is not scoped to a feed or data component: {q[:120]}"
     assert seen == expected

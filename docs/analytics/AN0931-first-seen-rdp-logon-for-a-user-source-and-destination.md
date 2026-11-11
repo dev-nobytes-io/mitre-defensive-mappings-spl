@@ -11,7 +11,6 @@ flowchart LR
   DC0067["DC0067 Logon Session Creation"] --> AN
   F_wineventlog(["Windows Event Logs"]) --> DC0067
   BL[("mitre_baseline_rdp_pairs")] --> AN
-  LK_mitre_baseline_rdp_pairs[("mitre_baseline_rdp_pairs")] -.-> AN
   LK_mitre_allowlist_users[("mitre_allowlist_users")] -.-> AN
   AN["AN0931<br/>First-seen RDP logon for a user, source and destination"] --> ACT{{"risk event only"}}
   AN -.-> DET["DET0327"] -.-> T["T1021.001 Remote Desktop Protocol"]

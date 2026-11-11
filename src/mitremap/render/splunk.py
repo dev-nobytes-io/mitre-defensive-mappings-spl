@@ -86,6 +86,7 @@ ENV_MACROS: list[tuple[str, str, str]] = [
     ("mitre_ctime(1)", 'convert timeformat="%Y-%m-%dT%H:%M:%S" ctime($field$)', "Render an epoch field as a timestamp. Args: field."),
     ("mitre_normalize_host", "eval dest=coalesce(dest, Computer, dvc, host), user=coalesce(user, User, SubjectUserName, TargetUserName)", "Normalise host and user for raw Windows/Sysmon searches when the source TA has not aliased them. Edit to match your field extractions."),
     ("mitre_normalize_zeek", "eval src=coalesce(src, src_ip, 'id.orig_h'), dest=coalesce(dest, dest_ip, 'id.resp_h'), dest_port=coalesce(dest_port, 'id.resp_p'), bytes_out=coalesce(bytes_out, orig_bytes, orig_ip_bytes), bytes_in=coalesce(bytes_in, resp_bytes, resp_ip_bytes)", "Normalise Corelight/Zeek connection fields to CIM names whichever TA is installed."),
+    ("mitre_normalize_zeek_http", "eval http_user_agent=coalesce(http_user_agent, user_agent), http_host=coalesce(http_host, url_domain, dest_host, site), uri=coalesce(uri, uri_path, url)", "Normalise Corelight/Zeek HTTP fields. The Zeek 'host' header collides with Splunk's host field; point http_host at whatever your TA extracts it as."),
     ("mitre_normalize_pan", "eval src=coalesce(src, src_ip), dest=coalesce(dest, dest_ip), user=coalesce(user, src_user, admin)", "Normalise Palo Alto fields to CIM names."),
 ]
 
@@ -182,6 +183,13 @@ class SplunkRenderer:
             if f.get("virtual") or not f.get("index"):
                 continue
             lines += [f"[mitre_idx_{name}]", f"definition = index={f['index']}", f"description = Index for feed {name}: {f['label']}", ""]
+        lines.append("# ---- sourcetype macros for feeds that ship several logs (so analytics do not hard-code sourcetype names)")
+        for name, f in config.stack().items():
+            tmpl = f.get("sourcetype_template")
+            if not tmpl or "{log}" not in tmpl or f.get("render") is False:
+                continue
+            for log in f.get("default_logs", []):
+                lines += [f"[mitre_st_{name}_{log}]", f'definition = sourcetype="{tmpl.format(log=log)}"', f"description = {f['label'].split(' (')[0]}: {log} log", ""]
         lines.append("# ---- environment / tuning macros")
         for stanza, definition, desc in ENV_MACROS:
             lines.append(f"[{stanza}]")

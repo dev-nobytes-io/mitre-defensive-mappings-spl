@@ -66,8 +66,9 @@ class AnalyticsDocsRenderer:
                     L.append(f'  F_{f.feed}(["{_esc(config.feed(f.feed)["label"].split(" (")[0])}"]) --> {dc}')
         for b in c.get("baselines") or []:
             L.append(f'  BL[("{_esc(b["lookup"])}")] --> AN')
+        baseline_lookups = {b["lookup"] for b in c.get("baselines") or []}
         for t in c.get("tuning") or []:
-            if t.get("bind") == "lookup":
+            if t.get("bind") == "lookup" and t["name"] not in baseline_lookups:
                 L.append(f'  LK_{slug(t["name"])}[("{_esc(t["name"])}")] -.-> AN')
         L.append(f'  AN["{v.id}<br/>{_esc(v.title)}"] --> ACT{{{{"{ACTION[ctype]}"}}}}')
         if det and te:

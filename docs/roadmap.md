@@ -4,41 +4,42 @@
 
 Done: feed checklist, log-source normalisation, per-component eventtypes/tags/macros/lookups, Sigma logsource pipeline, per-component docs, coverage/gaps/checklist, changelog tooling, CI.
 
-## Phase 2: analytics as ES detections
+## Phase 2 (in progress): analytics as ES detections
 
-One YAML per analytic in `content/analytics/ANxxxx.yml`:
+Done: analytic schema and scaffolding (`new-analytic`), validation, ES 8 detections app, Sigma rule rendering with correlation support, per-analytic docs, prioritised backlog, and 49 implemented analytics (18 TTP, 27 Anomaly, 4 Hunting, 1 baseline) across Windows endpoint, Corelight and Palo Alto feeds.
+
+The schema, as implemented (`content/analytics/ANxxxx.yml`, `curated` block):
 
 ```yaml
-id: AN0110
-detection_strategy: DET0039
-technique: T1071.004
-platforms: [Linux]
-attack: {description, log_source_references, mutable_elements}   # derived, regenerated
-status: scaffold | implemented | reviewed
-content_type: ttp | anomaly | hunting | baseline                  # inferred default, overridable
-data_components: [DC0032, DC0082]                                 # derived
-tuning:                                                           # one entry per ATT&CK mutable element
-  TimeWindow:        {bind: macro,  name: mitre_time_window, default: 15m}
-  ProcessWhitelist:  {bind: lookup, name: mitre_allowlist_processes}
-  UserContext:       {bind: lookup, name: mitre_account_roles}
-spl:
-  search: |                                                       # uses `mitre_dcXXXX*` macros, CIM fields, tstats where the DC has a _dm macro
-  risk:   {score: 25, objects: [{field: dest, type: system}, {field: user, type: user}]}   # for anomaly/ttp
-  notable: {title: ..., severity: medium}                                                  # for ttp
-  schedule: {cron: "*/15 * * * *", earliest: -20m@m, latest: now}
-sigma:
-  rule: {detection: ..., falsepositives: ...}                     # logsource derived from the DC mapping
-kql: null
-esql: null
+status: implemented            # scaffold | implemented | reviewed
+title: LSASS memory access by an unexpected process
+content_type: ttp              # ttp | anomaly | hunting
+severity: high
+summary: what this search detects
+gaps: what ATT&CK's text asks for that this does not cover
+data_components: [DC0035]
+feeds: [sysmon]
+tuning:                        # one entry per ATT&CK mutable element that is bound
+  - {element: AccessMask, bind: macro, name: mitre_an1030_access_mask, default: 'GrantedAccess IN (...)'}
+  - {element: ParentProcessName, bind: lookup, name: mitre_allowlist_processes}
+spl: |                         # uses mitre_dcXXXX macros and ends with mitre_anXXXX_filter
+risk: {message: "...", objects: [{field: dest, type: system, score: 70}], threat_objects: [...]}
+schedule: {cron, earliest, latest}     # optional; default every 15 minutes with a per-analytic offset
+throttle: {fields: [dest], period: 3600s}
+baselines: [{name, lookup, fields, search, cron, earliest}]
+sigma: {logsource, detection}  # or rules: [...] + correlation: {...}, or not_expressible: reason
 ```
 
-Renderer: `savedsearches.conf` into `DA-ESS-mitre-attack-detections` with `action.correlationsearch.annotations` carrying `mitre_attack`, `mitre_det`, `mitre_an`, `mitre_dc`; action by content type (see [splunk-implementation.md](splunk-implementation.md)); disabled by default; one Sigma rule per analytic; pySigma used to validate Sigma and to draft SPL for scaffold-status analytics (hand-written SPL wins when present).
+Remaining:
 
-Prioritisation: rank techniques by group/software/campaign usage from the STIX `uses` relationships and implement analytics for the top techniques on Windows and network platforms first.
+* Work down [the backlog](analytics/backlog.md): about 460 more analytics are coverable by the ticked feeds.
+* Promote `implemented` to `reviewed` after each detection has run against production data for a tuning period.
+* Analytics for Linux, ESXi, containers and Azure once those feeds are ticked (564 are waiting on a feed).
+* Optional consolidation of same-shape analytics (the discovery set) into one scheduled search per data component where search concurrency is tight.
 
 ## Phase 3: detection strategies
 
-`content/detection_strategies/DETxxxx.yml` with `shape: risk_incident | correlation | notable`, the analytics it combines and the window. Rendered as ES risk incident rules (count distinct `mitre_an` within `mitre_det` per risk object) or correlation searches, plus Sigma correlation rules.
+`content/detection_strategies/DETxxxx.yml` with `shape: risk_incident | correlation | notable`, the analytics it combines and the window. Rendered as ES finding-based detections over the Risk data model (count distinct `mitre_an` within `mitre_det` per risk object) or correlation searches, plus Sigma correlation rules. The `gaps` text on each analytic page already names the legs it leaves to this layer.
 
 ## Phase 4: more languages and platforms
 

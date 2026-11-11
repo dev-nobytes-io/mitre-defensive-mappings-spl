@@ -52,8 +52,8 @@ flowchart TB
 |---|---|---|---|
 | Log source | literal `index`/`sourcetype`/field constraint inside an eventtype | `logsource` product/service | done |
 | Data component | umbrella eventtype, `mitre_dcXXXX*` macros, CIM tags, `_dm` macro | generic category (`process_creation`, `file_event`...) | done |
-| Mutable elements | environment macros and tuning lookups (`mitre_allowlist_*`, `mitre_asset_roles`, `mitre_time_window(1)`) | pipeline placeholders | surface shipped, bindings in phase 2 |
-| Analytic | ES 8 detection with a declared content type (TTP → notable, Anomaly → risk, Hunting → scheduled search, Baseline → summary) | rule | phase 2 |
+| Mutable elements | per-analytic macros (`mitre_anXXXX_*`), shared macros and tuning lookups (`mitre_allowlist_*`, `mitre_asset_roles`, `mitre_account_roles`), baseline lookups | rule values | done for implemented analytics |
+| Analytic | ES 8 detection with a declared content type (TTP → finding + risk, Anomaly → risk, Hunting → no action); baselines attach as supporting searches | rule, plus correlation rule where needed | 49 implemented, rest in the backlog |
 | Detection strategy | correlation search, risk incident rule or notable, chosen per DET | correlation rule | phase 3 |
 
 ## Why eventtypes for data components
