@@ -5,10 +5,10 @@ Requires `TA-mitre-attack-datacomponents` (eventtypes, macros, lookups) and Splu
 
 | Content type | Count | Adaptive response |
 |---|---|---|
-| TTP | 12 | finding (notable) + risk |
-| Anomaly | 6 | risk only (intermediate finding) |
+| TTP | 17 | finding (notable) + risk |
+| Anomaly | 15 | risk only (intermediate finding) |
 | Hunting | 0 | none; run on demand or schedule for a dashboard |
-| Baselines | 0 | write a lookup that an analytic reads |
+| Baselines | 1 | write a lookup that an analytic reads |
 
 ## Enabling
 
