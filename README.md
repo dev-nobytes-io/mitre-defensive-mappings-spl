@@ -24,6 +24,8 @@ flowchart LR
 
 Green is complete for every data component. Amber is in progress: 49 analytics, chosen by technique prevalence on the ticked feeds ([backlog](docs/analytics/backlog.md) for the rest), and a detection-strategy layer of 6 sequences, 4 strategy risk rules and 3 cross-strategy correlations ([strategies](docs/strategies/README.md)).
 
+**Resuming work?** [TODO.md](TODO.md) has the current state, conventions and the ordered next steps; [docs/roadmap.md](docs/roadmap.md) has the phased map.
+
 ## What you get
 
 | Output | Where | Notes |
