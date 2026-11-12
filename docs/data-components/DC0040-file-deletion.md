@@ -65,14 +65,14 @@ Component specific:
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetypes | Constraint | Origin | TA / collector |
+| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `solidcore` | live | `mcafee:epo` | `(threat_name=FILE_DELETED OR event_description=FILE_DELETED) (product_name="Solidcore*")` | defaults | Arrives through the ePO TA; Solidcore events carry event names such as FILE_CREATED, FILE_MODIFIED, FILE_DELETED, EXECUTION_DENIED, REG_VALUE_MODIFIED, PROCESS_HIJACK_ATTEMPTED. Verify field names (threat_name / event_description) in your data. |
-| `sysmon` | live | `XmlWinEventLog:Microsoft-Windows-Sysmon/Operational` | `EventCode IN (23, 26)` | defaults | Splunk Add-on for Sysmon (TA-microsoft-sysmon) |
-| `wineventlog` | live | `XmlWinEventLog:Security` | `EventCode IN (4660, 4663)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering |
-| `auditd` | ready (tick in stack.yml) | `linux:audit` | `type IN (PATH, SYSCALL) (syscall IN (rename, renameat, rmdir, unlink, unlinkat) OR SYSCALL IN (rename, renameat, rmdir, unlink, unlinkat))` | defaults | Splunk Add-on for Unix and Linux (linux:audit) or auditd -> auditbeat/syslog |
-| `esxi_syslog` | ready (tick in stack.yml) | `vmware:esxlog:hostd`, `vmware:esxlog:shell` | `(whole feed)` | defaults | Splunk Add-on for VMware ESXi Logs (vmware:esxlog:<log>) |
-| `sysmon_linux` | ready (tick in stack.yml) | `sysmon:linux` | `EventCode IN (23)` | defaults | Splunk Add-on for Sysmon for Linux |
+| `solidcore` | live | sourcetype=`mcafee:epo` | `(threat_name=FILE_DELETED OR event_description=FILE_DELETED) (product_name="Solidcore*")` | defaults | Arrives through the ePO TA; Solidcore events carry event names such as FILE_CREATED, FILE_MODIFIED, FILE_DELETED, EXECUTION_DENIED, REG_VALUE_MODIFIED, PROCESS_HIJACK_ATTEMPTED. Verify field names (threat_name / event_description) in your data. |
+| `sysmon` | live | source=`XmlWinEventLog:Microsoft-Windows-Sysmon/Operational` | `EventCode IN (23, 26)` | defaults | Splunk Add-on for Sysmon (needs Splunk_TA_windows for XML parsing) |
+| `wineventlog` | live | source=`XmlWinEventLog:Security` | `EventCode IN (4660, 4663)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true) |
+| `auditd` | ready (tick in stack.yml) | sourcetype=`linux:audit` | `type IN (PATH, SYSCALL) (syscall IN (rename, renameat, rmdir, unlink, unlinkat) OR SYSCALL IN (rename, renameat, rmdir, unlink, unlinkat))` | defaults | Splunk Add-on for Unix and Linux (linux:audit) or auditd -> auditbeat/syslog |
+| `esxi_syslog` | ready (tick in stack.yml) | sourcetype=`vmware:esxlog:hostd`, sourcetype=`vmware:esxlog:shell` | `(whole feed)` | defaults | Splunk Add-on for VMware ESXi Logs (vmware:esxlog:<log>) |
+| `sysmon_linux` | ready (tick in stack.yml) | sourcetype=`sysmon:linux` | `EventCode IN (23)` | defaults | Splunk Add-on for Sysmon for Linux |
 
 Collection prerequisites:
 
@@ -96,16 +96,16 @@ Eventtypes (literal constraints, see `dist/splunk/TA-mitre-attack-datacomponents
 
 ```ini
 [mitre_dc0040_file_deletion__solidcore]
-search = index=epo sourcetype=mcafee:epo (threat_name=FILE_DELETED OR event_description=FILE_DELETED) (product_name="Solidcore*")
+search = index=epo sourcetype="mcafee:epo" (threat_name=FILE_DELETED OR event_description=FILE_DELETED) (product_name="Solidcore*")
 
 [mitre_dc0040_file_deletion__sysmon]
-search = index=sysmon sourcetype=XmlWinEventLog:Microsoft-Windows-Sysmon/Operational EventCode IN (23, 26)
+search = index=sysmon source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode IN (23, 26)
 
 [mitre_dc0040_file_deletion__wineventlog]
-search = index=wineventlog sourcetype=XmlWinEventLog:Security EventCode IN (4660, 4663)
+search = index=wineventlog source="XmlWinEventLog:Security" EventCode IN (4660, 4663)
 
 [mitre_dc0040_file_deletion__auditd]
-search = index=linux sourcetype=linux:audit type IN (PATH, SYSCALL) (syscall IN (rename, renameat, rmdir, unlink, unlinkat) OR SYSCALL IN (rename, renameat, rmdir, unlink, unlinkat))
+search = index=linux sourcetype="linux:audit" type IN (PATH, SYSCALL) (syscall IN (rename, renameat, rmdir, unlink, unlinkat) OR SYSCALL IN (rename, renameat, rmdir, unlink, unlinkat))
 disabled = 1
 
 [mitre_dc0040_file_deletion__esxi_syslog]
@@ -113,7 +113,7 @@ search = index=vmware sourcetype IN ("vmware:esxlog:hostd", "vmware:esxlog:shell
 disabled = 1
 
 [mitre_dc0040_file_deletion__sysmon_linux]
-search = index=linux sourcetype=sysmon:linux EventCode IN (23)
+search = index=linux sourcetype="sysmon:linux" EventCode IN (23)
 disabled = 1
 
 [mitre_dc0040_file_deletion]

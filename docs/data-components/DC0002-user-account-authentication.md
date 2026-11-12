@@ -79,16 +79,16 @@ Component specific:
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetypes | Constraint | Origin | TA / collector |
+| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `corelight` | live | `corelight_kerberos`, `corelight_ntlm`, `corelight_radius`, `corelight_rdp`, `corelight_ssh` | `(whole feed)` | defaults | Corelight App for Splunk (corelight_<log>). For TA_zeek use prefix zeek: and suffix :json. |
-| `palo_alto` | live | `pan:globalprotect`, `pan:system` | `(whole feed)` | defaults | Splunk Add-on for Palo Alto Networks (pan:*) |
-| `wineventlog` | live | `XmlWinEventLog:Security` | `EventCode IN (4624, 4625, 4648, 4768, 4769, 4770, 4771, 4776, 4777)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering |
-| `auditd` | ready (tick in stack.yml) | `linux:audit` | `type IN (CRED_ACQ, USER_ACCT, USER_AUTH, USER_LOGIN)` | defaults | Splunk Add-on for Unix and Linux (linux:audit) or auditd -> auditbeat/syslog |
-| `azure_entra` | ready (tick in stack.yml) | `azure:aad:signin` | `(whole feed)` | defaults | Splunk Add-on for Microsoft Azure (azure:aad:signin, azure:aad:audit) or Microsoft Cloud Services add-on via Event Hub |
-| `esxi_syslog` | ready (tick in stack.yml) | `vmware:esxlog:auth` | `(whole feed)` | defaults | Splunk Add-on for VMware ESXi Logs (vmware:esxlog:<log>) |
-| `kubernetes_audit` | ready (tick in stack.yml) | `kube:apiserver-audit` | `(responseStatus.code=401 OR responseStatus.code=403)` | defaults | Splunk OpenTelemetry Collector for Kubernetes / Splunk Connect for Kubernetes |
-| `linux_syslog` | ready (tick in stack.yml) | `linux_secure` | `(whole feed)` | defaults | Splunk Add-on for Unix and Linux (syslog, linux_secure, linux_messages_syslog) |
+| `corelight` | live | sourcetype=`corelight_kerberos`, sourcetype=`corelight_ntlm`, sourcetype=`corelight_radius`, sourcetype=`corelight_rdp`, sourcetype=`corelight_ssh` | `(whole feed)` | defaults | Corelight App for Splunk (corelight_<log>). For TA_zeek use prefix zeek: and suffix :json. |
+| `palo_alto` | live | sourcetype=`pan:globalprotect`, sourcetype=`pan:system` | `(whole feed)` | defaults | Splunk Add-on for Palo Alto Networks (pan:*) |
+| `wineventlog` | live | source=`XmlWinEventLog:Security` | `EventCode IN (4624, 4625, 4648, 4768, 4769, 4770, 4771, 4776, 4777)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true) |
+| `auditd` | ready (tick in stack.yml) | sourcetype=`linux:audit` | `type IN (CRED_ACQ, USER_ACCT, USER_AUTH, USER_LOGIN)` | defaults | Splunk Add-on for Unix and Linux (linux:audit) or auditd -> auditbeat/syslog |
+| `azure_entra` | ready (tick in stack.yml) | sourcetype=`azure:aad:signin` | `(whole feed)` | defaults | Splunk Add-on for Microsoft Azure (azure:aad:signin, azure:aad:audit) or Microsoft Cloud Services add-on via Event Hub |
+| `esxi_syslog` | ready (tick in stack.yml) | sourcetype=`vmware:esxlog:auth` | `(whole feed)` | defaults | Splunk Add-on for VMware ESXi Logs (vmware:esxlog:<log>) |
+| `kubernetes_audit` | ready (tick in stack.yml) | sourcetype=`kube:apiserver-audit` | `(responseStatus.code=401 OR responseStatus.code=403)` | defaults | Splunk OpenTelemetry Collector for Kubernetes / Splunk Connect for Kubernetes |
+| `linux_syslog` | ready (tick in stack.yml) | sourcetype=`linux_secure` | `(whole feed)` | defaults | Splunk Add-on for Unix and Linux (syslog, linux_secure, linux_messages_syslog) |
 
 Collection prerequisites:
 
@@ -127,22 +127,22 @@ search = index=corelight sourcetype IN (corelight_kerberos, corelight_ntlm, core
 search = index=pan_logs sourcetype IN ("pan:globalprotect", "pan:system")
 
 [mitre_dc0002_user_account_authentication__wineventlog]
-search = index=wineventlog sourcetype=XmlWinEventLog:Security EventCode IN (4624, 4625, 4648, 4768, 4769, 4770, 4771, 4776, 4777)
+search = index=wineventlog source="XmlWinEventLog:Security" EventCode IN (4624, 4625, 4648, 4768, 4769, 4770, 4771, 4776, 4777)
 
 [mitre_dc0002_user_account_authentication__auditd]
-search = index=linux sourcetype=linux:audit type IN (CRED_ACQ, USER_ACCT, USER_AUTH, USER_LOGIN)
+search = index=linux sourcetype="linux:audit" type IN (CRED_ACQ, USER_ACCT, USER_AUTH, USER_LOGIN)
 disabled = 1
 
 [mitre_dc0002_user_account_authentication__azure_entra]
-search = index=azure sourcetype=azure:aad:signin
+search = index=azure sourcetype="azure:aad:signin"
 disabled = 1
 
 [mitre_dc0002_user_account_authentication__esxi_syslog]
-search = index=vmware sourcetype=vmware:esxlog:auth
+search = index=vmware sourcetype="vmware:esxlog:auth"
 disabled = 1
 
 [mitre_dc0002_user_account_authentication__kubernetes_audit]
-search = index=k8s sourcetype=kube:apiserver-audit (responseStatus.code=401 OR responseStatus.code=403)
+search = index=k8s sourcetype="kube:apiserver-audit" (responseStatus.code=401 OR responseStatus.code=403)
 disabled = 1
 
 [mitre_dc0002_user_account_authentication__linux_syslog]

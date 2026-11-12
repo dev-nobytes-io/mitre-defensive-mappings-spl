@@ -73,21 +73,21 @@ Component specific:
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetypes | Constraint | Origin | TA / collector |
+| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `palo_alto` | live | `pan:config`, `pan:system` | `(whole feed)` | defaults | Splunk Add-on for Palo Alto Networks (pan:*) |
-| `powershell_logging` | live | `XmlWinEventLog:Microsoft-Windows-PowerShell/Operational` | `EventCode IN (4103, 4104)` | defaults | Splunk Add-on for Microsoft Windows |
-| `sysmon` | live | `XmlWinEventLog:Microsoft-Windows-Sysmon/Operational` | `EventCode IN (1)` | defaults | Splunk Add-on for Sysmon (TA-microsoft-sysmon) |
-| `trellix_epo` | live | `mcafee:epo` | `(threat_type="AMSI*" OR threat_name="AMSI*")` | defaults | Splunk Add-on for McAfee ePO (mcafee:epo). Verify the sourcetype against your installed TA version. |
-| `wineventlog` | live | `XmlWinEventLog:Security` | `EventCode IN (4688)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering |
-| `auditd` | ready (tick in stack.yml) | `linux:audit` | `type IN (EXECVE, PROCTITLE, SYSCALL) (syscall IN (execve, execveat) OR SYSCALL IN (execve, execveat))` | defaults | Splunk Add-on for Unix and Linux (linux:audit) or auditd -> auditbeat/syslog |
-| `container_runtime` | ready (tick in stack.yml) | `docker:daemon`, `docker:events` | `(status IN (exec_create, exec_start))` | defaults | docker events scripted input or OpenTelemetry (docker:events, containerd) |
-| `ebpf` | ready (tick in stack.yml) | `falco` | `(whole feed)` | derived | Vendor specific (falco JSON, tetragon) |
-| `edr_telemetry` | ready (tick in stack.yml) | `edr:telemetry` | `(whole feed)` | derived | Vendor specific |
-| `esxi_syslog` | ready (tick in stack.yml) | `vmware:esxlog:shell` | `(whole feed)` | defaults | Splunk Add-on for VMware ESXi Logs (vmware:esxlog:<log>) |
-| `kubernetes_audit` | ready (tick in stack.yml) | `kube:apiserver-audit` | `(objectRef.subresource=exec OR objectRef.subresource=attach)` | defaults | Splunk OpenTelemetry Collector for Kubernetes / Splunk Connect for Kubernetes |
-| `netdev_syslog` | ready (tick in stack.yml) | `cisco:asa`, `cisco:ios`, `syslog` | `(whole feed)` | derived | Cisco Networks Add-on (cisco:ios, cisco:asa), Juniper/Arista TAs, or generic syslog |
-| `vcenter` | ready (tick in stack.yml) | `vmware:vclog:vpxd` | `(whole feed)` | derived | Splunk Add-on for VMware (vmware:vclog:vpxd) |
+| `palo_alto` | live | sourcetype=`pan:config`, sourcetype=`pan:system` | `(whole feed)` | defaults | Splunk Add-on for Palo Alto Networks (pan:*) |
+| `powershell_logging` | live | source=`XmlWinEventLog:Microsoft-Windows-PowerShell/Operational` | `EventCode IN (4103, 4104)` | defaults | Splunk Add-on for Microsoft Windows |
+| `sysmon` | live | source=`XmlWinEventLog:Microsoft-Windows-Sysmon/Operational` | `EventCode IN (1)` | defaults | Splunk Add-on for Sysmon (needs Splunk_TA_windows for XML parsing) |
+| `trellix_epo` | live | sourcetype=`mcafee:epo` | `(threat_type="AMSI*" OR threat_name="AMSI*")` | defaults | Splunk Add-on for McAfee ePO (mcafee:epo). Verify the sourcetype against your installed TA version. |
+| `wineventlog` | live | source=`XmlWinEventLog:Security` | `EventCode IN (4688)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true) |
+| `auditd` | ready (tick in stack.yml) | sourcetype=`linux:audit` | `type IN (EXECVE, PROCTITLE, SYSCALL) (syscall IN (execve, execveat) OR SYSCALL IN (execve, execveat))` | defaults | Splunk Add-on for Unix and Linux (linux:audit) or auditd -> auditbeat/syslog |
+| `container_runtime` | ready (tick in stack.yml) | sourcetype=`docker:daemon`, sourcetype=`docker:events` | `(status IN (exec_create, exec_start))` | defaults | docker events scripted input or OpenTelemetry (docker:events, containerd) |
+| `ebpf` | ready (tick in stack.yml) | sourcetype=`falco` | `(whole feed)` | derived | Vendor specific (falco JSON, tetragon) |
+| `edr_telemetry` | ready (tick in stack.yml) | sourcetype=`edr:telemetry` | `(whole feed)` | derived | Vendor specific |
+| `esxi_syslog` | ready (tick in stack.yml) | sourcetype=`vmware:esxlog:shell` | `(whole feed)` | defaults | Splunk Add-on for VMware ESXi Logs (vmware:esxlog:<log>) |
+| `kubernetes_audit` | ready (tick in stack.yml) | sourcetype=`kube:apiserver-audit` | `(objectRef.subresource=exec OR objectRef.subresource=attach)` | defaults | Splunk OpenTelemetry Collector for Kubernetes / Splunk Connect for Kubernetes |
+| `netdev_syslog` | ready (tick in stack.yml) | sourcetype=`cisco:asa`, sourcetype=`cisco:ios`, sourcetype=`syslog` | `(whole feed)` | derived | Cisco Networks Add-on (cisco:ios, cisco:asa), Juniper/Arista TAs, or generic syslog |
+| `vcenter` | ready (tick in stack.yml) | sourcetype=`vmware:vclog:vpxd` | `(whole feed)` | derived | Splunk Add-on for VMware (vmware:vclog:vpxd) |
 
 Collection prerequisites:
 
@@ -124,19 +124,19 @@ Eventtypes (literal constraints, see `dist/splunk/TA-mitre-attack-datacomponents
 search = index=pan_logs sourcetype IN ("pan:config", "pan:system")
 
 [mitre_dc0064_command_execution__powershell_logging]
-search = index=wineventlog sourcetype=XmlWinEventLog:Microsoft-Windows-PowerShell/Operational EventCode IN (4103, 4104)
+search = index=wineventlog source="XmlWinEventLog:Microsoft-Windows-PowerShell/Operational" EventCode IN (4103, 4104)
 
 [mitre_dc0064_command_execution__sysmon]
-search = index=sysmon sourcetype=XmlWinEventLog:Microsoft-Windows-Sysmon/Operational EventCode IN (1)
+search = index=sysmon source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode IN (1)
 
 [mitre_dc0064_command_execution__trellix_epo]
-search = index=epo sourcetype=mcafee:epo (threat_type="AMSI*" OR threat_name="AMSI*")
+search = index=epo sourcetype="mcafee:epo" (threat_type="AMSI*" OR threat_name="AMSI*")
 
 [mitre_dc0064_command_execution__wineventlog]
-search = index=wineventlog sourcetype=XmlWinEventLog:Security EventCode IN (4688)
+search = index=wineventlog source="XmlWinEventLog:Security" EventCode IN (4688)
 
 [mitre_dc0064_command_execution__auditd]
-search = index=linux sourcetype=linux:audit type IN (EXECVE, PROCTITLE, SYSCALL) (syscall IN (execve, execveat) OR SYSCALL IN (execve, execveat))
+search = index=linux sourcetype="linux:audit" type IN (EXECVE, PROCTITLE, SYSCALL) (syscall IN (execve, execveat) OR SYSCALL IN (execve, execveat))
 disabled = 1
 
 [mitre_dc0064_command_execution__container_runtime]
@@ -148,15 +148,15 @@ search = index=linux sourcetype=falco
 disabled = 1
 
 [mitre_dc0064_command_execution__edr_telemetry]
-search = index=edr sourcetype=edr:telemetry
+search = index=edr sourcetype="edr:telemetry"
 disabled = 1
 
 [mitre_dc0064_command_execution__esxi_syslog]
-search = index=vmware sourcetype=vmware:esxlog:shell
+search = index=vmware sourcetype="vmware:esxlog:shell"
 disabled = 1
 
 [mitre_dc0064_command_execution__kubernetes_audit]
-search = index=k8s sourcetype=kube:apiserver-audit (objectRef.subresource=exec OR objectRef.subresource=attach)
+search = index=k8s sourcetype="kube:apiserver-audit" (objectRef.subresource=exec OR objectRef.subresource=attach)
 disabled = 1
 
 [mitre_dc0064_command_execution__netdev_syslog]
@@ -164,7 +164,7 @@ search = index=netops sourcetype IN ("cisco:asa", "cisco:ios", syslog)
 disabled = 1
 
 [mitre_dc0064_command_execution__vcenter]
-search = index=vmware sourcetype=vmware:vclog:vpxd
+search = index=vmware sourcetype="vmware:vclog:vpxd"
 disabled = 1
 
 [mitre_dc0064_command_execution]

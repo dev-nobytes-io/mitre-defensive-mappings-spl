@@ -341,7 +341,7 @@ derived:
     in_scope: true
     eventtype: mitre_dc0034_process_metadata__powershell_logging
     search: >-
-      index=wineventlog sourcetype=XmlWinEventLog:Microsoft-Windows-PowerShell/Operational EventCode IN (400, 403)
+      index=wineventlog source="XmlWinEventLog:Microsoft-Windows-PowerShell/Operational" EventCode IN (400, 403)
     constraint_origin: defaults
     broad_refs: 0
     sources:
@@ -351,7 +351,7 @@ derived:
     have: true
     in_scope: true
     eventtype: mitre_dc0034_process_metadata__sysmon
-    search: index=sysmon sourcetype=XmlWinEventLog:Microsoft-Windows-Sysmon/Operational EventCode IN (1, 5)
+    search: index=sysmon source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode IN (1, 5)
     constraint_origin: defaults
     broad_refs: 0
     sources:
@@ -363,7 +363,7 @@ derived:
     in_scope: true
     eventtype: mitre_dc0034_process_metadata__wineventlog
     search: >-
-      index=wineventlog sourcetype IN ("XmlWinEventLog:Microsoft-Windows-AppLocker/EXE and DLL", "XmlWinEventLog:Microsoft-Windows-CodeIntegrity/Operational",
+      index=wineventlog source IN ("XmlWinEventLog:Microsoft-Windows-AppLocker/EXE and DLL", "XmlWinEventLog:Microsoft-Windows-CodeIntegrity/Operational",
       "XmlWinEventLog:Microsoft-Windows-DeviceGuard/Operational", "XmlWinEventLog:Security")
     constraint_origin: defaults
     broad_refs: 14
@@ -380,7 +380,7 @@ derived:
     in_scope: true
     eventtype: mitre_dc0034_process_metadata__auditd
     search: >-
-      index=linux sourcetype=linux:audit type IN (PROCTITLE, SYSCALL) (syscall IN (execve, prctl, setgid, setuid)
+      index=linux sourcetype="linux:audit" type IN (PROCTITLE, SYSCALL) (syscall IN (execve, prctl, setgid, setuid)
       OR SYSCALL IN (execve, prctl, setgid, setuid))
     constraint_origin: defaults
     broad_refs: 0
@@ -391,7 +391,7 @@ derived:
     have: false
     in_scope: true
     eventtype: mitre_dc0034_process_metadata__edr_telemetry
-    search: index=edr sourcetype=edr:telemetry
+    search: index=edr sourcetype="edr:telemetry"
     constraint_origin: derived
     broad_refs: 4
     sources:
@@ -402,7 +402,7 @@ derived:
     have: false
     in_scope: true
     eventtype: mitre_dc0034_process_metadata__etw
-    search: index=etw sourcetype=etw:json (ProviderName="Microsoft-Windows-Kernel-Process")
+    search: index=etw sourcetype="etw:json" (ProviderName="Microsoft-Windows-Kernel-Process")
     constraint_origin: derived
     broad_refs: 1
     sources:
@@ -414,7 +414,7 @@ derived:
     in_scope: true
     eventtype: mitre_dc0034_process_metadata__linux_osquery
     search: >-
-      index=osquery sourcetype=osquery:results (name=processes OR name=process_open_sockets OR name=process_memory_map)
+      index=osquery sourcetype="osquery:results" (name=processes OR name=process_open_sockets OR name=process_memory_map)
     constraint_origin: defaults
     broad_refs: 9
     sources:

@@ -59,7 +59,7 @@ derived:
     have: false
     in_scope: true
     eventtype: mitre_dc0057_snapshot_creation__azure_activity
-    search: index=azure sourcetype=mscs:azure:audit (operationName="Microsoft.Compute/snapshots/write")
+    search: index=azure sourcetype="mscs:azure:audit" (operationName="Microsoft.Compute/snapshots/write")
     constraint_origin: defaults
     broad_refs: 1
     sources:

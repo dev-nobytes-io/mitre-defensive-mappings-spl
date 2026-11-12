@@ -30,10 +30,10 @@ flowchart LR
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetypes | Constraint | Origin | TA / collector |
+| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `palo_alto` | live | `pan:config`, `pan:system` | `(whole feed)` | defaults | Splunk Add-on for Palo Alto Networks (pan:*) |
-| `wineventlog` | live | `XmlWinEventLog:Microsoft-Windows-Windows Firewall With Advanced Security/Firewall`, `XmlWinEventLog:Security` | `EventCode IN (2004, 2005, 2006, 4946, 4947, 4948)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering |
+| `palo_alto` | live | sourcetype=`pan:config`, sourcetype=`pan:system` | `(whole feed)` | defaults | Splunk Add-on for Palo Alto Networks (pan:*) |
+| `wineventlog` | live | source=`XmlWinEventLog:Microsoft-Windows-Windows Firewall With Advanced Security/Firewall`, source=`XmlWinEventLog:Security` | `EventCode IN (2004, 2005, 2006, 4946, 4947, 4948)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true) |
 
 Collection prerequisites:
 
@@ -58,7 +58,7 @@ Eventtypes (literal constraints, see `dist/splunk/TA-mitre-attack-datacomponents
 search = index=pan_logs sourcetype IN ("pan:config", "pan:system")
 
 [mitre_dc0053_firewall_metadata__wineventlog]
-search = index=wineventlog sourcetype IN ("XmlWinEventLog:Microsoft-Windows-Windows Firewall With Advanced Security/Firewall", "XmlWinEventLog:Security") EventCode IN (2004, 2005, 2006, 4946, 4947, 4948)
+search = index=wineventlog source IN ("XmlWinEventLog:Microsoft-Windows-Windows Firewall With Advanced Security/Firewall", "XmlWinEventLog:Security") EventCode IN (2004, 2005, 2006, 4946, 4947, 4948)
 
 [mitre_dc0053_firewall_metadata]
 search = eventtype=mitre_dc0053_firewall_metadata__palo_alto OR eventtype=mitre_dc0053_firewall_metadata__wineventlog

@@ -32,9 +32,9 @@ flowchart LR
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetypes | Constraint | Origin | TA / collector |
+| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `wineventlog` | live | `XmlWinEventLog:Security` | `EventCode IN (4929, 5141)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering |
+| `wineventlog` | live | source=`XmlWinEventLog:Security` | `EventCode IN (4929, 5141)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true) |
 
 Collection prerequisites:
 
@@ -50,7 +50,7 @@ Eventtypes (literal constraints, see `dist/splunk/TA-mitre-attack-datacomponents
 
 ```ini
 [mitre_dc0068_active_directory_object_deletion__wineventlog]
-search = index=wineventlog sourcetype=XmlWinEventLog:Security EventCode IN (4929, 5141)
+search = index=wineventlog source="XmlWinEventLog:Security" EventCode IN (4929, 5141)
 
 [mitre_dc0068_active_directory_object_deletion]
 search = eventtype=mitre_dc0068_active_directory_object_deletion__wineventlog

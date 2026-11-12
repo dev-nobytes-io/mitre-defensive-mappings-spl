@@ -36,9 +36,9 @@ Component specific:
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetypes | Constraint | Origin | TA / collector |
+| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `wineventlog` | live | `XmlWinEventLog:Security` | `EventCode IN (4661, 4662)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering |
+| `wineventlog` | live | source=`XmlWinEventLog:Security` | `EventCode IN (4661, 4662)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true) |
 
 Collection prerequisites:
 
@@ -54,7 +54,7 @@ Eventtypes (literal constraints, see `dist/splunk/TA-mitre-attack-datacomponents
 
 ```ini
 [mitre_dc0071_active_directory_object_access__wineventlog]
-search = index=wineventlog sourcetype=XmlWinEventLog:Security EventCode IN (4661, 4662)
+search = index=wineventlog source="XmlWinEventLog:Security" EventCode IN (4661, 4662)
 
 [mitre_dc0071_active_directory_object_access]
 search = eventtype=mitre_dc0071_active_directory_object_access__wineventlog

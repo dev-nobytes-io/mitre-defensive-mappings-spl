@@ -627,7 +627,7 @@ derived:
     have: true
     in_scope: true
     eventtype: mitre_dc0061_file_modification__palo_alto
-    search: index=pan_logs sourcetype=pan:config
+    search: index=pan_logs sourcetype="pan:config"
     constraint_origin: defaults
     broad_refs: 0
     sources:
@@ -642,7 +642,7 @@ derived:
     in_scope: true
     eventtype: mitre_dc0061_file_modification__solidcore
     search: >-
-      index=epo sourcetype=mcafee:epo (threat_name IN (FILE_MODIFIED, FILE_ATTR_MODIFIED, FILE_RENAMED, WRITE_DENIED,
+      index=epo sourcetype="mcafee:epo" (threat_name IN (FILE_MODIFIED, FILE_ATTR_MODIFIED, FILE_RENAMED, WRITE_DENIED,
       OWNERSHIP_DENIED) OR event_description IN (FILE_MODIFIED, FILE_ATTR_MODIFIED, FILE_RENAMED, WRITE_DENIED,
       OWNERSHIP_DENIED)) (product_name="Solidcore*")
     constraint_origin: defaults
@@ -654,7 +654,7 @@ derived:
     have: true
     in_scope: true
     eventtype: mitre_dc0061_file_modification__sysmon
-    search: index=sysmon sourcetype=XmlWinEventLog:Microsoft-Windows-Sysmon/Operational EventCode IN (2, 11, 15)
+    search: index=sysmon source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode IN (2, 11, 15)
     constraint_origin: defaults
     broad_refs: 0
     sources:
@@ -664,7 +664,7 @@ derived:
     have: true
     in_scope: true
     eventtype: mitre_dc0061_file_modification__wineventlog
-    search: index=wineventlog sourcetype=XmlWinEventLog:Security EventCode IN (4663, 4670)
+    search: index=wineventlog source="XmlWinEventLog:Security" EventCode IN (4663, 4670)
     constraint_origin: defaults
     broad_refs: 2
     sources:
@@ -677,9 +677,9 @@ derived:
     in_scope: true
     eventtype: mitre_dc0061_file_modification__auditd
     search: >-
-      index=linux sourcetype=linux:audit type IN (PATH, SYSCALL) (syscall IN (chmod, chown, fchmod, fchmodat, fchown,
-      ftruncate, pwrite, rename, renameat, setxattr, truncate, write) OR SYSCALL IN (chmod, chown, fchmod, fchmodat,
-      fchown, ftruncate, pwrite, rename, renameat, setxattr, truncate, write))
+      index=linux sourcetype="linux:audit" type IN (PATH, SYSCALL) (syscall IN (chmod, chown, fchmod, fchmodat,
+      fchown, ftruncate, pwrite, rename, renameat, setxattr, truncate, write) OR SYSCALL IN (chmod, chown, fchmod,
+      fchmodat, fchown, ftruncate, pwrite, rename, renameat, setxattr, truncate, write))
     constraint_origin: defaults
     broad_refs: 0
     sources:

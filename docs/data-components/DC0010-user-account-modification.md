@@ -63,14 +63,14 @@ Component specific:
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetypes | Constraint | Origin | TA / collector |
+| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `wineventlog` | live | `XmlWinEventLog:Security` | `EventCode IN (4670, 4704, 4722, 4723, 4724, 4725, 4728, 4729, 4732, 4733, 4738, 4740, 4756, 4757, 4767)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering |
-| `auditd` | ready (tick in stack.yml) | `linux:audit` | `type IN (EXECVE, SYSCALL, USER_CHAUTHTOK, USER_MGMT) (exe="/usr/sbin/usermod" OR exe="/usr/bin/passwd" OR exe="/usr/sbin/chpasswd" OR type=USER_CHAUTHTOK OR type=USER_MGMT)` | defaults | Splunk Add-on for Unix and Linux (linux:audit) or auditd -> auditbeat/syslog |
-| `azure_activity` | ready (tick in stack.yml) | `mscs:azure:audit` | `(category=Policy)` | derived | Splunk Add-on for Microsoft Cloud Services (mscs:azure:audit) |
-| `azure_entra` | ready (tick in stack.yml) | `azure:aad:audit` | `(whole feed)` | defaults | Splunk Add-on for Microsoft Azure (azure:aad:signin, azure:aad:audit) or Microsoft Cloud Services add-on via Event Hub |
-| `kubernetes_audit` | ready (tick in stack.yml) | `kube:apiserver-audit` | `verb IN (create, patch, update) (objectRef.resource IN (rolebindings, clusterrolebindings, serviceaccounts))` | defaults | Splunk OpenTelemetry Collector for Kubernetes / Splunk Connect for Kubernetes |
-| `linux_syslog` | ready (tick in stack.yml) | `linux_secure` | `(whole feed)` | defaults | Splunk Add-on for Unix and Linux (syslog, linux_secure, linux_messages_syslog) |
+| `wineventlog` | live | source=`XmlWinEventLog:Security` | `EventCode IN (4670, 4704, 4722, 4723, 4724, 4725, 4728, 4729, 4732, 4733, 4738, 4740, 4756, 4757, 4767)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true) |
+| `auditd` | ready (tick in stack.yml) | sourcetype=`linux:audit` | `type IN (EXECVE, SYSCALL, USER_CHAUTHTOK, USER_MGMT) (exe="/usr/sbin/usermod" OR exe="/usr/bin/passwd" OR exe="/usr/sbin/chpasswd" OR type=USER_CHAUTHTOK OR type=USER_MGMT)` | defaults | Splunk Add-on for Unix and Linux (linux:audit) or auditd -> auditbeat/syslog |
+| `azure_activity` | ready (tick in stack.yml) | sourcetype=`mscs:azure:audit` | `(category=Policy)` | derived | Splunk Add-on for Microsoft Cloud Services (mscs:azure:audit) |
+| `azure_entra` | ready (tick in stack.yml) | sourcetype=`azure:aad:audit` | `(whole feed)` | defaults | Splunk Add-on for Microsoft Azure (azure:aad:signin, azure:aad:audit) or Microsoft Cloud Services add-on via Event Hub |
+| `kubernetes_audit` | ready (tick in stack.yml) | sourcetype=`kube:apiserver-audit` | `verb IN (create, patch, update) (objectRef.resource IN (rolebindings, clusterrolebindings, serviceaccounts))` | defaults | Splunk OpenTelemetry Collector for Kubernetes / Splunk Connect for Kubernetes |
+| `linux_syslog` | ready (tick in stack.yml) | sourcetype=`linux_secure` | `(whole feed)` | defaults | Splunk Add-on for Unix and Linux (syslog, linux_secure, linux_messages_syslog) |
 
 Collection prerequisites:
 
@@ -97,22 +97,22 @@ Eventtypes (literal constraints, see `dist/splunk/TA-mitre-attack-datacomponents
 
 ```ini
 [mitre_dc0010_user_account_modification__wineventlog]
-search = index=wineventlog sourcetype=XmlWinEventLog:Security EventCode IN (4670, 4704, 4722, 4723, 4724, 4725, 4728, 4729, 4732, 4733, 4738, 4740, 4756, 4757, 4767)
+search = index=wineventlog source="XmlWinEventLog:Security" EventCode IN (4670, 4704, 4722, 4723, 4724, 4725, 4728, 4729, 4732, 4733, 4738, 4740, 4756, 4757, 4767)
 
 [mitre_dc0010_user_account_modification__auditd]
-search = index=linux sourcetype=linux:audit type IN (EXECVE, SYSCALL, USER_CHAUTHTOK, USER_MGMT) (exe="/usr/sbin/usermod" OR exe="/usr/bin/passwd" OR exe="/usr/sbin/chpasswd" OR type=USER_CHAUTHTOK OR type=USER_MGMT)
+search = index=linux sourcetype="linux:audit" type IN (EXECVE, SYSCALL, USER_CHAUTHTOK, USER_MGMT) (exe="/usr/sbin/usermod" OR exe="/usr/bin/passwd" OR exe="/usr/sbin/chpasswd" OR type=USER_CHAUTHTOK OR type=USER_MGMT)
 disabled = 1
 
 [mitre_dc0010_user_account_modification__azure_activity]
-search = index=azure sourcetype=mscs:azure:audit (category=Policy)
+search = index=azure sourcetype="mscs:azure:audit" (category=Policy)
 disabled = 1
 
 [mitre_dc0010_user_account_modification__azure_entra]
-search = index=azure sourcetype=azure:aad:audit
+search = index=azure sourcetype="azure:aad:audit"
 disabled = 1
 
 [mitre_dc0010_user_account_modification__kubernetes_audit]
-search = index=k8s sourcetype=kube:apiserver-audit verb IN (create, patch, update) (objectRef.resource IN (rolebindings, clusterrolebindings, serviceaccounts))
+search = index=k8s sourcetype="kube:apiserver-audit" verb IN (create, patch, update) (objectRef.resource IN (rolebindings, clusterrolebindings, serviceaccounts))
 disabled = 1
 
 [mitre_dc0010_user_account_modification__linux_syslog]

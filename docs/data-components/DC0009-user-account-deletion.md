@@ -37,10 +37,10 @@ flowchart LR
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetypes | Constraint | Origin | TA / collector |
+| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `wineventlog` | live | `XmlWinEventLog:Security` | `EventCode IN (4726)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering |
-| `esxi_syslog` | ready (tick in stack.yml) | `vmware:esxlog:hostd` | `(whole feed)` | defaults | Splunk Add-on for VMware ESXi Logs (vmware:esxlog:<log>) |
+| `wineventlog` | live | source=`XmlWinEventLog:Security` | `EventCode IN (4726)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true) |
+| `esxi_syslog` | ready (tick in stack.yml) | sourcetype=`vmware:esxlog:hostd` | `(whole feed)` | defaults | Splunk Add-on for VMware ESXi Logs (vmware:esxlog:<log>) |
 
 Collection prerequisites:
 
@@ -57,10 +57,10 @@ Eventtypes (literal constraints, see `dist/splunk/TA-mitre-attack-datacomponents
 
 ```ini
 [mitre_dc0009_user_account_deletion__wineventlog]
-search = index=wineventlog sourcetype=XmlWinEventLog:Security EventCode IN (4726)
+search = index=wineventlog source="XmlWinEventLog:Security" EventCode IN (4726)
 
 [mitre_dc0009_user_account_deletion__esxi_syslog]
-search = index=vmware sourcetype=vmware:esxlog:hostd
+search = index=vmware sourcetype="vmware:esxlog:hostd"
 disabled = 1
 
 [mitre_dc0009_user_account_deletion]

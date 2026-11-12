@@ -58,12 +58,12 @@ Component specific:
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetypes | Constraint | Origin | TA / collector |
+| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `sysmon` | live | `XmlWinEventLog:Microsoft-Windows-Sysmon/Operational` | `EventCode IN (8, 10)` | defaults | Splunk Add-on for Sysmon (TA-microsoft-sysmon) |
-| `wineventlog` | live | `XmlWinEventLog:Security` | `EventCode IN (4656, 4663)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering |
-| `auditd` | ready (tick in stack.yml) | `linux:audit` | `type IN (SYSCALL) (syscall IN (process_vm_readv, process_vm_writev, ptrace) OR SYSCALL IN (process_vm_readv, process_vm_writev, ptrace))` | defaults | Splunk Add-on for Unix and Linux (linux:audit) or auditd -> auditbeat/syslog |
-| `edr_telemetry` | ready (tick in stack.yml) | `edr:telemetry` | `(whole feed)` | derived | Vendor specific |
+| `sysmon` | live | source=`XmlWinEventLog:Microsoft-Windows-Sysmon/Operational` | `EventCode IN (8, 10)` | defaults | Splunk Add-on for Sysmon (needs Splunk_TA_windows for XML parsing) |
+| `wineventlog` | live | source=`XmlWinEventLog:Security` | `EventCode IN (4656, 4663)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true) |
+| `auditd` | ready (tick in stack.yml) | sourcetype=`linux:audit` | `type IN (SYSCALL) (syscall IN (process_vm_readv, process_vm_writev, ptrace) OR SYSCALL IN (process_vm_readv, process_vm_writev, ptrace))` | defaults | Splunk Add-on for Unix and Linux (linux:audit) or auditd -> auditbeat/syslog |
+| `edr_telemetry` | ready (tick in stack.yml) | sourcetype=`edr:telemetry` | `(whole feed)` | derived | Vendor specific |
 
 Collection prerequisites:
 
@@ -85,17 +85,17 @@ Eventtypes (literal constraints, see `dist/splunk/TA-mitre-attack-datacomponents
 
 ```ini
 [mitre_dc0035_process_access__sysmon]
-search = index=sysmon sourcetype=XmlWinEventLog:Microsoft-Windows-Sysmon/Operational EventCode IN (8, 10)
+search = index=sysmon source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode IN (8, 10)
 
 [mitre_dc0035_process_access__wineventlog]
-search = index=wineventlog sourcetype=XmlWinEventLog:Security EventCode IN (4656, 4663)
+search = index=wineventlog source="XmlWinEventLog:Security" EventCode IN (4656, 4663)
 
 [mitre_dc0035_process_access__auditd]
-search = index=linux sourcetype=linux:audit type IN (SYSCALL) (syscall IN (process_vm_readv, process_vm_writev, ptrace) OR SYSCALL IN (process_vm_readv, process_vm_writev, ptrace))
+search = index=linux sourcetype="linux:audit" type IN (SYSCALL) (syscall IN (process_vm_readv, process_vm_writev, ptrace) OR SYSCALL IN (process_vm_readv, process_vm_writev, ptrace))
 disabled = 1
 
 [mitre_dc0035_process_access__edr_telemetry]
-search = index=edr sourcetype=edr:telemetry
+search = index=edr sourcetype="edr:telemetry"
 disabled = 1
 
 [mitre_dc0035_process_access]

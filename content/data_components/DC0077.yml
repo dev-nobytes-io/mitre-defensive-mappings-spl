@@ -85,7 +85,7 @@ derived:
     have: false
     in_scope: true
     eventtype: mitre_dc0077_container_start__kubernetes_audit
-    search: index=k8s sourcetype=kube:objects:events (reason=Started OR reason=Pulled OR reason=Created)
+    search: index=k8s sourcetype="kube:objects:events" (reason=Started OR reason=Pulled OR reason=Created)
     constraint_origin: defaults
     broad_refs: 2
     sources:

@@ -39,10 +39,10 @@ flowchart LR
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetypes | Constraint | Origin | TA / collector |
+| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `container_runtime` | ready (tick in stack.yml) | `containerd:events`, `docker:events` | `(status=start)` | defaults | docker events scripted input or OpenTelemetry (docker:events, containerd) |
-| `kubernetes_audit` | ready (tick in stack.yml) | `kube:objects:events` | `(reason=Started OR reason=Pulled OR reason=Created)` | defaults | Splunk OpenTelemetry Collector for Kubernetes / Splunk Connect for Kubernetes |
+| `container_runtime` | ready (tick in stack.yml) | sourcetype=`containerd:events`, sourcetype=`docker:events` | `(status=start)` | defaults | docker events scripted input or OpenTelemetry (docker:events, containerd) |
+| `kubernetes_audit` | ready (tick in stack.yml) | sourcetype=`kube:objects:events` | `(reason=Started OR reason=Pulled OR reason=Created)` | defaults | Splunk OpenTelemetry Collector for Kubernetes / Splunk Connect for Kubernetes |
 
 Collection prerequisites:
 
@@ -61,7 +61,7 @@ search = index=k8s sourcetype IN ("containerd:events", "docker:events") (status=
 disabled = 1
 
 [mitre_dc0077_container_start__kubernetes_audit]
-search = index=k8s sourcetype=kube:objects:events (reason=Started OR reason=Pulled OR reason=Created)
+search = index=k8s sourcetype="kube:objects:events" (reason=Started OR reason=Pulled OR reason=Created)
 disabled = 1
 
 [mitre_dc0077_container_start]

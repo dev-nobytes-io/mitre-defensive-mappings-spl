@@ -150,7 +150,7 @@ derived:
     have: true
     in_scope: true
     eventtype: mitre_dc0051_firewall_rule_modification__palo_alto
-    search: index=pan_logs sourcetype=pan:config
+    search: index=pan_logs sourcetype="pan:config"
     constraint_origin: defaults
     broad_refs: 0
     sources:
@@ -163,7 +163,7 @@ derived:
     in_scope: true
     eventtype: mitre_dc0051_firewall_rule_modification__wineventlog
     search: >-
-      index=wineventlog sourcetype IN ("XmlWinEventLog:Microsoft-Windows-Windows Firewall With Advanced Security/Firewall",
+      index=wineventlog source IN ("XmlWinEventLog:Microsoft-Windows-Windows Firewall With Advanced Security/Firewall",
       "XmlWinEventLog:Security") EventCode IN (2004, 2005, 2006, 2033, 4946, 4947, 4948, 4950)
     constraint_origin: defaults
     broad_refs: 6
@@ -175,7 +175,7 @@ derived:
     have: false
     in_scope: true
     eventtype: mitre_dc0051_firewall_rule_modification__esxi_syslog
-    search: index=vmware sourcetype=vmware:esxlog:hostd (firewall)
+    search: index=vmware sourcetype="vmware:esxlog:hostd" (firewall)
     constraint_origin: defaults
     broad_refs: 0
     sources:

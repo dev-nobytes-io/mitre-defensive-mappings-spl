@@ -136,7 +136,7 @@ derived:
     have: true
     in_scope: true
     eventtype: mitre_dc0014_user_account_creation__palo_alto
-    search: index=pan_logs sourcetype=pan:config
+    search: index=pan_logs sourcetype="pan:config"
     constraint_origin: defaults
     broad_refs: 0
     sources:
@@ -146,7 +146,7 @@ derived:
     have: true
     in_scope: true
     eventtype: mitre_dc0014_user_account_creation__wineventlog
-    search: index=wineventlog sourcetype=XmlWinEventLog:Security EventCode IN (4720)
+    search: index=wineventlog source="XmlWinEventLog:Security" EventCode IN (4720)
     constraint_origin: defaults
     broad_refs: 0
     sources:
@@ -157,7 +157,7 @@ derived:
     in_scope: true
     eventtype: mitre_dc0014_user_account_creation__auditd
     search: >-
-      index=linux sourcetype=linux:audit type IN (ADD_USER, EXECVE, SYSCALL) (exe="/usr/sbin/useradd" OR exe="/usr/sbin/adduser"
+      index=linux sourcetype="linux:audit" type IN (ADD_USER, EXECVE, SYSCALL) (exe="/usr/sbin/useradd" OR exe="/usr/sbin/adduser"
       OR type=ADD_USER)
     constraint_origin: defaults
     broad_refs: 0
@@ -168,7 +168,7 @@ derived:
     have: false
     in_scope: true
     eventtype: mitre_dc0014_user_account_creation__azure_entra
-    search: index=azure sourcetype=azure:aad:audit (operationName="Add user")
+    search: index=azure sourcetype="azure:aad:audit" (operationName="Add user")
     constraint_origin: defaults
     broad_refs: 4
     sources:

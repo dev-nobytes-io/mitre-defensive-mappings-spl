@@ -57,12 +57,12 @@ Component specific:
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetypes | Constraint | Origin | TA / collector |
+| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `sysmon` | live | `XmlWinEventLog:Microsoft-Windows-Sysmon/Operational` | `EventCode IN (8, 10, 25)` | defaults | Splunk Add-on for Sysmon (TA-microsoft-sysmon) |
-| `auditd` | ready (tick in stack.yml) | `linux:audit` | `type IN (SYSCALL) (syscall IN (memfd_create, mprotect, process_vm_writev, ptrace) OR SYSCALL IN (memfd_create, mprotect, process_vm_writev, ptrace))` | defaults | Splunk Add-on for Unix and Linux (linux:audit) or auditd -> auditbeat/syslog |
-| `ebpf` | ready (tick in stack.yml) | `falco` | `(whole feed)` | derived | Vendor specific (falco JSON, tetragon) |
-| `etw` | ready (tick in stack.yml) | `etw:json` | `(ProviderName="Microsoft-Windows-Kernel-Process")` | derived | Requires a user-mode ETW consumer (SilkETW/Sealighter, Splunk Stream for NDIS, or an EDR that exposes the provider). No standard Splunk TA. |
+| `sysmon` | live | source=`XmlWinEventLog:Microsoft-Windows-Sysmon/Operational` | `EventCode IN (8, 10, 25)` | defaults | Splunk Add-on for Sysmon (needs Splunk_TA_windows for XML parsing) |
+| `auditd` | ready (tick in stack.yml) | sourcetype=`linux:audit` | `type IN (SYSCALL) (syscall IN (memfd_create, mprotect, process_vm_writev, ptrace) OR SYSCALL IN (memfd_create, mprotect, process_vm_writev, ptrace))` | defaults | Splunk Add-on for Unix and Linux (linux:audit) or auditd -> auditbeat/syslog |
+| `ebpf` | ready (tick in stack.yml) | sourcetype=`falco` | `(whole feed)` | derived | Vendor specific (falco JSON, tetragon) |
+| `etw` | ready (tick in stack.yml) | sourcetype=`etw:json` | `(ProviderName="Microsoft-Windows-Kernel-Process")` | derived | Requires a user-mode ETW consumer (SilkETW/Sealighter, Splunk Stream for NDIS, or an EDR that exposes the provider). No standard Splunk TA. |
 
 Collection prerequisites:
 
@@ -79,10 +79,10 @@ Eventtypes (literal constraints, see `dist/splunk/TA-mitre-attack-datacomponents
 
 ```ini
 [mitre_dc0020_process_modification__sysmon]
-search = index=sysmon sourcetype=XmlWinEventLog:Microsoft-Windows-Sysmon/Operational EventCode IN (8, 10, 25)
+search = index=sysmon source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode IN (8, 10, 25)
 
 [mitre_dc0020_process_modification__auditd]
-search = index=linux sourcetype=linux:audit type IN (SYSCALL) (syscall IN (memfd_create, mprotect, process_vm_writev, ptrace) OR SYSCALL IN (memfd_create, mprotect, process_vm_writev, ptrace))
+search = index=linux sourcetype="linux:audit" type IN (SYSCALL) (syscall IN (memfd_create, mprotect, process_vm_writev, ptrace) OR SYSCALL IN (memfd_create, mprotect, process_vm_writev, ptrace))
 disabled = 1
 
 [mitre_dc0020_process_modification__ebpf]
@@ -90,7 +90,7 @@ search = index=linux sourcetype=falco
 disabled = 1
 
 [mitre_dc0020_process_modification__etw]
-search = index=etw sourcetype=etw:json (ProviderName="Microsoft-Windows-Kernel-Process")
+search = index=etw sourcetype="etw:json" (ProviderName="Microsoft-Windows-Kernel-Process")
 disabled = 1
 
 [mitre_dc0020_process_modification]

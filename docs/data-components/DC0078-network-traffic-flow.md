@@ -80,21 +80,21 @@ Component specific:
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetypes | Constraint | Origin | TA / collector |
+| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `corelight` | live | `corelight_conn` | `(whole feed)` | defaults | Corelight App for Splunk (corelight_<log>). For TA_zeek use prefix zeek: and suffix :json. |
-| `palo_alto` | live | `pan:traffic` | `(whole feed)` | defaults | Splunk Add-on for Palo Alto Networks (pan:*) |
-| `sysmon` | live | `XmlWinEventLog:Microsoft-Windows-Sysmon/Operational` | `EventCode IN (3)` | defaults | Splunk Add-on for Sysmon (TA-microsoft-sysmon) |
-| `wineventlog` | live | `XmlWinEventLog:Security` | `EventCode IN (5156, 5157)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering |
-| `wireshark` | hunt-only | `wireshark:json` | `(whole feed)` | derived | None standard. tshark -T ek output (wireshark:json) or Splunk Stream for continuous capture. |
-| `auditd` | ready (tick in stack.yml) | `linux:audit` | `type IN (SYSCALL) (syscall IN (connect, recvfrom, sendmsg, sendto) OR SYSCALL IN (connect, recvfrom, sendmsg, sendto))` | defaults | Splunk Add-on for Unix and Linux (linux:audit) or auditd -> auditbeat/syslog |
-| `edr_telemetry` | ready (tick in stack.yml) | `edr:telemetry` | `(whole feed)` | derived | Vendor specific |
-| `esxi_syslog` | ready (tick in stack.yml) | `vmware:esxlog:hostd`, `vmware:esxlog:vmkernel`, `vmware:esxlog:vobd` | `(whole feed)` | defaults | Splunk Add-on for VMware ESXi Logs (vmware:esxlog:<log>) |
-| `iptables` | ready (tick in stack.yml) | `syslog` | `("IN=" "OUT=")` | derived | Splunk Add-on for Unix and Linux (syslog) |
-| `netdev_syslog` | ready (tick in stack.yml) | `cisco:asa`, `cisco:ios`, `syslog` | `(whole feed)` | derived | Cisco Networks Add-on (cisco:ios, cisco:asa), Juniper/Arista TAs, or generic syslog |
-| `netflow` | ready (tick in stack.yml) | `stream:netflow` | `(whole feed)` | derived | Splunk Stream or Splunk Add-on for NetFlow |
-| `vcenter` | ready (tick in stack.yml) | `vmware:vclog:vpxd` | `(whole feed)` | derived | Splunk Add-on for VMware (vmware:vclog:vpxd) |
-| `windows_firewall_log` | ready (tick in stack.yml) | `WinFirewall` | `(whole feed)` | derived | Splunk_TA_windows (monitor input on %systemroot%\System32\LogFiles\Firewall\pfirewall.log) |
+| `corelight` | live | sourcetype=`corelight_conn` | `(whole feed)` | defaults | Corelight App for Splunk (corelight_<log>). For TA_zeek use prefix zeek: and suffix :json. |
+| `palo_alto` | live | sourcetype=`pan:traffic` | `(whole feed)` | defaults | Splunk Add-on for Palo Alto Networks (pan:*) |
+| `sysmon` | live | source=`XmlWinEventLog:Microsoft-Windows-Sysmon/Operational` | `EventCode IN (3)` | defaults | Splunk Add-on for Sysmon (needs Splunk_TA_windows for XML parsing) |
+| `wineventlog` | live | source=`XmlWinEventLog:Security` | `EventCode IN (5156, 5157)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true) |
+| `wireshark` | hunt-only | sourcetype=`wireshark:json` | `(whole feed)` | derived | None standard. tshark -T ek output (wireshark:json) or Splunk Stream for continuous capture. |
+| `auditd` | ready (tick in stack.yml) | sourcetype=`linux:audit` | `type IN (SYSCALL) (syscall IN (connect, recvfrom, sendmsg, sendto) OR SYSCALL IN (connect, recvfrom, sendmsg, sendto))` | defaults | Splunk Add-on for Unix and Linux (linux:audit) or auditd -> auditbeat/syslog |
+| `edr_telemetry` | ready (tick in stack.yml) | sourcetype=`edr:telemetry` | `(whole feed)` | derived | Vendor specific |
+| `esxi_syslog` | ready (tick in stack.yml) | sourcetype=`vmware:esxlog:hostd`, sourcetype=`vmware:esxlog:vmkernel`, sourcetype=`vmware:esxlog:vobd` | `(whole feed)` | defaults | Splunk Add-on for VMware ESXi Logs (vmware:esxlog:<log>) |
+| `iptables` | ready (tick in stack.yml) | sourcetype=`syslog` | `("IN=" "OUT=")` | derived | Splunk Add-on for Unix and Linux (syslog) |
+| `netdev_syslog` | ready (tick in stack.yml) | sourcetype=`cisco:asa`, sourcetype=`cisco:ios`, sourcetype=`syslog` | `(whole feed)` | derived | Cisco Networks Add-on (cisco:ios, cisco:asa), Juniper/Arista TAs, or generic syslog |
+| `netflow` | ready (tick in stack.yml) | sourcetype=`stream:netflow` | `(whole feed)` | derived | Splunk Stream or Splunk Add-on for NetFlow |
+| `vcenter` | ready (tick in stack.yml) | sourcetype=`vmware:vclog:vpxd` | `(whole feed)` | derived | Splunk Add-on for VMware (vmware:vclog:vpxd) |
+| `windows_firewall_log` | ready (tick in stack.yml) | sourcetype=`WinFirewall` | `(whole feed)` | derived | Splunk_TA_windows (monitor input on %systemroot%\System32\LogFiles\Firewall\pfirewall.log) |
 
 Collection prerequisites:
 
@@ -128,24 +128,24 @@ Eventtypes (literal constraints, see `dist/splunk/TA-mitre-attack-datacomponents
 search = index=corelight sourcetype=corelight_conn
 
 [mitre_dc0078_network_traffic_flow__palo_alto]
-search = index=pan_logs sourcetype=pan:traffic
+search = index=pan_logs sourcetype="pan:traffic"
 
 [mitre_dc0078_network_traffic_flow__sysmon]
-search = index=sysmon sourcetype=XmlWinEventLog:Microsoft-Windows-Sysmon/Operational EventCode IN (3)
+search = index=sysmon source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode IN (3)
 
 [mitre_dc0078_network_traffic_flow__wineventlog]
-search = index=wineventlog sourcetype=XmlWinEventLog:Security EventCode IN (5156, 5157)
+search = index=wineventlog source="XmlWinEventLog:Security" EventCode IN (5156, 5157)
 
 [mitre_dc0078_network_traffic_flow__wireshark]
-search = index=pcap sourcetype=wireshark:json
+search = index=pcap sourcetype="wireshark:json"
 disabled = 1
 
 [mitre_dc0078_network_traffic_flow__auditd]
-search = index=linux sourcetype=linux:audit type IN (SYSCALL) (syscall IN (connect, recvfrom, sendmsg, sendto) OR SYSCALL IN (connect, recvfrom, sendmsg, sendto))
+search = index=linux sourcetype="linux:audit" type IN (SYSCALL) (syscall IN (connect, recvfrom, sendmsg, sendto) OR SYSCALL IN (connect, recvfrom, sendmsg, sendto))
 disabled = 1
 
 [mitre_dc0078_network_traffic_flow__edr_telemetry]
-search = index=edr sourcetype=edr:telemetry
+search = index=edr sourcetype="edr:telemetry"
 disabled = 1
 
 [mitre_dc0078_network_traffic_flow__esxi_syslog]
@@ -161,11 +161,11 @@ search = index=netops sourcetype IN ("cisco:asa", "cisco:ios", syslog)
 disabled = 1
 
 [mitre_dc0078_network_traffic_flow__netflow]
-search = index=netflow sourcetype=stream:netflow
+search = index=netflow sourcetype="stream:netflow"
 disabled = 1
 
 [mitre_dc0078_network_traffic_flow__vcenter]
-search = index=vmware sourcetype=vmware:vclog:vpxd
+search = index=vmware sourcetype="vmware:vclog:vpxd"
 disabled = 1
 
 [mitre_dc0078_network_traffic_flow__windows_firewall_log]

@@ -58,7 +58,7 @@ derived:
     have: false
     in_scope: true
     eventtype: mitre_dc0049_snapshot_deletion__azure_activity
-    search: index=azure sourcetype=mscs:azure:audit (operationName="Microsoft.Compute/snapshots/delete")
+    search: index=azure sourcetype="mscs:azure:audit" (operationName="Microsoft.Compute/snapshots/delete")
     constraint_origin: defaults
     broad_refs: 0
     sources:
@@ -68,7 +68,7 @@ derived:
     have: false
     in_scope: true
     eventtype: mitre_dc0049_snapshot_deletion__esxi_syslog
-    search: index=vmware sourcetype=vmware:esxlog:hostd (snapshot)
+    search: index=vmware sourcetype="vmware:esxlog:hostd" (snapshot)
     constraint_origin: defaults
     broad_refs: 0
     sources:

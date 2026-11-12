@@ -83,21 +83,21 @@ Component specific:
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetypes | Constraint | Origin | TA / collector |
+| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `corelight` | live | `corelight_dce_rpc`, `corelight_dns`, `corelight_files`, `corelight_ftp`, `corelight_http`, `corelight_kerberos`, `corelight_ldap`, `corelight_notice`, `corelight_ntlm`, `corelight_rdp`, `corelight_smb_files`, `corelight_smtp`, `corelight_ssh`, `corelight_ssl`, `corelight_weird`, `corelight_x509` | `(whole feed)` | defaults | Corelight App for Splunk (corelight_<log>). For TA_zeek use prefix zeek: and suffix :json. |
-| `palo_alto` | live | `pan:decryption`, `pan:threat` | `(whole feed)` | defaults | Splunk Add-on for Palo Alto Networks (pan:*) |
-| `sysmon` | live | `XmlWinEventLog:Microsoft-Windows-Sysmon/Operational` | `EventCode IN (22)` | defaults | Splunk Add-on for Sysmon (TA-microsoft-sysmon) |
-| `wineventlog` | live | `XmlWinEventLog:Microsoft-Windows-Windows Defender/Operational` | `Defender/Operational EventCode IN (1116, 1117)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering |
-| `wireshark` | hunt-only | `wireshark:json` | `(whole feed)` | derived | None standard. tshark -T ek output (wireshark:json) or Splunk Stream for continuous capture. |
-| `auditd` | ready (tick in stack.yml) | `linux:audit` | `type IN (SYSCALL) (syscall IN (recvfrom, recvmsg, sendmsg, sendto) OR SYSCALL IN (recvfrom, recvmsg, sendmsg, sendto))` | defaults | Splunk Add-on for Unix and Linux (linux:audit) or auditd -> auditbeat/syslog |
-| `azure_resource` | ready (tick in stack.yml) | `mscs:azure:eventhub` | `(category=NetworkSecurityGroupFlowEvent OR category=FlowLogFlowEvent)` | derived | Splunk Add-on for Microsoft Cloud Services (mscs:azure:eventhub) |
-| `ebpf` | ready (tick in stack.yml) | `falco` | `(whole feed)` | derived | Vendor specific (falco JSON, tetragon) |
-| `edr_telemetry` | ready (tick in stack.yml) | `edr:telemetry` | `(whole feed)` | derived | Vendor specific |
-| `iis` | ready (tick in stack.yml) | `ms:iis:auto` | `(whole feed)` | derived | Splunk Add-on for Microsoft IIS |
-| `kubernetes_audit` | ready (tick in stack.yml) | `kube:container:ingress-nginx` | `(whole feed)` | derived | Splunk OpenTelemetry Collector for Kubernetes / Splunk Connect for Kubernetes |
-| `linux_syslog` | ready (tick in stack.yml) | `access_combined` | `(whole feed)` | defaults | Splunk Add-on for Unix and Linux (syslog, linux_secure, linux_messages_syslog) |
-| `windows_dns_server` | ready (tick in stack.yml) | `MSAD:NT6:DNS` | `(whole feed)` | derived | Splunk_TA_windows (MSAD:NT6:DNS) or Microsoft-Windows-DNS-Server/Analytical ETW |
+| `corelight` | live | sourcetype=`corelight_dce_rpc`, sourcetype=`corelight_dns`, sourcetype=`corelight_files`, sourcetype=`corelight_ftp`, sourcetype=`corelight_http`, sourcetype=`corelight_kerberos`, sourcetype=`corelight_ldap`, sourcetype=`corelight_notice`, sourcetype=`corelight_ntlm`, sourcetype=`corelight_rdp`, sourcetype=`corelight_smb_files`, sourcetype=`corelight_smtp`, sourcetype=`corelight_ssh`, sourcetype=`corelight_ssl`, sourcetype=`corelight_weird`, sourcetype=`corelight_x509` | `(whole feed)` | defaults | Corelight App for Splunk (corelight_<log>). For TA_zeek use prefix zeek: and suffix :json. |
+| `palo_alto` | live | sourcetype=`pan:decryption`, sourcetype=`pan:threat` | `(whole feed)` | defaults | Splunk Add-on for Palo Alto Networks (pan:*) |
+| `sysmon` | live | source=`XmlWinEventLog:Microsoft-Windows-Sysmon/Operational` | `EventCode IN (22)` | defaults | Splunk Add-on for Sysmon (needs Splunk_TA_windows for XML parsing) |
+| `wineventlog` | live | source=`XmlWinEventLog:Microsoft-Windows-Windows Defender/Operational` | `EventCode IN (1116, 1117)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true) |
+| `wireshark` | hunt-only | sourcetype=`wireshark:json` | `(whole feed)` | derived | None standard. tshark -T ek output (wireshark:json) or Splunk Stream for continuous capture. |
+| `auditd` | ready (tick in stack.yml) | sourcetype=`linux:audit` | `type IN (SYSCALL) (syscall IN (recvfrom, recvmsg, sendmsg, sendto) OR SYSCALL IN (recvfrom, recvmsg, sendmsg, sendto))` | defaults | Splunk Add-on for Unix and Linux (linux:audit) or auditd -> auditbeat/syslog |
+| `azure_resource` | ready (tick in stack.yml) | sourcetype=`mscs:azure:eventhub` | `(category=NetworkSecurityGroupFlowEvent OR category=FlowLogFlowEvent)` | derived | Splunk Add-on for Microsoft Cloud Services (mscs:azure:eventhub) |
+| `ebpf` | ready (tick in stack.yml) | sourcetype=`falco` | `(whole feed)` | derived | Vendor specific (falco JSON, tetragon) |
+| `edr_telemetry` | ready (tick in stack.yml) | sourcetype=`edr:telemetry` | `(whole feed)` | derived | Vendor specific |
+| `iis` | ready (tick in stack.yml) | sourcetype=`ms:iis:auto` | `(whole feed)` | derived | Splunk Add-on for Microsoft IIS |
+| `kubernetes_audit` | ready (tick in stack.yml) | sourcetype=`kube:container:ingress-nginx` | `(whole feed)` | derived | Splunk OpenTelemetry Collector for Kubernetes / Splunk Connect for Kubernetes |
+| `linux_syslog` | ready (tick in stack.yml) | sourcetype=`access_combined` | `(whole feed)` | defaults | Splunk Add-on for Unix and Linux (syslog, linux_secure, linux_messages_syslog) |
+| `windows_dns_server` | ready (tick in stack.yml) | sourcetype=`MSAD:NT6:DNS` | `(whole feed)` | derived | Splunk_TA_windows (MSAD:NT6:DNS) or Microsoft-Windows-DNS-Server/Analytical ETW |
 
 Collection prerequisites:
 
@@ -133,21 +133,21 @@ search = index=corelight sourcetype IN (corelight_dce_rpc, corelight_dns, coreli
 search = index=pan_logs sourcetype IN ("pan:decryption", "pan:threat")
 
 [mitre_dc0085_network_traffic_content__sysmon]
-search = index=sysmon sourcetype=XmlWinEventLog:Microsoft-Windows-Sysmon/Operational EventCode IN (22)
+search = index=sysmon source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode IN (22)
 
 [mitre_dc0085_network_traffic_content__wineventlog]
-search = index=wineventlog sourcetype=XmlWinEventLog:Microsoft-Windows-Windows Defender/Operational EventCode IN (1116, 1117)
+search = index=wineventlog source="XmlWinEventLog:Microsoft-Windows-Windows Defender/Operational" EventCode IN (1116, 1117)
 
 [mitre_dc0085_network_traffic_content__wireshark]
-search = index=pcap sourcetype=wireshark:json
+search = index=pcap sourcetype="wireshark:json"
 disabled = 1
 
 [mitre_dc0085_network_traffic_content__auditd]
-search = index=linux sourcetype=linux:audit type IN (SYSCALL) (syscall IN (recvfrom, recvmsg, sendmsg, sendto) OR SYSCALL IN (recvfrom, recvmsg, sendmsg, sendto))
+search = index=linux sourcetype="linux:audit" type IN (SYSCALL) (syscall IN (recvfrom, recvmsg, sendmsg, sendto) OR SYSCALL IN (recvfrom, recvmsg, sendmsg, sendto))
 disabled = 1
 
 [mitre_dc0085_network_traffic_content__azure_resource]
-search = index=azure sourcetype=mscs:azure:eventhub (category=NetworkSecurityGroupFlowEvent OR category=FlowLogFlowEvent)
+search = index=azure sourcetype="mscs:azure:eventhub" (category=NetworkSecurityGroupFlowEvent OR category=FlowLogFlowEvent)
 disabled = 1
 
 [mitre_dc0085_network_traffic_content__ebpf]
@@ -155,15 +155,15 @@ search = index=linux sourcetype=falco
 disabled = 1
 
 [mitre_dc0085_network_traffic_content__edr_telemetry]
-search = index=edr sourcetype=edr:telemetry
+search = index=edr sourcetype="edr:telemetry"
 disabled = 1
 
 [mitre_dc0085_network_traffic_content__iis]
-search = index=web sourcetype=ms:iis:auto
+search = index=web sourcetype="ms:iis:auto"
 disabled = 1
 
 [mitre_dc0085_network_traffic_content__kubernetes_audit]
-search = index=k8s sourcetype=kube:container:ingress-nginx
+search = index=k8s sourcetype="kube:container:ingress-nginx"
 disabled = 1
 
 [mitre_dc0085_network_traffic_content__linux_syslog]
@@ -171,7 +171,7 @@ search = index=linux sourcetype=access_combined
 disabled = 1
 
 [mitre_dc0085_network_traffic_content__windows_dns_server]
-search = index=wineventlog sourcetype=MSAD:NT6:DNS
+search = index=wineventlog sourcetype="MSAD:NT6:DNS"
 disabled = 1
 
 [mitre_dc0085_network_traffic_content]

@@ -78,19 +78,19 @@ Component specific:
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetypes | Constraint | Origin | TA / collector |
+| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `corelight` | live | `corelight_conn` | `(whole feed)` | defaults | Corelight App for Splunk (corelight_<log>). For TA_zeek use prefix zeek: and suffix :json. |
-| `palo_alto` | live | `pan:traffic` | `(whole feed)` | defaults | Splunk Add-on for Palo Alto Networks (pan:*) |
-| `sysmon` | live | `XmlWinEventLog:Microsoft-Windows-Sysmon/Operational` | `EventCode IN (3)` | defaults | Splunk Add-on for Sysmon (TA-microsoft-sysmon) |
-| `wineventlog` | live | `XmlWinEventLog:Microsoft-Windows-Windows Firewall With Advanced Security/Firewall`, `XmlWinEventLog:Security` | `EventCode IN (5156, 5157, 5158)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering |
-| `auditd` | ready (tick in stack.yml) | `linux:audit` | `type IN (SYSCALL) (syscall IN (accept, accept4, bind, connect, listen, socket) OR SYSCALL IN (accept, accept4, bind, connect, listen, socket))` | defaults | Splunk Add-on for Unix and Linux (linux:audit) or auditd -> auditbeat/syslog |
-| `ebpf` | ready (tick in stack.yml) | `falco` | `(whole feed)` | derived | Vendor specific (falco JSON, tetragon) |
-| `esxi_syslog` | ready (tick in stack.yml) | `vmware:esxlog:hostd`, `vmware:esxlog:vmkernel` | `(whole feed)` | defaults | Splunk Add-on for VMware ESXi Logs (vmware:esxlog:<log>) |
-| `linux_osquery` | ready (tick in stack.yml) | `osquery:results` | `(name=process_open_sockets OR name=socket_events OR name=listening_ports)` | defaults | osquery TA |
-| `netdev_syslog` | ready (tick in stack.yml) | `cisco:asa`, `cisco:ios`, `syslog` | `(whole feed)` | derived | Cisco Networks Add-on (cisco:ios, cisco:asa), Juniper/Arista TAs, or generic syslog |
-| `netflow` | ready (tick in stack.yml) | `stream:netflow` | `(whole feed)` | derived | Splunk Stream or Splunk Add-on for NetFlow |
-| `sysmon_linux` | ready (tick in stack.yml) | `sysmon:linux` | `EventCode IN (3)` | defaults | Splunk Add-on for Sysmon for Linux |
+| `corelight` | live | sourcetype=`corelight_conn` | `(whole feed)` | defaults | Corelight App for Splunk (corelight_<log>). For TA_zeek use prefix zeek: and suffix :json. |
+| `palo_alto` | live | sourcetype=`pan:traffic` | `(whole feed)` | defaults | Splunk Add-on for Palo Alto Networks (pan:*) |
+| `sysmon` | live | source=`XmlWinEventLog:Microsoft-Windows-Sysmon/Operational` | `EventCode IN (3)` | defaults | Splunk Add-on for Sysmon (needs Splunk_TA_windows for XML parsing) |
+| `wineventlog` | live | source=`XmlWinEventLog:Microsoft-Windows-Windows Firewall With Advanced Security/Firewall`, source=`XmlWinEventLog:Security` | `EventCode IN (5156, 5157, 5158)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true) |
+| `auditd` | ready (tick in stack.yml) | sourcetype=`linux:audit` | `type IN (SYSCALL) (syscall IN (accept, accept4, bind, connect, listen, socket) OR SYSCALL IN (accept, accept4, bind, connect, listen, socket))` | defaults | Splunk Add-on for Unix and Linux (linux:audit) or auditd -> auditbeat/syslog |
+| `ebpf` | ready (tick in stack.yml) | sourcetype=`falco` | `(whole feed)` | derived | Vendor specific (falco JSON, tetragon) |
+| `esxi_syslog` | ready (tick in stack.yml) | sourcetype=`vmware:esxlog:hostd`, sourcetype=`vmware:esxlog:vmkernel` | `(whole feed)` | defaults | Splunk Add-on for VMware ESXi Logs (vmware:esxlog:<log>) |
+| `linux_osquery` | ready (tick in stack.yml) | sourcetype=`osquery:results` | `(name=process_open_sockets OR name=socket_events OR name=listening_ports)` | defaults | osquery TA |
+| `netdev_syslog` | ready (tick in stack.yml) | sourcetype=`cisco:asa`, sourcetype=`cisco:ios`, sourcetype=`syslog` | `(whole feed)` | derived | Cisco Networks Add-on (cisco:ios, cisco:asa), Juniper/Arista TAs, or generic syslog |
+| `netflow` | ready (tick in stack.yml) | sourcetype=`stream:netflow` | `(whole feed)` | derived | Splunk Stream or Splunk Add-on for NetFlow |
+| `sysmon_linux` | ready (tick in stack.yml) | sourcetype=`sysmon:linux` | `EventCode IN (3)` | defaults | Splunk Add-on for Sysmon for Linux |
 
 Collection prerequisites:
 
@@ -123,16 +123,16 @@ Eventtypes (literal constraints, see `dist/splunk/TA-mitre-attack-datacomponents
 search = index=corelight sourcetype=corelight_conn
 
 [mitre_dc0082_network_connection_creation__palo_alto]
-search = index=pan_logs sourcetype=pan:traffic
+search = index=pan_logs sourcetype="pan:traffic"
 
 [mitre_dc0082_network_connection_creation__sysmon]
-search = index=sysmon sourcetype=XmlWinEventLog:Microsoft-Windows-Sysmon/Operational EventCode IN (3)
+search = index=sysmon source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode IN (3)
 
 [mitre_dc0082_network_connection_creation__wineventlog]
-search = index=wineventlog sourcetype IN ("XmlWinEventLog:Microsoft-Windows-Windows Firewall With Advanced Security/Firewall", "XmlWinEventLog:Security") EventCode IN (5156, 5157, 5158)
+search = index=wineventlog source IN ("XmlWinEventLog:Microsoft-Windows-Windows Firewall With Advanced Security/Firewall", "XmlWinEventLog:Security") EventCode IN (5156, 5157, 5158)
 
 [mitre_dc0082_network_connection_creation__auditd]
-search = index=linux sourcetype=linux:audit type IN (SYSCALL) (syscall IN (accept, accept4, bind, connect, listen, socket) OR SYSCALL IN (accept, accept4, bind, connect, listen, socket))
+search = index=linux sourcetype="linux:audit" type IN (SYSCALL) (syscall IN (accept, accept4, bind, connect, listen, socket) OR SYSCALL IN (accept, accept4, bind, connect, listen, socket))
 disabled = 1
 
 [mitre_dc0082_network_connection_creation__ebpf]
@@ -144,7 +144,7 @@ search = index=vmware sourcetype IN ("vmware:esxlog:hostd", "vmware:esxlog:vmker
 disabled = 1
 
 [mitre_dc0082_network_connection_creation__linux_osquery]
-search = index=osquery sourcetype=osquery:results (name=process_open_sockets OR name=socket_events OR name=listening_ports)
+search = index=osquery sourcetype="osquery:results" (name=process_open_sockets OR name=socket_events OR name=listening_ports)
 disabled = 1
 
 [mitre_dc0082_network_connection_creation__netdev_syslog]
@@ -152,11 +152,11 @@ search = index=netops sourcetype IN ("cisco:asa", "cisco:ios", syslog)
 disabled = 1
 
 [mitre_dc0082_network_connection_creation__netflow]
-search = index=netflow sourcetype=stream:netflow
+search = index=netflow sourcetype="stream:netflow"
 disabled = 1
 
 [mitre_dc0082_network_connection_creation__sysmon_linux]
-search = index=linux sourcetype=sysmon:linux EventCode IN (3)
+search = index=linux sourcetype="sysmon:linux" EventCode IN (3)
 disabled = 1
 
 [mitre_dc0082_network_connection_creation]

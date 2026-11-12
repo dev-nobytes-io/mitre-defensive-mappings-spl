@@ -130,7 +130,7 @@ derived:
     have: true
     in_scope: true
     eventtype: mitre_dc0102_network_share_access__palo_alto
-    search: index=pan_logs sourcetype=pan:traffic (app=ms-ds-smb OR app=ms-ds-smbv3 OR app=ms-ds-smbv2)
+    search: index=pan_logs sourcetype="pan:traffic" (app=ms-ds-smb OR app=ms-ds-smbv3 OR app=ms-ds-smbv2)
     constraint_origin: defaults
     broad_refs: 0
     sources:
@@ -141,7 +141,7 @@ derived:
     in_scope: true
     eventtype: mitre_dc0102_network_share_access__wineventlog
     search: >-
-      index=wineventlog sourcetype IN ("XmlWinEventLog:Microsoft-Windows-SMBClient/Security", "XmlWinEventLog:Microsoft-Windows-SMBServer/Security",
+      index=wineventlog source IN ("XmlWinEventLog:Microsoft-Windows-SMBClient/Security", "XmlWinEventLog:Microsoft-Windows-SMBServer/Security",
       "XmlWinEventLog:Security") EventCode IN (5140, 5142, 5144, 5145, 31001)
     constraint_origin: defaults
     broad_refs: 1

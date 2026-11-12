@@ -62,13 +62,13 @@ Component specific:
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetypes | Constraint | Origin | TA / collector |
+| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `wineventlog` | live | `XmlWinEventLog:Microsoft-Windows-TaskScheduler/Operational`, `XmlWinEventLog:Security` | `EventCode IN (106, 4698)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering |
-| `auditd` | ready (tick in stack.yml) | `linux:audit` | `type IN (PATH, SYSCALL) (syscall IN (open, openat, rename) OR SYSCALL IN (open, openat, rename)) (name="/etc/cron*" OR name="/var/spool/cron/*" OR name="/etc/systemd/system/*.timer")` | defaults | Splunk Add-on for Unix and Linux (linux:audit) or auditd -> auditbeat/syslog |
-| `esxi_syslog` | ready (tick in stack.yml) | `vmware:esxlog:syslog` | `(crond)` | defaults | Splunk Add-on for VMware ESXi Logs (vmware:esxlog:<log>) |
-| `kubernetes_audit` | ready (tick in stack.yml) | `kube:apiserver-audit` | `verb IN (create) (objectRef.resource=cronjobs)` | defaults | Splunk OpenTelemetry Collector for Kubernetes / Splunk Connect for Kubernetes |
-| `linux_syslog` | ready (tick in stack.yml) | `linux_messages_syslog`, `linux_secure`, `syslog` | `(process=CRON OR process=cron OR process=crond OR process=systemd)` | defaults | Splunk Add-on for Unix and Linux (syslog, linux_secure, linux_messages_syslog) |
+| `wineventlog` | live | source=`XmlWinEventLog:Microsoft-Windows-TaskScheduler/Operational`, source=`XmlWinEventLog:Security` | `EventCode IN (106, 4698)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true) |
+| `auditd` | ready (tick in stack.yml) | sourcetype=`linux:audit` | `type IN (PATH, SYSCALL) (syscall IN (open, openat, rename) OR SYSCALL IN (open, openat, rename)) (name="/etc/cron*" OR name="/var/spool/cron/*" OR name="/etc/systemd/system/*.timer")` | defaults | Splunk Add-on for Unix and Linux (linux:audit) or auditd -> auditbeat/syslog |
+| `esxi_syslog` | ready (tick in stack.yml) | sourcetype=`vmware:esxlog:syslog` | `(crond)` | defaults | Splunk Add-on for VMware ESXi Logs (vmware:esxlog:<log>) |
+| `kubernetes_audit` | ready (tick in stack.yml) | sourcetype=`kube:apiserver-audit` | `verb IN (create) (objectRef.resource=cronjobs)` | defaults | Splunk OpenTelemetry Collector for Kubernetes / Splunk Connect for Kubernetes |
+| `linux_syslog` | ready (tick in stack.yml) | sourcetype=`linux_messages_syslog`, sourcetype=`linux_secure`, sourcetype=`syslog` | `(process=CRON OR process=cron OR process=crond OR process=systemd)` | defaults | Splunk Add-on for Unix and Linux (syslog, linux_secure, linux_messages_syslog) |
 
 Collection prerequisites:
 
@@ -92,18 +92,18 @@ Eventtypes (literal constraints, see `dist/splunk/TA-mitre-attack-datacomponents
 
 ```ini
 [mitre_dc0001_scheduled_job_creation__wineventlog]
-search = index=wineventlog sourcetype IN ("XmlWinEventLog:Microsoft-Windows-TaskScheduler/Operational", "XmlWinEventLog:Security") EventCode IN (106, 4698)
+search = index=wineventlog source IN ("XmlWinEventLog:Microsoft-Windows-TaskScheduler/Operational", "XmlWinEventLog:Security") EventCode IN (106, 4698)
 
 [mitre_dc0001_scheduled_job_creation__auditd]
-search = index=linux sourcetype=linux:audit type IN (PATH, SYSCALL) (syscall IN (open, openat, rename) OR SYSCALL IN (open, openat, rename)) (name="/etc/cron*" OR name="/var/spool/cron/*" OR name="/etc/systemd/system/*.timer")
+search = index=linux sourcetype="linux:audit" type IN (PATH, SYSCALL) (syscall IN (open, openat, rename) OR SYSCALL IN (open, openat, rename)) (name="/etc/cron*" OR name="/var/spool/cron/*" OR name="/etc/systemd/system/*.timer")
 disabled = 1
 
 [mitre_dc0001_scheduled_job_creation__esxi_syslog]
-search = index=vmware sourcetype=vmware:esxlog:syslog (crond)
+search = index=vmware sourcetype="vmware:esxlog:syslog" (crond)
 disabled = 1
 
 [mitre_dc0001_scheduled_job_creation__kubernetes_audit]
-search = index=k8s sourcetype=kube:apiserver-audit verb IN (create) (objectRef.resource=cronjobs)
+search = index=k8s sourcetype="kube:apiserver-audit" verb IN (create) (objectRef.resource=cronjobs)
 disabled = 1
 
 [mitre_dc0001_scheduled_job_creation__linux_syslog]

@@ -595,7 +595,7 @@ derived:
     in_scope: true
     eventtype: mitre_dc0032_process_creation__solidcore
     search: >-
-      index=epo sourcetype=mcafee:epo (threat_name=EXECUTION_DENIED OR event_description=EXECUTION_DENIED) (product_name="Solidcore*")
+      index=epo sourcetype="mcafee:epo" (threat_name=EXECUTION_DENIED OR event_description=EXECUTION_DENIED) (product_name="Solidcore*")
     constraint_origin: defaults
     broad_refs: 0
     sources:
@@ -605,7 +605,7 @@ derived:
     have: true
     in_scope: true
     eventtype: mitre_dc0032_process_creation__sysmon
-    search: index=sysmon sourcetype=XmlWinEventLog:Microsoft-Windows-Sysmon/Operational EventCode IN (1)
+    search: index=sysmon source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode IN (1)
     constraint_origin: defaults
     broad_refs: 0
     sources:
@@ -616,7 +616,7 @@ derived:
     have: true
     in_scope: true
     eventtype: mitre_dc0032_process_creation__wineventlog
-    search: index=wineventlog sourcetype=XmlWinEventLog:Security EventCode IN (4688)
+    search: index=wineventlog source="XmlWinEventLog:Security" EventCode IN (4688)
     constraint_origin: defaults
     broad_refs: 2
     sources:
@@ -630,7 +630,7 @@ derived:
     in_scope: true
     eventtype: mitre_dc0032_process_creation__auditd
     search: >-
-      index=linux sourcetype=linux:audit type IN (EXECVE, SYSCALL) (syscall IN (execve, execveat) OR SYSCALL IN
+      index=linux sourcetype="linux:audit" type IN (EXECVE, SYSCALL) (syscall IN (execve, execveat) OR SYSCALL IN
       (execve, execveat))
     constraint_origin: defaults
     broad_refs: 0
@@ -667,7 +667,7 @@ derived:
     have: false
     in_scope: true
     eventtype: mitre_dc0032_process_creation__esxi_syslog
-    search: index=vmware sourcetype=vmware:esxlog:shell
+    search: index=vmware sourcetype="vmware:esxlog:shell"
     constraint_origin: defaults
     broad_refs: 0
     sources:
@@ -681,7 +681,7 @@ derived:
     have: false
     in_scope: true
     eventtype: mitre_dc0032_process_creation__etw
-    search: index=etw sourcetype=etw:json (ProviderName="Microsoft-Windows-Kernel-Process")
+    search: index=etw sourcetype="etw:json" (ProviderName="Microsoft-Windows-Kernel-Process")
     constraint_origin: derived
     broad_refs: 0
     sources:
@@ -692,7 +692,7 @@ derived:
     in_scope: true
     eventtype: mitre_dc0032_process_creation__kubernetes_audit
     search: >-
-      index=k8s sourcetype=kube:apiserver-audit (objectRef.subresource=exec OR (verb=create objectRef.resource=pods))
+      index=k8s sourcetype="kube:apiserver-audit" (objectRef.subresource=exec OR (verb=create objectRef.resource=pods))
     constraint_origin: defaults
     broad_refs: 0
     sources:
@@ -702,7 +702,7 @@ derived:
     have: false
     in_scope: true
     eventtype: mitre_dc0032_process_creation__linux_osquery
-    search: index=osquery sourcetype=osquery:results (name=process_events OR name=processes)
+    search: index=osquery sourcetype="osquery:results" (name=process_events OR name=processes)
     constraint_origin: defaults
     broad_refs: 25
     sources:
@@ -712,7 +712,7 @@ derived:
     have: false
     in_scope: true
     eventtype: mitre_dc0032_process_creation__sysmon_linux
-    search: index=linux sourcetype=sysmon:linux EventCode IN (1)
+    search: index=linux sourcetype="sysmon:linux" EventCode IN (1)
     constraint_origin: defaults
     broad_refs: 0
     sources:

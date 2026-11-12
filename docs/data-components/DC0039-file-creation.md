@@ -68,14 +68,14 @@ Component specific:
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetypes | Constraint | Origin | TA / collector |
+| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `solidcore` | live | `mcafee:epo` | `(threat_name IN (FILE_CREATED, FILE_RENAMED) OR event_description IN (FILE_CREATED, FILE_RENAMED)) (product_name="Solidcore*")` | defaults | Arrives through the ePO TA; Solidcore events carry event names such as FILE_CREATED, FILE_MODIFIED, FILE_DELETED, EXECUTION_DENIED, REG_VALUE_MODIFIED, PROCESS_HIJACK_ATTEMPTED. Verify field names (threat_name / event_description) in your data. |
-| `sysmon` | live | `XmlWinEventLog:Microsoft-Windows-Sysmon/Operational` | `EventCode IN (11, 15)` | defaults | Splunk Add-on for Sysmon (TA-microsoft-sysmon) |
-| `wineventlog` | live | `XmlWinEventLog:Security` | `EventCode IN (4656, 4663)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering |
-| `auditd` | ready (tick in stack.yml) | `linux:audit` | `type IN (PATH, SYSCALL) (syscall IN (creat, link, mkdir, mkdirat, open, openat, openat2, rename, renameat, symlink) OR SYSCALL IN (creat, link, mkdir, mkdirat, open, openat, openat2, rename, renameat, symlink))` | defaults | Splunk Add-on for Unix and Linux (linux:audit) or auditd -> auditbeat/syslog |
-| `esxi_syslog` | ready (tick in stack.yml) | `vmware:esxlog:hostd`, `vmware:esxlog:vmkernel` | `(whole feed)` | defaults | Splunk Add-on for VMware ESXi Logs (vmware:esxlog:<log>) |
-| `sysmon_linux` | ready (tick in stack.yml) | `sysmon:linux` | `EventCode IN (11)` | defaults | Splunk Add-on for Sysmon for Linux |
+| `solidcore` | live | sourcetype=`mcafee:epo` | `(threat_name IN (FILE_CREATED, FILE_RENAMED) OR event_description IN (FILE_CREATED, FILE_RENAMED)) (product_name="Solidcore*")` | defaults | Arrives through the ePO TA; Solidcore events carry event names such as FILE_CREATED, FILE_MODIFIED, FILE_DELETED, EXECUTION_DENIED, REG_VALUE_MODIFIED, PROCESS_HIJACK_ATTEMPTED. Verify field names (threat_name / event_description) in your data. |
+| `sysmon` | live | source=`XmlWinEventLog:Microsoft-Windows-Sysmon/Operational` | `EventCode IN (11, 15)` | defaults | Splunk Add-on for Sysmon (needs Splunk_TA_windows for XML parsing) |
+| `wineventlog` | live | source=`XmlWinEventLog:Security` | `EventCode IN (4656, 4663)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true) |
+| `auditd` | ready (tick in stack.yml) | sourcetype=`linux:audit` | `type IN (PATH, SYSCALL) (syscall IN (creat, link, mkdir, mkdirat, open, openat, openat2, rename, renameat, symlink) OR SYSCALL IN (creat, link, mkdir, mkdirat, open, openat, openat2, rename, renameat, symlink))` | defaults | Splunk Add-on for Unix and Linux (linux:audit) or auditd -> auditbeat/syslog |
+| `esxi_syslog` | ready (tick in stack.yml) | sourcetype=`vmware:esxlog:hostd`, sourcetype=`vmware:esxlog:vmkernel` | `(whole feed)` | defaults | Splunk Add-on for VMware ESXi Logs (vmware:esxlog:<log>) |
+| `sysmon_linux` | ready (tick in stack.yml) | sourcetype=`sysmon:linux` | `EventCode IN (11)` | defaults | Splunk Add-on for Sysmon for Linux |
 
 Collection prerequisites:
 
@@ -99,16 +99,16 @@ Eventtypes (literal constraints, see `dist/splunk/TA-mitre-attack-datacomponents
 
 ```ini
 [mitre_dc0039_file_creation__solidcore]
-search = index=epo sourcetype=mcafee:epo (threat_name IN (FILE_CREATED, FILE_RENAMED) OR event_description IN (FILE_CREATED, FILE_RENAMED)) (product_name="Solidcore*")
+search = index=epo sourcetype="mcafee:epo" (threat_name IN (FILE_CREATED, FILE_RENAMED) OR event_description IN (FILE_CREATED, FILE_RENAMED)) (product_name="Solidcore*")
 
 [mitre_dc0039_file_creation__sysmon]
-search = index=sysmon sourcetype=XmlWinEventLog:Microsoft-Windows-Sysmon/Operational EventCode IN (11, 15)
+search = index=sysmon source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode IN (11, 15)
 
 [mitre_dc0039_file_creation__wineventlog]
-search = index=wineventlog sourcetype=XmlWinEventLog:Security EventCode IN (4656, 4663)
+search = index=wineventlog source="XmlWinEventLog:Security" EventCode IN (4656, 4663)
 
 [mitre_dc0039_file_creation__auditd]
-search = index=linux sourcetype=linux:audit type IN (PATH, SYSCALL) (syscall IN (creat, link, mkdir, mkdirat, open, openat, openat2, rename, renameat, symlink) OR SYSCALL IN (creat, link, mkdir, mkdirat, open, openat, openat2, rename, renameat, symlink))
+search = index=linux sourcetype="linux:audit" type IN (PATH, SYSCALL) (syscall IN (creat, link, mkdir, mkdirat, open, openat, openat2, rename, renameat, symlink) OR SYSCALL IN (creat, link, mkdir, mkdirat, open, openat, openat2, rename, renameat, symlink))
 disabled = 1
 
 [mitre_dc0039_file_creation__esxi_syslog]
@@ -116,7 +116,7 @@ search = index=vmware sourcetype IN ("vmware:esxlog:hostd", "vmware:esxlog:vmker
 disabled = 1
 
 [mitre_dc0039_file_creation__sysmon_linux]
-search = index=linux sourcetype=sysmon:linux EventCode IN (11)
+search = index=linux sourcetype="sysmon:linux" EventCode IN (11)
 disabled = 1
 
 [mitre_dc0039_file_creation]

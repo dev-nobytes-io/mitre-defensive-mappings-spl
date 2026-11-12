@@ -451,7 +451,7 @@ derived:
     in_scope: true
     eventtype: mitre_dc0039_file_creation__solidcore
     search: >-
-      index=epo sourcetype=mcafee:epo (threat_name IN (FILE_CREATED, FILE_RENAMED) OR event_description IN (FILE_CREATED,
+      index=epo sourcetype="mcafee:epo" (threat_name IN (FILE_CREATED, FILE_RENAMED) OR event_description IN (FILE_CREATED,
       FILE_RENAMED)) (product_name="Solidcore*")
     constraint_origin: defaults
     broad_refs: 0
@@ -462,7 +462,7 @@ derived:
     have: true
     in_scope: true
     eventtype: mitre_dc0039_file_creation__sysmon
-    search: index=sysmon sourcetype=XmlWinEventLog:Microsoft-Windows-Sysmon/Operational EventCode IN (11, 15)
+    search: index=sysmon source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode IN (11, 15)
     constraint_origin: defaults
     broad_refs: 0
     sources:
@@ -472,7 +472,7 @@ derived:
     have: true
     in_scope: true
     eventtype: mitre_dc0039_file_creation__wineventlog
-    search: index=wineventlog sourcetype=XmlWinEventLog:Security EventCode IN (4656, 4663)
+    search: index=wineventlog source="XmlWinEventLog:Security" EventCode IN (4656, 4663)
     constraint_origin: defaults
     broad_refs: 2
     sources:
@@ -483,7 +483,7 @@ derived:
     in_scope: true
     eventtype: mitre_dc0039_file_creation__auditd
     search: >-
-      index=linux sourcetype=linux:audit type IN (PATH, SYSCALL) (syscall IN (creat, link, mkdir, mkdirat, open,
+      index=linux sourcetype="linux:audit" type IN (PATH, SYSCALL) (syscall IN (creat, link, mkdir, mkdirat, open,
       openat, openat2, rename, renameat, symlink) OR SYSCALL IN (creat, link, mkdir, mkdirat, open, openat, openat2,
       rename, renameat, symlink))
     constraint_origin: defaults
@@ -507,7 +507,7 @@ derived:
     have: false
     in_scope: true
     eventtype: mitre_dc0039_file_creation__sysmon_linux
-    search: index=linux sourcetype=sysmon:linux EventCode IN (11)
+    search: index=linux sourcetype="sysmon:linux" EventCode IN (11)
     constraint_origin: defaults
     broad_refs: 2
     sources:

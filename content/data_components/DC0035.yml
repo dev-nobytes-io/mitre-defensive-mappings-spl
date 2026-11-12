@@ -251,7 +251,7 @@ derived:
     have: true
     in_scope: true
     eventtype: mitre_dc0035_process_access__sysmon
-    search: index=sysmon sourcetype=XmlWinEventLog:Microsoft-Windows-Sysmon/Operational EventCode IN (8, 10)
+    search: index=sysmon source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode IN (8, 10)
     constraint_origin: defaults
     broad_refs: 0
     sources:
@@ -261,7 +261,7 @@ derived:
     have: true
     in_scope: true
     eventtype: mitre_dc0035_process_access__wineventlog
-    search: index=wineventlog sourcetype=XmlWinEventLog:Security EventCode IN (4656, 4663)
+    search: index=wineventlog source="XmlWinEventLog:Security" EventCode IN (4656, 4663)
     constraint_origin: defaults
     broad_refs: 0
     sources:
@@ -272,7 +272,7 @@ derived:
     in_scope: true
     eventtype: mitre_dc0035_process_access__auditd
     search: >-
-      index=linux sourcetype=linux:audit type IN (SYSCALL) (syscall IN (process_vm_readv, process_vm_writev, ptrace)
+      index=linux sourcetype="linux:audit" type IN (SYSCALL) (syscall IN (process_vm_readv, process_vm_writev, ptrace)
       OR SYSCALL IN (process_vm_readv, process_vm_writev, ptrace))
     constraint_origin: defaults
     broad_refs: 0
@@ -283,7 +283,7 @@ derived:
     have: false
     in_scope: true
     eventtype: mitre_dc0035_process_access__edr_telemetry
-    search: index=edr sourcetype=edr:telemetry
+    search: index=edr sourcetype="edr:telemetry"
     constraint_origin: derived
     broad_refs: 1
     sources:

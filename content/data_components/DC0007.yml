@@ -162,7 +162,7 @@ derived:
     have: false
     in_scope: true
     eventtype: mitre_dc0007_web_credential_usage__azure_entra
-    search: index=azure sourcetype=azure:aad:signin
+    search: index=azure sourcetype="azure:aad:signin"
     constraint_origin: defaults
     broad_refs: 4
     sources:

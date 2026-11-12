@@ -73,7 +73,6 @@ def test_strategy_sigma_converts(model):
     pytest.importorskip("sigma")
     from sigma.backends.splunk import SplunkBackend
     from sigma.collection import SigmaCollection
-    from sigma.pipelines.splunk import splunk_windows_pipeline
     from sigma.pipelines.sysmon import sysmon_pipeline
     from sigma.processing.pipeline import ProcessingPipeline
     ours = ProcessingPipeline.from_yaml((DIST_DIR / "sigma" / "pipelines" / "splunk_mitre_dc.yml").read_text())
@@ -84,7 +83,7 @@ def test_strategy_sigma_converts(model):
         docs = [d for d in yaml.safe_load_all(p.read_text()) if d]
         assert docs[-1].get("correlation"), p.name
         assert all(d.get("mitre_detection_strategy") for d in docs), p.name
-        out = SplunkBackend(processing_pipeline=sysmon_pipeline() + splunk_windows_pipeline() + ours).convert(SigmaCollection.from_yaml(p.read_text()))
+        out = SplunkBackend(processing_pipeline=sysmon_pipeline() + ours).convert(SigmaCollection.from_yaml(p.read_text()))
         corr = out[-1]
         assert "| multisearch" in corr or "| stats" in corr, p.name
         assert "index=" in corr, p.name

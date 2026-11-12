@@ -123,7 +123,7 @@ derived:
     in_scope: true
     eventtype: mitre_dc0063_windows_registry_key_modification__solidcore
     search: >-
-      index=epo sourcetype=mcafee:epo (threat_name IN (REG_VALUE_MODIFIED, REG_KEY_MODIFIED) OR event_description
+      index=epo sourcetype="mcafee:epo" (threat_name IN (REG_VALUE_MODIFIED, REG_KEY_MODIFIED) OR event_description
       IN (REG_VALUE_MODIFIED, REG_KEY_MODIFIED)) (product_name="Solidcore*")
     constraint_origin: defaults
     broad_refs: 0
@@ -134,7 +134,7 @@ derived:
     have: true
     in_scope: true
     eventtype: mitre_dc0063_windows_registry_key_modification__sysmon
-    search: index=sysmon sourcetype=XmlWinEventLog:Microsoft-Windows-Sysmon/Operational EventCode IN (13, 14)
+    search: index=sysmon source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode IN (13, 14)
     constraint_origin: defaults
     broad_refs: 0
     sources:
@@ -144,7 +144,7 @@ derived:
     have: true
     in_scope: true
     eventtype: mitre_dc0063_windows_registry_key_modification__wineventlog
-    search: index=wineventlog sourcetype=XmlWinEventLog:Security EventCode IN (4657, 4663, 4670)
+    search: index=wineventlog source="XmlWinEventLog:Security" EventCode IN (4657, 4663, 4670)
     constraint_origin: defaults
     broad_refs: 0
     sources:

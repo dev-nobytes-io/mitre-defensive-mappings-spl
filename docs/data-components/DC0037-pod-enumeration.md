@@ -32,9 +32,9 @@ flowchart LR
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetypes | Constraint | Origin | TA / collector |
+| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `kubernetes_audit` | ready (tick in stack.yml) | `kube:apiserver-audit` | `verb IN (get, list, watch) (objectRef.resource=pods)` | defaults | Splunk OpenTelemetry Collector for Kubernetes / Splunk Connect for Kubernetes |
+| `kubernetes_audit` | ready (tick in stack.yml) | sourcetype=`kube:apiserver-audit` | `verb IN (get, list, watch) (objectRef.resource=pods)` | defaults | Splunk OpenTelemetry Collector for Kubernetes / Splunk Connect for Kubernetes |
 
 Collection prerequisites:
 
@@ -47,7 +47,7 @@ Eventtypes (literal constraints, see `dist/splunk/TA-mitre-attack-datacomponents
 
 ```ini
 [mitre_dc0037_pod_enumeration__kubernetes_audit]
-search = index=k8s sourcetype=kube:apiserver-audit verb IN (get, list, watch) (objectRef.resource=pods)
+search = index=k8s sourcetype="kube:apiserver-audit" verb IN (get, list, watch) (objectRef.resource=pods)
 disabled = 1
 
 [mitre_dc0037_pod_enumeration]

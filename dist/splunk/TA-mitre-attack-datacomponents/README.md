@@ -22,6 +22,7 @@ Components with at least one live feed: 64. In scope but waiting on a feed you h
 ## Notes
 
 * Eventtypes for feeds not ticked are shipped `disabled = 1`; enable when the feed arrives.
+* Windows event log, Sysmon and PowerShell eventtypes match on `source=XmlWinEventLog:<channel>`, which is correct for Splunk_TA_windows 5.0+ (sourcetype `XmlWinEventLog`) and for older versions alike.
 * `wireshark` eventtypes are hunt-only and disabled.
 * Eventtypes are not usable with `tstats`. For high-volume components use the `mitre_dcXXXX_dm` / `_dm_where` macros against accelerated CIM data models.
 * No `props.conf`: field extraction is the job of the source TAs listed in `lookups/mitre_attack_feeds.csv`.

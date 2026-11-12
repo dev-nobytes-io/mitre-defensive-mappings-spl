@@ -37,10 +37,10 @@ flowchart LR
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetypes | Constraint | Origin | TA / collector |
+| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `wineventlog` | live | `XmlWinEventLog:AD FS/Admin`, `XmlWinEventLog:Security` | `EventCode IN (1200, 1202, 4662, 4769)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering |
-| `azure_entra` | ready (tick in stack.yml) | `azure:aad:audit`, `azure:aad:signin` | `(whole feed)` | defaults | Splunk Add-on for Microsoft Azure (azure:aad:signin, azure:aad:audit) or Microsoft Cloud Services add-on via Event Hub |
+| `wineventlog` | live | source=`XmlWinEventLog:AD FS/Admin`, source=`XmlWinEventLog:Security` | `EventCode IN (1200, 1202, 4662, 4769)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true) |
+| `azure_entra` | ready (tick in stack.yml) | sourcetype=`azure:aad:audit`, sourcetype=`azure:aad:signin` | `(whole feed)` | defaults | Splunk Add-on for Microsoft Azure (azure:aad:signin, azure:aad:audit) or Microsoft Cloud Services add-on via Event Hub |
 
 Collection prerequisites:
 
@@ -62,7 +62,7 @@ Eventtypes (literal constraints, see `dist/splunk/TA-mitre-attack-datacomponents
 
 ```ini
 [mitre_dc0006_web_credential_creation__wineventlog]
-search = index=wineventlog sourcetype IN ("XmlWinEventLog:AD FS/Admin", "XmlWinEventLog:Security") EventCode IN (1200, 1202, 4662, 4769)
+search = index=wineventlog source IN ("XmlWinEventLog:AD FS/Admin", "XmlWinEventLog:Security") EventCode IN (1200, 1202, 4662, 4769)
 
 [mitre_dc0006_web_credential_creation__azure_entra]
 search = index=azure sourcetype IN ("azure:aad:audit", "azure:aad:signin")

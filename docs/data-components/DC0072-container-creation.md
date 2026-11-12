@@ -54,10 +54,10 @@ Component specific:
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetypes | Constraint | Origin | TA / collector |
+| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `container_runtime` | ready (tick in stack.yml) | `containerd:events`, `docker:daemon`, `docker:events` | `(status=create)` | defaults | docker events scripted input or OpenTelemetry (docker:events, containerd) |
-| `kubernetes_audit` | ready (tick in stack.yml) | `kube:apiserver-audit`, `kube:objects:events` | `verb IN (create) (objectRef.resource=pods)` | defaults | Splunk OpenTelemetry Collector for Kubernetes / Splunk Connect for Kubernetes |
+| `container_runtime` | ready (tick in stack.yml) | sourcetype=`containerd:events`, sourcetype=`docker:daemon`, sourcetype=`docker:events` | `(status=create)` | defaults | docker events scripted input or OpenTelemetry (docker:events, containerd) |
+| `kubernetes_audit` | ready (tick in stack.yml) | sourcetype=`kube:apiserver-audit`, sourcetype=`kube:objects:events` | `verb IN (create) (objectRef.resource=pods)` | defaults | Splunk OpenTelemetry Collector for Kubernetes / Splunk Connect for Kubernetes |
 
 Collection prerequisites:
 

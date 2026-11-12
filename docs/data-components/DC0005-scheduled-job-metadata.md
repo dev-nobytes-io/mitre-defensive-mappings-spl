@@ -44,11 +44,11 @@ flowchart LR
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetypes | Constraint | Origin | TA / collector |
+| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `wineventlog` | live | `XmlWinEventLog:Microsoft-Windows-TaskScheduler/Operational` | `EventCode IN (106, 140, 200, 201)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering |
-| `esxi_syslog` | ready (tick in stack.yml) | `vmware:esxlog:syslog` | `(whole feed)` | derived | Splunk Add-on for VMware ESXi Logs (vmware:esxlog:<log>) |
-| `linux_syslog` | ready (tick in stack.yml) | `linux_messages_syslog`, `linux_secure`, `syslog` | `(process=CRON OR process=cron OR process=crond)` | defaults | Splunk Add-on for Unix and Linux (syslog, linux_secure, linux_messages_syslog) |
+| `wineventlog` | live | source=`XmlWinEventLog:Microsoft-Windows-TaskScheduler/Operational` | `EventCode IN (106, 140, 200, 201)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true) |
+| `esxi_syslog` | ready (tick in stack.yml) | sourcetype=`vmware:esxlog:syslog` | `(whole feed)` | derived | Splunk Add-on for VMware ESXi Logs (vmware:esxlog:<log>) |
+| `linux_syslog` | ready (tick in stack.yml) | sourcetype=`linux_messages_syslog`, sourcetype=`linux_secure`, sourcetype=`syslog` | `(process=CRON OR process=cron OR process=crond)` | defaults | Splunk Add-on for Unix and Linux (syslog, linux_secure, linux_messages_syslog) |
 
 Collection prerequisites:
 
@@ -68,10 +68,10 @@ Eventtypes (literal constraints, see `dist/splunk/TA-mitre-attack-datacomponents
 
 ```ini
 [mitre_dc0005_scheduled_job_metadata__wineventlog]
-search = index=wineventlog sourcetype=XmlWinEventLog:Microsoft-Windows-TaskScheduler/Operational EventCode IN (106, 140, 200, 201)
+search = index=wineventlog source="XmlWinEventLog:Microsoft-Windows-TaskScheduler/Operational" EventCode IN (106, 140, 200, 201)
 
 [mitre_dc0005_scheduled_job_metadata__esxi_syslog]
-search = index=vmware sourcetype=vmware:esxlog:syslog
+search = index=vmware sourcetype="vmware:esxlog:syslog"
 disabled = 1
 
 [mitre_dc0005_scheduled_job_metadata__linux_syslog]

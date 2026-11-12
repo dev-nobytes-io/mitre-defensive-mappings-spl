@@ -171,7 +171,7 @@ derived:
     have: false
     in_scope: true
     eventtype: mitre_dc0069_cloud_service_modification__azure_activity
-    search: index=azure sourcetype=mscs:azure:audit
+    search: index=azure sourcetype="mscs:azure:audit"
     constraint_origin: defaults
     broad_refs: 4
     sources:
@@ -182,7 +182,7 @@ derived:
     have: false
     in_scope: true
     eventtype: mitre_dc0069_cloud_service_modification__azure_entra
-    search: index=azure sourcetype=azure:aad:audit
+    search: index=azure sourcetype="azure:aad:audit"
     constraint_origin: defaults
     broad_refs: 3
     sources:

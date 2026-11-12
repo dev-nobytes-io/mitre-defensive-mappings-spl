@@ -1078,7 +1078,7 @@ derived:
     have: true
     in_scope: true
     eventtype: mitre_dc0038_application_log_content__trellix_epo
-    search: index=epo sourcetype=mcafee:epo
+    search: index=epo sourcetype="mcafee:epo"
     constraint_origin: defaults
     broad_refs: 3
     sources:
@@ -1089,7 +1089,7 @@ derived:
     in_scope: true
     eventtype: mitre_dc0038_application_log_content__wineventlog
     search: >-
-      index=wineventlog sourcetype IN ("XmlWinEventLog:Application", "XmlWinEventLog:Security", "XmlWinEventLog:System")
+      index=wineventlog source IN ("XmlWinEventLog:Application", "XmlWinEventLog:Security", "XmlWinEventLog:System")
       EventCode IN (104, 1000, 1020, 1063, 1102, 1341, 1342, 6416)
     constraint_origin: defaults
     broad_refs: 0
@@ -1102,7 +1102,7 @@ derived:
     have: false
     in_scope: true
     eventtype: mitre_dc0038_application_log_content__azure_activity
-    search: index=azure sourcetype=mscs:azure:audit
+    search: index=azure sourcetype="mscs:azure:audit"
     constraint_origin: derived
     broad_refs: 1
     sources:
@@ -1147,7 +1147,7 @@ derived:
     have: false
     in_scope: true
     eventtype: mitre_dc0038_application_log_content__iis
-    search: index=web sourcetype=ms:iis:auto
+    search: index=web sourcetype="ms:iis:auto"
     constraint_origin: derived
     broad_refs: 6
     sources:
@@ -1185,7 +1185,7 @@ derived:
     have: false
     in_scope: true
     eventtype: mitre_dc0038_application_log_content__vcenter
-    search: index=vmware sourcetype=vmware:vclog:vpxd
+    search: index=vmware sourcetype="vmware:vclog:vpxd"
     constraint_origin: derived
     broad_refs: 4
     sources:

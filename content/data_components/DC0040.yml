@@ -238,7 +238,7 @@ derived:
     in_scope: true
     eventtype: mitre_dc0040_file_deletion__solidcore
     search: >-
-      index=epo sourcetype=mcafee:epo (threat_name=FILE_DELETED OR event_description=FILE_DELETED) (product_name="Solidcore*")
+      index=epo sourcetype="mcafee:epo" (threat_name=FILE_DELETED OR event_description=FILE_DELETED) (product_name="Solidcore*")
     constraint_origin: defaults
     broad_refs: 0
     sources:
@@ -248,7 +248,7 @@ derived:
     have: true
     in_scope: true
     eventtype: mitre_dc0040_file_deletion__sysmon
-    search: index=sysmon sourcetype=XmlWinEventLog:Microsoft-Windows-Sysmon/Operational EventCode IN (23, 26)
+    search: index=sysmon source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode IN (23, 26)
     constraint_origin: defaults
     broad_refs: 0
     sources:
@@ -258,7 +258,7 @@ derived:
     have: true
     in_scope: true
     eventtype: mitre_dc0040_file_deletion__wineventlog
-    search: index=wineventlog sourcetype=XmlWinEventLog:Security EventCode IN (4660, 4663)
+    search: index=wineventlog source="XmlWinEventLog:Security" EventCode IN (4660, 4663)
     constraint_origin: defaults
     broad_refs: 2
     sources:
@@ -270,8 +270,8 @@ derived:
     in_scope: true
     eventtype: mitre_dc0040_file_deletion__auditd
     search: >-
-      index=linux sourcetype=linux:audit type IN (PATH, SYSCALL) (syscall IN (rename, renameat, rmdir, unlink, unlinkat)
-      OR SYSCALL IN (rename, renameat, rmdir, unlink, unlinkat))
+      index=linux sourcetype="linux:audit" type IN (PATH, SYSCALL) (syscall IN (rename, renameat, rmdir, unlink,
+      unlinkat) OR SYSCALL IN (rename, renameat, rmdir, unlink, unlinkat))
     constraint_origin: defaults
     broad_refs: 0
     sources:
@@ -293,7 +293,7 @@ derived:
     have: false
     in_scope: true
     eventtype: mitre_dc0040_file_deletion__sysmon_linux
-    search: index=linux sourcetype=sysmon:linux EventCode IN (23)
+    search: index=linux sourcetype="sysmon:linux" EventCode IN (23)
     constraint_origin: defaults
     broad_refs: 0
     sources:

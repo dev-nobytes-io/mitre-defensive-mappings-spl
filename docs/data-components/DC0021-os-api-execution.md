@@ -73,13 +73,13 @@ Component specific:
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetypes | Constraint | Origin | TA / collector |
+| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `sysmon` | live | `XmlWinEventLog:Microsoft-Windows-Sysmon/Operational` | `EventCode IN (8, 10, 25)` | defaults | Splunk Add-on for Sysmon (TA-microsoft-sysmon) |
-| `wineventlog` | live | `XmlWinEventLog:Security` | `EventCode IN (4656, 4663)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering |
-| `auditd` | ready (tick in stack.yml) | `linux:audit` | `type IN (SYSCALL) (syscall IN (bpf, keyctl, mmap, mprotect, process_vm_writev, ptrace, setns, unshare) OR SYSCALL IN (bpf, keyctl, mmap, mprotect, process_vm_writev, ptrace, setns, unshare))` | defaults | Splunk Add-on for Unix and Linux (linux:audit) or auditd -> auditbeat/syslog |
-| `edr_telemetry` | ready (tick in stack.yml) | `edr:telemetry` | `(whole feed)` | derived | Vendor specific |
-| `etw` | ready (tick in stack.yml) | `etw:json` | `(ProviderName="Microsoft-Windows-Kernel-Process")` | derived | Requires a user-mode ETW consumer (SilkETW/Sealighter, Splunk Stream for NDIS, or an EDR that exposes the provider). No standard Splunk TA. |
+| `sysmon` | live | source=`XmlWinEventLog:Microsoft-Windows-Sysmon/Operational` | `EventCode IN (8, 10, 25)` | defaults | Splunk Add-on for Sysmon (needs Splunk_TA_windows for XML parsing) |
+| `wineventlog` | live | source=`XmlWinEventLog:Security` | `EventCode IN (4656, 4663)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true) |
+| `auditd` | ready (tick in stack.yml) | sourcetype=`linux:audit` | `type IN (SYSCALL) (syscall IN (bpf, keyctl, mmap, mprotect, process_vm_writev, ptrace, setns, unshare) OR SYSCALL IN (bpf, keyctl, mmap, mprotect, process_vm_writev, ptrace, setns, unshare))` | defaults | Splunk Add-on for Unix and Linux (linux:audit) or auditd -> auditbeat/syslog |
+| `edr_telemetry` | ready (tick in stack.yml) | sourcetype=`edr:telemetry` | `(whole feed)` | derived | Vendor specific |
+| `etw` | ready (tick in stack.yml) | sourcetype=`etw:json` | `(ProviderName="Microsoft-Windows-Kernel-Process")` | derived | Requires a user-mode ETW consumer (SilkETW/Sealighter, Splunk Stream for NDIS, or an EDR that exposes the provider). No standard Splunk TA. |
 
 Collection prerequisites:
 
@@ -101,21 +101,21 @@ Eventtypes (literal constraints, see `dist/splunk/TA-mitre-attack-datacomponents
 
 ```ini
 [mitre_dc0021_os_api_execution__sysmon]
-search = index=sysmon sourcetype=XmlWinEventLog:Microsoft-Windows-Sysmon/Operational EventCode IN (8, 10, 25)
+search = index=sysmon source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode IN (8, 10, 25)
 
 [mitre_dc0021_os_api_execution__wineventlog]
-search = index=wineventlog sourcetype=XmlWinEventLog:Security EventCode IN (4656, 4663)
+search = index=wineventlog source="XmlWinEventLog:Security" EventCode IN (4656, 4663)
 
 [mitre_dc0021_os_api_execution__auditd]
-search = index=linux sourcetype=linux:audit type IN (SYSCALL) (syscall IN (bpf, keyctl, mmap, mprotect, process_vm_writev, ptrace, setns, unshare) OR SYSCALL IN (bpf, keyctl, mmap, mprotect, process_vm_writev, ptrace, setns, unshare))
+search = index=linux sourcetype="linux:audit" type IN (SYSCALL) (syscall IN (bpf, keyctl, mmap, mprotect, process_vm_writev, ptrace, setns, unshare) OR SYSCALL IN (bpf, keyctl, mmap, mprotect, process_vm_writev, ptrace, setns, unshare))
 disabled = 1
 
 [mitre_dc0021_os_api_execution__edr_telemetry]
-search = index=edr sourcetype=edr:telemetry
+search = index=edr sourcetype="edr:telemetry"
 disabled = 1
 
 [mitre_dc0021_os_api_execution__etw]
-search = index=etw sourcetype=etw:json (ProviderName="Microsoft-Windows-Kernel-Process")
+search = index=etw sourcetype="etw:json" (ProviderName="Microsoft-Windows-Kernel-Process")
 disabled = 1
 
 [mitre_dc0021_os_api_execution]

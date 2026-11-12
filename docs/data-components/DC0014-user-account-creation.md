@@ -56,13 +56,13 @@ Component specific:
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetypes | Constraint | Origin | TA / collector |
+| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `palo_alto` | live | `pan:config` | `(whole feed)` | defaults | Splunk Add-on for Palo Alto Networks (pan:*) |
-| `wineventlog` | live | `XmlWinEventLog:Security` | `EventCode IN (4720)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering |
-| `auditd` | ready (tick in stack.yml) | `linux:audit` | `type IN (ADD_USER, EXECVE, SYSCALL) (exe="/usr/sbin/useradd" OR exe="/usr/sbin/adduser" OR type=ADD_USER)` | defaults | Splunk Add-on for Unix and Linux (linux:audit) or auditd -> auditbeat/syslog |
-| `azure_entra` | ready (tick in stack.yml) | `azure:aad:audit` | `(operationName="Add user")` | defaults | Splunk Add-on for Microsoft Azure (azure:aad:signin, azure:aad:audit) or Microsoft Cloud Services add-on via Event Hub |
-| `linux_syslog` | ready (tick in stack.yml) | `linux_secure` | `(useradd OR adduser)` | defaults | Splunk Add-on for Unix and Linux (syslog, linux_secure, linux_messages_syslog) |
+| `palo_alto` | live | sourcetype=`pan:config` | `(whole feed)` | defaults | Splunk Add-on for Palo Alto Networks (pan:*) |
+| `wineventlog` | live | source=`XmlWinEventLog:Security` | `EventCode IN (4720)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true) |
+| `auditd` | ready (tick in stack.yml) | sourcetype=`linux:audit` | `type IN (ADD_USER, EXECVE, SYSCALL) (exe="/usr/sbin/useradd" OR exe="/usr/sbin/adduser" OR type=ADD_USER)` | defaults | Splunk Add-on for Unix and Linux (linux:audit) or auditd -> auditbeat/syslog |
+| `azure_entra` | ready (tick in stack.yml) | sourcetype=`azure:aad:audit` | `(operationName="Add user")` | defaults | Splunk Add-on for Microsoft Azure (azure:aad:signin, azure:aad:audit) or Microsoft Cloud Services add-on via Event Hub |
+| `linux_syslog` | ready (tick in stack.yml) | sourcetype=`linux_secure` | `(useradd OR adduser)` | defaults | Splunk Add-on for Unix and Linux (syslog, linux_secure, linux_messages_syslog) |
 
 Collection prerequisites:
 
@@ -90,17 +90,17 @@ Eventtypes (literal constraints, see `dist/splunk/TA-mitre-attack-datacomponents
 
 ```ini
 [mitre_dc0014_user_account_creation__palo_alto]
-search = index=pan_logs sourcetype=pan:config
+search = index=pan_logs sourcetype="pan:config"
 
 [mitre_dc0014_user_account_creation__wineventlog]
-search = index=wineventlog sourcetype=XmlWinEventLog:Security EventCode IN (4720)
+search = index=wineventlog source="XmlWinEventLog:Security" EventCode IN (4720)
 
 [mitre_dc0014_user_account_creation__auditd]
-search = index=linux sourcetype=linux:audit type IN (ADD_USER, EXECVE, SYSCALL) (exe="/usr/sbin/useradd" OR exe="/usr/sbin/adduser" OR type=ADD_USER)
+search = index=linux sourcetype="linux:audit" type IN (ADD_USER, EXECVE, SYSCALL) (exe="/usr/sbin/useradd" OR exe="/usr/sbin/adduser" OR type=ADD_USER)
 disabled = 1
 
 [mitre_dc0014_user_account_creation__azure_entra]
-search = index=azure sourcetype=azure:aad:audit (operationName="Add user")
+search = index=azure sourcetype="azure:aad:audit" (operationName="Add user")
 disabled = 1
 
 [mitre_dc0014_user_account_creation__linux_syslog]

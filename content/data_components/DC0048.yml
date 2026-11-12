@@ -71,7 +71,7 @@ derived:
     have: true
     in_scope: true
     eventtype: mitre_dc0048_named_pipe_metadata__sysmon
-    search: index=sysmon sourcetype=XmlWinEventLog:Microsoft-Windows-Sysmon/Operational EventCode IN (17, 18)
+    search: index=sysmon source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode IN (17, 18)
     constraint_origin: defaults
     broad_refs: 0
     sources:

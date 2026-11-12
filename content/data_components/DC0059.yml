@@ -521,7 +521,7 @@ derived:
     have: true
     in_scope: true
     eventtype: mitre_dc0059_file_metadata__palo_alto
-    search: index=pan_logs sourcetype=pan:threat (log_subtype=wildfire OR log_subtype=virus)
+    search: index=pan_logs sourcetype="pan:threat" (log_subtype=wildfire OR log_subtype=virus)
     constraint_origin: defaults
     broad_refs: 0
     sources:
@@ -533,8 +533,8 @@ derived:
     in_scope: true
     eventtype: mitre_dc0059_file_metadata__solidcore
     search: >-
-      index=epo sourcetype=mcafee:epo (threat_name IN (FILE_ATTR_MODIFIED, FILE_SOLIDIFIED, FILE_UNSOLIDIFIED) OR
-      event_description IN (FILE_ATTR_MODIFIED, FILE_SOLIDIFIED, FILE_UNSOLIDIFIED)) (product_name="Solidcore*")
+      index=epo sourcetype="mcafee:epo" (threat_name IN (FILE_ATTR_MODIFIED, FILE_SOLIDIFIED, FILE_UNSOLIDIFIED)
+      OR event_description IN (FILE_ATTR_MODIFIED, FILE_SOLIDIFIED, FILE_UNSOLIDIFIED)) (product_name="Solidcore*")
     constraint_origin: defaults
     broad_refs: 5
     sources:
@@ -545,7 +545,7 @@ derived:
     have: true
     in_scope: true
     eventtype: mitre_dc0059_file_metadata__sysmon
-    search: index=sysmon sourcetype=XmlWinEventLog:Microsoft-Windows-Sysmon/Operational EventCode IN (2, 11, 15)
+    search: index=sysmon source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode IN (2, 11, 15)
     constraint_origin: defaults
     broad_refs: 0
     sources:
@@ -556,7 +556,7 @@ derived:
     have: true
     in_scope: true
     eventtype: mitre_dc0059_file_metadata__trellix_epo
-    search: index=epo sourcetype=mcafee:epo
+    search: index=epo sourcetype="mcafee:epo"
     constraint_origin: derived
     broad_refs: 2
     sources:
@@ -567,7 +567,7 @@ derived:
     in_scope: true
     eventtype: mitre_dc0059_file_metadata__wineventlog
     search: >-
-      index=wineventlog sourcetype IN ("XmlWinEventLog:Microsoft-Windows-CodeIntegrity/Operational", "XmlWinEventLog:Microsoft-Windows-Windows
+      index=wineventlog source IN ("XmlWinEventLog:Microsoft-Windows-CodeIntegrity/Operational", "XmlWinEventLog:Microsoft-Windows-Windows
       Defender/Operational", "XmlWinEventLog:Security") EventCode IN (1116, 1117, 3033, 4663, 4670)
     constraint_origin: defaults
     broad_refs: 14
@@ -582,9 +582,9 @@ derived:
     in_scope: true
     eventtype: mitre_dc0059_file_metadata__auditd
     search: >-
-      index=linux sourcetype=linux:audit type IN (PATH, SYSCALL) (syscall IN (chmod, chown, fchmod, fchmodat, fchown,
-      fchownat, fsetxattr, lchown, lsetxattr, removexattr, setxattr) OR SYSCALL IN (chmod, chown, fchmod, fchmodat,
-      fchown, fchownat, fsetxattr, lchown, lsetxattr, removexattr, setxattr))
+      index=linux sourcetype="linux:audit" type IN (PATH, SYSCALL) (syscall IN (chmod, chown, fchmod, fchmodat,
+      fchown, fchownat, fsetxattr, lchown, lsetxattr, removexattr, setxattr) OR SYSCALL IN (chmod, chown, fchmod,
+      fchmodat, fchown, fchownat, fsetxattr, lchown, lsetxattr, removexattr, setxattr))
     constraint_origin: defaults
     broad_refs: 0
     sources:
@@ -608,7 +608,7 @@ derived:
     have: false
     in_scope: true
     eventtype: mitre_dc0059_file_metadata__edr_telemetry
-    search: index=edr sourcetype=edr:telemetry
+    search: index=edr sourcetype="edr:telemetry"
     constraint_origin: derived
     broad_refs: 6
     sources:
@@ -619,7 +619,7 @@ derived:
     have: false
     in_scope: true
     eventtype: mitre_dc0059_file_metadata__linux_osquery
-    search: index=osquery sourcetype=osquery:results (name=file OR name=hash OR name=file_events)
+    search: index=osquery sourcetype="osquery:results" (name=file OR name=hash OR name=file_events)
     constraint_origin: defaults
     broad_refs: 21
     sources:

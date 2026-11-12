@@ -193,7 +193,7 @@ derived:
     have: true
     in_scope: true
     eventtype: mitre_dc0041_service_metadata__sysmon
-    search: index=sysmon sourcetype=XmlWinEventLog:Microsoft-Windows-Sysmon/Operational EventCode IN (4)
+    search: index=sysmon source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode IN (4)
     constraint_origin: defaults
     broad_refs: 0
     sources:
@@ -203,7 +203,7 @@ derived:
     have: true
     in_scope: true
     eventtype: mitre_dc0041_service_metadata__wineventlog
-    search: index=wineventlog sourcetype=XmlWinEventLog:System EventCode IN (7034, 7035, 7036, 7040)
+    search: index=wineventlog source="XmlWinEventLog:System" EventCode IN (7034, 7035, 7036, 7040)
     constraint_origin: defaults
     broad_refs: 0
     sources:
@@ -214,7 +214,7 @@ derived:
     have: false
     in_scope: true
     eventtype: mitre_dc0041_service_metadata__auditd
-    search: index=linux sourcetype=linux:audit type IN (CONFIG_CHANGE)
+    search: index=linux sourcetype="linux:audit" type IN (CONFIG_CHANGE)
     constraint_origin: derived
     broad_refs: 0
     sources:
@@ -224,7 +224,7 @@ derived:
     have: false
     in_scope: true
     eventtype: mitre_dc0041_service_metadata__esxi_syslog
-    search: index=vmware sourcetype=vmware:esxlog:hostd
+    search: index=vmware sourcetype="vmware:esxlog:hostd"
     constraint_origin: derived
     broad_refs: 0
     sources:
@@ -234,7 +234,7 @@ derived:
     have: false
     in_scope: true
     eventtype: mitre_dc0041_service_metadata__linux_osquery
-    search: index=osquery sourcetype=osquery:results (name=systemd_units OR name=startup_items)
+    search: index=osquery sourcetype="osquery:results" (name=systemd_units OR name=startup_items)
     constraint_origin: defaults
     broad_refs: 2
     sources:

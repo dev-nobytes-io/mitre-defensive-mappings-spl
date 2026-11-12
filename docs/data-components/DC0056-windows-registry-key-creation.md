@@ -36,11 +36,11 @@ Component specific:
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetypes | Constraint | Origin | TA / collector |
+| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `solidcore` | live | `mcafee:epo` | `(threat_name=REG_KEY_CREATED OR event_description=REG_KEY_CREATED) (product_name="Solidcore*")` | defaults | Arrives through the ePO TA; Solidcore events carry event names such as FILE_CREATED, FILE_MODIFIED, FILE_DELETED, EXECUTION_DENIED, REG_VALUE_MODIFIED, PROCESS_HIJACK_ATTEMPTED. Verify field names (threat_name / event_description) in your data. |
-| `sysmon` | live | `XmlWinEventLog:Microsoft-Windows-Sysmon/Operational` | `EventCode IN (12)` | defaults | Splunk Add-on for Sysmon (TA-microsoft-sysmon) |
-| `wineventlog` | live | `XmlWinEventLog:Security` | `EventCode IN (4657, 4663)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering |
+| `solidcore` | live | sourcetype=`mcafee:epo` | `(threat_name=REG_KEY_CREATED OR event_description=REG_KEY_CREATED) (product_name="Solidcore*")` | defaults | Arrives through the ePO TA; Solidcore events carry event names such as FILE_CREATED, FILE_MODIFIED, FILE_DELETED, EXECUTION_DENIED, REG_VALUE_MODIFIED, PROCESS_HIJACK_ATTEMPTED. Verify field names (threat_name / event_description) in your data. |
+| `sysmon` | live | source=`XmlWinEventLog:Microsoft-Windows-Sysmon/Operational` | `EventCode IN (12)` | defaults | Splunk Add-on for Sysmon (needs Splunk_TA_windows for XML parsing) |
+| `wineventlog` | live | source=`XmlWinEventLog:Security` | `EventCode IN (4657, 4663)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true) |
 
 Collection prerequisites:
 
@@ -59,13 +59,13 @@ Eventtypes (literal constraints, see `dist/splunk/TA-mitre-attack-datacomponents
 
 ```ini
 [mitre_dc0056_windows_registry_key_creation__solidcore]
-search = index=epo sourcetype=mcafee:epo (threat_name=REG_KEY_CREATED OR event_description=REG_KEY_CREATED) (product_name="Solidcore*")
+search = index=epo sourcetype="mcafee:epo" (threat_name=REG_KEY_CREATED OR event_description=REG_KEY_CREATED) (product_name="Solidcore*")
 
 [mitre_dc0056_windows_registry_key_creation__sysmon]
-search = index=sysmon sourcetype=XmlWinEventLog:Microsoft-Windows-Sysmon/Operational EventCode IN (12)
+search = index=sysmon source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode IN (12)
 
 [mitre_dc0056_windows_registry_key_creation__wineventlog]
-search = index=wineventlog sourcetype=XmlWinEventLog:Security EventCode IN (4657, 4663)
+search = index=wineventlog source="XmlWinEventLog:Security" EventCode IN (4657, 4663)
 
 [mitre_dc0056_windows_registry_key_creation]
 search = eventtype=mitre_dc0056_windows_registry_key_creation__solidcore OR eventtype=mitre_dc0056_windows_registry_key_creation__sysmon OR eventtype=mitre_dc0056_windows_registry_key_creation__wineventlog

@@ -74,4 +74,4 @@ A later phase should add a *data check* search per component (`| tstats count wh
 
 * Eventtypes evaluate at search time on the search head; hundreds of eventtypes with `eventtype=` nesting add a little parsing cost to every search that references them. Negligible next to the raw search, but do not use `eventtype=*mitre*` wildcards in analytics.
 * `index=` is literal in eventtypes. If you split Sysmon across indexes, list them in `stack.yml` as `index: sysmon OR index=sysmon_dmz` is not supported; use one index per feed or override stanzas locally.
-* Sigma field names differ from Splunk's. The shipped pipeline only scopes by eventtype/sourcetype; chain it after `sysmon` and `splunk_windows` (or a CIM pipeline) for field mapping.
+* Sigma field names differ from Splunk's. The shipped pipeline only scopes by eventtype, index and sourcetype (source for the Windows event log feeds); chain it after `sysmon` for Sysmon rules. Do not chain `splunk_windows`: it adds a classic `source="WinEventLog:<channel>"` that contradicts XML collection.

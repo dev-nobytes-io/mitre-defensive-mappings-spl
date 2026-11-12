@@ -50,10 +50,10 @@ Component specific:
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetypes | Constraint | Origin | TA / collector |
+| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `wineventlog` | live | `XmlWinEventLog:Security` | `EventCode IN (4662, 4739, 5136, 5137, 5139, 5141, 5163)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering |
-| `azure_entra` | ready (tick in stack.yml) | `azure:aad:audit` | `(whole feed)` | defaults | Splunk Add-on for Microsoft Azure (azure:aad:signin, azure:aad:audit) or Microsoft Cloud Services add-on via Event Hub |
+| `wineventlog` | live | source=`XmlWinEventLog:Security` | `EventCode IN (4662, 4739, 5136, 5137, 5139, 5141, 5163)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true) |
+| `azure_entra` | ready (tick in stack.yml) | sourcetype=`azure:aad:audit` | `(whole feed)` | defaults | Splunk Add-on for Microsoft Azure (azure:aad:signin, azure:aad:audit) or Microsoft Cloud Services add-on via Event Hub |
 
 Collection prerequisites:
 
@@ -75,10 +75,10 @@ Eventtypes (literal constraints, see `dist/splunk/TA-mitre-attack-datacomponents
 
 ```ini
 [mitre_dc0066_active_directory_object_modification__wineventlog]
-search = index=wineventlog sourcetype=XmlWinEventLog:Security EventCode IN (4662, 4739, 5136, 5137, 5139, 5141, 5163)
+search = index=wineventlog source="XmlWinEventLog:Security" EventCode IN (4662, 4739, 5136, 5137, 5139, 5141, 5163)
 
 [mitre_dc0066_active_directory_object_modification__azure_entra]
-search = index=azure sourcetype=azure:aad:audit
+search = index=azure sourcetype="azure:aad:audit"
 disabled = 1
 
 [mitre_dc0066_active_directory_object_modification]

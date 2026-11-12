@@ -241,7 +241,7 @@ derived:
     have: true
     in_scope: true
     eventtype: mitre_dc0013_user_account_metadata__wineventlog
-    search: index=wineventlog sourcetype=XmlWinEventLog:Security EventCode IN (4672, 4673, 4674, 4720, 4738)
+    search: index=wineventlog source="XmlWinEventLog:Security" EventCode IN (4672, 4673, 4674, 4720, 4738)
     constraint_origin: defaults
     broad_refs: 0
     sources:
@@ -252,7 +252,7 @@ derived:
     in_scope: true
     eventtype: mitre_dc0013_user_account_metadata__auditd
     search: >-
-      index=linux sourcetype=linux:audit type IN (PATH, SYSCALL) (syscall IN (open, openat, read) OR SYSCALL IN
+      index=linux sourcetype="linux:audit" type IN (PATH, SYSCALL) (syscall IN (open, openat, read) OR SYSCALL IN
       (open, openat, read)) (name="/etc/passwd" OR name="/etc/shadow" OR name="/etc/group" OR name="/etc/sudoers*")
     constraint_origin: defaults
     broad_refs: 0
@@ -263,7 +263,7 @@ derived:
     have: false
     in_scope: true
     eventtype: mitre_dc0013_user_account_metadata__azure_activity
-    search: index=azure sourcetype=mscs:azure:audit
+    search: index=azure sourcetype="mscs:azure:audit"
     constraint_origin: derived
     broad_refs: 2
     sources:
@@ -273,7 +273,7 @@ derived:
     have: false
     in_scope: true
     eventtype: mitre_dc0013_user_account_metadata__azure_entra
-    search: index=azure sourcetype=azure:aad:audit
+    search: index=azure sourcetype="azure:aad:audit"
     constraint_origin: defaults
     broad_refs: 6
     sources:
@@ -283,7 +283,8 @@ derived:
     have: false
     in_scope: true
     eventtype: mitre_dc0013_user_account_metadata__linux_osquery
-    search: index=osquery sourcetype=osquery:results (name=users OR name=groups OR name=sudoers OR name=shadow)
+    search: >-
+      index=osquery sourcetype="osquery:results" (name=users OR name=groups OR name=sudoers OR name=shadow)
     constraint_origin: defaults
     broad_refs: 2
     sources:
@@ -293,7 +294,7 @@ derived:
     have: false
     in_scope: true
     eventtype: mitre_dc0013_user_account_metadata__windows_osquery
-    search: index=osquery sourcetype=osquery:results (name=users OR name=groups OR name=logged_in_users)
+    search: index=osquery sourcetype="osquery:results" (name=users OR name=groups OR name=logged_in_users)
     constraint_origin: defaults
     broad_refs: 2
     sources:

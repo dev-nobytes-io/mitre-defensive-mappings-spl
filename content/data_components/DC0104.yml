@@ -65,7 +65,7 @@ derived:
     have: true
     in_scope: true
     eventtype: mitre_dc0104_response_content__palo_alto
-    search: index=pan_logs sourcetype=pan:threat
+    search: index=pan_logs sourcetype="pan:threat"
     constraint_origin: defaults
     broad_refs: 0
     sources:

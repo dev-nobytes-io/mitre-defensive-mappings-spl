@@ -64,7 +64,7 @@ derived:
     in_scope: true
     eventtype: mitre_dc0031_kernel_module_load__auditd
     search: >-
-      index=linux sourcetype=linux:audit type IN (SYSCALL) (syscall IN (delete_module, finit_module, init_module)
+      index=linux sourcetype="linux:audit" type IN (SYSCALL) (syscall IN (delete_module, finit_module, init_module)
       OR SYSCALL IN (delete_module, finit_module, init_module))
     constraint_origin: defaults
     broad_refs: 0
@@ -75,7 +75,7 @@ derived:
     have: false
     in_scope: true
     eventtype: mitre_dc0031_kernel_module_load__esxi_syslog
-    search: index=vmware sourcetype=vmware:esxlog:vmkernel
+    search: index=vmware sourcetype="vmware:esxlog:vmkernel"
     constraint_origin: defaults
     broad_refs: 0
     sources:

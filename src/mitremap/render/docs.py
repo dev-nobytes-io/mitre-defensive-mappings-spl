@@ -141,13 +141,14 @@ class DocsRenderer:
             L.append("")
         L.append("Per feed (from `config/stack.yml` and `config/log_sources.yml`):")
         L.append("")
-        L.append("| Feed | Status | Sourcetypes | Constraint | Origin | TA / collector |")
+        L.append("| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |")
         L.append("|---|---|---|---|---|---|")
         for f in in_scope:
             fd = config.feed(f.feed)
             cons = eventtype_search(f).replace(f"index={fd.get('index')} ", "", 1) if fd.get("index") else eventtype_search(f)
-            cons = re.sub(r"sourcetype(=\S+|\s+IN \([^)]*\))\s*", "", cons, count=1).strip() or "(whole feed)"
-            L.append(f"| `{f.feed}` | {_badge(f)} | {', '.join(f'`{s}`' for s in f.sourcetypes) or '—'} | `{cons}` | {f.origin} | {fd.get('ta', '')} |")
+            cons = re.sub(r"(?:sourcetype|source)(=(?:\"[^\"]*\"|\S+)|\s+IN \([^)]*\))\s*", "", cons, count=1).strip() or "(whole feed)"
+            fld = config.feed(f.feed).get("constraint_field", "sourcetype")
+            L.append(f"| `{f.feed}` | {_badge(f)} | {', '.join(f'{fld}=`{s}`' for s in f.sourcetypes) or '—'} | `{cons}` | {f.origin} | {fd.get('ta', '')} |")
         L.append("")
         prereqs: list[tuple[str, str]] = []
         for f in in_scope:

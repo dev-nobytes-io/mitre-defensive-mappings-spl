@@ -477,7 +477,7 @@ derived:
     have: true
     in_scope: true
     eventtype: mitre_dc0082_network_connection_creation__palo_alto
-    search: index=pan_logs sourcetype=pan:traffic
+    search: index=pan_logs sourcetype="pan:traffic"
     constraint_origin: defaults
     broad_refs: 0
     sources:
@@ -491,7 +491,7 @@ derived:
     have: true
     in_scope: true
     eventtype: mitre_dc0082_network_connection_creation__sysmon
-    search: index=sysmon sourcetype=XmlWinEventLog:Microsoft-Windows-Sysmon/Operational EventCode IN (3)
+    search: index=sysmon source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode IN (3)
     constraint_origin: defaults
     broad_refs: 0
     sources:
@@ -502,7 +502,7 @@ derived:
     in_scope: true
     eventtype: mitre_dc0082_network_connection_creation__wineventlog
     search: >-
-      index=wineventlog sourcetype IN ("XmlWinEventLog:Microsoft-Windows-Windows Firewall With Advanced Security/Firewall",
+      index=wineventlog source IN ("XmlWinEventLog:Microsoft-Windows-Windows Firewall With Advanced Security/Firewall",
       "XmlWinEventLog:Security") EventCode IN (5156, 5157, 5158)
     constraint_origin: defaults
     broad_refs: 1
@@ -517,7 +517,7 @@ derived:
     in_scope: true
     eventtype: mitre_dc0082_network_connection_creation__auditd
     search: >-
-      index=linux sourcetype=linux:audit type IN (SYSCALL) (syscall IN (accept, accept4, bind, connect, listen,
+      index=linux sourcetype="linux:audit" type IN (SYSCALL) (syscall IN (accept, accept4, bind, connect, listen,
       socket) OR SYSCALL IN (accept, accept4, bind, connect, listen, socket))
     constraint_origin: defaults
     broad_refs: 0
@@ -552,7 +552,7 @@ derived:
     in_scope: true
     eventtype: mitre_dc0082_network_connection_creation__linux_osquery
     search: >-
-      index=osquery sourcetype=osquery:results (name=process_open_sockets OR name=socket_events OR name=listening_ports)
+      index=osquery sourcetype="osquery:results" (name=process_open_sockets OR name=socket_events OR name=listening_ports)
     constraint_origin: defaults
     broad_refs: 6
     sources:
@@ -572,7 +572,7 @@ derived:
     have: false
     in_scope: true
     eventtype: mitre_dc0082_network_connection_creation__netflow
-    search: index=netflow sourcetype=stream:netflow
+    search: index=netflow sourcetype="stream:netflow"
     constraint_origin: derived
     broad_refs: 2
     sources:
@@ -582,7 +582,7 @@ derived:
     have: false
     in_scope: true
     eventtype: mitre_dc0082_network_connection_creation__sysmon_linux
-    search: index=linux sourcetype=sysmon:linux EventCode IN (3)
+    search: index=linux sourcetype="sysmon:linux" EventCode IN (3)
     constraint_origin: defaults
     broad_refs: 0
     sources:

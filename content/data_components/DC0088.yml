@@ -289,7 +289,7 @@ derived:
     have: true
     in_scope: true
     eventtype: mitre_dc0088_logon_session_metadata__palo_alto
-    search: index=pan_logs sourcetype=pan:globalprotect
+    search: index=pan_logs sourcetype="pan:globalprotect"
     constraint_origin: defaults
     broad_refs: 0
     sources:
@@ -301,7 +301,7 @@ derived:
     in_scope: true
     eventtype: mitre_dc0088_logon_session_metadata__wineventlog
     search: >-
-      index=wineventlog sourcetype=XmlWinEventLog:Security EventCode IN (4624, 4634, 4647, 4672, 4778, 4779, 4800,
+      index=wineventlog source="XmlWinEventLog:Security" EventCode IN (4624, 4634, 4647, 4672, 4778, 4779, 4800,
       4801, 4802, 4803)
     constraint_origin: defaults
     broad_refs: 0
@@ -312,7 +312,7 @@ derived:
     have: false
     in_scope: true
     eventtype: mitre_dc0088_logon_session_metadata__auditd
-    search: index=linux sourcetype=linux:audit type IN (CRED_ACQ, CRED_DISP, USER_END, USER_LOGIN)
+    search: index=linux sourcetype="linux:audit" type IN (CRED_ACQ, CRED_DISP, USER_END, USER_LOGIN)
     constraint_origin: defaults
     broad_refs: 0
     sources:
@@ -323,7 +323,7 @@ derived:
     have: false
     in_scope: true
     eventtype: mitre_dc0088_logon_session_metadata__azure_entra
-    search: index=azure sourcetype=azure:aad:signin
+    search: index=azure sourcetype="azure:aad:signin"
     constraint_origin: defaults
     broad_refs: 4
     sources:

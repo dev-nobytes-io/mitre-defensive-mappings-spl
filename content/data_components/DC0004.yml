@@ -191,7 +191,7 @@ derived:
     have: true
     in_scope: true
     eventtype: mitre_dc0004_firmware_modification__palo_alto
-    search: index=pan_logs sourcetype=pan:system
+    search: index=pan_logs sourcetype="pan:system"
     constraint_origin: defaults
     broad_refs: 0
     sources:
@@ -204,8 +204,8 @@ derived:
     in_scope: true
     eventtype: mitre_dc0004_firmware_modification__wineventlog
     search: >-
-      index=wineventlog sourcetype IN ("XmlWinEventLog:Microsoft-Windows-Kernel-Boot", "XmlWinEventLog:System")
-      EventCode IN (12, 13, 20, 1001)
+      index=wineventlog source IN ("XmlWinEventLog:Microsoft-Windows-Kernel-Boot", "XmlWinEventLog:System") EventCode
+      IN (12, 13, 20, 1001)
     constraint_origin: defaults
     broad_refs: 2
     sources:
@@ -216,7 +216,7 @@ derived:
     in_scope: true
     eventtype: mitre_dc0004_firmware_modification__auditd
     search: >-
-      index=linux sourcetype=linux:audit type IN (SYSCALL) (syscall IN (ioctl, write) OR SYSCALL IN (ioctl, write))
+      index=linux sourcetype="linux:audit" type IN (SYSCALL) (syscall IN (ioctl, write) OR SYSCALL IN (ioctl, write))
       (name="/dev/mem" OR name="/dev/mtd*" OR exe="*flashrom*" OR exe="*fwupd*")
     constraint_origin: defaults
     broad_refs: 0
@@ -227,7 +227,7 @@ derived:
     have: false
     in_scope: true
     eventtype: mitre_dc0004_firmware_modification__linux_osquery
-    search: index=osquery sourcetype=osquery:results
+    search: index=osquery sourcetype="osquery:results"
     constraint_origin: derived
     broad_refs: 12
     sources:
@@ -251,7 +251,7 @@ derived:
     have: false
     in_scope: true
     eventtype: mitre_dc0004_firmware_modification__snmp
-    search: index=netops sourcetype=sc4snmp:event
+    search: index=netops sourcetype="sc4snmp:event"
     constraint_origin: derived
     broad_refs: 15
     sources:
@@ -263,7 +263,7 @@ derived:
     have: false
     in_scope: true
     eventtype: mitre_dc0004_firmware_modification__windows_osquery
-    search: index=osquery sourcetype=osquery:results
+    search: index=osquery sourcetype="osquery:results"
     constraint_origin: derived
     broad_refs: 11
     sources:

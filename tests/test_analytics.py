@@ -72,7 +72,6 @@ def test_sigma_rules_parse_and_convert(model):
     pytest.importorskip("sigma")
     from sigma.backends.splunk import SplunkBackend
     from sigma.collection import SigmaCollection
-    from sigma.pipelines.splunk import splunk_windows_pipeline
     from sigma.pipelines.sysmon import sysmon_pipeline
     from sigma.processing.pipeline import ProcessingPipeline
     ours = ProcessingPipeline.from_yaml((DIST_DIR / "sigma" / "pipelines" / "splunk_mitre_dc.yml").read_text())
@@ -84,9 +83,10 @@ def test_sigma_rules_parse_and_convert(model):
         assert all(d.get("mitre_analytic") for d in docs), p.name
         coll = SigmaCollection.from_yaml(p.read_text())
         assert not coll.errors, (p.name, coll.errors)
-        backend = SplunkBackend(processing_pipeline=sysmon_pipeline() + splunk_windows_pipeline() + ours)
+        backend = SplunkBackend(processing_pipeline=sysmon_pipeline() + ours)
         out = backend.convert(coll)
         assert out and all(isinstance(q, str) and q.strip() and q.strip() != "*" for q in out), p.name
         for q in out:
             assert "index=" in q or "eventtype" in q, f"{p.name}: converted query is not scoped to a feed or data component: {q[:120]}"
+            assert 'source="WinEventLog:' not in q, f"{p.name}: classic WinEventLog source contradicts XML collection"
     assert seen == expected

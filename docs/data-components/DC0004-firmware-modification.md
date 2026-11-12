@@ -74,15 +74,15 @@ flowchart LR
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetypes | Constraint | Origin | TA / collector |
+| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `palo_alto` | live | `pan:system` | `(whole feed)` | defaults | Splunk Add-on for Palo Alto Networks (pan:*) |
-| `wineventlog` | live | `XmlWinEventLog:Microsoft-Windows-Kernel-Boot`, `XmlWinEventLog:System` | `EventCode IN (12, 13, 20, 1001)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering |
-| `auditd` | ready (tick in stack.yml) | `linux:audit` | `type IN (SYSCALL) (syscall IN (ioctl, write) OR SYSCALL IN (ioctl, write)) (name="/dev/mem" OR name="/dev/mtd*" OR exe="*flashrom*" OR exe="*fwupd*")` | defaults | Splunk Add-on for Unix and Linux (linux:audit) or auditd -> auditbeat/syslog |
-| `linux_osquery` | ready (tick in stack.yml) | `osquery:results` | `(whole feed)` | derived | osquery TA |
-| `netdev_syslog` | ready (tick in stack.yml) | `cisco:asa`, `cisco:ios`, `syslog` | `(whole feed)` | derived | Cisco Networks Add-on (cisco:ios, cisco:asa), Juniper/Arista TAs, or generic syslog |
-| `snmp` | ready (tick in stack.yml) | `sc4snmp:event` | `(whole feed)` | derived | Splunk Connect for SNMP |
-| `windows_osquery` | ready (tick in stack.yml) | `osquery:results` | `(whole feed)` | derived | osquery TA (osquery:results) |
+| `palo_alto` | live | sourcetype=`pan:system` | `(whole feed)` | defaults | Splunk Add-on for Palo Alto Networks (pan:*) |
+| `wineventlog` | live | source=`XmlWinEventLog:Microsoft-Windows-Kernel-Boot`, source=`XmlWinEventLog:System` | `EventCode IN (12, 13, 20, 1001)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true) |
+| `auditd` | ready (tick in stack.yml) | sourcetype=`linux:audit` | `type IN (SYSCALL) (syscall IN (ioctl, write) OR SYSCALL IN (ioctl, write)) (name="/dev/mem" OR name="/dev/mtd*" OR exe="*flashrom*" OR exe="*fwupd*")` | defaults | Splunk Add-on for Unix and Linux (linux:audit) or auditd -> auditbeat/syslog |
+| `linux_osquery` | ready (tick in stack.yml) | sourcetype=`osquery:results` | `(whole feed)` | derived | osquery TA |
+| `netdev_syslog` | ready (tick in stack.yml) | sourcetype=`cisco:asa`, sourcetype=`cisco:ios`, sourcetype=`syslog` | `(whole feed)` | derived | Cisco Networks Add-on (cisco:ios, cisco:asa), Juniper/Arista TAs, or generic syslog |
+| `snmp` | ready (tick in stack.yml) | sourcetype=`sc4snmp:event` | `(whole feed)` | derived | Splunk Connect for SNMP |
+| `windows_osquery` | ready (tick in stack.yml) | sourcetype=`osquery:results` | `(whole feed)` | derived | osquery TA (osquery:results) |
 
 Collection prerequisites:
 
@@ -107,17 +107,17 @@ Eventtypes (literal constraints, see `dist/splunk/TA-mitre-attack-datacomponents
 
 ```ini
 [mitre_dc0004_firmware_modification__palo_alto]
-search = index=pan_logs sourcetype=pan:system
+search = index=pan_logs sourcetype="pan:system"
 
 [mitre_dc0004_firmware_modification__wineventlog]
-search = index=wineventlog sourcetype IN ("XmlWinEventLog:Microsoft-Windows-Kernel-Boot", "XmlWinEventLog:System") EventCode IN (12, 13, 20, 1001)
+search = index=wineventlog source IN ("XmlWinEventLog:Microsoft-Windows-Kernel-Boot", "XmlWinEventLog:System") EventCode IN (12, 13, 20, 1001)
 
 [mitre_dc0004_firmware_modification__auditd]
-search = index=linux sourcetype=linux:audit type IN (SYSCALL) (syscall IN (ioctl, write) OR SYSCALL IN (ioctl, write)) (name="/dev/mem" OR name="/dev/mtd*" OR exe="*flashrom*" OR exe="*fwupd*")
+search = index=linux sourcetype="linux:audit" type IN (SYSCALL) (syscall IN (ioctl, write) OR SYSCALL IN (ioctl, write)) (name="/dev/mem" OR name="/dev/mtd*" OR exe="*flashrom*" OR exe="*fwupd*")
 disabled = 1
 
 [mitre_dc0004_firmware_modification__linux_osquery]
-search = index=osquery sourcetype=osquery:results
+search = index=osquery sourcetype="osquery:results"
 disabled = 1
 
 [mitre_dc0004_firmware_modification__netdev_syslog]
@@ -125,11 +125,11 @@ search = index=netops sourcetype IN ("cisco:asa", "cisco:ios", syslog)
 disabled = 1
 
 [mitre_dc0004_firmware_modification__snmp]
-search = index=netops sourcetype=sc4snmp:event
+search = index=netops sourcetype="sc4snmp:event"
 disabled = 1
 
 [mitre_dc0004_firmware_modification__windows_osquery]
-search = index=osquery sourcetype=osquery:results
+search = index=osquery sourcetype="osquery:results"
 disabled = 1
 
 [mitre_dc0004_firmware_modification]

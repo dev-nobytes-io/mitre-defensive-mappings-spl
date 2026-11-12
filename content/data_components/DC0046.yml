@@ -113,7 +113,7 @@ derived:
     have: true
     in_scope: true
     eventtype: mitre_dc0046_drive_modification__sysmon
-    search: index=sysmon sourcetype=XmlWinEventLog:Microsoft-Windows-Sysmon/Operational EventCode IN (9)
+    search: index=sysmon source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode IN (9)
     constraint_origin: defaults
     broad_refs: 6
     sources:
@@ -123,7 +123,7 @@ derived:
     have: true
     in_scope: true
     eventtype: mitre_dc0046_drive_modification__wineventlog
-    search: index=wineventlog sourcetype=XmlWinEventLog:System EventCode IN (1006, 2003, 20001)
+    search: index=wineventlog source="XmlWinEventLog:System" EventCode IN (1006, 2003, 20001)
     constraint_origin: defaults
     broad_refs: 0
     sources:

@@ -41,10 +41,10 @@ flowchart LR
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetypes | Constraint | Origin | TA / collector |
+| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `container_runtime` | ready (tick in stack.yml) | `containerd:events`, `docker:daemon` | `(status IN (commit, build, import, pull, tag))` | defaults | docker events scripted input or OpenTelemetry (docker:events, containerd) |
-| `kubernetes_audit` | ready (tick in stack.yml) | `kube:apiserver-audit` | `verb IN (create) (objectRef.resource=pods)` | defaults | Splunk OpenTelemetry Collector for Kubernetes / Splunk Connect for Kubernetes |
+| `container_runtime` | ready (tick in stack.yml) | sourcetype=`containerd:events`, sourcetype=`docker:daemon` | `(status IN (commit, build, import, pull, tag))` | defaults | docker events scripted input or OpenTelemetry (docker:events, containerd) |
+| `kubernetes_audit` | ready (tick in stack.yml) | sourcetype=`kube:apiserver-audit` | `verb IN (create) (objectRef.resource=pods)` | defaults | Splunk OpenTelemetry Collector for Kubernetes / Splunk Connect for Kubernetes |
 
 Collection prerequisites:
 
@@ -63,7 +63,7 @@ search = index=k8s sourcetype IN ("containerd:events", "docker:daemon") (status 
 disabled = 1
 
 [mitre_dc0015_image_creation__kubernetes_audit]
-search = index=k8s sourcetype=kube:apiserver-audit verb IN (create) (objectRef.resource=pods)
+search = index=k8s sourcetype="kube:apiserver-audit" verb IN (create) (objectRef.resource=pods)
 disabled = 1
 
 [mitre_dc0015_image_creation]

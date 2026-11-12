@@ -142,7 +142,7 @@ derived:
     have: true
     in_scope: true
     eventtype: mitre_dc0033_process_termination__sysmon
-    search: index=sysmon sourcetype=XmlWinEventLog:Microsoft-Windows-Sysmon/Operational EventCode IN (5)
+    search: index=sysmon source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode IN (5)
     constraint_origin: defaults
     broad_refs: 0
     sources:
@@ -153,7 +153,7 @@ derived:
     in_scope: true
     eventtype: mitre_dc0033_process_termination__auditd
     search: >-
-      index=linux sourcetype=linux:audit type IN (SYSCALL) (syscall IN (exit_group, kill, tgkill, tkill) OR SYSCALL
+      index=linux sourcetype="linux:audit" type IN (SYSCALL) (syscall IN (exit_group, kill, tgkill, tkill) OR SYSCALL
       IN (exit_group, kill, tgkill, tkill))
     constraint_origin: defaults
     broad_refs: 0
@@ -164,7 +164,7 @@ derived:
     have: false
     in_scope: true
     eventtype: mitre_dc0033_process_termination__container_runtime
-    search: index=k8s sourcetype=docker:events (status IN (die, kill, stop))
+    search: index=k8s sourcetype="docker:events" (status IN (die, kill, stop))
     constraint_origin: defaults
     broad_refs: 2
     sources:
@@ -174,7 +174,7 @@ derived:
     have: false
     in_scope: true
     eventtype: mitre_dc0033_process_termination__esxi_syslog
-    search: index=vmware sourcetype=vmware:esxlog:hostd
+    search: index=vmware sourcetype="vmware:esxlog:hostd"
     constraint_origin: derived
     broad_refs: 0
     sources:

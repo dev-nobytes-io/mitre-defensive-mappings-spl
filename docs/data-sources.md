@@ -26,14 +26,14 @@ flowchart LR
 
 ## Windows Event Logs (`wineventlog`, `powershell_logging`)
 
-* Sourcetype `XmlWinEventLog:<Channel>` from Splunk_TA_windows with `renderXml=true`. If you still use the classic `WinEventLog:` rendering, change `sourcetype_template` in `stack.yml` to `WinEventLog:{channel}`.
+* XML rendering (`renderXml = true`) through Splunk_TA_windows. Since add-on version 5.0 the sourcetype is `XmlWinEventLog` for every channel and the channel is in `source` (`XmlWinEventLog:Security`). Earlier versions used the channel as the sourcetype, but `source` held the same value in both, so the eventtypes match on `source` (`constraint_field: source` in `stack.yml`) and work with either. For classic rendering change the values to `WinEventLog:<channel>`.
 * ATT&CK names channels loosely (`WinEventLog:TaskScheduler`, `WinEventLog:WMI`, `WinEventLog:AppLocker`). `log_sources.yml` maps each to the real channel name (`Microsoft-Windows-TaskScheduler/Operational`, `Microsoft-Windows-WMI-Activity/Operational`, `Microsoft-Windows-AppLocker/EXE and DLL`). Several are disabled in Windows by default and all need an input stanza.
 * PowerShell is its own feed because 4103/4104 require a GPO and an input of their own; it shares the `wineventlog` index.
 * 1310 of 1386 Windows channel strings carried a parseable EventCode. The rest are prose; the per-component defaults in `config/dc_defaults.yml` take over.
 
 ## Sysmon (`sysmon`)
 
-Sourcetype `XmlWinEventLog:Microsoft-Windows-Sysmon/Operational`, index `sysmon`. The highest-yield feed in ATT&CK v20 (861 analytic references). Event IDs used per component: 1 Process Creation/Command Execution, 3 Network Connection, 5 Process Termination, 6 Driver Load, 7 Module Load, 8/10/25 Process Access/Modification/OS API, 9 Drive Access, 11/15/2 File Creation/Metadata, 12/13/14 Registry, 17/18 Named Pipe, 19/20/21 WMI, 22 DNS (Network Traffic Content), 23/26 File Deletion, 4/16 Host Status. Your Sysmon config must include the matching rule groups.
+Matched on `source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational"` (sourcetype `XmlWinEventLog` on current add-ons), index `sysmon`. The Sysmon add-on needs Splunk_TA_windows installed for XML parsing. The highest-yield feed in ATT&CK v20 (861 analytic references). Event IDs used per component: 1 Process Creation/Command Execution, 3 Network Connection, 5 Process Termination, 6 Driver Load, 7 Module Load, 8/10/25 Process Access/Modification/OS API, 9 Drive Access, 11/15/2 File Creation/Metadata, 12/13/14 Registry, 17/18 Named Pipe, 19/20/21 WMI, 22 DNS (Network Traffic Content), 23/26 File Deletion, 4/16 Host Status. Your Sysmon config must include the matching rule groups.
 
 Sysmon also stands in for some ETW providers ATT&CK names directly: `etw:Microsoft-Windows-Kernel-Process` (EID 1/5/8/10/25) and `etw:Microsoft-Windows-Kernel-ImageLoad` (EID 7). Providers like Win32k, WinINet, RPC, DotNETRuntime, Token have no Sysmon equivalent; they sit in the unticked `etw` feed.
 

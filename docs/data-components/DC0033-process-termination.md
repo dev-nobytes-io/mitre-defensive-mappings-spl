@@ -57,12 +57,12 @@ Component specific:
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetypes | Constraint | Origin | TA / collector |
+| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `sysmon` | live | `XmlWinEventLog:Microsoft-Windows-Sysmon/Operational` | `EventCode IN (5)` | defaults | Splunk Add-on for Sysmon (TA-microsoft-sysmon) |
-| `auditd` | ready (tick in stack.yml) | `linux:audit` | `type IN (SYSCALL) (syscall IN (exit_group, kill, tgkill, tkill) OR SYSCALL IN (exit_group, kill, tgkill, tkill))` | defaults | Splunk Add-on for Unix and Linux (linux:audit) or auditd -> auditbeat/syslog |
-| `container_runtime` | ready (tick in stack.yml) | `docker:events` | `(status IN (die, kill, stop))` | defaults | docker events scripted input or OpenTelemetry (docker:events, containerd) |
-| `esxi_syslog` | ready (tick in stack.yml) | `vmware:esxlog:hostd` | `(whole feed)` | derived | Splunk Add-on for VMware ESXi Logs (vmware:esxlog:<log>) |
+| `sysmon` | live | source=`XmlWinEventLog:Microsoft-Windows-Sysmon/Operational` | `EventCode IN (5)` | defaults | Splunk Add-on for Sysmon (needs Splunk_TA_windows for XML parsing) |
+| `auditd` | ready (tick in stack.yml) | sourcetype=`linux:audit` | `type IN (SYSCALL) (syscall IN (exit_group, kill, tgkill, tkill) OR SYSCALL IN (exit_group, kill, tgkill, tkill))` | defaults | Splunk Add-on for Unix and Linux (linux:audit) or auditd -> auditbeat/syslog |
+| `container_runtime` | ready (tick in stack.yml) | sourcetype=`docker:events` | `(status IN (die, kill, stop))` | defaults | docker events scripted input or OpenTelemetry (docker:events, containerd) |
+| `esxi_syslog` | ready (tick in stack.yml) | sourcetype=`vmware:esxlog:hostd` | `(whole feed)` | derived | Splunk Add-on for VMware ESXi Logs (vmware:esxlog:<log>) |
 
 Collection prerequisites:
 
@@ -80,18 +80,18 @@ Eventtypes (literal constraints, see `dist/splunk/TA-mitre-attack-datacomponents
 
 ```ini
 [mitre_dc0033_process_termination__sysmon]
-search = index=sysmon sourcetype=XmlWinEventLog:Microsoft-Windows-Sysmon/Operational EventCode IN (5)
+search = index=sysmon source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode IN (5)
 
 [mitre_dc0033_process_termination__auditd]
-search = index=linux sourcetype=linux:audit type IN (SYSCALL) (syscall IN (exit_group, kill, tgkill, tkill) OR SYSCALL IN (exit_group, kill, tgkill, tkill))
+search = index=linux sourcetype="linux:audit" type IN (SYSCALL) (syscall IN (exit_group, kill, tgkill, tkill) OR SYSCALL IN (exit_group, kill, tgkill, tkill))
 disabled = 1
 
 [mitre_dc0033_process_termination__container_runtime]
-search = index=k8s sourcetype=docker:events (status IN (die, kill, stop))
+search = index=k8s sourcetype="docker:events" (status IN (die, kill, stop))
 disabled = 1
 
 [mitre_dc0033_process_termination__esxi_syslog]
-search = index=vmware sourcetype=vmware:esxlog:hostd
+search = index=vmware sourcetype="vmware:esxlog:hostd"
 disabled = 1
 
 [mitre_dc0033_process_termination]

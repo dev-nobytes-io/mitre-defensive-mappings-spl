@@ -70,7 +70,7 @@ derived:
     have: false
     in_scope: true
     eventtype: mitre_dc0090_cloud_service_disable__azure_activity
-    search: index=azure sourcetype=mscs:azure:audit
+    search: index=azure sourcetype="mscs:azure:audit"
     constraint_origin: derived
     broad_refs: 1
     sources:

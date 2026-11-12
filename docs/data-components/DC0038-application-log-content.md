@@ -70,20 +70,20 @@ Component specific:
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetypes | Constraint | Origin | TA / collector |
+| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `corelight` | live | `corelight_http`, `corelight_notice`, `corelight_smtp`, `corelight_ssh` | `(whole feed)` | defaults | Corelight App for Splunk (corelight_<log>). For TA_zeek use prefix zeek: and suffix :json. |
-| `palo_alto` | live | `pan:globalprotect`, `pan:system`, `pan:threat` | `(whole feed)` | defaults | Splunk Add-on for Palo Alto Networks (pan:*) |
-| `trellix_epo` | live | `mcafee:epo` | `(whole feed)` | defaults | Splunk Add-on for McAfee ePO (mcafee:epo). Verify the sourcetype against your installed TA version. |
-| `wineventlog` | live | `XmlWinEventLog:Application`, `XmlWinEventLog:Security`, `XmlWinEventLog:System` | `EventCode IN (104, 1000, 1020, 1063, 1102, 1341, 1342, 6416)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering |
-| `azure_activity` | ready (tick in stack.yml) | `mscs:azure:audit` | `(whole feed)` | derived | Splunk Add-on for Microsoft Cloud Services (mscs:azure:audit) |
-| `azure_entra` | ready (tick in stack.yml) | `azure:aad:audit`, `azure:aad:signin` | `(whole feed)` | defaults | Splunk Add-on for Microsoft Azure (azure:aad:signin, azure:aad:audit) or Microsoft Cloud Services add-on via Event Hub |
-| `container_runtime` | ready (tick in stack.yml) | `docker:daemon`, `docker:events` | `(whole feed)` | derived | docker events scripted input or OpenTelemetry (docker:events, containerd) |
-| `esxi_syslog` | ready (tick in stack.yml) | `vmware:esxlog:esxupdate`, `vmware:esxlog:hostd`, `vmware:esxlog:vmkernel` | `(whole feed)` | defaults | Splunk Add-on for VMware ESXi Logs (vmware:esxlog:<log>) |
-| `iis` | ready (tick in stack.yml) | `ms:iis:auto` | `(whole feed)` | derived | Splunk Add-on for Microsoft IIS |
-| `kubernetes_audit` | ready (tick in stack.yml) | `kube:apiserver-audit`, `kube:container:*`, `kube:container:ingress-nginx` | `(whole feed)` | derived | Splunk OpenTelemetry Collector for Kubernetes / Splunk Connect for Kubernetes |
-| `linux_syslog` | ready (tick in stack.yml) | `access_combined`, `linux_messages_syslog`, `linux_secure` | `(whole feed)` | defaults | Splunk Add-on for Unix and Linux (syslog, linux_secure, linux_messages_syslog) |
-| `vcenter` | ready (tick in stack.yml) | `vmware:vclog:vpxd` | `(whole feed)` | derived | Splunk Add-on for VMware (vmware:vclog:vpxd) |
+| `corelight` | live | sourcetype=`corelight_http`, sourcetype=`corelight_notice`, sourcetype=`corelight_smtp`, sourcetype=`corelight_ssh` | `(whole feed)` | defaults | Corelight App for Splunk (corelight_<log>). For TA_zeek use prefix zeek: and suffix :json. |
+| `palo_alto` | live | sourcetype=`pan:globalprotect`, sourcetype=`pan:system`, sourcetype=`pan:threat` | `(whole feed)` | defaults | Splunk Add-on for Palo Alto Networks (pan:*) |
+| `trellix_epo` | live | sourcetype=`mcafee:epo` | `(whole feed)` | defaults | Splunk Add-on for McAfee ePO (mcafee:epo). Verify the sourcetype against your installed TA version. |
+| `wineventlog` | live | source=`XmlWinEventLog:Application`, source=`XmlWinEventLog:Security`, source=`XmlWinEventLog:System` | `EventCode IN (104, 1000, 1020, 1063, 1102, 1341, 1342, 6416)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true) |
+| `azure_activity` | ready (tick in stack.yml) | sourcetype=`mscs:azure:audit` | `(whole feed)` | derived | Splunk Add-on for Microsoft Cloud Services (mscs:azure:audit) |
+| `azure_entra` | ready (tick in stack.yml) | sourcetype=`azure:aad:audit`, sourcetype=`azure:aad:signin` | `(whole feed)` | defaults | Splunk Add-on for Microsoft Azure (azure:aad:signin, azure:aad:audit) or Microsoft Cloud Services add-on via Event Hub |
+| `container_runtime` | ready (tick in stack.yml) | sourcetype=`docker:daemon`, sourcetype=`docker:events` | `(whole feed)` | derived | docker events scripted input or OpenTelemetry (docker:events, containerd) |
+| `esxi_syslog` | ready (tick in stack.yml) | sourcetype=`vmware:esxlog:esxupdate`, sourcetype=`vmware:esxlog:hostd`, sourcetype=`vmware:esxlog:vmkernel` | `(whole feed)` | defaults | Splunk Add-on for VMware ESXi Logs (vmware:esxlog:<log>) |
+| `iis` | ready (tick in stack.yml) | sourcetype=`ms:iis:auto` | `(whole feed)` | derived | Splunk Add-on for Microsoft IIS |
+| `kubernetes_audit` | ready (tick in stack.yml) | sourcetype=`kube:apiserver-audit`, sourcetype=`kube:container:*`, sourcetype=`kube:container:ingress-nginx` | `(whole feed)` | derived | Splunk OpenTelemetry Collector for Kubernetes / Splunk Connect for Kubernetes |
+| `linux_syslog` | ready (tick in stack.yml) | sourcetype=`access_combined`, sourcetype=`linux_messages_syslog`, sourcetype=`linux_secure` | `(whole feed)` | defaults | Splunk Add-on for Unix and Linux (syslog, linux_secure, linux_messages_syslog) |
+| `vcenter` | ready (tick in stack.yml) | sourcetype=`vmware:vclog:vpxd` | `(whole feed)` | derived | Splunk Add-on for VMware (vmware:vclog:vpxd) |
 
 Collection prerequisites:
 
@@ -123,13 +123,13 @@ search = index=corelight sourcetype IN (corelight_http, corelight_notice, coreli
 search = index=pan_logs sourcetype IN ("pan:globalprotect", "pan:system", "pan:threat")
 
 [mitre_dc0038_application_log_content__trellix_epo]
-search = index=epo sourcetype=mcafee:epo
+search = index=epo sourcetype="mcafee:epo"
 
 [mitre_dc0038_application_log_content__wineventlog]
-search = index=wineventlog sourcetype IN ("XmlWinEventLog:Application", "XmlWinEventLog:Security", "XmlWinEventLog:System") EventCode IN (104, 1000, 1020, 1063, 1102, 1341, 1342, 6416)
+search = index=wineventlog source IN ("XmlWinEventLog:Application", "XmlWinEventLog:Security", "XmlWinEventLog:System") EventCode IN (104, 1000, 1020, 1063, 1102, 1341, 1342, 6416)
 
 [mitre_dc0038_application_log_content__azure_activity]
-search = index=azure sourcetype=mscs:azure:audit
+search = index=azure sourcetype="mscs:azure:audit"
 disabled = 1
 
 [mitre_dc0038_application_log_content__azure_entra]
@@ -145,7 +145,7 @@ search = index=vmware sourcetype IN ("vmware:esxlog:esxupdate", "vmware:esxlog:h
 disabled = 1
 
 [mitre_dc0038_application_log_content__iis]
-search = index=web sourcetype=ms:iis:auto
+search = index=web sourcetype="ms:iis:auto"
 disabled = 1
 
 [mitre_dc0038_application_log_content__kubernetes_audit]
@@ -157,7 +157,7 @@ search = index=linux sourcetype IN (access_combined, linux_messages_syslog, linu
 disabled = 1
 
 [mitre_dc0038_application_log_content__vcenter]
-search = index=vmware sourcetype=vmware:vclog:vpxd
+search = index=vmware sourcetype="vmware:vclog:vpxd"
 disabled = 1
 
 [mitre_dc0038_application_log_content]

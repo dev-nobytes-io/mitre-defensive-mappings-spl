@@ -32,11 +32,11 @@ flowchart LR
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetypes | Constraint | Origin | TA / collector |
+| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `palo_alto` | live | `pan:config`, `pan:system` | `(whole feed)` | defaults | Splunk Add-on for Palo Alto Networks (pan:*) |
-| `wineventlog` | live | `XmlWinEventLog:Microsoft-Windows-Windows Firewall With Advanced Security/Firewall`, `XmlWinEventLog:Security` | `EventCode IN (2003, 2008, 4950, 5025)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering |
-| `esxi_syslog` | ready (tick in stack.yml) | `vmware:esxlog:hostd` | `(firewall)` | defaults | Splunk Add-on for VMware ESXi Logs (vmware:esxlog:<log>) |
+| `palo_alto` | live | sourcetype=`pan:config`, sourcetype=`pan:system` | `(whole feed)` | defaults | Splunk Add-on for Palo Alto Networks (pan:*) |
+| `wineventlog` | live | source=`XmlWinEventLog:Microsoft-Windows-Windows Firewall With Advanced Security/Firewall`, source=`XmlWinEventLog:Security` | `EventCode IN (2003, 2008, 4950, 5025)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true) |
+| `esxi_syslog` | ready (tick in stack.yml) | sourcetype=`vmware:esxlog:hostd` | `(firewall)` | defaults | Splunk Add-on for VMware ESXi Logs (vmware:esxlog:<log>) |
 
 Collection prerequisites:
 
@@ -60,10 +60,10 @@ Eventtypes (literal constraints, see `dist/splunk/TA-mitre-attack-datacomponents
 search = index=pan_logs sourcetype IN ("pan:config", "pan:system")
 
 [mitre_dc0043_firewall_disable__wineventlog]
-search = index=wineventlog sourcetype IN ("XmlWinEventLog:Microsoft-Windows-Windows Firewall With Advanced Security/Firewall", "XmlWinEventLog:Security") EventCode IN (2003, 2008, 4950, 5025)
+search = index=wineventlog source IN ("XmlWinEventLog:Microsoft-Windows-Windows Firewall With Advanced Security/Firewall", "XmlWinEventLog:Security") EventCode IN (2003, 2008, 4950, 5025)
 
 [mitre_dc0043_firewall_disable__esxi_syslog]
-search = index=vmware sourcetype=vmware:esxlog:hostd (firewall)
+search = index=vmware sourcetype="vmware:esxlog:hostd" (firewall)
 disabled = 1
 
 [mitre_dc0043_firewall_disable]

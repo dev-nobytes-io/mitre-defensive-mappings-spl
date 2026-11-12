@@ -46,10 +46,10 @@ flowchart LR
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetypes | Constraint | Origin | TA / collector |
+| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `sysmon` | live | `XmlWinEventLog:Microsoft-Windows-Sysmon/Operational` | `EventCode IN (9)` | defaults | Splunk Add-on for Sysmon (TA-microsoft-sysmon) |
-| `wineventlog` | live | `XmlWinEventLog:System` | `EventCode IN (1006, 2003, 20001)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering |
+| `sysmon` | live | source=`XmlWinEventLog:Microsoft-Windows-Sysmon/Operational` | `EventCode IN (9)` | defaults | Splunk Add-on for Sysmon (needs Splunk_TA_windows for XML parsing) |
+| `wineventlog` | live | source=`XmlWinEventLog:System` | `EventCode IN (1006, 2003, 20001)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true) |
 
 Collection prerequisites:
 
@@ -69,10 +69,10 @@ Eventtypes (literal constraints, see `dist/splunk/TA-mitre-attack-datacomponents
 
 ```ini
 [mitre_dc0046_drive_modification__sysmon]
-search = index=sysmon sourcetype=XmlWinEventLog:Microsoft-Windows-Sysmon/Operational EventCode IN (9)
+search = index=sysmon source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode IN (9)
 
 [mitre_dc0046_drive_modification__wineventlog]
-search = index=wineventlog sourcetype=XmlWinEventLog:System EventCode IN (1006, 2003, 20001)
+search = index=wineventlog source="XmlWinEventLog:System" EventCode IN (1006, 2003, 20001)
 
 [mitre_dc0046_drive_modification]
 search = eventtype=mitre_dc0046_drive_modification__sysmon OR eventtype=mitre_dc0046_drive_modification__wineventlog

@@ -87,7 +87,7 @@ derived:
     have: true
     in_scope: true
     eventtype: mitre_dc0011_malware_content__palo_alto
-    search: index=pan_logs sourcetype=pan:threat (log_subtype IN (virus, wildfire))
+    search: index=pan_logs sourcetype="pan:threat" (log_subtype IN (virus, wildfire))
     constraint_origin: defaults
     broad_refs: 0
     sources:
@@ -97,7 +97,7 @@ derived:
     have: true
     in_scope: true
     eventtype: mitre_dc0011_malware_content__trellix_epo
-    search: index=epo sourcetype=mcafee:epo
+    search: index=epo sourcetype="mcafee:epo"
     constraint_origin: defaults
     broad_refs: 0
     sources:

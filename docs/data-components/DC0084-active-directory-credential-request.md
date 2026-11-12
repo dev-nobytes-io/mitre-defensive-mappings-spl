@@ -39,10 +39,10 @@ Component specific:
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetypes | Constraint | Origin | TA / collector |
+| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `corelight` | live | `corelight_kerberos` | `(whole feed)` | defaults | Corelight App for Splunk (corelight_<log>). For TA_zeek use prefix zeek: and suffix :json. |
-| `wineventlog` | live | `XmlWinEventLog:Security` | `EventCode IN (4768, 4769, 4770, 4771, 4773)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering |
+| `corelight` | live | sourcetype=`corelight_kerberos` | `(whole feed)` | defaults | Corelight App for Splunk (corelight_<log>). For TA_zeek use prefix zeek: and suffix :json. |
+| `wineventlog` | live | source=`XmlWinEventLog:Security` | `EventCode IN (4768, 4769, 4770, 4771, 4773)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true) |
 
 Collection prerequisites:
 
@@ -63,7 +63,7 @@ Eventtypes (literal constraints, see `dist/splunk/TA-mitre-attack-datacomponents
 search = index=corelight sourcetype=corelight_kerberos
 
 [mitre_dc0084_active_directory_credential_request__wineventlog]
-search = index=wineventlog sourcetype=XmlWinEventLog:Security EventCode IN (4768, 4769, 4770, 4771, 4773)
+search = index=wineventlog source="XmlWinEventLog:Security" EventCode IN (4768, 4769, 4770, 4771, 4773)
 
 [mitre_dc0084_active_directory_credential_request]
 search = eventtype=mitre_dc0084_active_directory_credential_request__corelight OR eventtype=mitre_dc0084_active_directory_credential_request__wineventlog

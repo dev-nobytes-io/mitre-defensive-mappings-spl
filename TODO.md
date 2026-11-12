@@ -43,8 +43,8 @@ Work on a branch, open a draft PR, keep `make build` idempotent and the tests gr
 
 ### P0: correctness before anyone enables anything
 
-- [ ] **Windows feeds match on `source`, not `sourcetype`.** Splunk Add-on for Windows 5.0+ and the current Sysmon add-on use `sourcetype=XmlWinEventLog` with the channel in `source=XmlWinEventLog:<channel>`. The eventtypes use `sourcetype=XmlWinEventLog:<channel>`, which only matches pre-5.0 add-ons. Fix: per-feed `constraint_field: source` for wineventlog, sysmon and powershell_logging; matching on source works for old and new add-on versions. Done when the eventtypes, Sigma pipeline, docs and tests use `source=` for these feeds.
-- [ ] **Sigma chain drops `splunk_windows`.** That pipeline adds `source="WinEventLog:<channel>"` (classic rendering), which contradicts XML collection. Our pipeline should emit the XML `source` itself; tests and docs should chain `sysmon` plus ours only.
+- [x] **Windows feeds match on `source`, not `sourcetype`.** Splunk Add-on for Windows 5.0+ and the current Sysmon add-on use `sourcetype=XmlWinEventLog` with the channel in `source=XmlWinEventLog:<channel>`. The eventtypes use `sourcetype=XmlWinEventLog:<channel>`, which only matches pre-5.0 add-ons. Fix: per-feed `constraint_field: source` for wineventlog, sysmon and powershell_logging; matching on source works for old and new add-on versions. Done when the eventtypes, Sigma pipeline, docs and tests use `source=` for these feeds.
+- [x] **Sigma chain drops `splunk_windows`.** That pipeline adds `source="WinEventLog:<channel>"` (classic rendering), which contradicts XML collection. Our pipeline should emit the XML `source` itself; tests and docs should chain `sysmon` plus ours only.
 - [ ] **Verify remaining sourcetype names** against installed add-ons and record the result in `config/stack.yml`: Trellix ePO (`mcafee:epo` from DB pull vs `mcafee:epo:syslog`), the Solidcore event-name field (`threat_name` vs `event_description`), Kubernetes audit (`kube:apiserver-audit` depends on the collector), container runtime.
 
 ### P1: operational safety net

@@ -142,7 +142,7 @@ derived:
     in_scope: true
     eventtype: mitre_dc0042_drive_creation__wineventlog
     search: >-
-      index=wineventlog sourcetype IN ("XmlWinEventLog:Security", "XmlWinEventLog:System") EventCode IN (1006, 2003,
+      index=wineventlog source IN ("XmlWinEventLog:Security", "XmlWinEventLog:System") EventCode IN (1006, 2003,
       2100, 2101, 2102, 2105, 2106, 6416, 10000, 10001, 20001, 20003)
     constraint_origin: defaults
     broad_refs: 0
@@ -153,7 +153,7 @@ derived:
     have: false
     in_scope: true
     eventtype: mitre_dc0042_drive_creation__auditd
-    search: index=linux sourcetype=linux:audit type IN (SYSCALL) (syscall IN (mount) OR SYSCALL IN (mount))
+    search: index=linux sourcetype="linux:audit" type IN (SYSCALL) (syscall IN (mount) OR SYSCALL IN (mount))
     constraint_origin: defaults
     broad_refs: 0
     sources:
