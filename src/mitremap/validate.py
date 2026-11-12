@@ -162,7 +162,7 @@ def validate(m: AttackModel) -> list[str]:
 
 def _validate_health(views) -> list[str]:
     from .analytics import EXTERNAL_MACROS, _conf_sections, _macro_index, lint_spl, lookups_used, macros_used
-    from .health import expected_telemetry, rules
+    from .health import expected_telemetry, rules, support_searches
     errs = []
     ta = DIST_DIR / "splunk" / APP / "default"
     da = DIST_DIR / "splunk" / "DA-ESS-mitre-attack-detections" / "default"
@@ -180,6 +180,17 @@ def _validate_health(views) -> list[str]:
                 errs.append(f"{r.id}: unknown lookup {lk}")
         if f"MITRE - {r.id} - {r.title} - Rule" not in stanzas:
             errs.append(f"{r.id}: stanza missing from savedsearches.conf")
+    for sp in support_searches():
+        for e in lint_spl(sp.spl):
+            errs.append(f"{sp.id}: spl: {e}")
+        for name, n in macros_used(sp.spl):
+            if name not in macros and name not in EXTERNAL_MACROS:
+                errs.append(f"{sp.id}: unknown macro `{name}`")
+        for lk in lookups_used(sp.spl):
+            if lk not in lookups:
+                errs.append(f"{sp.id}: unknown lookup {lk}")
+        if f"MITRE - {sp.id} - {sp.title}" not in stanzas:
+            errs.append(f"{sp.id}: stanza missing from savedsearches.conf")
     rows = expected_telemetry(views)
     for feed, f in config.stack().items():
         if f.get("have") and not f.get("hunt_only") and not f.get("virtual") and f.get("render") is not False:

@@ -24,6 +24,14 @@ Risk rules recover the analytic or strategy id from the rule name in `source` an
 
 **Asset and identity correlation is a prerequisite for the risk layer.** Endpoint analytics raise risk on host names, network analytics on IP addresses. Unless ES Asset and Identity management maps a host's IPs to its name, a host's endpoint and network risk land on two different risk objects and cross-feed rules (DET0400, RISK0001) undercount. Populate the asset lookup with `ip`, `nt_host` and `dns` before enabling them.
 
+A starter is shipped: the supporting search **ASSET0001** (disabled, daily) writes `mitre_asset_ip_map` (`nt_host`, `dns`, `ip`, `mac`) from the source address of outbound Sysmon connections and Corelight DHCP leases, keeping 30 days. To use it:
+
+1. Enable `MITRE - ASSET0001 - Host to IP map from Sysmon connections and Corelight DHCP` and let it run once.
+2. In ES, Configure → Data Enrichment → Asset and Identity Management → Asset Lookup Configuration, add `mitre_asset_ip_map` as a new asset source. Field names already match the ES asset schema; add `priority`, `bunit` and `category` from your CMDB when you have them.
+3. Check that a host's risk merges: `| from datamodel:Risk.All_Risk | search risk_object=<host> | stats values(risk_object_type) values(source)` should show both endpoint and network sources once the merge has run.
+
+The map is a starting point, not a CMDB: hosts with several interfaces get one row per address, and DHCP churn means old addresses linger for up to 30 days.
+
 Two conventions keep the searches portable:
 
 * **Per-log sourcetype macros.** Feeds that ship several logs get `mitre_st_<feed>_<log>` (`mitre_st_corelight_http`, `mitre_st_palo_alto_config`), generated from `stack.yml`, so an analytic writes `` `mitre_dc0085_corelight` `mitre_st_corelight_http` `` and never a sourcetype name.

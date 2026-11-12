@@ -42,3 +42,16 @@ def test_health_stanzas_rendered():
         assert "disabled = true" in body and "action.notable = 1" in body
         assert ("action.risk = 1" in body) == bool(r.risk)
         json.loads(re.search(r"^action\.correlationsearch\.annotations = (.+)$", body, re.M).group(1))
+
+
+def test_asset_map_support_search():
+    from mitremap.health import support_searches
+    text = (DA / "default" / "savedsearches.conf").read_text()
+    transforms = (DA / "default" / "transforms.conf").read_text()
+    for sp in support_searches():
+        m = re.search(rf"^\[MITRE - {sp.id} - .*?\]\n(.*?)(?=^\[|\Z)", text, re.M | re.S)
+        assert m and "action.notable" not in m.group(1) and "action.risk" not in m.group(1)
+        assert f"[{sp.lookup}]" in transforms
+        header = (DA / "lookups" / f"{sp.lookup}.csv").read_text().splitlines()[0].split(",")
+        assert header == sp.fields
+        assert {"nt_host", "dns", "ip"} <= set(header), "ES asset lookups key on these fields"

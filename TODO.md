@@ -53,7 +53,8 @@ Work on a branch, open a draft PR, keep `make build` idempotent and the tests gr
 
 - [x] **Telemetry health detection.** (HEALTH0001, `mitre_expected_telemetry` lookup, `docs/health.md`) A generated lookup of every (index, sourcetype or source) that a live eventtype depends on, and a detection that reports which are never seen in 7 days (configuration gap: the eventtype gives false coverage) and which went silent in the last N hours (outage). Thresholds in macros.
 - [x] **Per-host feed dropout.** (HEALTH0002; uses the indexed `host`, so Windows Event Forwarding needs host set from `Computer`) Hosts that sent Sysmon (or Security) in the previous 7 days but nothing in the last 4 hours; the usual sign of a stopped or tampered agent. Raise Host Status risk so it feeds the correlations.
-- [ ] **Asset and identity starter.** Document, or generate a template for, the ES asset lookup (`ip`, `nt_host`, `dns`) the cross-feed risk rules depend on. Add a check that risk objects from Corelight and Palo Alto resolve to assets.
+- [x] **Asset and identity starter.** ASSET0001 writes `mitre_asset_ip_map` (`nt_host`, `dns`, `ip`, `mac`) from Sysmon connections and Corelight DHCP; registration steps are in `docs/splunk-implementation.md`.
+- [ ] **Automated asset-resolution check.** A health search listing risk objects from network analytics (IP risk objects) that ES did not resolve to an asset, so a broken asset merge is visible. Needs the ES asset fields on risk events (`risk_object_*` enrichment), so build it on a real ES instance.
 
 ### P2: content growth (Windows and network, feeds already ticked)
 

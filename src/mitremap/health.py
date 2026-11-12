@@ -136,3 +136,42 @@ def rules() -> list[HealthRule]:
 
 def filter_macros() -> list[tuple[str, str, str]]:
     return [(f"mitre_{r.id.lower()}_filter", "search *", f"Exclusions for {r.id} {r.title}.") for r in rules()]
+
+
+# --------------------------------------------------------------------------- supporting searches
+ASSET_MAP_LOOKUP = "mitre_asset_ip_map"
+ASSET_MAP_FIELDS = ["nt_host", "dns", "ip", "mac", "last_seen", "source_feed"]
+
+ASSET_MAP_SPL = """(`mitre_dc0082_sysmon` EventCode=3 Initiated=true NOT SourceIp IN ("127.*", "::1", "0:0:*", "fe80:*", "169.254.*"))
+  OR (`mitre_idx_corelight` `mitre_st_corelight_dhcp` assigned_addr=*)
+| `mitre_normalize_host`
+| eval ip=coalesce(assigned_addr, SourceIp), host_fqdn=lower(coalesce(host_name, Computer, dest)), nt_host=mvindex(split(host_fqdn, "."), 0), dns=if(match(host_fqdn, "\\."), host_fqdn, null()), source_feed=if(isnotnull(assigned_addr), "corelight_dhcp", "sysmon")
+| where isnotnull(ip) AND isnotnull(nt_host) AND nt_host!=""
+| stats max(_time) as last_seen values(mac) as mac values(source_feed) as source_feed by nt_host dns ip
+| inputlookup append=true mitre_asset_ip_map
+| stats max(last_seen) as last_seen values(mac) as mac values(source_feed) as source_feed by nt_host dns ip
+| where last_seen >= relative_time(now(), "-30d")
+| eval mac=mvindex(mac, 0), source_feed=mvjoin(source_feed, "|")
+| table nt_host dns ip mac last_seen source_feed
+| outputlookup mitre_asset_ip_map"""
+
+
+@dataclass
+class SupportSearch:
+    id: str
+    title: str
+    summary: str
+    spl: str
+    cron: str
+    earliest: str
+    lookup: str
+    fields: list[str]
+
+
+def support_searches() -> list[SupportSearch]:
+    return [SupportSearch(
+        "ASSET0001", "Host to IP map from Sysmon connections and Corelight DHCP",
+        "Builds mitre_asset_ip_map (nt_host, dns, ip, mac) from the source address of outbound Sysmon connections and Corelight DHCP leases, "
+        "keeping 30 days. Register it as an asset lookup in ES Asset and Identity Management so host-name risk from endpoint analytics and IP risk "
+        "from network analytics land on the same asset.",
+        ASSET_MAP_SPL, "23 2 * * *", "-25h@h", ASSET_MAP_LOOKUP, ASSET_MAP_FIELDS)]
