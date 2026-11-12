@@ -16,13 +16,21 @@ Analytics bind each ATT&CK mutable element to one of these, or to a macro of the
 
 Because a strategy's analytics are platform variants, "correlating the analytics of a strategy" is rarely what you want. Each strategy takes one of three shapes:
 
-* **Delegated** (default, 36 strategies): the analytics' own findings and risk events are the strategy's output. Nothing extra runs.
-* **Sequence** (6): a hand-written search over raw events that implements the chain the single-leg analytic left in its `gaps` field, joined on a real key: Sysmon process GUID for LSASS access then dump write, host and file path for document write then execution, host and task command for task creation then Task Scheduler launch. Sequences write a finding and risk, like a TTP analytic.
+* **Delegated** (default, 50 strategies): the analytics' own findings and risk events are the strategy's output. Nothing extra runs.
+* **Sequence** (8): a hand-written search over raw events that implements the chain the single-leg analytic left in its `gaps` field, joined on a real key: Sysmon process GUID for LSASS access then dump write, host and file path for document write then execution, host and task command for task creation then Task Scheduler launch. Sequences write a finding and risk, like a TTP analytic.
 * **Risk rule** (4 strategy-scoped, 3 cross-strategy): generated from parameters (scope, `group_by` risk or threat object, window, condition) over the Risk data model. They write a finding only, never risk, so no rule reads its own output. Strategy-scoped rules look for spread (one source address on three hosts); cross-strategy rules look for breadth (three strategies or tactics on one object) or a named precursor set (ransomware).
 
 Risk rules recover the analytic or strategy id from the rule name in `source` and enrich it from the TA's ATT&CK lookups. That avoids depending on how custom annotation frameworks are flattened into risk-event fields, which differs between ES versions.
 
 **Asset and identity correlation is a prerequisite for the risk layer.** Endpoint analytics raise risk on host names, network analytics on IP addresses. Unless ES Asset and Identity management maps a host's IPs to its name, a host's endpoint and network risk land on two different risk objects and cross-feed rules (DET0400, RISK0001) undercount. Populate the asset lookup with `ip`, `nt_host` and `dns` before enabling them.
+
+A starter is shipped: the supporting search **ASSET0001** (disabled, daily) writes `mitre_asset_ip_map` (`nt_host`, `dns`, `ip`, `mac`) from the source address of outbound Sysmon connections and Corelight DHCP leases, keeping 30 days. To use it:
+
+1. Enable `MITRE - ASSET0001 - Host to IP map from Sysmon connections and Corelight DHCP` and let it run once.
+2. In ES, Configure → Data Enrichment → Asset and Identity Management → Asset Lookup Configuration, add `mitre_asset_ip_map` as a new asset source. Field names already match the ES asset schema; add `priority`, `bunit` and `category` from your CMDB when you have them.
+3. Check that a host's risk merges: `| from datamodel:Risk.All_Risk | search risk_object=<host> | stats values(risk_object_type) values(source)` should show both endpoint and network sources once the merge has run.
+
+The map is a starting point, not a CMDB: hosts with several interfaces get one row per address, and DHCP churn means old addresses linger for up to 30 days.
 
 Two conventions keep the searches portable:
 
@@ -40,7 +48,7 @@ ATT&CK analytics vary from "process X spawned by Y" (a specific behaviour) to "u
 | **Hunting** | Pivot material for an analyst | scheduled search, no adaptive response; dashboard panel | Enumeration analytics, context collection, anything with "monitor for" and no decision boundary |
 | **Baseline** | Produces reference data others consume | `outputlookup` on a daily schedule | Attached to an analytic whose mutable element is a learned set (first-seen pairs, known parents, normal volumes); not a content type of its own |
 
-A content type is suggested from the analytic text (discovery-only tactics → Hunting; threshold, window and rarity language → Anomaly; otherwise TTP) and shown in the backlog, but the author decides. In the implemented set the split is 18 TTP, 27 Anomaly, 4 Hunting, with one baseline (first-seen RDP pairs for AN0931). Detection strategies (phase 3) then pick their own shape: a **risk incident rule** when the DET's analytics are anomalies (count distinct `mitre_an` per risk object within the DET over a window), a plain **correlation search / notable** when one TTP analytic is sufficient on its own.
+A content type is suggested from the analytic text (discovery-only tactics → Hunting; threshold, window and rarity language → Anomaly; otherwise TTP) and shown in the backlog, but the author decides. In the implemented set the split is 20 TTP, 36 Anomaly, 9 Hunting, with one baseline (first-seen RDP pairs for AN0931). Detection strategies (phase 3) then pick their own shape: a **risk incident rule** when the DET's analytics are anomalies (count distinct `mitre_an` per risk object within the DET over a window), a plain **correlation search / notable** when one TTP analytic is sufficient on its own.
 
 Custom annotation frameworks make this work: every detection will carry `action.correlationsearch.annotations = {"mitre_attack": ["T1059.001"], "mitre_det": ["DET0039"], "mitre_an": ["AN0110"], "mitre_dc": ["DC0032"]}`, so the Risk data model and the ES Detections page can group and filter by any layer.
 
@@ -61,7 +69,7 @@ The TAs (Splunk_TA_windows, TA-microsoft-sysmon, Corelight, Palo Alto) already t
 
 An eventtype with no events is false comfort. Each component page lists what has to be true at the source: audit subcategories and the 4688 command-line GPO, PowerShell Script Block Logging, SACLs for 4663/4657, Sysmon rule groups (ProcessAccess, ImageLoad, DNS, FileDelete are off in minimal configs), Corelight log set and sensor placement, PAN-OS log forwarding profiles on every rule, ePO event forwarding, auditd rule sets and ENRICHED format, ESXi remote syslog, Kubernetes audit policy, Entra diagnostic settings. Treat the list as the acceptance test when you tick a feed.
 
-A later phase should add a *data check* search per component (`| tstats count where eventtype=... by sourcetype` over 24h) so missing telemetry is itself alerted on, with Host Status (DC0018) as the home for it.
+Two generated health detections close this gap ([telemetry health](health.md)): HEALTH0001 lists every index and sourcetype or source a live eventtype depends on that has not arrived in 7 days or has gone silent, and HEALTH0002 flags hosts that stopped sending Sysmon or Security events and raises Host Status risk on them.
 
 ## 6. Packaging and versioning
 
@@ -74,4 +82,4 @@ A later phase should add a *data check* search per component (`| tstats count wh
 
 * Eventtypes evaluate at search time on the search head; hundreds of eventtypes with `eventtype=` nesting add a little parsing cost to every search that references them. Negligible next to the raw search, but do not use `eventtype=*mitre*` wildcards in analytics.
 * `index=` is literal in eventtypes. If you split Sysmon across indexes, list them in `stack.yml` as `index: sysmon OR index=sysmon_dmz` is not supported; use one index per feed or override stanzas locally.
-* Sigma field names differ from Splunk's. The shipped pipeline only scopes by eventtype/sourcetype; chain it after `sysmon` and `splunk_windows` (or a CIM pipeline) for field mapping.
+* Sigma field names differ from Splunk's. The shipped pipeline only scopes by eventtype, index and sourcetype (source for the Windows event log feeds); chain it after `sysmon` for Sysmon rules. Do not chain `splunk_windows`: it adds a classic `source="WinEventLog:<channel>"` that contradicts XML collection.

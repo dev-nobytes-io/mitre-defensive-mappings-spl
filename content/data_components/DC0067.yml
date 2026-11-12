@@ -449,7 +449,7 @@ derived:
     have: true
     in_scope: true
     eventtype: mitre_dc0067_logon_session_creation__wineventlog
-    search: index=wineventlog sourcetype=XmlWinEventLog:Security EventCode IN (4624, 4625, 4648, 4778)
+    search: index=wineventlog source="XmlWinEventLog:Security" EventCode IN (4624, 4625, 4648, 4778)
     constraint_origin: defaults
     broad_refs: 0
     sources:
@@ -459,7 +459,7 @@ derived:
     have: false
     in_scope: true
     eventtype: mitre_dc0067_logon_session_creation__auditd
-    search: index=linux sourcetype=linux:audit type IN (USER_AUTH, USER_LOGIN, USER_START)
+    search: index=linux sourcetype="linux:audit" type IN (USER_AUTH, USER_LOGIN, USER_START)
     constraint_origin: defaults
     broad_refs: 0
     sources:
@@ -469,7 +469,7 @@ derived:
     have: false
     in_scope: true
     eventtype: mitre_dc0067_logon_session_creation__azure_entra
-    search: index=azure sourcetype=azure:aad:signin
+    search: index=azure sourcetype="azure:aad:signin"
     constraint_origin: defaults
     broad_refs: 18
     sources:

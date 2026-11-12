@@ -52,11 +52,11 @@ Component specific:
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetypes | Constraint | Origin | TA / collector |
+| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `corelight` | live | `corelight_smb_files`, `corelight_smb_mapping` | `(whole feed)` | defaults | Corelight App for Splunk (corelight_<log>). For TA_zeek use prefix zeek: and suffix :json. |
-| `palo_alto` | live | `pan:traffic` | `(app=ms-ds-smb OR app=ms-ds-smbv3 OR app=ms-ds-smbv2)` | defaults | Splunk Add-on for Palo Alto Networks (pan:*) |
-| `wineventlog` | live | `XmlWinEventLog:Microsoft-Windows-SMBClient/Security`, `XmlWinEventLog:Microsoft-Windows-SMBServer/Security`, `XmlWinEventLog:Security` | `EventCode IN (5140, 5142, 5144, 5145, 31001)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering |
+| `corelight` | live | sourcetype=`corelight_smb_files`, sourcetype=`corelight_smb_mapping` | `(whole feed)` | defaults | Corelight App for Splunk (corelight_<log>). For TA_zeek use prefix zeek: and suffix :json. |
+| `palo_alto` | live | sourcetype=`pan:traffic` | `(app=ms-ds-smb OR app=ms-ds-smbv3 OR app=ms-ds-smbv2)` | defaults | Splunk Add-on for Palo Alto Networks (pan:*) |
+| `wineventlog` | live | source=`XmlWinEventLog:Microsoft-Windows-SMBClient/Security`, source=`XmlWinEventLog:Microsoft-Windows-SMBServer/Security`, source=`XmlWinEventLog:Security` | `EventCode IN (5140, 5142, 5144, 5145, 31001)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true) |
 
 Collection prerequisites:
 
@@ -83,10 +83,10 @@ Eventtypes (literal constraints, see `dist/splunk/TA-mitre-attack-datacomponents
 search = index=corelight sourcetype IN (corelight_smb_files, corelight_smb_mapping)
 
 [mitre_dc0102_network_share_access__palo_alto]
-search = index=pan_logs sourcetype=pan:traffic (app=ms-ds-smb OR app=ms-ds-smbv3 OR app=ms-ds-smbv2)
+search = index=pan_logs sourcetype="pan:traffic" (app=ms-ds-smb OR app=ms-ds-smbv3 OR app=ms-ds-smbv2)
 
 [mitre_dc0102_network_share_access__wineventlog]
-search = index=wineventlog sourcetype IN ("XmlWinEventLog:Microsoft-Windows-SMBClient/Security", "XmlWinEventLog:Microsoft-Windows-SMBServer/Security", "XmlWinEventLog:Security") EventCode IN (5140, 5142, 5144, 5145, 31001)
+search = index=wineventlog source IN ("XmlWinEventLog:Microsoft-Windows-SMBClient/Security", "XmlWinEventLog:Microsoft-Windows-SMBServer/Security", "XmlWinEventLog:Security") EventCode IN (5140, 5142, 5144, 5145, 31001)
 
 [mitre_dc0102_network_share_access]
 search = eventtype=mitre_dc0102_network_share_access__corelight OR eventtype=mitre_dc0102_network_share_access__palo_alto OR eventtype=mitre_dc0102_network_share_access__wineventlog

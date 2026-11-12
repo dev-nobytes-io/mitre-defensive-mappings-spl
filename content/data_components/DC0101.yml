@@ -83,7 +83,7 @@ derived:
     have: true
     in_scope: true
     eventtype: mitre_dc0101_domain_registration__sysmon
-    search: index=sysmon sourcetype=XmlWinEventLog:Microsoft-Windows-Sysmon/Operational EventCode IN (22)
+    search: index=sysmon source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode IN (22)
     constraint_origin: defaults
     broad_refs: 0
     sources:
@@ -93,7 +93,7 @@ derived:
     have: false
     in_scope: true
     eventtype: mitre_dc0101_domain_registration__windows_dns_server
-    search: index=wineventlog sourcetype=MSAD:NT6:DNS
+    search: index=wineventlog sourcetype="MSAD:NT6:DNS"
     constraint_origin: derived
     broad_refs: 2
     sources:

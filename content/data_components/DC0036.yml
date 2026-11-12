@@ -51,7 +51,7 @@ derived:
     have: false
     in_scope: true
     eventtype: mitre_dc0036_image_modification__container_runtime
-    search: index=k8s sourcetype=docker:daemon (status IN (tag, untag, push))
+    search: index=k8s sourcetype="docker:daemon" (status IN (tag, untag, push))
     constraint_origin: defaults
     broad_refs: 2
     sources:

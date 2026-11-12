@@ -78,7 +78,7 @@ derived:
     have: true
     in_scope: true
     eventtype: mitre_dc0084_active_directory_credential_request__wineventlog
-    search: index=wineventlog sourcetype=XmlWinEventLog:Security EventCode IN (4768, 4769, 4770, 4771, 4773)
+    search: index=wineventlog source="XmlWinEventLog:Security" EventCode IN (4768, 4769, 4770, 4771, 4773)
     constraint_origin: defaults
     broad_refs: 0
     sources:

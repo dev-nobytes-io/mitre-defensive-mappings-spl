@@ -185,7 +185,7 @@ derived:
     in_scope: true
     eventtype: mitre_dc0060_service_creation__wineventlog
     search: >-
-      index=wineventlog sourcetype IN ("XmlWinEventLog:Security", "XmlWinEventLog:System") EventCode IN (4697, 7045)
+      index=wineventlog source IN ("XmlWinEventLog:Security", "XmlWinEventLog:System") EventCode IN (4697, 7045)
     constraint_origin: defaults
     broad_refs: 0
     sources:
@@ -197,7 +197,7 @@ derived:
     in_scope: true
     eventtype: mitre_dc0060_service_creation__auditd
     search: >-
-      index=linux sourcetype=linux:audit type IN (CONFIG_CHANGE, PATH) (name="/etc/systemd/system/*" OR name="/usr/lib/systemd/system/*"
+      index=linux sourcetype="linux:audit" type IN (CONFIG_CHANGE, PATH) (name="/etc/systemd/system/*" OR name="/usr/lib/systemd/system/*"
       OR name="/etc/init.d/*")
     constraint_origin: defaults
     broad_refs: 0
@@ -210,7 +210,7 @@ derived:
     in_scope: true
     eventtype: mitre_dc0060_service_creation__kubernetes_audit
     search: >-
-      index=k8s sourcetype=kube:apiserver-audit verb IN (create) (objectRef.resource IN (daemonsets, deployments,
+      index=k8s sourcetype="kube:apiserver-audit" verb IN (create) (objectRef.resource IN (daemonsets, deployments,
       cronjobs, services))
     constraint_origin: defaults
     broad_refs: 0

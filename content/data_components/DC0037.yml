@@ -53,7 +53,7 @@ derived:
     have: false
     in_scope: true
     eventtype: mitre_dc0037_pod_enumeration__kubernetes_audit
-    search: index=k8s sourcetype=kube:apiserver-audit verb IN (get, list, watch) (objectRef.resource=pods)
+    search: index=k8s sourcetype="kube:apiserver-audit" verb IN (get, list, watch) (objectRef.resource=pods)
     constraint_origin: defaults
     broad_refs: 0
     sources:

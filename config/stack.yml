@@ -9,6 +9,14 @@
 # (eventtypes cannot expand macros). Change them here and rebuild, or override
 # in the app's local/eventtypes.conf.
 #
+# `constraint_field: source` makes the eventtypes match those values on `source`
+# instead of `sourcetype`. The Windows event log feeds use it: Splunk Add-on for
+# Windows 5.0+ and the current Sysmon add-on index XML event logs as
+# sourcetype=XmlWinEventLog with the channel in source=XmlWinEventLog:<channel>.
+# Older add-ons put the channel in the sourcetype, but source carried the same value
+# in both, so matching on source works for either. For classic (non-XML) rendering
+# change the values to WinEventLog:<channel>.
+#
 # Feed keys are referenced from config/log_sources.yml and from
 # content/data_components/*.yml (curated.providers).
 # ---------------------------------------------------------------------------
@@ -20,7 +28,10 @@ feeds:
     have: true
     platforms: [Windows]
     index: wineventlog
-    ta: Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering
+    ta: Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true)
+    constraint_field: source
+    host_feed: true
+    host_feed_value: "XmlWinEventLog:Security"   # the channel every Windows host writes
     sourcetype_template: "XmlWinEventLog:{channel}"
     default_channels: [Security, System, Application]
     prerequisites:
@@ -37,7 +48,9 @@ feeds:
     have: true
     platforms: [Windows]
     index: sysmon
-    ta: Splunk Add-on for Sysmon (TA-microsoft-sysmon)
+    ta: Splunk Add-on for Sysmon (needs Splunk_TA_windows for XML parsing)
+    constraint_field: source
+    host_feed: true          # reports per endpoint; HEALTH0002 watches for hosts that stop sending it
     sourcetype: "XmlWinEventLog:Microsoft-Windows-Sysmon/Operational"
     prerequisites:
       - Sysmon deployed with a maintained modular configuration (e.g. sysmon-modular or SwiftOnSecurity). Event IDs referenced by a data component only exist if the config includes that rule group (ProcessAccess=10, ImageLoad=7, DNS=22, FileDelete=23/26, ClipboardChange=24, ProcessTampering=25, FileBlock=27/28 are off in minimal configs).
@@ -50,6 +63,7 @@ feeds:
     platforms: [Windows]
     index: wineventlog
     ta: Splunk Add-on for Microsoft Windows
+    constraint_field: source
     sourcetype: "XmlWinEventLog:Microsoft-Windows-PowerShell/Operational"
     prerequisites:
       - Turn on Script Block Logging and Module Logging GPO; consider Transcription to a protected share.
@@ -135,8 +149,8 @@ feeds:
     have: true
     platforms: [Windows, Linux]
     index: epo
-    ta: Splunk Add-on for McAfee ePO (mcafee:epo). Verify the sourcetype against your installed TA version.
-    sourcetype: "mcafee:epo"
+    ta: Splunk Add-on for McAfee ePO Syslog (sourcetype mcafee:epo:syslog, documented by Splunk). If ePO data arrives another way (DB Connect pull, a community Trellix REST add-on such as trellix_epo:threat_events), change the sourcetype here.
+    sourcetype: "mcafee:epo:syslog"
     prerequisites:
       - ePO configured to forward threat events to Splunk (syslog or DB pull); confirm product_name/threat_type fields populate.
       - ENS AMSI and Exploit Prevention enabled if AMSI-type analytics are expected.
@@ -148,7 +162,7 @@ feeds:
     platforms: [Windows, Linux]
     index: epo
     ta: Arrives through the ePO TA; Solidcore events carry event names such as FILE_CREATED, FILE_MODIFIED, FILE_DELETED, EXECUTION_DENIED, REG_VALUE_MODIFIED, PROCESS_HIJACK_ATTEMPTED. Verify field names (threat_name / event_description) in your data.
-    sourcetype: "mcafee:epo"
+    sourcetype: "mcafee:epo:syslog"
     filter: 'product_name="Solidcore*"'
     prerequisites:
       - Change Control file and registry monitoring rules scoped to the paths/keys of interest; Application Control in Enabled (not Observe) mode for EXECUTION_DENIED.
@@ -336,6 +350,8 @@ feeds:
     index: k8s
     ta: Splunk OpenTelemetry Collector for Kubernetes / Splunk Connect for Kubernetes
     sourcetypes: ["kube:apiserver-audit", "kube:objects:events"]
+    # kube:apiserver-audit is the value Splunk's OpenTelemetry Collector examples set for the API server
+    # audit file via logsCollection.extraFileLogs (com.splunk.sourcetype). It only exists if you configure that input.
     prerequisites: [Audit policy at Metadata level minimum, RequestResponse for secrets/pods/exec; ship the audit log file from control-plane nodes.]
     unlocks: Container Creation/Start, Pod Creation/Enumeration, User Account Authentication (k8s), Cloud Service Enumeration - about 30 references.
 

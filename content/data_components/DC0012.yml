@@ -75,7 +75,7 @@ derived:
     in_scope: true
     eventtype: mitre_dc0012_scheduled_job_modification__wineventlog
     search: >-
-      index=wineventlog sourcetype IN ("XmlWinEventLog:Microsoft-Windows-TaskScheduler/Operational", "XmlWinEventLog:Security")
+      index=wineventlog source IN ("XmlWinEventLog:Microsoft-Windows-TaskScheduler/Operational", "XmlWinEventLog:Security")
       EventCode IN (140, 4702)
     constraint_origin: defaults
     broad_refs: 0
@@ -87,7 +87,7 @@ derived:
     in_scope: true
     eventtype: mitre_dc0012_scheduled_job_modification__auditd
     search: >-
-      index=linux sourcetype=linux:audit type IN (CONFIG_CHANGE, PATH) (name="/etc/cron*" OR name="/var/spool/cron/*")
+      index=linux sourcetype="linux:audit" type IN (CONFIG_CHANGE, PATH) (name="/etc/cron*" OR name="/var/spool/cron/*")
     constraint_origin: defaults
     broad_refs: 0
     sources:

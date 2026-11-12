@@ -77,15 +77,15 @@ Component specific:
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetypes | Constraint | Origin | TA / collector |
+| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `powershell_logging` | live | `XmlWinEventLog:Microsoft-Windows-PowerShell/Operational` | `EventCode IN (400, 403)` | defaults | Splunk Add-on for Microsoft Windows |
-| `sysmon` | live | `XmlWinEventLog:Microsoft-Windows-Sysmon/Operational` | `EventCode IN (1, 5)` | defaults | Splunk Add-on for Sysmon (TA-microsoft-sysmon) |
-| `wineventlog` | live | `XmlWinEventLog:Microsoft-Windows-AppLocker/EXE and DLL`, `XmlWinEventLog:Microsoft-Windows-CodeIntegrity/Operational`, `XmlWinEventLog:Microsoft-Windows-DeviceGuard/Operational`, `XmlWinEventLog:Security` | `(whole feed)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering |
-| `auditd` | ready (tick in stack.yml) | `linux:audit` | `type IN (PROCTITLE, SYSCALL) (syscall IN (execve, prctl, setgid, setuid) OR SYSCALL IN (execve, prctl, setgid, setuid))` | defaults | Splunk Add-on for Unix and Linux (linux:audit) or auditd -> auditbeat/syslog |
-| `edr_telemetry` | ready (tick in stack.yml) | `edr:telemetry` | `(whole feed)` | derived | Vendor specific |
-| `etw` | ready (tick in stack.yml) | `etw:json` | `(ProviderName="Microsoft-Windows-Kernel-Process")` | derived | Requires a user-mode ETW consumer (SilkETW/Sealighter, Splunk Stream for NDIS, or an EDR that exposes the provider). No standard Splunk TA. |
-| `linux_osquery` | ready (tick in stack.yml) | `osquery:results` | `(name=processes OR name=process_open_sockets OR name=process_memory_map)` | defaults | osquery TA |
+| `powershell_logging` | live | source=`XmlWinEventLog:Microsoft-Windows-PowerShell/Operational` | `EventCode IN (400, 403)` | defaults | Splunk Add-on for Microsoft Windows |
+| `sysmon` | live | source=`XmlWinEventLog:Microsoft-Windows-Sysmon/Operational` | `EventCode IN (1, 5)` | defaults | Splunk Add-on for Sysmon (needs Splunk_TA_windows for XML parsing) |
+| `wineventlog` | live | source=`XmlWinEventLog:Microsoft-Windows-AppLocker/EXE and DLL`, source=`XmlWinEventLog:Microsoft-Windows-CodeIntegrity/Operational`, source=`XmlWinEventLog:Microsoft-Windows-DeviceGuard/Operational`, source=`XmlWinEventLog:Security` | `(whole feed)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true) |
+| `auditd` | ready (tick in stack.yml) | sourcetype=`linux:audit` | `type IN (PROCTITLE, SYSCALL) (syscall IN (execve, prctl, setgid, setuid) OR SYSCALL IN (execve, prctl, setgid, setuid))` | defaults | Splunk Add-on for Unix and Linux (linux:audit) or auditd -> auditbeat/syslog |
+| `edr_telemetry` | ready (tick in stack.yml) | sourcetype=`edr:telemetry` | `(whole feed)` | derived | Vendor specific |
+| `etw` | ready (tick in stack.yml) | sourcetype=`etw:json` | `(ProviderName="Microsoft-Windows-Kernel-Process")` | derived | Requires a user-mode ETW consumer (SilkETW/Sealighter, Splunk Stream for NDIS, or an EDR that exposes the provider). No standard Splunk TA. |
+| `linux_osquery` | ready (tick in stack.yml) | sourcetype=`osquery:results` | `(name=processes OR name=process_open_sockets OR name=process_memory_map)` | defaults | osquery TA |
 
 Collection prerequisites:
 
@@ -109,28 +109,28 @@ Eventtypes (literal constraints, see `dist/splunk/TA-mitre-attack-datacomponents
 
 ```ini
 [mitre_dc0034_process_metadata__powershell_logging]
-search = index=wineventlog sourcetype=XmlWinEventLog:Microsoft-Windows-PowerShell/Operational EventCode IN (400, 403)
+search = index=wineventlog source="XmlWinEventLog:Microsoft-Windows-PowerShell/Operational" EventCode IN (400, 403)
 
 [mitre_dc0034_process_metadata__sysmon]
-search = index=sysmon sourcetype=XmlWinEventLog:Microsoft-Windows-Sysmon/Operational EventCode IN (1, 5)
+search = index=sysmon source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode IN (1, 5)
 
 [mitre_dc0034_process_metadata__wineventlog]
-search = index=wineventlog sourcetype IN ("XmlWinEventLog:Microsoft-Windows-AppLocker/EXE and DLL", "XmlWinEventLog:Microsoft-Windows-CodeIntegrity/Operational", "XmlWinEventLog:Microsoft-Windows-DeviceGuard/Operational", "XmlWinEventLog:Security")
+search = index=wineventlog source IN ("XmlWinEventLog:Microsoft-Windows-AppLocker/EXE and DLL", "XmlWinEventLog:Microsoft-Windows-CodeIntegrity/Operational", "XmlWinEventLog:Microsoft-Windows-DeviceGuard/Operational", "XmlWinEventLog:Security")
 
 [mitre_dc0034_process_metadata__auditd]
-search = index=linux sourcetype=linux:audit type IN (PROCTITLE, SYSCALL) (syscall IN (execve, prctl, setgid, setuid) OR SYSCALL IN (execve, prctl, setgid, setuid))
+search = index=linux sourcetype="linux:audit" type IN (PROCTITLE, SYSCALL) (syscall IN (execve, prctl, setgid, setuid) OR SYSCALL IN (execve, prctl, setgid, setuid))
 disabled = 1
 
 [mitre_dc0034_process_metadata__edr_telemetry]
-search = index=edr sourcetype=edr:telemetry
+search = index=edr sourcetype="edr:telemetry"
 disabled = 1
 
 [mitre_dc0034_process_metadata__etw]
-search = index=etw sourcetype=etw:json (ProviderName="Microsoft-Windows-Kernel-Process")
+search = index=etw sourcetype="etw:json" (ProviderName="Microsoft-Windows-Kernel-Process")
 disabled = 1
 
 [mitre_dc0034_process_metadata__linux_osquery]
-search = index=osquery sourcetype=osquery:results (name=processes OR name=process_open_sockets OR name=process_memory_map)
+search = index=osquery sourcetype="osquery:results" (name=processes OR name=process_open_sockets OR name=process_memory_map)
 disabled = 1
 
 [mitre_dc0034_process_metadata]

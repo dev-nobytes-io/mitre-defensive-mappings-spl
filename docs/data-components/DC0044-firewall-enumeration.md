@@ -25,10 +25,10 @@ flowchart LR
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetypes | Constraint | Origin | TA / collector |
+| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `palo_alto` | live | `pan:config`, `pan:system` | `(whole feed)` | defaults | Splunk Add-on for Palo Alto Networks (pan:*) |
-| `wineventlog` | live | `XmlWinEventLog:Security` | `EventCode IN (4688)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering |
+| `palo_alto` | live | sourcetype=`pan:config`, sourcetype=`pan:system` | `(whole feed)` | defaults | Splunk Add-on for Palo Alto Networks (pan:*) |
+| `wineventlog` | live | source=`XmlWinEventLog:Security` | `EventCode IN (4688)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true) |
 
 Collection prerequisites:
 
@@ -51,7 +51,7 @@ Eventtypes (literal constraints, see `dist/splunk/TA-mitre-attack-datacomponents
 search = index=pan_logs sourcetype IN ("pan:config", "pan:system")
 
 [mitre_dc0044_firewall_enumeration__wineventlog]
-search = index=wineventlog sourcetype=XmlWinEventLog:Security EventCode IN (4688)
+search = index=wineventlog source="XmlWinEventLog:Security" EventCode IN (4688)
 
 [mitre_dc0044_firewall_enumeration]
 search = eventtype=mitre_dc0044_firewall_enumeration__palo_alto OR eventtype=mitre_dc0044_firewall_enumeration__wineventlog

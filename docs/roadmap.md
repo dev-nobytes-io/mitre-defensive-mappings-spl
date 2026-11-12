@@ -1,14 +1,36 @@
 # Roadmap
 
-## Phase 1 (this release): data components
+Phases and where each stands. The ordered, checkbox-level work list is [TODO.md](../TODO.md); this page is the map.
 
-Done: feed checklist, log-source normalisation, per-component eventtypes/tags/macros/lookups, Sigma logsource pipeline, per-component docs, coverage/gaps/checklist, changelog tooling, CI.
+```mermaid
+flowchart LR
+  P1["1. Data components<br/>eventtypes, tags, macros, lookups"]:::done
+  P2["2. Analytics<br/>ES detections + Sigma<br/>65 of ~510 coverable"]:::part
+  P3["3. Detection strategies<br/>sequences, risk rules,<br/>correlations"]:::part
+  P0["0. Correctness and health<br/>Windows source matching,<br/>telemetry health checks"]:::next
+  PV["Validation in Splunk<br/>replayed attack data,<br/>AppInspect, tuning"]:::next
+  P4["4. More platforms<br/>Linux, ESXi, containers, Azure"]:::later
+  P5["5. More languages<br/>KQL, ES|QL"]:::later
+  P1 --> P2 --> P3
+  P0 --> PV
+  P3 --> PV --> P4 --> P5
+  classDef done fill:#d4edda,stroke:#2e7d32,color:#1b1b1b
+  classDef part fill:#fff3cd,stroke:#b26a00,color:#1b1b1b
+  classDef next fill:#fde2e1,stroke:#b42318,color:#1b1b1b
+  classDef later fill:#eeeeee,stroke:#888,color:#1b1b1b
+```
 
-## Phase 2 (in progress): analytics as ES detections
+Green is done, amber is in progress, red is next and blocks enabling anything in production, grey is later.
 
-Done: analytic schema and scaffolding (`new-analytic`), validation, ES 8 detections app, Sigma rule rendering with correlation support, per-analytic docs, prioritised backlog, and 49 implemented analytics (18 TTP, 27 Anomaly, 4 Hunting, 1 baseline) across Windows endpoint, Corelight and Palo Alto feeds.
+## Phase 1: data components (done)
 
-The schema, as implemented (`content/analytics/ANxxxx.yml`, `curated` block):
+Feed checklist, log-source normalisation, per-component eventtypes, tags, macros and lookups, Sigma logsource pipeline, per-component docs, coverage, gaps, checklist, changelog tooling, CI. Open correctness item: Windows feeds must match on `source` for current add-on versions (TODO P0).
+
+## Phase 2: analytics (in progress)
+
+Done: schema and scaffolding (`new-analytic`), validation, ES 8 detections app, Sigma rules with correlation support, per-analytic docs, prioritised backlog, 65 analytics (20 TTP, 36 anomaly, 9 hunting). Next: the batches listed in TODO P2, then `reviewed` status after production tuning.
+
+The `curated` schema of `content/analytics/ANxxxx.yml`:
 
 ```yaml
 status: implemented            # scaffold | implemented | reviewed
@@ -30,32 +52,22 @@ baselines: [{name, lookup, fields, search, cron, earliest}]
 sigma: {logsource, detection}  # or rules: [...] + correlation: {...}, or not_expressible: reason
 ```
 
-Remaining:
+## Phase 3: detection strategies (in progress)
 
-* Work down [the backlog](analytics/backlog.md): about 460 more analytics are coverable by the ticked feeds.
-* Promote `implemented` to `reviewed` after each detection has run against production data for a tuning period.
-* Analytics for Linux, ESXi, containers and Azure once those feeds are ticked (564 are waiting on a feed).
-* Optional consolidation of same-shape analytics (the discovery set) into one scheduled search per data component where search concurrency is tight.
+Done: strategy and correlation schema (`new-strategy`), generated risk rules over the Risk data model, 8 sequences, 4 strategy risk rules, 3 cross-strategy correlations. Next: sequences for the strategies listed in TODO P2, and threshold tuning of RISK0001 and RISK0002 against real risk data.
 
-## Phase 3 (in progress): detection strategies
+## Phase 0 and validation: before production (next)
 
-Done: strategy and correlation schema (`content/detection_strategies/`, `content/correlations/`), `new-strategy` scaffolding, generated risk rules over the Risk data model, sequence validation, Sigma correlation rules for sequences, docs per strategy, and the first set: 6 sequences (DET0363 LSASS access then dump, DET0085 SYSTEM plus SAM hive save, DET0294 document write then execute, DET0394 web-root write then web shell, DET0365 Run key then execution, DET0441 task creation then Task Scheduler launch), 4 strategy risk rules (DET0530 and DET0327 spread from one source, DET0027 spread to one domain, DET0400 endpoint and network DNS agreement) and 3 cross-strategy correlations (RISK0001 breadth, RISK0002 score, RISK0003 ransomware precursors).
+Nothing here has run in Splunk. Before enabling content: fix Windows source matching, add telemetry health detections, set up asset and identity mapping, then replay attack data on a test search head and record which detections fire (TODO P0, P1, P3).
 
-Remaining:
+## Phase 4: more platforms (later)
 
-* Sequences for the other strategies whose analytics name a chain (`gaps` on each analytic page lists them).
-* A data-check correlation per data component: no events from a ticked feed in 24 hours raises Host Status risk.
-* Tune RISK0001/RISK0002 thresholds against a month of production risk data before enabling.
+Tick the feed in `config/stack.yml`, then implement from the backlog: Linux (357 analytics ready), ESXi (107), containers (35), Entra ID (21). Out-of-scope platforms (macOS, M365, AWS, GCP, SaaS) need `config/platforms.yml` and the `render` flags changed first.
 
-## Phase 4: more languages and platforms
+## Phase 5: more query languages (later)
 
-* KQL renderer (Sentinel / Defender advanced hunting tables already noted per log source as `kql.table`; Kibana KQL variant).
-* ES|QL renderer (`elastic.dataset` per log source).
-* Bring macOS, M365/Office, AWS, GCP, Okta, SaaS into scope by editing `config/platforms.yml` and `render` flags.
-* ICS and Mobile ATT&CK domains (same STIX layout; `fetch --domain ics-attack`).
+KQL (Sentinel and Defender tables are recorded per log source as `kql.table`) and ES|QL (`elastic.dataset`). The renderer interface and stubs exist in `src/mitremap/render/`.
 
-## Operational
+## Maintenance (ongoing)
 
-* Data-check analytic per component (missing telemetry alert) under Host Status.
-* A Splunk dashboard built on the `mitre_attack_*` lookups for coverage by tactic/technique/feed.
-* Mermaid parse check in CI once a headless mermaid parser is wired in (Node + jsdom).
+New ATT&CK release: fetch, diff, build, review. Optional contentctl export. ICS and Mobile domains use the same STIX layout (`fetch --domain`).

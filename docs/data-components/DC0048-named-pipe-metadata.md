@@ -36,9 +36,9 @@ Component specific:
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetypes | Constraint | Origin | TA / collector |
+| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `sysmon` | live | `XmlWinEventLog:Microsoft-Windows-Sysmon/Operational` | `EventCode IN (17, 18)` | defaults | Splunk Add-on for Sysmon (TA-microsoft-sysmon) |
+| `sysmon` | live | source=`XmlWinEventLog:Microsoft-Windows-Sysmon/Operational` | `EventCode IN (17, 18)` | defaults | Splunk Add-on for Sysmon (needs Splunk_TA_windows for XML parsing) |
 
 Collection prerequisites:
 
@@ -51,7 +51,7 @@ Eventtypes (literal constraints, see `dist/splunk/TA-mitre-attack-datacomponents
 
 ```ini
 [mitre_dc0048_named_pipe_metadata__sysmon]
-search = index=sysmon sourcetype=XmlWinEventLog:Microsoft-Windows-Sysmon/Operational EventCode IN (17, 18)
+search = index=sysmon source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode IN (17, 18)
 
 [mitre_dc0048_named_pipe_metadata]
 search = eventtype=mitre_dc0048_named_pipe_metadata__sysmon

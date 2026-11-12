@@ -32,11 +32,11 @@ flowchart LR
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetypes | Constraint | Origin | TA / collector |
+| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `auditd` | ready (tick in stack.yml) | `linux:audit` | `type IN (SYSCALL) (syscall IN (delete_module, finit_module, init_module) OR SYSCALL IN (delete_module, finit_module, init_module))` | defaults | Splunk Add-on for Unix and Linux (linux:audit) or auditd -> auditbeat/syslog |
-| `esxi_syslog` | ready (tick in stack.yml) | `vmware:esxlog:vmkernel` | `(whole feed)` | defaults | Splunk Add-on for VMware ESXi Logs (vmware:esxlog:<log>) |
-| `linux_syslog` | ready (tick in stack.yml) | `linux_messages_syslog`, `linux_secure`, `syslog` | `(kernel)` | defaults | Splunk Add-on for Unix and Linux (syslog, linux_secure, linux_messages_syslog) |
+| `auditd` | ready (tick in stack.yml) | sourcetype=`linux:audit` | `type IN (SYSCALL) (syscall IN (delete_module, finit_module, init_module) OR SYSCALL IN (delete_module, finit_module, init_module))` | defaults | Splunk Add-on for Unix and Linux (linux:audit) or auditd -> auditbeat/syslog |
+| `esxi_syslog` | ready (tick in stack.yml) | sourcetype=`vmware:esxlog:vmkernel` | `(whole feed)` | defaults | Splunk Add-on for VMware ESXi Logs (vmware:esxlog:<log>) |
+| `linux_syslog` | ready (tick in stack.yml) | sourcetype=`linux_messages_syslog`, sourcetype=`linux_secure`, sourcetype=`syslog` | `(kernel)` | defaults | Splunk Add-on for Unix and Linux (syslog, linux_secure, linux_messages_syslog) |
 
 Collection prerequisites:
 
@@ -50,11 +50,11 @@ Eventtypes (literal constraints, see `dist/splunk/TA-mitre-attack-datacomponents
 
 ```ini
 [mitre_dc0031_kernel_module_load__auditd]
-search = index=linux sourcetype=linux:audit type IN (SYSCALL) (syscall IN (delete_module, finit_module, init_module) OR SYSCALL IN (delete_module, finit_module, init_module))
+search = index=linux sourcetype="linux:audit" type IN (SYSCALL) (syscall IN (delete_module, finit_module, init_module) OR SYSCALL IN (delete_module, finit_module, init_module))
 disabled = 1
 
 [mitre_dc0031_kernel_module_load__esxi_syslog]
-search = index=vmware sourcetype=vmware:esxlog:vmkernel
+search = index=vmware sourcetype="vmware:esxlog:vmkernel"
 disabled = 1
 
 [mitre_dc0031_kernel_module_load__linux_syslog]

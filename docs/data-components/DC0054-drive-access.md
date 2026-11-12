@@ -47,10 +47,10 @@ Component specific:
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetypes | Constraint | Origin | TA / collector |
+| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `sysmon` | live | `XmlWinEventLog:Microsoft-Windows-Sysmon/Operational` | `EventCode IN (9)` | defaults | Splunk Add-on for Sysmon (TA-microsoft-sysmon) |
-| `auditd` | ready (tick in stack.yml) | `linux:audit` | `type IN (PATH, SYSCALL) (syscall IN (open, openat, read, write) OR SYSCALL IN (open, openat, read, write)) (name="/dev/sd*" OR name="/dev/nvme*" OR name="/dev/mapper/*")` | defaults | Splunk Add-on for Unix and Linux (linux:audit) or auditd -> auditbeat/syslog |
+| `sysmon` | live | source=`XmlWinEventLog:Microsoft-Windows-Sysmon/Operational` | `EventCode IN (9)` | defaults | Splunk Add-on for Sysmon (needs Splunk_TA_windows for XML parsing) |
+| `auditd` | ready (tick in stack.yml) | sourcetype=`linux:audit` | `type IN (PATH, SYSCALL) (syscall IN (open, openat, read, write) OR SYSCALL IN (open, openat, read, write)) (name="/dev/sd*" OR name="/dev/nvme*" OR name="/dev/mapper/*")` | defaults | Splunk Add-on for Unix and Linux (linux:audit) or auditd -> auditbeat/syslog |
 
 Collection prerequisites:
 
@@ -65,10 +65,10 @@ Eventtypes (literal constraints, see `dist/splunk/TA-mitre-attack-datacomponents
 
 ```ini
 [mitre_dc0054_drive_access__sysmon]
-search = index=sysmon sourcetype=XmlWinEventLog:Microsoft-Windows-Sysmon/Operational EventCode IN (9)
+search = index=sysmon source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode IN (9)
 
 [mitre_dc0054_drive_access__auditd]
-search = index=linux sourcetype=linux:audit type IN (PATH, SYSCALL) (syscall IN (open, openat, read, write) OR SYSCALL IN (open, openat, read, write)) (name="/dev/sd*" OR name="/dev/nvme*" OR name="/dev/mapper/*")
+search = index=linux sourcetype="linux:audit" type IN (PATH, SYSCALL) (syscall IN (open, openat, read, write) OR SYSCALL IN (open, openat, read, write)) (name="/dev/sd*" OR name="/dev/nvme*" OR name="/dev/mapper/*")
 disabled = 1
 
 [mitre_dc0054_drive_access]

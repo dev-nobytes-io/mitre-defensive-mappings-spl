@@ -517,7 +517,7 @@ derived:
     in_scope: true
     eventtype: mitre_dc0002_user_account_authentication__wineventlog
     search: >-
-      index=wineventlog sourcetype=XmlWinEventLog:Security EventCode IN (4624, 4625, 4648, 4768, 4769, 4770, 4771,
+      index=wineventlog source="XmlWinEventLog:Security" EventCode IN (4624, 4625, 4648, 4768, 4769, 4770, 4771,
       4776, 4777)
     constraint_origin: defaults
     broad_refs: 0
@@ -528,7 +528,7 @@ derived:
     have: false
     in_scope: true
     eventtype: mitre_dc0002_user_account_authentication__auditd
-    search: index=linux sourcetype=linux:audit type IN (CRED_ACQ, USER_ACCT, USER_AUTH, USER_LOGIN)
+    search: index=linux sourcetype="linux:audit" type IN (CRED_ACQ, USER_ACCT, USER_AUTH, USER_LOGIN)
     constraint_origin: defaults
     broad_refs: 0
     sources:
@@ -539,7 +539,7 @@ derived:
     have: false
     in_scope: true
     eventtype: mitre_dc0002_user_account_authentication__azure_entra
-    search: index=azure sourcetype=azure:aad:signin
+    search: index=azure sourcetype="azure:aad:signin"
     constraint_origin: defaults
     broad_refs: 36
     sources:
@@ -549,7 +549,7 @@ derived:
     have: false
     in_scope: true
     eventtype: mitre_dc0002_user_account_authentication__esxi_syslog
-    search: index=vmware sourcetype=vmware:esxlog:auth
+    search: index=vmware sourcetype="vmware:esxlog:auth"
     constraint_origin: defaults
     broad_refs: 0
     sources:
@@ -560,7 +560,7 @@ derived:
     have: false
     in_scope: true
     eventtype: mitre_dc0002_user_account_authentication__kubernetes_audit
-    search: index=k8s sourcetype=kube:apiserver-audit (responseStatus.code=401 OR responseStatus.code=403)
+    search: index=k8s sourcetype="kube:apiserver-audit" (responseStatus.code=401 OR responseStatus.code=403)
     constraint_origin: defaults
     broad_refs: 4
     sources:

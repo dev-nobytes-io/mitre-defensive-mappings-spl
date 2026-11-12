@@ -78,7 +78,7 @@ derived:
     in_scope: true
     eventtype: mitre_dc0006_web_credential_creation__wineventlog
     search: >-
-      index=wineventlog sourcetype IN ("XmlWinEventLog:AD FS/Admin", "XmlWinEventLog:Security") EventCode IN (1200,
+      index=wineventlog source IN ("XmlWinEventLog:AD FS/Admin", "XmlWinEventLog:Security") EventCode IN (1200,
       1202, 4662, 4769)
     constraint_origin: defaults
     broad_refs: 2

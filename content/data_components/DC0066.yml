@@ -124,7 +124,7 @@ derived:
     in_scope: true
     eventtype: mitre_dc0066_active_directory_object_modification__wineventlog
     search: >-
-      index=wineventlog sourcetype=XmlWinEventLog:Security EventCode IN (4662, 4739, 5136, 5137, 5139, 5141, 5163)
+      index=wineventlog source="XmlWinEventLog:Security" EventCode IN (4662, 4739, 5136, 5137, 5139, 5141, 5163)
     constraint_origin: defaults
     broad_refs: 0
     sources:
@@ -134,7 +134,7 @@ derived:
     have: false
     in_scope: true
     eventtype: mitre_dc0066_active_directory_object_modification__azure_entra
-    search: index=azure sourcetype=azure:aad:audit
+    search: index=azure sourcetype="azure:aad:audit"
     constraint_origin: defaults
     broad_refs: 2
     sources:

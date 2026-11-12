@@ -62,7 +62,7 @@ derived:
     have: true
     in_scope: true
     eventtype: mitre_dc0068_active_directory_object_deletion__wineventlog
-    search: index=wineventlog sourcetype=XmlWinEventLog:Security EventCode IN (4929, 5141)
+    search: index=wineventlog source="XmlWinEventLog:Security" EventCode IN (4929, 5141)
     constraint_origin: defaults
     broad_refs: 0
     sources:

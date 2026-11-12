@@ -278,7 +278,7 @@ derived:
     in_scope: true
     eventtype: mitre_dc0029_script_execution__powershell_logging
     search: >-
-      index=wineventlog sourcetype=XmlWinEventLog:Microsoft-Windows-PowerShell/Operational EventCode IN (4103, 4104)
+      index=wineventlog source="XmlWinEventLog:Microsoft-Windows-PowerShell/Operational" EventCode IN (4103, 4104)
     constraint_origin: defaults
     broad_refs: 0
     sources:
@@ -289,7 +289,7 @@ derived:
     have: true
     in_scope: true
     eventtype: mitre_dc0029_script_execution__trellix_epo
-    search: index=epo sourcetype=mcafee:epo (threat_type="AMSI*" OR threat_name="AMSI*")
+    search: index=epo sourcetype="mcafee:epo:syslog" (threat_type="AMSI*" OR threat_name="AMSI*")
     constraint_origin: derived
     broad_refs: 0
     sources:
@@ -301,8 +301,8 @@ derived:
     in_scope: true
     eventtype: mitre_dc0029_script_execution__wineventlog
     search: >-
-      index=wineventlog sourcetype IN ("XmlWinEventLog:Application", "XmlWinEventLog:System") EventCode IN (1502,
-      1503, 4016, 5312)
+      index=wineventlog source IN ("XmlWinEventLog:Application", "XmlWinEventLog:System") EventCode IN (1502, 1503,
+      4016, 5312)
     constraint_origin: defaults
     broad_refs: 2
     sources:
@@ -314,7 +314,7 @@ derived:
     in_scope: true
     eventtype: mitre_dc0029_script_execution__auditd
     search: >-
-      index=linux sourcetype=linux:audit type IN (EXECVE, SYSCALL) (syscall IN (execve, execveat) OR SYSCALL IN
+      index=linux sourcetype="linux:audit" type IN (EXECVE, SYSCALL) (syscall IN (execve, execveat) OR SYSCALL IN
       (execve, execveat)) (exe IN ("/bin/bash", "/bin/sh", "/usr/bin/python*", "/usr/bin/perl", "/bin/dash", "/bin/zsh"))
     constraint_origin: defaults
     broad_refs: 0
@@ -326,7 +326,7 @@ derived:
     have: false
     in_scope: true
     eventtype: mitre_dc0029_script_execution__edr_telemetry
-    search: index=edr sourcetype=edr:telemetry
+    search: index=edr sourcetype="edr:telemetry"
     constraint_origin: derived
     broad_refs: 4
     sources:
@@ -337,7 +337,7 @@ derived:
     have: false
     in_scope: true
     eventtype: mitre_dc0029_script_execution__esxi_syslog
-    search: index=vmware sourcetype=vmware:esxlog:shell
+    search: index=vmware sourcetype="vmware:esxlog:shell"
     constraint_origin: defaults
     broad_refs: 0
     sources:
@@ -348,7 +348,7 @@ derived:
     have: false
     in_scope: true
     eventtype: mitre_dc0029_script_execution__etw
-    search: index=etw sourcetype=etw:json (ProviderName="Microsoft-Antimalware-Scan-Interface")
+    search: index=etw sourcetype="etw:json" (ProviderName="Microsoft-Antimalware-Scan-Interface")
     constraint_origin: derived
     broad_refs: 0
     sources:

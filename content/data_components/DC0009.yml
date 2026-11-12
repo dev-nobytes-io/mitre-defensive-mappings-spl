@@ -69,7 +69,7 @@ derived:
     have: true
     in_scope: true
     eventtype: mitre_dc0009_user_account_deletion__wineventlog
-    search: index=wineventlog sourcetype=XmlWinEventLog:Security EventCode IN (4726)
+    search: index=wineventlog source="XmlWinEventLog:Security" EventCode IN (4726)
     constraint_origin: defaults
     broad_refs: 0
     sources:
@@ -79,7 +79,7 @@ derived:
     have: false
     in_scope: true
     eventtype: mitre_dc0009_user_account_deletion__esxi_syslog
-    search: index=vmware sourcetype=vmware:esxlog:hostd
+    search: index=vmware sourcetype="vmware:esxlog:hostd"
     constraint_origin: defaults
     broad_refs: 0
     sources:

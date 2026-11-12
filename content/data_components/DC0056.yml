@@ -50,7 +50,8 @@ derived:
     in_scope: true
     eventtype: mitre_dc0056_windows_registry_key_creation__solidcore
     search: >-
-      index=epo sourcetype=mcafee:epo (threat_name=REG_KEY_CREATED OR event_description=REG_KEY_CREATED) (product_name="Solidcore*")
+      index=epo sourcetype="mcafee:epo:syslog" (threat_name=REG_KEY_CREATED OR event_description=REG_KEY_CREATED)
+      (product_name="Solidcore*")
     constraint_origin: defaults
     broad_refs: 0
     sources:
@@ -60,7 +61,7 @@ derived:
     have: true
     in_scope: true
     eventtype: mitre_dc0056_windows_registry_key_creation__sysmon
-    search: index=sysmon sourcetype=XmlWinEventLog:Microsoft-Windows-Sysmon/Operational EventCode IN (12)
+    search: index=sysmon source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode IN (12)
     constraint_origin: defaults
     broad_refs: 0
     sources:
@@ -70,7 +71,7 @@ derived:
     have: true
     in_scope: true
     eventtype: mitre_dc0056_windows_registry_key_creation__wineventlog
-    search: index=wineventlog sourcetype=XmlWinEventLog:Security EventCode IN (4657, 4663)
+    search: index=wineventlog source="XmlWinEventLog:Security" EventCode IN (4657, 4663)
     constraint_origin: defaults
     broad_refs: 0
     sources:

@@ -77,15 +77,15 @@ Component specific:
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetypes | Constraint | Origin | TA / collector |
+| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `corelight` | live | `corelight_kerberos`, `corelight_ntlm`, `corelight_rdp`, `corelight_ssh` | `(whole feed)` | defaults | Corelight App for Splunk (corelight_<log>). For TA_zeek use prefix zeek: and suffix :json. |
-| `palo_alto` | live | `pan:globalprotect`, `pan:system` | `(whole feed)` | defaults | Splunk Add-on for Palo Alto Networks (pan:*) |
-| `wineventlog` | live | `XmlWinEventLog:Security` | `EventCode IN (4624, 4625, 4648, 4778)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering |
-| `auditd` | ready (tick in stack.yml) | `linux:audit` | `type IN (USER_AUTH, USER_LOGIN, USER_START)` | defaults | Splunk Add-on for Unix and Linux (linux:audit) or auditd -> auditbeat/syslog |
-| `azure_entra` | ready (tick in stack.yml) | `azure:aad:signin` | `(whole feed)` | defaults | Splunk Add-on for Microsoft Azure (azure:aad:signin, azure:aad:audit) or Microsoft Cloud Services add-on via Event Hub |
-| `esxi_syslog` | ready (tick in stack.yml) | `vmware:esxlog:auth`, `vmware:esxlog:hostd` | `(whole feed)` | defaults | Splunk Add-on for VMware ESXi Logs (vmware:esxlog:<log>) |
-| `linux_syslog` | ready (tick in stack.yml) | `linux_secure` | `(whole feed)` | defaults | Splunk Add-on for Unix and Linux (syslog, linux_secure, linux_messages_syslog) |
+| `corelight` | live | sourcetype=`corelight_kerberos`, sourcetype=`corelight_ntlm`, sourcetype=`corelight_rdp`, sourcetype=`corelight_ssh` | `(whole feed)` | defaults | Corelight App for Splunk (corelight_<log>). For TA_zeek use prefix zeek: and suffix :json. |
+| `palo_alto` | live | sourcetype=`pan:globalprotect`, sourcetype=`pan:system` | `(whole feed)` | defaults | Splunk Add-on for Palo Alto Networks (pan:*) |
+| `wineventlog` | live | source=`XmlWinEventLog:Security` | `EventCode IN (4624, 4625, 4648, 4778)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true) |
+| `auditd` | ready (tick in stack.yml) | sourcetype=`linux:audit` | `type IN (USER_AUTH, USER_LOGIN, USER_START)` | defaults | Splunk Add-on for Unix and Linux (linux:audit) or auditd -> auditbeat/syslog |
+| `azure_entra` | ready (tick in stack.yml) | sourcetype=`azure:aad:signin` | `(whole feed)` | defaults | Splunk Add-on for Microsoft Azure (azure:aad:signin, azure:aad:audit) or Microsoft Cloud Services add-on via Event Hub |
+| `esxi_syslog` | ready (tick in stack.yml) | sourcetype=`vmware:esxlog:auth`, sourcetype=`vmware:esxlog:hostd` | `(whole feed)` | defaults | Splunk Add-on for VMware ESXi Logs (vmware:esxlog:<log>) |
+| `linux_syslog` | ready (tick in stack.yml) | sourcetype=`linux_secure` | `(whole feed)` | defaults | Splunk Add-on for Unix and Linux (syslog, linux_secure, linux_messages_syslog) |
 
 Collection prerequisites:
 
@@ -122,14 +122,14 @@ search = index=corelight sourcetype IN (corelight_kerberos, corelight_ntlm, core
 search = index=pan_logs sourcetype IN ("pan:globalprotect", "pan:system")
 
 [mitre_dc0067_logon_session_creation__wineventlog]
-search = index=wineventlog sourcetype=XmlWinEventLog:Security EventCode IN (4624, 4625, 4648, 4778)
+search = index=wineventlog source="XmlWinEventLog:Security" EventCode IN (4624, 4625, 4648, 4778)
 
 [mitre_dc0067_logon_session_creation__auditd]
-search = index=linux sourcetype=linux:audit type IN (USER_AUTH, USER_LOGIN, USER_START)
+search = index=linux sourcetype="linux:audit" type IN (USER_AUTH, USER_LOGIN, USER_START)
 disabled = 1
 
 [mitre_dc0067_logon_session_creation__azure_entra]
-search = index=azure sourcetype=azure:aad:signin
+search = index=azure sourcetype="azure:aad:signin"
 disabled = 1
 
 [mitre_dc0067_logon_session_creation__esxi_syslog]

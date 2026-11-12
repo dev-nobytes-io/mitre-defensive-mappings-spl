@@ -55,7 +55,7 @@ derived:
     in_scope: true
     eventtype: mitre_dc0045_windows_registry_key_deletion__solidcore
     search: >-
-      index=epo sourcetype=mcafee:epo (threat_name IN (REG_KEY_DELETED, REG_VALUE_DELETED) OR event_description
+      index=epo sourcetype="mcafee:epo:syslog" (threat_name IN (REG_KEY_DELETED, REG_VALUE_DELETED) OR event_description
       IN (REG_KEY_DELETED, REG_VALUE_DELETED)) (product_name="Solidcore*")
     constraint_origin: defaults
     broad_refs: 0
@@ -66,7 +66,7 @@ derived:
     have: true
     in_scope: true
     eventtype: mitre_dc0045_windows_registry_key_deletion__sysmon
-    search: index=sysmon sourcetype=XmlWinEventLog:Microsoft-Windows-Sysmon/Operational EventCode IN (12)
+    search: index=sysmon source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode IN (12)
     constraint_origin: defaults
     broad_refs: 0
     sources:
@@ -76,7 +76,7 @@ derived:
     have: true
     in_scope: true
     eventtype: mitre_dc0045_windows_registry_key_deletion__wineventlog
-    search: index=wineventlog sourcetype=XmlWinEventLog:Security EventCode IN (4657, 4660, 4663)
+    search: index=wineventlog source="XmlWinEventLog:Security" EventCode IN (4657, 4660, 4663)
     constraint_origin: defaults
     broad_refs: 0
     sources:

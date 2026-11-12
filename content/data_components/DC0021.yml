@@ -542,7 +542,7 @@ derived:
     have: true
     in_scope: true
     eventtype: mitre_dc0021_os_api_execution__sysmon
-    search: index=sysmon sourcetype=XmlWinEventLog:Microsoft-Windows-Sysmon/Operational EventCode IN (8, 10, 25)
+    search: index=sysmon source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode IN (8, 10, 25)
     constraint_origin: defaults
     broad_refs: 0
     sources:
@@ -554,7 +554,7 @@ derived:
     have: true
     in_scope: true
     eventtype: mitre_dc0021_os_api_execution__wineventlog
-    search: index=wineventlog sourcetype=XmlWinEventLog:Security EventCode IN (4656, 4663)
+    search: index=wineventlog source="XmlWinEventLog:Security" EventCode IN (4656, 4663)
     constraint_origin: defaults
     broad_refs: 4
     sources:
@@ -567,7 +567,7 @@ derived:
     in_scope: true
     eventtype: mitre_dc0021_os_api_execution__auditd
     search: >-
-      index=linux sourcetype=linux:audit type IN (SYSCALL) (syscall IN (bpf, keyctl, mmap, mprotect, process_vm_writev,
+      index=linux sourcetype="linux:audit" type IN (SYSCALL) (syscall IN (bpf, keyctl, mmap, mprotect, process_vm_writev,
       ptrace, setns, unshare) OR SYSCALL IN (bpf, keyctl, mmap, mprotect, process_vm_writev, ptrace, setns, unshare))
     constraint_origin: defaults
     broad_refs: 0
@@ -579,7 +579,7 @@ derived:
     have: false
     in_scope: true
     eventtype: mitre_dc0021_os_api_execution__edr_telemetry
-    search: index=edr sourcetype=edr:telemetry
+    search: index=edr sourcetype="edr:telemetry"
     constraint_origin: derived
     broad_refs: 9
     sources:
@@ -591,7 +591,7 @@ derived:
     have: false
     in_scope: true
     eventtype: mitre_dc0021_os_api_execution__etw
-    search: index=etw sourcetype=etw:json (ProviderName="Microsoft-Windows-Kernel-Process")
+    search: index=etw sourcetype="etw:json" (ProviderName="Microsoft-Windows-Kernel-Process")
     constraint_origin: derived
     broad_refs: 22
     sources:

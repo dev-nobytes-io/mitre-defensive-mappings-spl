@@ -10,7 +10,7 @@ flowchart LR
     SYS[Sysmon<br/>TA-microsoft-sysmon]
     CL[Corelight<br/>corelight_*]
     PAN[Palo Alto<br/>pan:*]
-    EPO[Trellix ePO<br/>mcafee:epo]
+    EPO[Trellix ePO<br/>mcafee:epo:syslog]
     SC[Solidcore via ePO]
     WS[Wireshark<br/>hunt only]
   end
@@ -26,14 +26,14 @@ flowchart LR
 
 ## Windows Event Logs (`wineventlog`, `powershell_logging`)
 
-* Sourcetype `XmlWinEventLog:<Channel>` from Splunk_TA_windows with `renderXml=true`. If you still use the classic `WinEventLog:` rendering, change `sourcetype_template` in `stack.yml` to `WinEventLog:{channel}`.
+* XML rendering (`renderXml = true`) through Splunk_TA_windows. Since add-on version 5.0 the sourcetype is `XmlWinEventLog` for every channel and the channel is in `source` (`XmlWinEventLog:Security`). Earlier versions used the channel as the sourcetype, but `source` held the same value in both, so the eventtypes match on `source` (`constraint_field: source` in `stack.yml`) and work with either. For classic rendering change the values to `WinEventLog:<channel>`.
 * ATT&CK names channels loosely (`WinEventLog:TaskScheduler`, `WinEventLog:WMI`, `WinEventLog:AppLocker`). `log_sources.yml` maps each to the real channel name (`Microsoft-Windows-TaskScheduler/Operational`, `Microsoft-Windows-WMI-Activity/Operational`, `Microsoft-Windows-AppLocker/EXE and DLL`). Several are disabled in Windows by default and all need an input stanza.
 * PowerShell is its own feed because 4103/4104 require a GPO and an input of their own; it shares the `wineventlog` index.
 * 1310 of 1386 Windows channel strings carried a parseable EventCode. The rest are prose; the per-component defaults in `config/dc_defaults.yml` take over.
 
 ## Sysmon (`sysmon`)
 
-Sourcetype `XmlWinEventLog:Microsoft-Windows-Sysmon/Operational`, index `sysmon`. The highest-yield feed in ATT&CK v20 (861 analytic references). Event IDs used per component: 1 Process Creation/Command Execution, 3 Network Connection, 5 Process Termination, 6 Driver Load, 7 Module Load, 8/10/25 Process Access/Modification/OS API, 9 Drive Access, 11/15/2 File Creation/Metadata, 12/13/14 Registry, 17/18 Named Pipe, 19/20/21 WMI, 22 DNS (Network Traffic Content), 23/26 File Deletion, 4/16 Host Status. Your Sysmon config must include the matching rule groups.
+Matched on `source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational"` (sourcetype `XmlWinEventLog` on current add-ons), index `sysmon`. The Sysmon add-on needs Splunk_TA_windows installed for XML parsing. The highest-yield feed in ATT&CK v20 (861 analytic references). Event IDs used per component: 1 Process Creation/Command Execution, 3 Network Connection, 5 Process Termination, 6 Driver Load, 7 Module Load, 8/10/25 Process Access/Modification/OS API, 9 Drive Access, 11/15/2 File Creation/Metadata, 12/13/14 Registry, 17/18 Named Pipe, 19/20/21 WMI, 22 DNS (Network Traffic Content), 23/26 File Deletion, 4/16 Host Status. Your Sysmon config must include the matching rule groups.
 
 Sysmon also stands in for some ETW providers ATT&CK names directly: `etw:Microsoft-Windows-Kernel-Process` (EID 1/5/8/10/25) and `etw:Microsoft-Windows-Kernel-ImageLoad` (EID 7). Providers like Win32k, WinINet, RPC, DotNETRuntime, Token have no Sysmon equivalent; they sit in the unticked `etw` feed.
 
@@ -54,7 +54,7 @@ Log forwarding profiles must be attached to every security rule, and system/conf
 
 ATT&CK has no Trellix-specific log source names, so these feeds are mapped as *alternative providers* for components where the product observes the same thing:
 
-* ePO/ENS threat events (`mcafee:epo`): Host Status (AV disabled, tamper, update failure), Malware Metadata/Content, Application Log Content, and the `EDR:detection` / `EDR:AMSI` / `etw:Microsoft-Antimalware-Scan-Interface` references via ENS's AMSI integration.
+* ePO/ENS threat events (`mcafee:epo:syslog`, the sourcetype of Splunk's ePO Syslog add-on): Host Status (AV disabled, tamper, update failure), Malware Metadata/Content, Application Log Content, and the `EDR:detection` / `EDR:AMSI` / `etw:Microsoft-Antimalware-Scan-Interface` references via ENS's AMSI integration.
 * Solidcore (Application and Change Control) events arrive through ePO with event names such as `FILE_CREATED`, `FILE_MODIFIED`, `FILE_DELETED`, `FILE_ATTR_MODIFIED`, `EXECUTION_DENIED`, `PROCESS_HIJACK_ATTEMPTED`, `REG_VALUE_MODIFIED`, `WRITE_DENIED`, `READ_DENIED`. They are mapped to File Creation/Modification/Deletion/Access/Metadata, Registry Key Creation/Modification/Deletion, Module Load and Process Creation (denied). **Verify the field that carries the event name in your TA version** (`threat_name` or `event_description`) and adjust the filters in `config/dc_defaults.yml`; the shipped filters check both.
 
 ## Wireshark (`wireshark`)

@@ -51,11 +51,11 @@ Component specific:
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetypes | Constraint | Origin | TA / collector |
+| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `wineventlog` | live | `XmlWinEventLog:Security`, `XmlWinEventLog:System` | `EventCode IN (1006, 2003, 2100, 2101, 2102, 2105, 2106, 6416, 10000, 10001, 20001, 20003)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering |
-| `auditd` | ready (tick in stack.yml) | `linux:audit` | `type IN (SYSCALL) (syscall IN (mount) OR SYSCALL IN (mount))` | defaults | Splunk Add-on for Unix and Linux (linux:audit) or auditd -> auditbeat/syslog |
-| `linux_syslog` | ready (tick in stack.yml) | `linux_messages_syslog`, `linux_secure`, `syslog` | `(kernel usb OR process=udisksd OR "New USB device")` | defaults | Splunk Add-on for Unix and Linux (syslog, linux_secure, linux_messages_syslog) |
+| `wineventlog` | live | source=`XmlWinEventLog:Security`, source=`XmlWinEventLog:System` | `EventCode IN (1006, 2003, 2100, 2101, 2102, 2105, 2106, 6416, 10000, 10001, 20001, 20003)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true) |
+| `auditd` | ready (tick in stack.yml) | sourcetype=`linux:audit` | `type IN (SYSCALL) (syscall IN (mount) OR SYSCALL IN (mount))` | defaults | Splunk Add-on for Unix and Linux (linux:audit) or auditd -> auditbeat/syslog |
+| `linux_syslog` | ready (tick in stack.yml) | sourcetype=`linux_messages_syslog`, sourcetype=`linux_secure`, sourcetype=`syslog` | `(kernel usb OR process=udisksd OR "New USB device")` | defaults | Splunk Add-on for Unix and Linux (syslog, linux_secure, linux_messages_syslog) |
 
 Collection prerequisites:
 
@@ -75,10 +75,10 @@ Eventtypes (literal constraints, see `dist/splunk/TA-mitre-attack-datacomponents
 
 ```ini
 [mitre_dc0042_drive_creation__wineventlog]
-search = index=wineventlog sourcetype IN ("XmlWinEventLog:Security", "XmlWinEventLog:System") EventCode IN (1006, 2003, 2100, 2101, 2102, 2105, 2106, 6416, 10000, 10001, 20001, 20003)
+search = index=wineventlog source IN ("XmlWinEventLog:Security", "XmlWinEventLog:System") EventCode IN (1006, 2003, 2100, 2101, 2102, 2105, 2106, 6416, 10000, 10001, 20001, 20003)
 
 [mitre_dc0042_drive_creation__auditd]
-search = index=linux sourcetype=linux:audit type IN (SYSCALL) (syscall IN (mount) OR SYSCALL IN (mount))
+search = index=linux sourcetype="linux:audit" type IN (SYSCALL) (syscall IN (mount) OR SYSCALL IN (mount))
 disabled = 1
 
 [mitre_dc0042_drive_creation__linux_syslog]

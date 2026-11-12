@@ -76,19 +76,19 @@ Component specific:
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetypes | Constraint | Origin | TA / collector |
+| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `solidcore` | live | `mcafee:epo` | `(threat_name=EXECUTION_DENIED OR event_description=EXECUTION_DENIED) (product_name="Solidcore*")` | defaults | Arrives through the ePO TA; Solidcore events carry event names such as FILE_CREATED, FILE_MODIFIED, FILE_DELETED, EXECUTION_DENIED, REG_VALUE_MODIFIED, PROCESS_HIJACK_ATTEMPTED. Verify field names (threat_name / event_description) in your data. |
-| `sysmon` | live | `XmlWinEventLog:Microsoft-Windows-Sysmon/Operational` | `EventCode IN (1)` | defaults | Splunk Add-on for Sysmon (TA-microsoft-sysmon) |
-| `wineventlog` | live | `XmlWinEventLog:Security` | `EventCode IN (4688)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering |
-| `auditd` | ready (tick in stack.yml) | `linux:audit` | `type IN (EXECVE, SYSCALL) (syscall IN (execve, execveat) OR SYSCALL IN (execve, execveat))` | defaults | Splunk Add-on for Unix and Linux (linux:audit) or auditd -> auditbeat/syslog |
-| `container_runtime` | ready (tick in stack.yml) | `containerd:events`, `docker:daemon`, `docker:events` | `(status IN (create, start, exec_create, exec_start))` | defaults | docker events scripted input or OpenTelemetry (docker:events, containerd) |
-| `ebpf` | ready (tick in stack.yml) | `falco` | `(whole feed)` | derived | Vendor specific (falco JSON, tetragon) |
-| `esxi_syslog` | ready (tick in stack.yml) | `vmware:esxlog:shell` | `(whole feed)` | defaults | Splunk Add-on for VMware ESXi Logs (vmware:esxlog:<log>) |
-| `etw` | ready (tick in stack.yml) | `etw:json` | `(ProviderName="Microsoft-Windows-Kernel-Process")` | derived | Requires a user-mode ETW consumer (SilkETW/Sealighter, Splunk Stream for NDIS, or an EDR that exposes the provider). No standard Splunk TA. |
-| `kubernetes_audit` | ready (tick in stack.yml) | `kube:apiserver-audit` | `(objectRef.subresource=exec OR (verb=create objectRef.resource=pods))` | defaults | Splunk OpenTelemetry Collector for Kubernetes / Splunk Connect for Kubernetes |
-| `linux_osquery` | ready (tick in stack.yml) | `osquery:results` | `(name=process_events OR name=processes)` | defaults | osquery TA |
-| `sysmon_linux` | ready (tick in stack.yml) | `sysmon:linux` | `EventCode IN (1)` | defaults | Splunk Add-on for Sysmon for Linux |
+| `solidcore` | live | sourcetype=`mcafee:epo:syslog` | `(threat_name=EXECUTION_DENIED OR event_description=EXECUTION_DENIED) (product_name="Solidcore*")` | defaults | Arrives through the ePO TA; Solidcore events carry event names such as FILE_CREATED, FILE_MODIFIED, FILE_DELETED, EXECUTION_DENIED, REG_VALUE_MODIFIED, PROCESS_HIJACK_ATTEMPTED. Verify field names (threat_name / event_description) in your data. |
+| `sysmon` | live | source=`XmlWinEventLog:Microsoft-Windows-Sysmon/Operational` | `EventCode IN (1)` | defaults | Splunk Add-on for Sysmon (needs Splunk_TA_windows for XML parsing) |
+| `wineventlog` | live | source=`XmlWinEventLog:Security` | `EventCode IN (4688)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true) |
+| `auditd` | ready (tick in stack.yml) | sourcetype=`linux:audit` | `type IN (EXECVE, SYSCALL) (syscall IN (execve, execveat) OR SYSCALL IN (execve, execveat))` | defaults | Splunk Add-on for Unix and Linux (linux:audit) or auditd -> auditbeat/syslog |
+| `container_runtime` | ready (tick in stack.yml) | sourcetype=`containerd:events`, sourcetype=`docker:daemon`, sourcetype=`docker:events` | `(status IN (create, start, exec_create, exec_start))` | defaults | docker events scripted input or OpenTelemetry (docker:events, containerd) |
+| `ebpf` | ready (tick in stack.yml) | sourcetype=`falco` | `(whole feed)` | derived | Vendor specific (falco JSON, tetragon) |
+| `esxi_syslog` | ready (tick in stack.yml) | sourcetype=`vmware:esxlog:shell` | `(whole feed)` | defaults | Splunk Add-on for VMware ESXi Logs (vmware:esxlog:<log>) |
+| `etw` | ready (tick in stack.yml) | sourcetype=`etw:json` | `(ProviderName="Microsoft-Windows-Kernel-Process")` | derived | Requires a user-mode ETW consumer (SilkETW/Sealighter, Splunk Stream for NDIS, or an EDR that exposes the provider). No standard Splunk TA. |
+| `kubernetes_audit` | ready (tick in stack.yml) | sourcetype=`kube:apiserver-audit` | `(objectRef.subresource=exec OR (verb=create objectRef.resource=pods))` | defaults | Splunk OpenTelemetry Collector for Kubernetes / Splunk Connect for Kubernetes |
+| `linux_osquery` | ready (tick in stack.yml) | sourcetype=`osquery:results` | `(name=process_events OR name=processes)` | defaults | osquery TA |
+| `sysmon_linux` | ready (tick in stack.yml) | sourcetype=`sysmon:linux` | `EventCode IN (1)` | defaults | Splunk Add-on for Sysmon for Linux |
 
 Collection prerequisites:
 
@@ -114,16 +114,16 @@ Eventtypes (literal constraints, see `dist/splunk/TA-mitre-attack-datacomponents
 
 ```ini
 [mitre_dc0032_process_creation__solidcore]
-search = index=epo sourcetype=mcafee:epo (threat_name=EXECUTION_DENIED OR event_description=EXECUTION_DENIED) (product_name="Solidcore*")
+search = index=epo sourcetype="mcafee:epo:syslog" (threat_name=EXECUTION_DENIED OR event_description=EXECUTION_DENIED) (product_name="Solidcore*")
 
 [mitre_dc0032_process_creation__sysmon]
-search = index=sysmon sourcetype=XmlWinEventLog:Microsoft-Windows-Sysmon/Operational EventCode IN (1)
+search = index=sysmon source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode IN (1)
 
 [mitre_dc0032_process_creation__wineventlog]
-search = index=wineventlog sourcetype=XmlWinEventLog:Security EventCode IN (4688)
+search = index=wineventlog source="XmlWinEventLog:Security" EventCode IN (4688)
 
 [mitre_dc0032_process_creation__auditd]
-search = index=linux sourcetype=linux:audit type IN (EXECVE, SYSCALL) (syscall IN (execve, execveat) OR SYSCALL IN (execve, execveat))
+search = index=linux sourcetype="linux:audit" type IN (EXECVE, SYSCALL) (syscall IN (execve, execveat) OR SYSCALL IN (execve, execveat))
 disabled = 1
 
 [mitre_dc0032_process_creation__container_runtime]
@@ -135,23 +135,23 @@ search = index=linux sourcetype=falco
 disabled = 1
 
 [mitre_dc0032_process_creation__esxi_syslog]
-search = index=vmware sourcetype=vmware:esxlog:shell
+search = index=vmware sourcetype="vmware:esxlog:shell"
 disabled = 1
 
 [mitre_dc0032_process_creation__etw]
-search = index=etw sourcetype=etw:json (ProviderName="Microsoft-Windows-Kernel-Process")
+search = index=etw sourcetype="etw:json" (ProviderName="Microsoft-Windows-Kernel-Process")
 disabled = 1
 
 [mitre_dc0032_process_creation__kubernetes_audit]
-search = index=k8s sourcetype=kube:apiserver-audit (objectRef.subresource=exec OR (verb=create objectRef.resource=pods))
+search = index=k8s sourcetype="kube:apiserver-audit" (objectRef.subresource=exec OR (verb=create objectRef.resource=pods))
 disabled = 1
 
 [mitre_dc0032_process_creation__linux_osquery]
-search = index=osquery sourcetype=osquery:results (name=process_events OR name=processes)
+search = index=osquery sourcetype="osquery:results" (name=process_events OR name=processes)
 disabled = 1
 
 [mitre_dc0032_process_creation__sysmon_linux]
-search = index=linux sourcetype=sysmon:linux EventCode IN (1)
+search = index=linux sourcetype="sysmon:linux" EventCode IN (1)
 disabled = 1
 
 [mitre_dc0032_process_creation]

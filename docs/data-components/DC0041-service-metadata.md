@@ -67,14 +67,14 @@ flowchart LR
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetypes | Constraint | Origin | TA / collector |
+| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `palo_alto` | live | `pan:config`, `pan:system` | `(whole feed)` | defaults | Splunk Add-on for Palo Alto Networks (pan:*) |
-| `sysmon` | live | `XmlWinEventLog:Microsoft-Windows-Sysmon/Operational` | `EventCode IN (4)` | defaults | Splunk Add-on for Sysmon (TA-microsoft-sysmon) |
-| `wineventlog` | live | `XmlWinEventLog:System` | `EventCode IN (7034, 7035, 7036, 7040)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering |
-| `auditd` | ready (tick in stack.yml) | `linux:audit` | `type IN (CONFIG_CHANGE)` | derived | Splunk Add-on for Unix and Linux (linux:audit) or auditd -> auditbeat/syslog |
-| `esxi_syslog` | ready (tick in stack.yml) | `vmware:esxlog:hostd` | `(whole feed)` | derived | Splunk Add-on for VMware ESXi Logs (vmware:esxlog:<log>) |
-| `linux_osquery` | ready (tick in stack.yml) | `osquery:results` | `(name=systemd_units OR name=startup_items)` | defaults | osquery TA |
+| `palo_alto` | live | sourcetype=`pan:config`, sourcetype=`pan:system` | `(whole feed)` | defaults | Splunk Add-on for Palo Alto Networks (pan:*) |
+| `sysmon` | live | source=`XmlWinEventLog:Microsoft-Windows-Sysmon/Operational` | `EventCode IN (4)` | defaults | Splunk Add-on for Sysmon (needs Splunk_TA_windows for XML parsing) |
+| `wineventlog` | live | source=`XmlWinEventLog:System` | `EventCode IN (7034, 7035, 7036, 7040)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true) |
+| `auditd` | ready (tick in stack.yml) | sourcetype=`linux:audit` | `type IN (CONFIG_CHANGE)` | derived | Splunk Add-on for Unix and Linux (linux:audit) or auditd -> auditbeat/syslog |
+| `esxi_syslog` | ready (tick in stack.yml) | sourcetype=`vmware:esxlog:hostd` | `(whole feed)` | derived | Splunk Add-on for VMware ESXi Logs (vmware:esxlog:<log>) |
+| `linux_osquery` | ready (tick in stack.yml) | sourcetype=`osquery:results` | `(name=systemd_units OR name=startup_items)` | defaults | osquery TA |
 
 Collection prerequisites:
 
@@ -104,21 +104,21 @@ Eventtypes (literal constraints, see `dist/splunk/TA-mitre-attack-datacomponents
 search = index=pan_logs sourcetype IN ("pan:config", "pan:system")
 
 [mitre_dc0041_service_metadata__sysmon]
-search = index=sysmon sourcetype=XmlWinEventLog:Microsoft-Windows-Sysmon/Operational EventCode IN (4)
+search = index=sysmon source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode IN (4)
 
 [mitre_dc0041_service_metadata__wineventlog]
-search = index=wineventlog sourcetype=XmlWinEventLog:System EventCode IN (7034, 7035, 7036, 7040)
+search = index=wineventlog source="XmlWinEventLog:System" EventCode IN (7034, 7035, 7036, 7040)
 
 [mitre_dc0041_service_metadata__auditd]
-search = index=linux sourcetype=linux:audit type IN (CONFIG_CHANGE)
+search = index=linux sourcetype="linux:audit" type IN (CONFIG_CHANGE)
 disabled = 1
 
 [mitre_dc0041_service_metadata__esxi_syslog]
-search = index=vmware sourcetype=vmware:esxlog:hostd
+search = index=vmware sourcetype="vmware:esxlog:hostd"
 disabled = 1
 
 [mitre_dc0041_service_metadata__linux_osquery]
-search = index=osquery sourcetype=osquery:results (name=systemd_units OR name=startup_items)
+search = index=osquery sourcetype="osquery:results" (name=systemd_units OR name=startup_items)
 disabled = 1
 
 [mitre_dc0041_service_metadata]

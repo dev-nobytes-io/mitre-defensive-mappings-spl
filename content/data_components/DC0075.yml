@@ -66,7 +66,7 @@ derived:
     have: false
     in_scope: true
     eventtype: mitre_dc0075_instance_enumeration__azure_activity
-    search: index=azure sourcetype=mscs:azure:audit
+    search: index=azure sourcetype="mscs:azure:audit"
     constraint_origin: derived
     broad_refs: 2
     sources:

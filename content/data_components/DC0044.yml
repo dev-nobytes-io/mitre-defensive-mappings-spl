@@ -44,7 +44,7 @@ derived:
     have: true
     in_scope: true
     eventtype: mitre_dc0044_firewall_enumeration__wineventlog
-    search: index=wineventlog sourcetype=XmlWinEventLog:Security EventCode IN (4688)
+    search: index=wineventlog source="XmlWinEventLog:Security" EventCode IN (4688)
     constraint_origin: defaults
     broad_refs: 0
     sources:

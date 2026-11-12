@@ -88,7 +88,7 @@ derived:
     in_scope: true
     eventtype: mitre_dc0043_firewall_disable__wineventlog
     search: >-
-      index=wineventlog sourcetype IN ("XmlWinEventLog:Microsoft-Windows-Windows Firewall With Advanced Security/Firewall",
+      index=wineventlog source IN ("XmlWinEventLog:Microsoft-Windows-Windows Firewall With Advanced Security/Firewall",
       "XmlWinEventLog:Security") EventCode IN (2003, 2008, 4950, 5025)
     constraint_origin: defaults
     broad_refs: 0
@@ -99,7 +99,7 @@ derived:
     have: false
     in_scope: true
     eventtype: mitre_dc0043_firewall_disable__esxi_syslog
-    search: index=vmware sourcetype=vmware:esxlog:hostd (firewall)
+    search: index=vmware sourcetype="vmware:esxlog:hostd" (firewall)
     constraint_origin: defaults
     broad_refs: 0
     sources:

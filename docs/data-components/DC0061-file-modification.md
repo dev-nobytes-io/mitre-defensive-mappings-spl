@@ -74,17 +74,17 @@ Component specific:
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetypes | Constraint | Origin | TA / collector |
+| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `palo_alto` | live | `pan:config` | `(whole feed)` | defaults | Splunk Add-on for Palo Alto Networks (pan:*) |
-| `solidcore` | live | `mcafee:epo` | `(threat_name IN (FILE_MODIFIED, FILE_ATTR_MODIFIED, FILE_RENAMED, WRITE_DENIED, OWNERSHIP_DENIED) OR event_description IN (FILE_MODIFIED, FILE_ATTR_MODIFIED, FILE_RENAMED, WRITE_DENIED, OWNERSHIP_DENIED)) (product_name="Solidcore*")` | defaults | Arrives through the ePO TA; Solidcore events carry event names such as FILE_CREATED, FILE_MODIFIED, FILE_DELETED, EXECUTION_DENIED, REG_VALUE_MODIFIED, PROCESS_HIJACK_ATTEMPTED. Verify field names (threat_name / event_description) in your data. |
-| `sysmon` | live | `XmlWinEventLog:Microsoft-Windows-Sysmon/Operational` | `EventCode IN (2, 11, 15)` | defaults | Splunk Add-on for Sysmon (TA-microsoft-sysmon) |
-| `wineventlog` | live | `XmlWinEventLog:Security` | `EventCode IN (4663, 4670)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering |
-| `auditd` | ready (tick in stack.yml) | `linux:audit` | `type IN (PATH, SYSCALL) (syscall IN (chmod, chown, fchmod, fchmodat, fchown, ftruncate, pwrite, rename, renameat, setxattr, truncate, write) OR SYSCALL IN (chmod, chown, fchmod, fchmodat, fchown, ftruncate, pwrite, rename, renameat, setxattr, truncate, write))` | defaults | Splunk Add-on for Unix and Linux (linux:audit) or auditd -> auditbeat/syslog |
-| `ebpf` | ready (tick in stack.yml) | `falco` | `(whole feed)` | derived | Vendor specific (falco JSON, tetragon) |
-| `esxi_syslog` | ready (tick in stack.yml) | `vmware:esxlog:hostd`, `vmware:esxlog:shell`, `vmware:esxlog:vmkernel` | `(whole feed)` | defaults | Splunk Add-on for VMware ESXi Logs (vmware:esxlog:<log>) |
-| `linux_syslog` | ready (tick in stack.yml) | `linux_messages_syslog`, `linux_secure`, `syslog` | `(process=fwupd)` | derived | Splunk Add-on for Unix and Linux (syslog, linux_secure, linux_messages_syslog) |
-| `netdev_syslog` | ready (tick in stack.yml) | `cisco:asa`, `cisco:ios`, `syslog` | `(whole feed)` | derived | Cisco Networks Add-on (cisco:ios, cisco:asa), Juniper/Arista TAs, or generic syslog |
+| `palo_alto` | live | sourcetype=`pan:config` | `(whole feed)` | defaults | Splunk Add-on for Palo Alto Networks (pan:*) |
+| `solidcore` | live | sourcetype=`mcafee:epo:syslog` | `(threat_name IN (FILE_MODIFIED, FILE_ATTR_MODIFIED, FILE_RENAMED, WRITE_DENIED, OWNERSHIP_DENIED) OR event_description IN (FILE_MODIFIED, FILE_ATTR_MODIFIED, FILE_RENAMED, WRITE_DENIED, OWNERSHIP_DENIED)) (product_name="Solidcore*")` | defaults | Arrives through the ePO TA; Solidcore events carry event names such as FILE_CREATED, FILE_MODIFIED, FILE_DELETED, EXECUTION_DENIED, REG_VALUE_MODIFIED, PROCESS_HIJACK_ATTEMPTED. Verify field names (threat_name / event_description) in your data. |
+| `sysmon` | live | source=`XmlWinEventLog:Microsoft-Windows-Sysmon/Operational` | `EventCode IN (2, 11, 15)` | defaults | Splunk Add-on for Sysmon (needs Splunk_TA_windows for XML parsing) |
+| `wineventlog` | live | source=`XmlWinEventLog:Security` | `EventCode IN (4663, 4670)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true) |
+| `auditd` | ready (tick in stack.yml) | sourcetype=`linux:audit` | `type IN (PATH, SYSCALL) (syscall IN (chmod, chown, fchmod, fchmodat, fchown, ftruncate, pwrite, rename, renameat, setxattr, truncate, write) OR SYSCALL IN (chmod, chown, fchmod, fchmodat, fchown, ftruncate, pwrite, rename, renameat, setxattr, truncate, write))` | defaults | Splunk Add-on for Unix and Linux (linux:audit) or auditd -> auditbeat/syslog |
+| `ebpf` | ready (tick in stack.yml) | sourcetype=`falco` | `(whole feed)` | derived | Vendor specific (falco JSON, tetragon) |
+| `esxi_syslog` | ready (tick in stack.yml) | sourcetype=`vmware:esxlog:hostd`, sourcetype=`vmware:esxlog:shell`, sourcetype=`vmware:esxlog:vmkernel` | `(whole feed)` | defaults | Splunk Add-on for VMware ESXi Logs (vmware:esxlog:<log>) |
+| `linux_syslog` | ready (tick in stack.yml) | sourcetype=`linux_messages_syslog`, sourcetype=`linux_secure`, sourcetype=`syslog` | `(process=fwupd)` | derived | Splunk Add-on for Unix and Linux (syslog, linux_secure, linux_messages_syslog) |
+| `netdev_syslog` | ready (tick in stack.yml) | sourcetype=`cisco:asa`, sourcetype=`cisco:ios`, sourcetype=`syslog` | `(whole feed)` | derived | Cisco Networks Add-on (cisco:ios, cisco:asa), Juniper/Arista TAs, or generic syslog |
 
 Collection prerequisites:
 
@@ -113,19 +113,19 @@ Eventtypes (literal constraints, see `dist/splunk/TA-mitre-attack-datacomponents
 
 ```ini
 [mitre_dc0061_file_modification__palo_alto]
-search = index=pan_logs sourcetype=pan:config
+search = index=pan_logs sourcetype="pan:config"
 
 [mitre_dc0061_file_modification__solidcore]
-search = index=epo sourcetype=mcafee:epo (threat_name IN (FILE_MODIFIED, FILE_ATTR_MODIFIED, FILE_RENAMED, WRITE_DENIED, OWNERSHIP_DENIED) OR event_description IN (FILE_MODIFIED, FILE_ATTR_MODIFIED, FILE_RENAMED, WRITE_DENIED, OWNERSHIP_DENIED)) (product_name="Solidcore*")
+search = index=epo sourcetype="mcafee:epo:syslog" (threat_name IN (FILE_MODIFIED, FILE_ATTR_MODIFIED, FILE_RENAMED, WRITE_DENIED, OWNERSHIP_DENIED) OR event_description IN (FILE_MODIFIED, FILE_ATTR_MODIFIED, FILE_RENAMED, WRITE_DENIED, OWNERSHIP_DENIED)) (product_name="Solidcore*")
 
 [mitre_dc0061_file_modification__sysmon]
-search = index=sysmon sourcetype=XmlWinEventLog:Microsoft-Windows-Sysmon/Operational EventCode IN (2, 11, 15)
+search = index=sysmon source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode IN (2, 11, 15)
 
 [mitre_dc0061_file_modification__wineventlog]
-search = index=wineventlog sourcetype=XmlWinEventLog:Security EventCode IN (4663, 4670)
+search = index=wineventlog source="XmlWinEventLog:Security" EventCode IN (4663, 4670)
 
 [mitre_dc0061_file_modification__auditd]
-search = index=linux sourcetype=linux:audit type IN (PATH, SYSCALL) (syscall IN (chmod, chown, fchmod, fchmodat, fchown, ftruncate, pwrite, rename, renameat, setxattr, truncate, write) OR SYSCALL IN (chmod, chown, fchmod, fchmodat, fchown, ftruncate, pwrite, rename, renameat, setxattr, truncate, write))
+search = index=linux sourcetype="linux:audit" type IN (PATH, SYSCALL) (syscall IN (chmod, chown, fchmod, fchmodat, fchown, ftruncate, pwrite, rename, renameat, setxattr, truncate, write) OR SYSCALL IN (chmod, chown, fchmod, fchmodat, fchown, ftruncate, pwrite, rename, renameat, setxattr, truncate, write))
 disabled = 1
 
 [mitre_dc0061_file_modification__ebpf]

@@ -73,14 +73,14 @@ Component specific:
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetypes | Constraint | Origin | TA / collector |
+| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `solidcore` | live | `mcafee:epo` | `(threat_name=PROCESS_HIJACK_ATTEMPTED OR event_description=PROCESS_HIJACK_ATTEMPTED) (product_name="Solidcore*")` | defaults | Arrives through the ePO TA; Solidcore events carry event names such as FILE_CREATED, FILE_MODIFIED, FILE_DELETED, EXECUTION_DENIED, REG_VALUE_MODIFIED, PROCESS_HIJACK_ATTEMPTED. Verify field names (threat_name / event_description) in your data. |
-| `sysmon` | live | `XmlWinEventLog:Microsoft-Windows-Sysmon/Operational` | `EventCode IN (7)` | defaults | Splunk Add-on for Sysmon (TA-microsoft-sysmon) |
-| `wineventlog` | live | `XmlWinEventLog:Application`, `XmlWinEventLog:Microsoft-Windows-CodeIntegrity/Operational`, `XmlWinEventLog:Security` | `EventCode IN (3033, 3063, 3077, 8001)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering |
-| `auditd` | ready (tick in stack.yml) | `linux:audit` | `type IN (PATH, SYSCALL) (syscall IN (mmap, open, openat) OR SYSCALL IN (mmap, open, openat)) (name="*.so" OR name="*.so.*")` | defaults | Splunk Add-on for Unix and Linux (linux:audit) or auditd -> auditbeat/syslog |
-| `etw` | ready (tick in stack.yml) | `etw:json` | `(ProviderName="Microsoft-Windows-Kernel-ImageLoad")` | derived | Requires a user-mode ETW consumer (SilkETW/Sealighter, Splunk Stream for NDIS, or an EDR that exposes the provider). No standard Splunk TA. |
-| `sysmon_linux` | ready (tick in stack.yml) | `sysmon:linux` | `EventCode IN (7)` | defaults | Splunk Add-on for Sysmon for Linux |
+| `solidcore` | live | sourcetype=`mcafee:epo:syslog` | `(threat_name=PROCESS_HIJACK_ATTEMPTED OR event_description=PROCESS_HIJACK_ATTEMPTED) (product_name="Solidcore*")` | defaults | Arrives through the ePO TA; Solidcore events carry event names such as FILE_CREATED, FILE_MODIFIED, FILE_DELETED, EXECUTION_DENIED, REG_VALUE_MODIFIED, PROCESS_HIJACK_ATTEMPTED. Verify field names (threat_name / event_description) in your data. |
+| `sysmon` | live | source=`XmlWinEventLog:Microsoft-Windows-Sysmon/Operational` | `EventCode IN (7)` | defaults | Splunk Add-on for Sysmon (needs Splunk_TA_windows for XML parsing) |
+| `wineventlog` | live | source=`XmlWinEventLog:Application`, source=`XmlWinEventLog:Microsoft-Windows-CodeIntegrity/Operational`, source=`XmlWinEventLog:Security` | `EventCode IN (3033, 3063, 3077, 8001)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true) |
+| `auditd` | ready (tick in stack.yml) | sourcetype=`linux:audit` | `type IN (PATH, SYSCALL) (syscall IN (mmap, open, openat) OR SYSCALL IN (mmap, open, openat)) (name="*.so" OR name="*.so.*")` | defaults | Splunk Add-on for Unix and Linux (linux:audit) or auditd -> auditbeat/syslog |
+| `etw` | ready (tick in stack.yml) | sourcetype=`etw:json` | `(ProviderName="Microsoft-Windows-Kernel-ImageLoad")` | derived | Requires a user-mode ETW consumer (SilkETW/Sealighter, Splunk Stream for NDIS, or an EDR that exposes the provider). No standard Splunk TA. |
+| `sysmon_linux` | ready (tick in stack.yml) | sourcetype=`sysmon:linux` | `EventCode IN (7)` | defaults | Splunk Add-on for Sysmon for Linux |
 
 Collection prerequisites:
 
@@ -103,24 +103,24 @@ Eventtypes (literal constraints, see `dist/splunk/TA-mitre-attack-datacomponents
 
 ```ini
 [mitre_dc0016_module_load__solidcore]
-search = index=epo sourcetype=mcafee:epo (threat_name=PROCESS_HIJACK_ATTEMPTED OR event_description=PROCESS_HIJACK_ATTEMPTED) (product_name="Solidcore*")
+search = index=epo sourcetype="mcafee:epo:syslog" (threat_name=PROCESS_HIJACK_ATTEMPTED OR event_description=PROCESS_HIJACK_ATTEMPTED) (product_name="Solidcore*")
 
 [mitre_dc0016_module_load__sysmon]
-search = index=sysmon sourcetype=XmlWinEventLog:Microsoft-Windows-Sysmon/Operational EventCode IN (7)
+search = index=sysmon source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode IN (7)
 
 [mitre_dc0016_module_load__wineventlog]
-search = index=wineventlog sourcetype IN ("XmlWinEventLog:Application", "XmlWinEventLog:Microsoft-Windows-CodeIntegrity/Operational", "XmlWinEventLog:Security") EventCode IN (3033, 3063, 3077, 8001)
+search = index=wineventlog source IN ("XmlWinEventLog:Application", "XmlWinEventLog:Microsoft-Windows-CodeIntegrity/Operational", "XmlWinEventLog:Security") EventCode IN (3033, 3063, 3077, 8001)
 
 [mitre_dc0016_module_load__auditd]
-search = index=linux sourcetype=linux:audit type IN (PATH, SYSCALL) (syscall IN (mmap, open, openat) OR SYSCALL IN (mmap, open, openat)) (name="*.so" OR name="*.so.*")
+search = index=linux sourcetype="linux:audit" type IN (PATH, SYSCALL) (syscall IN (mmap, open, openat) OR SYSCALL IN (mmap, open, openat)) (name="*.so" OR name="*.so.*")
 disabled = 1
 
 [mitre_dc0016_module_load__etw]
-search = index=etw sourcetype=etw:json (ProviderName="Microsoft-Windows-Kernel-ImageLoad")
+search = index=etw sourcetype="etw:json" (ProviderName="Microsoft-Windows-Kernel-ImageLoad")
 disabled = 1
 
 [mitre_dc0016_module_load__sysmon_linux]
-search = index=linux sourcetype=sysmon:linux EventCode IN (7)
+search = index=linux sourcetype="sysmon:linux" EventCode IN (7)
 disabled = 1
 
 [mitre_dc0016_module_load]

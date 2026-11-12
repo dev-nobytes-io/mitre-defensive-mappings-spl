@@ -70,7 +70,7 @@ derived:
     have: true
     in_scope: true
     eventtype: mitre_dc0071_active_directory_object_access__wineventlog
-    search: index=wineventlog sourcetype=XmlWinEventLog:Security EventCode IN (4661, 4662)
+    search: index=wineventlog source="XmlWinEventLog:Security" EventCode IN (4661, 4662)
     constraint_origin: defaults
     broad_refs: 0
     sources:

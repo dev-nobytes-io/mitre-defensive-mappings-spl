@@ -8,7 +8,10 @@ def test_process_creation_constraints(model):
     assert feeds["wineventlog"].event_codes == [4688]
     assert feeds["auditd"].syscalls == ["execve", "execveat"]
     assert "azure_resource" not in feeds  # excluded by dc_defaults
-    assert eventtype_search(feeds["sysmon"]).startswith("index=sysmon sourcetype=XmlWinEventLog:Microsoft-Windows-Sysmon/Operational")
+    # Windows event log feeds match on source (Splunk_TA_windows 5.0+ uses sourcetype=XmlWinEventLog)
+    assert eventtype_search(feeds["sysmon"]).startswith('index=sysmon source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational"')
+    assert eventtype_search(feeds["wineventlog"]).startswith('index=wineventlog source="XmlWinEventLog:Security"')
+    assert "sourcetype=" not in eventtype_search(feeds["sysmon"])
 
 
 def test_out_of_scope_feeds_not_rendered(model):

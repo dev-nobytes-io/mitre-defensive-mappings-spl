@@ -79,17 +79,17 @@ Component specific:
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetypes | Constraint | Origin | TA / collector |
+| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `palo_alto` | live | `pan:system` | `(whole feed)` | defaults | Splunk Add-on for Palo Alto Networks (pan:*) |
-| `sysmon` | live | `XmlWinEventLog:Microsoft-Windows-Sysmon/Operational` | `EventCode IN (4, 16, 255)` | defaults | Splunk Add-on for Sysmon (TA-microsoft-sysmon) |
-| `trellix_epo` | live | `mcafee:epo` | `(whole feed)` | defaults | Splunk Add-on for McAfee ePO (mcafee:epo). Verify the sourcetype against your installed TA version. |
-| `wineventlog` | live | `XmlWinEventLog:Microsoft-Windows-Windows Defender/Operational`, `XmlWinEventLog:Security`, `XmlWinEventLog:System` | `EventCode IN (104, 1001, 1074, 1100, 1102, 5001, 5004, 5007, 5010, 5012, 6005, 6006, 6008, 7036, 7045)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering |
-| `auditd` | ready (tick in stack.yml) | `linux:audit` | `type IN (CONFIG_CHANGE, DAEMON_ABORT, DAEMON_END, DAEMON_START, SERVICE_START, SERVICE_STOP)` | defaults | Splunk Add-on for Unix and Linux (linux:audit) or auditd -> auditbeat/syslog |
-| `esxi_syslog` | ready (tick in stack.yml) | `vmware:esxlog:hostd`, `vmware:esxlog:vobd` | `(whole feed)` | defaults | Splunk Add-on for VMware ESXi Logs (vmware:esxlog:<log>) |
-| `kubernetes_audit` | ready (tick in stack.yml) | `kube:objects:events` | `(whole feed)` | defaults | Splunk OpenTelemetry Collector for Kubernetes / Splunk Connect for Kubernetes |
-| `linux_syslog` | ready (tick in stack.yml) | `linux_messages_syslog`, `linux_secure`, `syslog` | `(process=auditd OR process=systemd OR process=kernel OR rsyslogd)` | defaults | Splunk Add-on for Unix and Linux (syslog, linux_secure, linux_messages_syslog) |
-| `windows_perfmon` | ready (tick in stack.yml) | `Perfmon:*` | `(whole feed)` | derived | Splunk_TA_windows perfmon inputs |
+| `palo_alto` | live | sourcetype=`pan:system` | `(whole feed)` | defaults | Splunk Add-on for Palo Alto Networks (pan:*) |
+| `sysmon` | live | source=`XmlWinEventLog:Microsoft-Windows-Sysmon/Operational` | `EventCode IN (4, 16, 255)` | defaults | Splunk Add-on for Sysmon (needs Splunk_TA_windows for XML parsing) |
+| `trellix_epo` | live | sourcetype=`mcafee:epo:syslog` | `(whole feed)` | defaults | Splunk Add-on for McAfee ePO Syslog (sourcetype mcafee:epo:syslog, documented by Splunk). If ePO data arrives another way (DB Connect pull, a community Trellix REST add-on such as trellix_epo:threat_events), change the sourcetype here. |
+| `wineventlog` | live | source=`XmlWinEventLog:Microsoft-Windows-Windows Defender/Operational`, source=`XmlWinEventLog:Security`, source=`XmlWinEventLog:System` | `EventCode IN (104, 1001, 1074, 1100, 1102, 5001, 5004, 5007, 5010, 5012, 6005, 6006, 6008, 7036, 7045)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true) |
+| `auditd` | ready (tick in stack.yml) | sourcetype=`linux:audit` | `type IN (CONFIG_CHANGE, DAEMON_ABORT, DAEMON_END, DAEMON_START, SERVICE_START, SERVICE_STOP)` | defaults | Splunk Add-on for Unix and Linux (linux:audit) or auditd -> auditbeat/syslog |
+| `esxi_syslog` | ready (tick in stack.yml) | sourcetype=`vmware:esxlog:hostd`, sourcetype=`vmware:esxlog:vobd` | `(whole feed)` | defaults | Splunk Add-on for VMware ESXi Logs (vmware:esxlog:<log>) |
+| `kubernetes_audit` | ready (tick in stack.yml) | sourcetype=`kube:objects:events` | `(whole feed)` | defaults | Splunk OpenTelemetry Collector for Kubernetes / Splunk Connect for Kubernetes |
+| `linux_syslog` | ready (tick in stack.yml) | sourcetype=`linux_messages_syslog`, sourcetype=`linux_secure`, sourcetype=`syslog` | `(process=auditd OR process=systemd OR process=kernel OR rsyslogd)` | defaults | Splunk Add-on for Unix and Linux (syslog, linux_secure, linux_messages_syslog) |
+| `windows_perfmon` | ready (tick in stack.yml) | sourcetype=`Perfmon:*` | `(whole feed)` | derived | Splunk_TA_windows perfmon inputs |
 
 Collection prerequisites:
 
@@ -120,19 +120,19 @@ Eventtypes (literal constraints, see `dist/splunk/TA-mitre-attack-datacomponents
 
 ```ini
 [mitre_dc0018_host_status__palo_alto]
-search = index=pan_logs sourcetype=pan:system
+search = index=pan_logs sourcetype="pan:system"
 
 [mitre_dc0018_host_status__sysmon]
-search = index=sysmon sourcetype=XmlWinEventLog:Microsoft-Windows-Sysmon/Operational EventCode IN (4, 16, 255)
+search = index=sysmon source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode IN (4, 16, 255)
 
 [mitre_dc0018_host_status__trellix_epo]
-search = index=epo sourcetype=mcafee:epo
+search = index=epo sourcetype="mcafee:epo:syslog"
 
 [mitre_dc0018_host_status__wineventlog]
-search = index=wineventlog sourcetype IN ("XmlWinEventLog:Microsoft-Windows-Windows Defender/Operational", "XmlWinEventLog:Security", "XmlWinEventLog:System") EventCode IN (104, 1001, 1074, 1100, 1102, 5001, 5004, 5007, 5010, 5012, 6005, 6006, 6008, 7036, 7045)
+search = index=wineventlog source IN ("XmlWinEventLog:Microsoft-Windows-Windows Defender/Operational", "XmlWinEventLog:Security", "XmlWinEventLog:System") EventCode IN (104, 1001, 1074, 1100, 1102, 5001, 5004, 5007, 5010, 5012, 6005, 6006, 6008, 7036, 7045)
 
 [mitre_dc0018_host_status__auditd]
-search = index=linux sourcetype=linux:audit type IN (CONFIG_CHANGE, DAEMON_ABORT, DAEMON_END, DAEMON_START, SERVICE_START, SERVICE_STOP)
+search = index=linux sourcetype="linux:audit" type IN (CONFIG_CHANGE, DAEMON_ABORT, DAEMON_END, DAEMON_START, SERVICE_START, SERVICE_STOP)
 disabled = 1
 
 [mitre_dc0018_host_status__esxi_syslog]
@@ -140,7 +140,7 @@ search = index=vmware sourcetype IN ("vmware:esxlog:hostd", "vmware:esxlog:vobd"
 disabled = 1
 
 [mitre_dc0018_host_status__kubernetes_audit]
-search = index=k8s sourcetype=kube:objects:events
+search = index=k8s sourcetype="kube:objects:events"
 disabled = 1
 
 [mitre_dc0018_host_status__linux_syslog]
@@ -148,7 +148,7 @@ search = index=linux sourcetype IN (linux_messages_syslog, linux_secure, syslog)
 disabled = 1
 
 [mitre_dc0018_host_status__windows_perfmon]
-search = index=perfmon sourcetype=Perfmon:*
+search = index=perfmon sourcetype="Perfmon:*"
 disabled = 1
 
 [mitre_dc0018_host_status]

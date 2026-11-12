@@ -100,7 +100,7 @@ derived:
     have: true
     in_scope: true
     eventtype: mitre_dc0099_group_enumeration__wineventlog
-    search: index=wineventlog sourcetype=XmlWinEventLog:Security EventCode IN (4798, 4799)
+    search: index=wineventlog source="XmlWinEventLog:Security" EventCode IN (4798, 4799)
     constraint_origin: defaults
     broad_refs: 0
     sources:
@@ -110,7 +110,7 @@ derived:
     have: false
     in_scope: true
     eventtype: mitre_dc0099_group_enumeration__azure_entra
-    search: index=azure sourcetype=azure:aad:audit
+    search: index=azure sourcetype="azure:aad:audit"
     constraint_origin: defaults
     broad_refs: 1
     sources:

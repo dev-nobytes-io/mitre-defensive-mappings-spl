@@ -73,7 +73,7 @@ derived:
     have: true
     in_scope: true
     eventtype: mitre_dc0050_windows_registry_key_access__wineventlog
-    search: index=wineventlog sourcetype=XmlWinEventLog:Security EventCode IN (4656, 4663)
+    search: index=wineventlog source="XmlWinEventLog:Security" EventCode IN (4656, 4663)
     constraint_origin: defaults
     broad_refs: 0
     sources:

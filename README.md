@@ -11,8 +11,8 @@ flowchart LR
   LS --> FEED["Feed in your stack<br/>config/stack.yml"]
   FEED --> ET["Splunk eventtype<br/>mitre_dcXXXX_name__feed"]
   ET --> UMB["Umbrella eventtype<br/>mitre_dcXXXX_name"]
-  UMB --> RULE["Analytic as ES detection + Sigma rule<br/>TTP / Anomaly / Hunting (+ baselines)<br/>49 implemented"]
-  UMB --> SEQ["Strategy sequence<br/>raw-event chain, 6"]
+  UMB --> RULE["Analytic as ES detection + Sigma rule<br/>TTP / Anomaly / Hunting (+ baselines)<br/>65 implemented"]
+  UMB --> SEQ["Strategy sequence<br/>raw-event chain, 8"]
   RULE -- "risk events" --> RISK[("Risk data model")]
   SEQ -- "risk events" --> RISK
   RISK --> CORR["Strategy risk rules (4) and<br/>cross-strategy correlations (3)"]
@@ -22,7 +22,9 @@ flowchart LR
   class RULE,SEQ,CORR part
 ```
 
-Green is complete for every data component. Amber is in progress: 49 analytics, chosen by technique prevalence on the ticked feeds ([backlog](docs/analytics/backlog.md) for the rest), and a detection-strategy layer of 6 sequences, 4 strategy risk rules and 3 cross-strategy correlations ([strategies](docs/strategies/README.md)).
+Green is complete for every data component. Amber is in progress: 65 analytics, chosen by technique prevalence on the ticked feeds ([backlog](docs/analytics/backlog.md) for the rest), and a detection-strategy layer of 8 sequences, 4 strategy risk rules and 3 cross-strategy correlations ([strategies](docs/strategies/README.md)).
+
+**Resuming work?** [TODO.md](TODO.md) has the current state, conventions and the ordered next steps; [docs/roadmap.md](docs/roadmap.md) has the phased map.
 
 ## What you get
 
@@ -31,7 +33,7 @@ Green is complete for every data component. Amber is in progress: 49 analytics, 
 | Splunk TA | `dist/splunk/TA-mitre-attack-datacomponents/` | `eventtypes.conf` (one per component per feed, plus umbrella), `tags.conf` (ATT&CK tags + CIM tags where safe), `macros.conf` (index, per-component, `_dm`, `_filter`, environment tunables), `transforms.conf` + `lookups/` (ATT&CK metadata, tuning allowlists with seed rows). |
 | Detections app | `dist/splunk/DA-ESS-mitre-attack-detections/` | One ES 8 detection per implemented analytic, strategy sequence, strategy risk rule and cross-strategy correlation, all disabled. Content type decides the action: TTP → finding + risk, Anomaly → risk only, Hunting → none. Per-analytic `mitre_anXXXX_filter` macro and tunables bound to ATT&CK mutable elements; baseline searches and their lookups. |
 | Sigma | `dist/sigma/` | `logsources.yml` (component ↔ Sigma logsource), `pipelines/splunk_mitre_dc.yml` (pySigma pipeline that scopes converted rules with the component eventtypes) and `rules/` (one file per implemented analytic, with correlation rules where needed). |
-| Docs | `docs/` | One page per component ([index](docs/data-components/README.md)) per analytic ([index](docs/analytics/README.md), [backlog](docs/analytics/backlog.md)) and per strategy ([index](docs/strategies/README.md)), [coverage](docs/coverage.md), [gaps](docs/gaps.md), [checklist](docs/checklist.md), [model](docs/model.md), [Splunk implementation guidance](docs/splunk-implementation.md), [data sources](docs/data-sources.md), [roadmap](docs/roadmap.md), [changelog 20.0→20.1](docs/changelog/attack-20.0-to-20.1.md). |
+| Docs | `docs/` | One page per component ([index](docs/data-components/README.md)) per analytic ([index](docs/analytics/README.md), [backlog](docs/analytics/backlog.md)) and per strategy ([index](docs/strategies/README.md)), [coverage](docs/coverage.md), [gaps](docs/gaps.md), [telemetry health](docs/health.md), [checklist](docs/checklist.md), [model](docs/model.md), [Splunk implementation guidance](docs/splunk-implementation.md), [data sources](docs/data-sources.md), [roadmap](docs/roadmap.md), [changelog 20.0→20.1](docs/changelog/attack-20.0-to-20.1.md). |
 | Content | `content/data_components/`, `content/analytics/`, `content/detection_strategies/`, `content/correlations/` | One YAML per component, implemented analytic, implemented strategy and cross-strategy correlation: regenerated ATT&CK blocks plus a hand-written `curated` block. |
 
 ## The checklist

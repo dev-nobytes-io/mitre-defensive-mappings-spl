@@ -102,7 +102,7 @@ derived:
     have: false
     in_scope: true
     eventtype: mitre_dc0015_image_creation__kubernetes_audit
-    search: index=k8s sourcetype=kube:apiserver-audit verb IN (create) (objectRef.resource=pods)
+    search: index=k8s sourcetype="kube:apiserver-audit" verb IN (create) (objectRef.resource=pods)
     constraint_origin: defaults
     broad_refs: 1
     sources:

@@ -34,9 +34,9 @@ flowchart LR
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetypes | Constraint | Origin | TA / collector |
+| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `container_runtime` | ready (tick in stack.yml) | `containerd:events`, `docker:daemon` | `(status=list OR method=GET uri="/containers/json*")` | defaults | docker events scripted input or OpenTelemetry (docker:events, containerd) |
+| `container_runtime` | ready (tick in stack.yml) | sourcetype=`containerd:events`, sourcetype=`docker:daemon` | `(status=list OR method=GET uri="/containers/json*")` | defaults | docker events scripted input or OpenTelemetry (docker:events, containerd) |
 
 Review notes: `container_runtime` has 4 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *defaults*.
 

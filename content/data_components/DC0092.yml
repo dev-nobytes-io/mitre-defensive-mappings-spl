@@ -49,7 +49,7 @@ derived:
     in_scope: true
     eventtype: mitre_dc0092_volume_modification__kubernetes_audit
     search: >-
-      index=k8s sourcetype=kube:apiserver-audit verb IN (patch, update) (objectRef.resource IN (persistentvolumes,
+      index=k8s sourcetype="kube:apiserver-audit" verb IN (patch, update) (objectRef.resource IN (persistentvolumes,
       persistentvolumeclaims))
     constraint_origin: defaults
     broad_refs: 2

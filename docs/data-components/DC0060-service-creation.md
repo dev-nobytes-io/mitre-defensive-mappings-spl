@@ -60,12 +60,12 @@ Component specific:
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetypes | Constraint | Origin | TA / collector |
+| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `wineventlog` | live | `XmlWinEventLog:Security`, `XmlWinEventLog:System` | `EventCode IN (4697, 7045)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering |
-| `auditd` | ready (tick in stack.yml) | `linux:audit` | `type IN (CONFIG_CHANGE, PATH) (name="/etc/systemd/system/*" OR name="/usr/lib/systemd/system/*" OR name="/etc/init.d/*")` | defaults | Splunk Add-on for Unix and Linux (linux:audit) or auditd -> auditbeat/syslog |
-| `kubernetes_audit` | ready (tick in stack.yml) | `kube:apiserver-audit` | `verb IN (create) (objectRef.resource IN (daemonsets, deployments, cronjobs, services))` | defaults | Splunk OpenTelemetry Collector for Kubernetes / Splunk Connect for Kubernetes |
-| `linux_syslog` | ready (tick in stack.yml) | `linux_messages_syslog`, `linux_secure`, `syslog` | `(process=systemd)` | defaults | Splunk Add-on for Unix and Linux (syslog, linux_secure, linux_messages_syslog) |
+| `wineventlog` | live | source=`XmlWinEventLog:Security`, source=`XmlWinEventLog:System` | `EventCode IN (4697, 7045)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true) |
+| `auditd` | ready (tick in stack.yml) | sourcetype=`linux:audit` | `type IN (CONFIG_CHANGE, PATH) (name="/etc/systemd/system/*" OR name="/usr/lib/systemd/system/*" OR name="/etc/init.d/*")` | defaults | Splunk Add-on for Unix and Linux (linux:audit) or auditd -> auditbeat/syslog |
+| `kubernetes_audit` | ready (tick in stack.yml) | sourcetype=`kube:apiserver-audit` | `verb IN (create) (objectRef.resource IN (daemonsets, deployments, cronjobs, services))` | defaults | Splunk OpenTelemetry Collector for Kubernetes / Splunk Connect for Kubernetes |
+| `linux_syslog` | ready (tick in stack.yml) | sourcetype=`linux_messages_syslog`, sourcetype=`linux_secure`, sourcetype=`syslog` | `(process=systemd)` | defaults | Splunk Add-on for Unix and Linux (syslog, linux_secure, linux_messages_syslog) |
 
 Collection prerequisites:
 
@@ -87,14 +87,14 @@ Eventtypes (literal constraints, see `dist/splunk/TA-mitre-attack-datacomponents
 
 ```ini
 [mitre_dc0060_service_creation__wineventlog]
-search = index=wineventlog sourcetype IN ("XmlWinEventLog:Security", "XmlWinEventLog:System") EventCode IN (4697, 7045)
+search = index=wineventlog source IN ("XmlWinEventLog:Security", "XmlWinEventLog:System") EventCode IN (4697, 7045)
 
 [mitre_dc0060_service_creation__auditd]
-search = index=linux sourcetype=linux:audit type IN (CONFIG_CHANGE, PATH) (name="/etc/systemd/system/*" OR name="/usr/lib/systemd/system/*" OR name="/etc/init.d/*")
+search = index=linux sourcetype="linux:audit" type IN (CONFIG_CHANGE, PATH) (name="/etc/systemd/system/*" OR name="/usr/lib/systemd/system/*" OR name="/etc/init.d/*")
 disabled = 1
 
 [mitre_dc0060_service_creation__kubernetes_audit]
-search = index=k8s sourcetype=kube:apiserver-audit verb IN (create) (objectRef.resource IN (daemonsets, deployments, cronjobs, services))
+search = index=k8s sourcetype="kube:apiserver-audit" verb IN (create) (objectRef.resource IN (daemonsets, deployments, cronjobs, services))
 disabled = 1
 
 [mitre_dc0060_service_creation__linux_syslog]

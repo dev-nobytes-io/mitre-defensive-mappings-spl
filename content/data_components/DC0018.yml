@@ -352,7 +352,7 @@ derived:
     have: true
     in_scope: true
     eventtype: mitre_dc0018_host_status__palo_alto
-    search: index=pan_logs sourcetype=pan:system
+    search: index=pan_logs sourcetype="pan:system"
     constraint_origin: defaults
     broad_refs: 0
     sources:
@@ -363,8 +363,7 @@ derived:
     have: true
     in_scope: true
     eventtype: mitre_dc0018_host_status__sysmon
-    search: >-
-      index=sysmon sourcetype=XmlWinEventLog:Microsoft-Windows-Sysmon/Operational EventCode IN (4, 16, 255)
+    search: index=sysmon source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode IN (4, 16, 255)
     constraint_origin: defaults
     broad_refs: 0
     sources:
@@ -374,7 +373,7 @@ derived:
     have: true
     in_scope: true
     eventtype: mitre_dc0018_host_status__trellix_epo
-    search: index=epo sourcetype=mcafee:epo
+    search: index=epo sourcetype="mcafee:epo:syslog"
     constraint_origin: defaults
     broad_refs: 0
     sources:
@@ -385,7 +384,7 @@ derived:
     in_scope: true
     eventtype: mitre_dc0018_host_status__wineventlog
     search: >-
-      index=wineventlog sourcetype IN ("XmlWinEventLog:Microsoft-Windows-Windows Defender/Operational", "XmlWinEventLog:Security",
+      index=wineventlog source IN ("XmlWinEventLog:Microsoft-Windows-Windows Defender/Operational", "XmlWinEventLog:Security",
       "XmlWinEventLog:System") EventCode IN (104, 1001, 1074, 1100, 1102, 5001, 5004, 5007, 5010, 5012, 6005, 6006,
       6008, 7036, 7045)
     constraint_origin: defaults
@@ -400,7 +399,7 @@ derived:
     in_scope: true
     eventtype: mitre_dc0018_host_status__auditd
     search: >-
-      index=linux sourcetype=linux:audit type IN (CONFIG_CHANGE, DAEMON_ABORT, DAEMON_END, DAEMON_START, SERVICE_START,
+      index=linux sourcetype="linux:audit" type IN (CONFIG_CHANGE, DAEMON_ABORT, DAEMON_END, DAEMON_START, SERVICE_START,
       SERVICE_STOP)
     constraint_origin: defaults
     broad_refs: 0
@@ -421,7 +420,7 @@ derived:
     have: false
     in_scope: true
     eventtype: mitre_dc0018_host_status__kubernetes_audit
-    search: index=k8s sourcetype=kube:objects:events
+    search: index=k8s sourcetype="kube:objects:events"
     constraint_origin: defaults
     broad_refs: 4
     sources:
@@ -444,7 +443,7 @@ derived:
     have: false
     in_scope: true
     eventtype: mitre_dc0018_host_status__windows_perfmon
-    search: index=perfmon sourcetype=Perfmon:*
+    search: index=perfmon sourcetype="Perfmon:*"
     constraint_origin: derived
     broad_refs: 8
     sources:

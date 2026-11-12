@@ -63,14 +63,14 @@ flowchart LR
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetypes | Constraint | Origin | TA / collector |
+| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `wineventlog` | live | `XmlWinEventLog:Security` | `EventCode IN (4672, 4673, 4674, 4720, 4738)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering |
-| `auditd` | ready (tick in stack.yml) | `linux:audit` | `type IN (PATH, SYSCALL) (syscall IN (open, openat, read) OR SYSCALL IN (open, openat, read)) (name="/etc/passwd" OR name="/etc/shadow" OR name="/etc/group" OR name="/etc/sudoers*")` | defaults | Splunk Add-on for Unix and Linux (linux:audit) or auditd -> auditbeat/syslog |
-| `azure_activity` | ready (tick in stack.yml) | `mscs:azure:audit` | `(whole feed)` | derived | Splunk Add-on for Microsoft Cloud Services (mscs:azure:audit) |
-| `azure_entra` | ready (tick in stack.yml) | `azure:aad:audit` | `(whole feed)` | defaults | Splunk Add-on for Microsoft Azure (azure:aad:signin, azure:aad:audit) or Microsoft Cloud Services add-on via Event Hub |
-| `linux_osquery` | ready (tick in stack.yml) | `osquery:results` | `(name=users OR name=groups OR name=sudoers OR name=shadow)` | defaults | osquery TA |
-| `windows_osquery` | ready (tick in stack.yml) | `osquery:results` | `(name=users OR name=groups OR name=logged_in_users)` | defaults | osquery TA (osquery:results) |
+| `wineventlog` | live | source=`XmlWinEventLog:Security` | `EventCode IN (4672, 4673, 4674, 4720, 4738)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true) |
+| `auditd` | ready (tick in stack.yml) | sourcetype=`linux:audit` | `type IN (PATH, SYSCALL) (syscall IN (open, openat, read) OR SYSCALL IN (open, openat, read)) (name="/etc/passwd" OR name="/etc/shadow" OR name="/etc/group" OR name="/etc/sudoers*")` | defaults | Splunk Add-on for Unix and Linux (linux:audit) or auditd -> auditbeat/syslog |
+| `azure_activity` | ready (tick in stack.yml) | sourcetype=`mscs:azure:audit` | `(whole feed)` | derived | Splunk Add-on for Microsoft Cloud Services (mscs:azure:audit) |
+| `azure_entra` | ready (tick in stack.yml) | sourcetype=`azure:aad:audit` | `(whole feed)` | defaults | Splunk Add-on for Microsoft Azure (azure:aad:signin, azure:aad:audit) or Microsoft Cloud Services add-on via Event Hub |
+| `linux_osquery` | ready (tick in stack.yml) | sourcetype=`osquery:results` | `(name=users OR name=groups OR name=sudoers OR name=shadow)` | defaults | osquery TA |
+| `windows_osquery` | ready (tick in stack.yml) | sourcetype=`osquery:results` | `(name=users OR name=groups OR name=logged_in_users)` | defaults | osquery TA (osquery:results) |
 
 Collection prerequisites:
 
@@ -95,26 +95,26 @@ Eventtypes (literal constraints, see `dist/splunk/TA-mitre-attack-datacomponents
 
 ```ini
 [mitre_dc0013_user_account_metadata__wineventlog]
-search = index=wineventlog sourcetype=XmlWinEventLog:Security EventCode IN (4672, 4673, 4674, 4720, 4738)
+search = index=wineventlog source="XmlWinEventLog:Security" EventCode IN (4672, 4673, 4674, 4720, 4738)
 
 [mitre_dc0013_user_account_metadata__auditd]
-search = index=linux sourcetype=linux:audit type IN (PATH, SYSCALL) (syscall IN (open, openat, read) OR SYSCALL IN (open, openat, read)) (name="/etc/passwd" OR name="/etc/shadow" OR name="/etc/group" OR name="/etc/sudoers*")
+search = index=linux sourcetype="linux:audit" type IN (PATH, SYSCALL) (syscall IN (open, openat, read) OR SYSCALL IN (open, openat, read)) (name="/etc/passwd" OR name="/etc/shadow" OR name="/etc/group" OR name="/etc/sudoers*")
 disabled = 1
 
 [mitre_dc0013_user_account_metadata__azure_activity]
-search = index=azure sourcetype=mscs:azure:audit
+search = index=azure sourcetype="mscs:azure:audit"
 disabled = 1
 
 [mitre_dc0013_user_account_metadata__azure_entra]
-search = index=azure sourcetype=azure:aad:audit
+search = index=azure sourcetype="azure:aad:audit"
 disabled = 1
 
 [mitre_dc0013_user_account_metadata__linux_osquery]
-search = index=osquery sourcetype=osquery:results (name=users OR name=groups OR name=sudoers OR name=shadow)
+search = index=osquery sourcetype="osquery:results" (name=users OR name=groups OR name=sudoers OR name=shadow)
 disabled = 1
 
 [mitre_dc0013_user_account_metadata__windows_osquery]
-search = index=osquery sourcetype=osquery:results (name=users OR name=groups OR name=logged_in_users)
+search = index=osquery sourcetype="osquery:results" (name=users OR name=groups OR name=logged_in_users)
 disabled = 1
 
 [mitre_dc0013_user_account_metadata]

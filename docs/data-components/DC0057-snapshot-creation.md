@@ -37,10 +37,10 @@ flowchart LR
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetypes | Constraint | Origin | TA / collector |
+| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `azure_activity` | ready (tick in stack.yml) | `mscs:azure:audit` | `(operationName="Microsoft.Compute/snapshots/write")` | defaults | Splunk Add-on for Microsoft Cloud Services (mscs:azure:audit) |
-| `esxi_syslog` | ready (tick in stack.yml) | `vmware:esxlog:hostd`, `vmware:esxlog:vmkernel` | `(snapshot)` | defaults | Splunk Add-on for VMware ESXi Logs (vmware:esxlog:<log>) |
+| `azure_activity` | ready (tick in stack.yml) | sourcetype=`mscs:azure:audit` | `(operationName="Microsoft.Compute/snapshots/write")` | defaults | Splunk Add-on for Microsoft Cloud Services (mscs:azure:audit) |
+| `esxi_syslog` | ready (tick in stack.yml) | sourcetype=`vmware:esxlog:hostd`, sourcetype=`vmware:esxlog:vmkernel` | `(snapshot)` | defaults | Splunk Add-on for VMware ESXi Logs (vmware:esxlog:<log>) |
 
 Collection prerequisites:
 
@@ -55,7 +55,7 @@ Eventtypes (literal constraints, see `dist/splunk/TA-mitre-attack-datacomponents
 
 ```ini
 [mitre_dc0057_snapshot_creation__azure_activity]
-search = index=azure sourcetype=mscs:azure:audit (operationName="Microsoft.Compute/snapshots/write")
+search = index=azure sourcetype="mscs:azure:audit" (operationName="Microsoft.Compute/snapshots/write")
 disabled = 1
 
 [mitre_dc0057_snapshot_creation__esxi_syslog]

@@ -485,7 +485,7 @@ derived:
     in_scope: true
     eventtype: mitre_dc0055_file_access__solidcore
     search: >-
-      index=epo sourcetype=mcafee:epo (threat_name=READ_DENIED OR event_description=READ_DENIED) (product_name="Solidcore*")
+      index=epo sourcetype="mcafee:epo:syslog" (threat_name=READ_DENIED OR event_description=READ_DENIED) (product_name="Solidcore*")
     constraint_origin: defaults
     broad_refs: 0
     sources:
@@ -495,7 +495,7 @@ derived:
     have: true
     in_scope: true
     eventtype: mitre_dc0055_file_access__wineventlog
-    search: index=wineventlog sourcetype=XmlWinEventLog:Security EventCode IN (4656, 4663)
+    search: index=wineventlog source="XmlWinEventLog:Security" EventCode IN (4656, 4663)
     constraint_origin: defaults
     broad_refs: 2
     sources:
@@ -507,7 +507,7 @@ derived:
     in_scope: true
     eventtype: mitre_dc0055_file_access__auditd
     search: >-
-      index=linux sourcetype=linux:audit type IN (PATH, SYSCALL) (syscall IN (access, open, openat, openat2, read,
+      index=linux sourcetype="linux:audit" type IN (PATH, SYSCALL) (syscall IN (access, open, openat, openat2, read,
       readlink, stat) OR SYSCALL IN (access, open, openat, openat2, read, readlink, stat))
     constraint_origin: defaults
     broad_refs: 0
@@ -545,7 +545,7 @@ derived:
     in_scope: true
     eventtype: mitre_dc0055_file_access__kubernetes_audit
     search: >-
-      index=k8s sourcetype=kube:apiserver-audit verb IN (get, list) (objectRef.resource=secrets OR objectRef.resource=configmaps)
+      index=k8s sourcetype="kube:apiserver-audit" verb IN (get, list) (objectRef.resource=secrets OR objectRef.resource=configmaps)
     constraint_origin: defaults
     broad_refs: 0
     sources:

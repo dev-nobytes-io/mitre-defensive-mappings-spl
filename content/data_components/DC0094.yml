@@ -53,7 +53,7 @@ derived:
     in_scope: true
     eventtype: mitre_dc0094_group_modification__wineventlog
     search: >-
-      index=wineventlog sourcetype=XmlWinEventLog:Security EventCode IN (4728, 4729, 4732, 4733, 4735, 4737, 4755,
+      index=wineventlog source="XmlWinEventLog:Security" EventCode IN (4728, 4729, 4732, 4733, 4735, 4737, 4755,
       4756, 4757)
     constraint_origin: defaults
     broad_refs: 0

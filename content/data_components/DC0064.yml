@@ -734,7 +734,7 @@ derived:
     in_scope: true
     eventtype: mitre_dc0064_command_execution__powershell_logging
     search: >-
-      index=wineventlog sourcetype=XmlWinEventLog:Microsoft-Windows-PowerShell/Operational EventCode IN (4103, 4104)
+      index=wineventlog source="XmlWinEventLog:Microsoft-Windows-PowerShell/Operational" EventCode IN (4103, 4104)
     constraint_origin: defaults
     broad_refs: 0
     sources:
@@ -744,7 +744,7 @@ derived:
     have: true
     in_scope: true
     eventtype: mitre_dc0064_command_execution__sysmon
-    search: index=sysmon sourcetype=XmlWinEventLog:Microsoft-Windows-Sysmon/Operational EventCode IN (1)
+    search: index=sysmon source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode IN (1)
     constraint_origin: defaults
     broad_refs: 0
     sources:
@@ -754,7 +754,7 @@ derived:
     have: true
     in_scope: true
     eventtype: mitre_dc0064_command_execution__trellix_epo
-    search: index=epo sourcetype=mcafee:epo (threat_type="AMSI*" OR threat_name="AMSI*")
+    search: index=epo sourcetype="mcafee:epo:syslog" (threat_type="AMSI*" OR threat_name="AMSI*")
     constraint_origin: defaults
     broad_refs: 0
     sources:
@@ -764,7 +764,7 @@ derived:
     have: true
     in_scope: true
     eventtype: mitre_dc0064_command_execution__wineventlog
-    search: index=wineventlog sourcetype=XmlWinEventLog:Security EventCode IN (4688)
+    search: index=wineventlog source="XmlWinEventLog:Security" EventCode IN (4688)
     constraint_origin: defaults
     broad_refs: 6
     sources:
@@ -778,7 +778,7 @@ derived:
     in_scope: true
     eventtype: mitre_dc0064_command_execution__auditd
     search: >-
-      index=linux sourcetype=linux:audit type IN (EXECVE, PROCTITLE, SYSCALL) (syscall IN (execve, execveat) OR
+      index=linux sourcetype="linux:audit" type IN (EXECVE, PROCTITLE, SYSCALL) (syscall IN (execve, execveat) OR
       SYSCALL IN (execve, execveat))
     constraint_origin: defaults
     broad_refs: 0
@@ -815,7 +815,7 @@ derived:
     have: false
     in_scope: true
     eventtype: mitre_dc0064_command_execution__edr_telemetry
-    search: index=edr sourcetype=edr:telemetry
+    search: index=edr sourcetype="edr:telemetry"
     constraint_origin: derived
     broad_refs: 4
     sources:
@@ -826,7 +826,7 @@ derived:
     have: false
     in_scope: true
     eventtype: mitre_dc0064_command_execution__esxi_syslog
-    search: index=vmware sourcetype=vmware:esxlog:shell
+    search: index=vmware sourcetype="vmware:esxlog:shell"
     constraint_origin: defaults
     broad_refs: 0
     sources:
@@ -841,7 +841,7 @@ derived:
     in_scope: true
     eventtype: mitre_dc0064_command_execution__kubernetes_audit
     search: >-
-      index=k8s sourcetype=kube:apiserver-audit (objectRef.subresource=exec OR objectRef.subresource=attach)
+      index=k8s sourcetype="kube:apiserver-audit" (objectRef.subresource=exec OR objectRef.subresource=attach)
     constraint_origin: defaults
     broad_refs: 4
     sources:
@@ -864,7 +864,7 @@ derived:
     have: false
     in_scope: true
     eventtype: mitre_dc0064_command_execution__vcenter
-    search: index=vmware sourcetype=vmware:vclog:vpxd
+    search: index=vmware sourcetype="vmware:vclog:vpxd"
     constraint_origin: derived
     broad_refs: 3
     sources:

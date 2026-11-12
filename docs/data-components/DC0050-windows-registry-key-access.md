@@ -44,10 +44,10 @@ Component specific:
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetypes | Constraint | Origin | TA / collector |
+| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `wineventlog` | live | `XmlWinEventLog:Security` | `EventCode IN (4656, 4663)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering |
-| `autoruns` | ready (tick in stack.yml) | `autoruns` | `(whole feed)` | derived | TA-autoruns (scripted input) |
+| `wineventlog` | live | source=`XmlWinEventLog:Security` | `EventCode IN (4656, 4663)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true) |
+| `autoruns` | ready (tick in stack.yml) | sourcetype=`autoruns` | `(whole feed)` | derived | TA-autoruns (scripted input) |
 
 Collection prerequisites:
 
@@ -65,7 +65,7 @@ Eventtypes (literal constraints, see `dist/splunk/TA-mitre-attack-datacomponents
 
 ```ini
 [mitre_dc0050_windows_registry_key_access__wineventlog]
-search = index=wineventlog sourcetype=XmlWinEventLog:Security EventCode IN (4656, 4663)
+search = index=wineventlog source="XmlWinEventLog:Security" EventCode IN (4656, 4663)
 
 [mitre_dc0050_windows_registry_key_access__autoruns]
 search = index=wineventlog sourcetype=autoruns

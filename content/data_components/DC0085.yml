@@ -775,7 +775,7 @@ derived:
     have: true
     in_scope: true
     eventtype: mitre_dc0085_network_traffic_content__sysmon
-    search: index=sysmon sourcetype=XmlWinEventLog:Microsoft-Windows-Sysmon/Operational EventCode IN (22)
+    search: index=sysmon source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode IN (22)
     constraint_origin: defaults
     broad_refs: 2
     sources:
@@ -787,7 +787,7 @@ derived:
     in_scope: true
     eventtype: mitre_dc0085_network_traffic_content__wineventlog
     search: >-
-      index=wineventlog sourcetype=XmlWinEventLog:Microsoft-Windows-Windows Defender/Operational EventCode IN (1116,
+      index=wineventlog source="XmlWinEventLog:Microsoft-Windows-Windows Defender/Operational" EventCode IN (1116,
       1117)
     constraint_origin: defaults
     broad_refs: 2
@@ -799,7 +799,7 @@ derived:
     have: true
     in_scope: true
     eventtype: mitre_dc0085_network_traffic_content__wireshark
-    search: index=pcap sourcetype=wireshark:json
+    search: index=pcap sourcetype="wireshark:json"
     constraint_origin: derived
     broad_refs: 0
     sources:
@@ -810,8 +810,8 @@ derived:
     in_scope: true
     eventtype: mitre_dc0085_network_traffic_content__auditd
     search: >-
-      index=linux sourcetype=linux:audit type IN (SYSCALL) (syscall IN (recvfrom, recvmsg, sendmsg, sendto) OR SYSCALL
-      IN (recvfrom, recvmsg, sendmsg, sendto))
+      index=linux sourcetype="linux:audit" type IN (SYSCALL) (syscall IN (recvfrom, recvmsg, sendmsg, sendto) OR
+      SYSCALL IN (recvfrom, recvmsg, sendmsg, sendto))
     constraint_origin: defaults
     broad_refs: 0
     sources:
@@ -823,7 +823,7 @@ derived:
     in_scope: true
     eventtype: mitre_dc0085_network_traffic_content__azure_resource
     search: >-
-      index=azure sourcetype=mscs:azure:eventhub (category=NetworkSecurityGroupFlowEvent OR category=FlowLogFlowEvent)
+      index=azure sourcetype="mscs:azure:eventhub" (category=NetworkSecurityGroupFlowEvent OR category=FlowLogFlowEvent)
     constraint_origin: derived
     broad_refs: 0
     sources:
@@ -843,7 +843,7 @@ derived:
     have: false
     in_scope: true
     eventtype: mitre_dc0085_network_traffic_content__edr_telemetry
-    search: index=edr sourcetype=edr:telemetry
+    search: index=edr sourcetype="edr:telemetry"
     constraint_origin: derived
     broad_refs: 2
     sources:
@@ -853,7 +853,7 @@ derived:
     have: false
     in_scope: true
     eventtype: mitre_dc0085_network_traffic_content__iis
-    search: index=web sourcetype=ms:iis:auto
+    search: index=web sourcetype="ms:iis:auto"
     constraint_origin: derived
     broad_refs: 4
     sources:
@@ -864,7 +864,7 @@ derived:
     have: false
     in_scope: true
     eventtype: mitre_dc0085_network_traffic_content__kubernetes_audit
-    search: index=k8s sourcetype=kube:container:ingress-nginx
+    search: index=k8s sourcetype="kube:container:ingress-nginx"
     constraint_origin: derived
     broad_refs: 2
     sources:
@@ -885,7 +885,7 @@ derived:
     have: false
     in_scope: true
     eventtype: mitre_dc0085_network_traffic_content__windows_dns_server
-    search: index=wineventlog sourcetype=MSAD:NT6:DNS
+    search: index=wineventlog sourcetype="MSAD:NT6:DNS"
     constraint_origin: derived
     broad_refs: 5
     sources:

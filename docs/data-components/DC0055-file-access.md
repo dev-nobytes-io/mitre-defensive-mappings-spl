@@ -69,14 +69,14 @@ Component specific:
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetypes | Constraint | Origin | TA / collector |
+| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `solidcore` | live | `mcafee:epo` | `(threat_name=READ_DENIED OR event_description=READ_DENIED) (product_name="Solidcore*")` | defaults | Arrives through the ePO TA; Solidcore events carry event names such as FILE_CREATED, FILE_MODIFIED, FILE_DELETED, EXECUTION_DENIED, REG_VALUE_MODIFIED, PROCESS_HIJACK_ATTEMPTED. Verify field names (threat_name / event_description) in your data. |
-| `wineventlog` | live | `XmlWinEventLog:Security` | `EventCode IN (4656, 4663)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering |
-| `auditd` | ready (tick in stack.yml) | `linux:audit` | `type IN (PATH, SYSCALL) (syscall IN (access, open, openat, openat2, read, readlink, stat) OR SYSCALL IN (access, open, openat, openat2, read, readlink, stat))` | defaults | Splunk Add-on for Unix and Linux (linux:audit) or auditd -> auditbeat/syslog |
-| `ebpf` | ready (tick in stack.yml) | `falco` | `(whole feed)` | derived | Vendor specific (falco JSON, tetragon) |
-| `esxi_syslog` | ready (tick in stack.yml) | `vmware:esxlog:hostd`, `vmware:esxlog:vmkernel` | `(whole feed)` | defaults | Splunk Add-on for VMware ESXi Logs (vmware:esxlog:<log>) |
-| `kubernetes_audit` | ready (tick in stack.yml) | `kube:apiserver-audit` | `verb IN (get, list) (objectRef.resource=secrets OR objectRef.resource=configmaps)` | defaults | Splunk OpenTelemetry Collector for Kubernetes / Splunk Connect for Kubernetes |
+| `solidcore` | live | sourcetype=`mcafee:epo:syslog` | `(threat_name=READ_DENIED OR event_description=READ_DENIED) (product_name="Solidcore*")` | defaults | Arrives through the ePO TA; Solidcore events carry event names such as FILE_CREATED, FILE_MODIFIED, FILE_DELETED, EXECUTION_DENIED, REG_VALUE_MODIFIED, PROCESS_HIJACK_ATTEMPTED. Verify field names (threat_name / event_description) in your data. |
+| `wineventlog` | live | source=`XmlWinEventLog:Security` | `EventCode IN (4656, 4663)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true) |
+| `auditd` | ready (tick in stack.yml) | sourcetype=`linux:audit` | `type IN (PATH, SYSCALL) (syscall IN (access, open, openat, openat2, read, readlink, stat) OR SYSCALL IN (access, open, openat, openat2, read, readlink, stat))` | defaults | Splunk Add-on for Unix and Linux (linux:audit) or auditd -> auditbeat/syslog |
+| `ebpf` | ready (tick in stack.yml) | sourcetype=`falco` | `(whole feed)` | derived | Vendor specific (falco JSON, tetragon) |
+| `esxi_syslog` | ready (tick in stack.yml) | sourcetype=`vmware:esxlog:hostd`, sourcetype=`vmware:esxlog:vmkernel` | `(whole feed)` | defaults | Splunk Add-on for VMware ESXi Logs (vmware:esxlog:<log>) |
+| `kubernetes_audit` | ready (tick in stack.yml) | sourcetype=`kube:apiserver-audit` | `verb IN (get, list) (objectRef.resource=secrets OR objectRef.resource=configmaps)` | defaults | Splunk OpenTelemetry Collector for Kubernetes / Splunk Connect for Kubernetes |
 
 Collection prerequisites:
 
@@ -100,13 +100,13 @@ Eventtypes (literal constraints, see `dist/splunk/TA-mitre-attack-datacomponents
 
 ```ini
 [mitre_dc0055_file_access__solidcore]
-search = index=epo sourcetype=mcafee:epo (threat_name=READ_DENIED OR event_description=READ_DENIED) (product_name="Solidcore*")
+search = index=epo sourcetype="mcafee:epo:syslog" (threat_name=READ_DENIED OR event_description=READ_DENIED) (product_name="Solidcore*")
 
 [mitre_dc0055_file_access__wineventlog]
-search = index=wineventlog sourcetype=XmlWinEventLog:Security EventCode IN (4656, 4663)
+search = index=wineventlog source="XmlWinEventLog:Security" EventCode IN (4656, 4663)
 
 [mitre_dc0055_file_access__auditd]
-search = index=linux sourcetype=linux:audit type IN (PATH, SYSCALL) (syscall IN (access, open, openat, openat2, read, readlink, stat) OR SYSCALL IN (access, open, openat, openat2, read, readlink, stat))
+search = index=linux sourcetype="linux:audit" type IN (PATH, SYSCALL) (syscall IN (access, open, openat, openat2, read, readlink, stat) OR SYSCALL IN (access, open, openat, openat2, read, readlink, stat))
 disabled = 1
 
 [mitre_dc0055_file_access__ebpf]
@@ -118,7 +118,7 @@ search = index=vmware sourcetype IN ("vmware:esxlog:hostd", "vmware:esxlog:vmker
 disabled = 1
 
 [mitre_dc0055_file_access__kubernetes_audit]
-search = index=k8s sourcetype=kube:apiserver-audit verb IN (get, list) (objectRef.resource=secrets OR objectRef.resource=configmaps)
+search = index=k8s sourcetype="kube:apiserver-audit" verb IN (get, list) (objectRef.resource=secrets OR objectRef.resource=configmaps)
 disabled = 1
 
 [mitre_dc0055_file_access]

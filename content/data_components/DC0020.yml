@@ -146,7 +146,7 @@ derived:
     have: true
     in_scope: true
     eventtype: mitre_dc0020_process_modification__sysmon
-    search: index=sysmon sourcetype=XmlWinEventLog:Microsoft-Windows-Sysmon/Operational EventCode IN (8, 10, 25)
+    search: index=sysmon source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode IN (8, 10, 25)
     constraint_origin: defaults
     broad_refs: 0
     sources:
@@ -158,7 +158,7 @@ derived:
     in_scope: true
     eventtype: mitre_dc0020_process_modification__auditd
     search: >-
-      index=linux sourcetype=linux:audit type IN (SYSCALL) (syscall IN (memfd_create, mprotect, process_vm_writev,
+      index=linux sourcetype="linux:audit" type IN (SYSCALL) (syscall IN (memfd_create, mprotect, process_vm_writev,
       ptrace) OR SYSCALL IN (memfd_create, mprotect, process_vm_writev, ptrace))
     constraint_origin: defaults
     broad_refs: 0
@@ -179,7 +179,7 @@ derived:
     have: false
     in_scope: true
     eventtype: mitre_dc0020_process_modification__etw
-    search: index=etw sourcetype=etw:json (ProviderName="Microsoft-Windows-Kernel-Process")
+    search: index=etw sourcetype="etw:json" (ProviderName="Microsoft-Windows-Kernel-Process")
     constraint_origin: derived
     broad_refs: 0
     sources:

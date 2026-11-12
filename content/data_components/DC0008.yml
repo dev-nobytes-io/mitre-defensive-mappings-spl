@@ -58,8 +58,7 @@ derived:
     have: true
     in_scope: true
     eventtype: mitre_dc0008_wmi_creation__sysmon
-    search: >-
-      index=sysmon sourcetype=XmlWinEventLog:Microsoft-Windows-Sysmon/Operational EventCode IN (19, 20, 21)
+    search: index=sysmon source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode IN (19, 20, 21)
     constraint_origin: defaults
     broad_refs: 0
     sources:
@@ -70,8 +69,8 @@ derived:
     in_scope: true
     eventtype: mitre_dc0008_wmi_creation__wineventlog
     search: >-
-      index=wineventlog sourcetype=XmlWinEventLog:Microsoft-Windows-WMI-Activity/Operational EventCode IN (5857,
-      5858, 5859, 5860, 5861)
+      index=wineventlog source="XmlWinEventLog:Microsoft-Windows-WMI-Activity/Operational" EventCode IN (5857, 5858,
+      5859, 5860, 5861)
     constraint_origin: defaults
     broad_refs: 2
     sources:

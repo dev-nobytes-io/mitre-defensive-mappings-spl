@@ -47,7 +47,7 @@ DC0002,User Account Authentication,saas:googleworkspace,8,saas,0,0,,saas:audit,d
 DC0002,User Account Authentication,saas:okta,12,saas,0,0,,saas:audit,derived
 DC0002,User Account Authentication,saas:salesforce,4,saas,0,0,,saas:audit,derived
 DC0003,Malware Metadata,(added by dc_defaults/curated),,palo_alto,1,1,mitre_dc0003_malware_metadata__palo_alto,pan:threat,defaults
-DC0003,Malware Metadata,(added by dc_defaults/curated),,trellix_epo,1,1,mitre_dc0003_malware_metadata__trellix_epo,mcafee:epo,defaults
+DC0003,Malware Metadata,(added by dc_defaults/curated),,trellix_epo,1,1,mitre_dc0003_malware_metadata__trellix_epo,mcafee:epo:syslog,defaults
 DC0003,Malware Metadata,(added by dc_defaults/curated),,wineventlog,1,1,mitre_dc0003_malware_metadata__wineventlog,XmlWinEventLog:Microsoft-Windows-Windows Defender/Operational,defaults
 DC0003,Malware Metadata,Malware Repository,8,threat_intel,0,0,,ti:feed,derived
 DC0004,Firmware Modification,networkdevice:config,6,palo_alto,1,1,mitre_dc0004_firmware_modification__palo_alto,pan:system,defaults
@@ -113,7 +113,7 @@ DC0010,User Account Modification,saas:okta,6,saas,0,0,,saas:audit,derived
 DC0010,User Account Modification,saas:zoom,2,saas,0,0,,saas:audit,derived
 DC0011,Malware Content,(added by dc_defaults/curated),,corelight,1,1,mitre_dc0011_malware_content__corelight,corelight_files|corelight_pe,defaults
 DC0011,Malware Content,(added by dc_defaults/curated),,palo_alto,1,1,mitre_dc0011_malware_content__palo_alto,pan:threat,defaults
-DC0011,Malware Content,(added by dc_defaults/curated),,trellix_epo,1,1,mitre_dc0011_malware_content__trellix_epo,mcafee:epo,defaults
+DC0011,Malware Content,(added by dc_defaults/curated),,trellix_epo,1,1,mitre_dc0011_malware_content__trellix_epo,mcafee:epo:syslog,defaults
 DC0011,Malware Content,Malware Repository,5,threat_intel,0,0,,ti:feed,derived
 DC0012,Scheduled Job Modification,WinEventLog:Security,2,wineventlog,1,1,mitre_dc0012_scheduled_job_modification__wineventlog,XmlWinEventLog:Microsoft-Windows-TaskScheduler/Operational|XmlWinEventLog:Security,defaults
 DC0012,Scheduled Job Modification,auditd:CONFIG_CHANGE,2,auditd,0,1,mitre_dc0012_scheduled_job_modification__auditd,linux:audit,defaults
@@ -148,7 +148,7 @@ DC0015,Image Creation,docker:daemon,4,container_runtime,0,1,mitre_dc0015_image_c
 DC0015,Image Creation,kubernetes:apiserver,1,kubernetes_audit,0,1,mitre_dc0015_image_creation__kubernetes_audit,kube:apiserver-audit,defaults
 DC0015,Image Creation,kubernetes:audit,1,kubernetes_audit,0,1,mitre_dc0015_image_creation__kubernetes_audit,kube:apiserver-audit,defaults
 DC0015,Image Creation,AWS:CloudTrail,2,aws,0,0,,aws:cloudtrail|aws:cloudwatchlogs|aws:cloudwatchlogs:vpcflow,derived
-DC0016,Module Load,(added by dc_defaults/curated),,solidcore,1,1,mitre_dc0016_module_load__solidcore,mcafee:epo,defaults
+DC0016,Module Load,(added by dc_defaults/curated),,solidcore,1,1,mitre_dc0016_module_load__solidcore,mcafee:epo:syslog,defaults
 DC0016,Module Load,WinEventLog:Sysmon,105,sysmon,1,1,mitre_dc0016_module_load__sysmon,XmlWinEventLog:Microsoft-Windows-Sysmon/Operational,defaults
 DC0016,Module Load,etw:Microsoft-Windows-Kernel-ImageLoad,2,sysmon,1,1,mitre_dc0016_module_load__sysmon,XmlWinEventLog:Microsoft-Windows-Sysmon/Operational,defaults
 DC0016,Module Load,WinEventLog:Application,2,wineventlog,1,1,mitre_dc0016_module_load__wineventlog,XmlWinEventLog:Application|XmlWinEventLog:Microsoft-Windows-CodeIntegrity/Operational|XmlWinEventLog:Security,defaults
@@ -171,7 +171,7 @@ DC0017,Cloud Storage Enumeration,gcp:storage,1,gcp,0,0,,google:gcp:pubsub:messag
 DC0018,Host Status,NSM:Flow,2,palo_alto,1,1,mitre_dc0018_host_status__palo_alto,pan:system,defaults
 DC0018,Host Status,networkdevice:syslog,4,palo_alto,1,1,mitre_dc0018_host_status__palo_alto,pan:system,defaults
 DC0018,Host Status,WinEventLog:Sysmon,2,sysmon,1,1,mitre_dc0018_host_status__sysmon,XmlWinEventLog:Microsoft-Windows-Sysmon/Operational,defaults
-DC0018,Host Status,(added by dc_defaults/curated),,trellix_epo,1,1,mitre_dc0018_host_status__trellix_epo,mcafee:epo,defaults
+DC0018,Host Status,(added by dc_defaults/curated),,trellix_epo,1,1,mitre_dc0018_host_status__trellix_epo,mcafee:epo:syslog,defaults
 DC0018,Host Status,WinEventLog:Microsoft-Windows-TCPIP,2,wineventlog,1,1,mitre_dc0018_host_status__wineventlog,XmlWinEventLog:Microsoft-Windows-Windows Defender/Operational|XmlWinEventLog:Security|XmlWinEventLog:System,defaults
 DC0018,Host Status,WinEventLog:Security,5,wineventlog,1,1,mitre_dc0018_host_status__wineventlog,XmlWinEventLog:Microsoft-Windows-Windows Defender/Operational|XmlWinEventLog:Security|XmlWinEventLog:System,defaults
 DC0018,Host Status,WinEventLog:System,2,wineventlog,1,1,mitre_dc0018_host_status__wineventlog,XmlWinEventLog:Microsoft-Windows-Windows Defender/Operational|XmlWinEventLog:Security|XmlWinEventLog:System,defaults
@@ -252,8 +252,8 @@ DC0027,Cloud Storage Metadata,saas:dropbox,1,saas,0,0,,saas:audit,derived
 DC0028,Image Metadata,docker:events,2,container_runtime,0,1,mitre_dc0028_image_metadata__container_runtime,docker:events,defaults
 DC0029,Script Execution,EDR:scriptblock,2,powershell_logging,1,1,mitre_dc0029_script_execution__powershell_logging,XmlWinEventLog:Microsoft-Windows-PowerShell/Operational,defaults
 DC0029,Script Execution,WinEventLog:PowerShell,9,powershell_logging,1,1,mitre_dc0029_script_execution__powershell_logging,XmlWinEventLog:Microsoft-Windows-PowerShell/Operational,defaults
-DC0029,Script Execution,EDR:AMSI,2,trellix_epo,1,1,mitre_dc0029_script_execution__trellix_epo,mcafee:epo,derived
-DC0029,Script Execution,etw:Microsoft-Antimalware-Scan-Interface,2,trellix_epo,1,1,mitre_dc0029_script_execution__trellix_epo,mcafee:epo,derived
+DC0029,Script Execution,EDR:AMSI,2,trellix_epo,1,1,mitre_dc0029_script_execution__trellix_epo,mcafee:epo:syslog,derived
+DC0029,Script Execution,etw:Microsoft-Antimalware-Scan-Interface,2,trellix_epo,1,1,mitre_dc0029_script_execution__trellix_epo,mcafee:epo:syslog,derived
 DC0029,Script Execution,WinEventLog:Application,2,wineventlog,1,1,mitre_dc0029_script_execution__wineventlog,XmlWinEventLog:Application|XmlWinEventLog:System,defaults
 DC0029,Script Execution,WinEventLog:System,4,wineventlog,1,1,mitre_dc0029_script_execution__wineventlog,XmlWinEventLog:Application|XmlWinEventLog:System,defaults
 DC0029,Script Execution,auditd:PROCTITLE,2,auditd,0,1,mitre_dc0029_script_execution__auditd,linux:audit,defaults
@@ -273,7 +273,7 @@ DC0031,Kernel Module Load,(added by dc_defaults/curated),,auditd,0,1,mitre_dc003
 DC0031,Kernel Module Load,esxi:vmkernel,2,esxi_syslog,0,1,mitre_dc0031_kernel_module_load__esxi_syslog,vmware:esxlog:vmkernel,defaults
 DC0031,Kernel Module Load,(added by dc_defaults/curated),,linux_syslog,0,1,mitre_dc0031_kernel_module_load__linux_syslog,linux_messages_syslog|linux_secure|syslog,defaults
 DC0031,Kernel Module Load,macos:osquery,2,macos,0,0,,macos:unifiedlog,derived
-DC0032,Process Creation,(added by dc_defaults/curated),,solidcore,1,1,mitre_dc0032_process_creation__solidcore,mcafee:epo,defaults
+DC0032,Process Creation,(added by dc_defaults/curated),,solidcore,1,1,mitre_dc0032_process_creation__solidcore,mcafee:epo:syslog,defaults
 DC0032,Process Creation,WinEventLog:Sysmon,290,sysmon,1,1,mitre_dc0032_process_creation__sysmon,XmlWinEventLog:Microsoft-Windows-Sysmon/Operational,defaults
 DC0032,Process Creation,etw:Microsoft-Windows-Kernel-Process,1,sysmon,1,1,mitre_dc0032_process_creation__sysmon,XmlWinEventLog:Microsoft-Windows-Sysmon/Operational,defaults
 DC0032,Process Creation,WinEventLog:AppLocker,1,wineventlog,1,1,mitre_dc0032_process_creation__wineventlog,XmlWinEventLog:Security,defaults
@@ -352,7 +352,7 @@ DC0038,Application Log Content,NSM:Connections,4,palo_alto,1,1,mitre_dc0038_appl
 DC0038,Application Log Content,WebProxy:AccessLogs,1,palo_alto,1,1,mitre_dc0038_application_log_content__palo_alto,pan:globalprotect|pan:system|pan:threat,defaults
 DC0038,Application Log Content,networkdevice:syslog,25,palo_alto,1,1,mitre_dc0038_application_log_content__palo_alto,pan:globalprotect|pan:system|pan:threat,defaults
 DC0038,Application Log Content,vpn:applog,1,palo_alto,1,1,mitre_dc0038_application_log_content__palo_alto,pan:globalprotect|pan:system|pan:threat,defaults
-DC0038,Application Log Content,EDR:detection,3,trellix_epo,1,1,mitre_dc0038_application_log_content__trellix_epo,mcafee:epo,defaults
+DC0038,Application Log Content,EDR:detection,3,trellix_epo,1,1,mitre_dc0038_application_log_content__trellix_epo,mcafee:epo:syslog,defaults
 DC0038,Application Log Content,WinEventLog:Application,36,wineventlog,1,1,mitre_dc0038_application_log_content__wineventlog,XmlWinEventLog:Application|XmlWinEventLog:Security|XmlWinEventLog:System,defaults
 DC0038,Application Log Content,WinEventLog:Security,8,wineventlog,1,1,mitre_dc0038_application_log_content__wineventlog,XmlWinEventLog:Application|XmlWinEventLog:Security|XmlWinEventLog:System,defaults
 DC0038,Application Log Content,WinEventLog:System,10,wineventlog,1,1,mitre_dc0038_application_log_content__wineventlog,XmlWinEventLog:Application|XmlWinEventLog:Security|XmlWinEventLog:System,defaults
@@ -419,7 +419,7 @@ DC0038,Application Log Content,saas:salesforce,2,saas,0,0,,saas:audit,derived
 DC0038,Application Log Content,saas:slack,10,saas,0,0,,saas:audit,derived
 DC0038,Application Log Content,saas:teams,1,saas,0,0,,saas:audit,derived
 DC0038,Application Log Content,saas:zoom,4,saas,0,0,,saas:audit,derived
-DC0039,File Creation,(added by dc_defaults/curated),,solidcore,1,1,mitre_dc0039_file_creation__solidcore,mcafee:epo,defaults
+DC0039,File Creation,(added by dc_defaults/curated),,solidcore,1,1,mitre_dc0039_file_creation__solidcore,mcafee:epo:syslog,defaults
 DC0039,File Creation,WinEventLog:Sysmon,165,sysmon,1,1,mitre_dc0039_file_creation__sysmon,XmlWinEventLog:Microsoft-Windows-Sysmon/Operational,defaults
 DC0039,File Creation,WinEventLog:Microsoft-Windows-Shell-Core,2,wineventlog,1,1,mitre_dc0039_file_creation__wineventlog,XmlWinEventLog:Security,defaults
 DC0039,File Creation,auditd:FILE,14,auditd,0,1,mitre_dc0039_file_creation__auditd,linux:audit,defaults
@@ -440,7 +440,7 @@ DC0039,File Creation,MobileEDR:telemetry,21,mobile,0,0,,mobile:telemetry,derived
 DC0039,File Creation,android:logcat,11,mobile,0,0,,mobile:telemetry,derived
 DC0039,File Creation,iOS:unifiedlog,10,mobile,0,0,,mobile:telemetry,derived
 DC0039,File Creation,mobile:ForensicArtifacts,24,mobile,0,0,,mobile:telemetry,derived
-DC0040,File Deletion,(added by dc_defaults/curated),,solidcore,1,1,mitre_dc0040_file_deletion__solidcore,mcafee:epo,defaults
+DC0040,File Deletion,(added by dc_defaults/curated),,solidcore,1,1,mitre_dc0040_file_deletion__solidcore,mcafee:epo:syslog,defaults
 DC0040,File Deletion,WinEventLog:Sysmon,11,sysmon,1,1,mitre_dc0040_file_deletion__sysmon,XmlWinEventLog:Microsoft-Windows-Sysmon/Operational,defaults
 DC0040,File Deletion,WinEventLog:Microsoft-Windows-Backup,2,wineventlog,1,1,mitre_dc0040_file_deletion__wineventlog,XmlWinEventLog:Security,defaults
 DC0040,File Deletion,WinEventLog:System,1,wineventlog,1,1,mitre_dc0040_file_deletion__wineventlog,XmlWinEventLog:Security,defaults
@@ -475,7 +475,7 @@ DC0043,Firewall Disable,esxi:vmkernel,2,esxi_syslog,0,1,mitre_dc0043_firewall_di
 DC0043,Firewall Disable,AWS:CloudTrail,2,aws,0,0,,aws:cloudtrail|aws:cloudwatchlogs|aws:cloudwatchlogs:vpcflow,derived
 DC0044,Firewall Enumeration,(added by dc_defaults/curated),,palo_alto,1,1,mitre_dc0044_firewall_enumeration__palo_alto,pan:config|pan:system,defaults
 DC0044,Firewall Enumeration,(added by dc_defaults/curated),,wineventlog,1,1,mitre_dc0044_firewall_enumeration__wineventlog,XmlWinEventLog:Security,defaults
-DC0045,Windows Registry Key Deletion,(added by dc_defaults/curated),,solidcore,1,1,mitre_dc0045_windows_registry_key_deletion__solidcore,mcafee:epo,defaults
+DC0045,Windows Registry Key Deletion,(added by dc_defaults/curated),,solidcore,1,1,mitre_dc0045_windows_registry_key_deletion__solidcore,mcafee:epo:syslog,defaults
 DC0045,Windows Registry Key Deletion,Windows Registry Key,1,sysmon,1,1,mitre_dc0045_windows_registry_key_deletion__sysmon,XmlWinEventLog:Microsoft-Windows-Sysmon/Operational,defaults
 DC0045,Windows Registry Key Deletion,(added by dc_defaults/curated),,wineventlog,1,1,mitre_dc0045_windows_registry_key_deletion__wineventlog,XmlWinEventLog:Security,defaults
 DC0046,Drive Modification,WinEventLog:Sysmon,6,sysmon,1,1,mitre_dc0046_drive_modification__sysmon,XmlWinEventLog:Microsoft-Windows-Sysmon/Operational,defaults
@@ -505,7 +505,7 @@ DC0054,Drive Access,WinEventLog:Sysmon,4,sysmon,1,1,mitre_dc0054_drive_access__s
 DC0054,Drive Access,auditd:SYSCALL,6,auditd,0,1,mitre_dc0054_drive_access__auditd,linux:audit,defaults
 DC0054,Drive Access,fs:fsusage,2,macos,0,0,,macos:unifiedlog,derived
 DC0054,Drive Access,macos:osquery,2,macos,0,0,,macos:unifiedlog,derived
-DC0055,File Access,(added by dc_defaults/curated),,solidcore,1,1,mitre_dc0055_file_access__solidcore,mcafee:epo,defaults
+DC0055,File Access,(added by dc_defaults/curated),,solidcore,1,1,mitre_dc0055_file_access__solidcore,mcafee:epo:syslog,defaults
 DC0055,File Access,WinEventLog:Microsoft-Windows-Windows Defender/Operational,2,wineventlog,1,1,mitre_dc0055_file_access__wineventlog,XmlWinEventLog:Security,defaults
 DC0055,File Access,WinEventLog:Security,35,wineventlog,1,1,mitre_dc0055_file_access__wineventlog,XmlWinEventLog:Security,defaults
 DC0055,File Access,auditd:FILE,4,auditd,0,1,mitre_dc0055_file_access__auditd,linux:audit,defaults
@@ -533,7 +533,7 @@ DC0055,File Access,MobileEDR:telemetry,3,mobile,0,0,,mobile:telemetry,derived
 DC0055,File Access,android:logcat,3,mobile,0,0,,mobile:telemetry,derived
 DC0055,File Access,iOS:unifiedlog,2,mobile,0,0,,mobile:telemetry,derived
 DC0055,File Access,mobile:ForensicArtifacts,7,mobile,0,0,,mobile:telemetry,derived
-DC0056,Windows Registry Key Creation,(added by dc_defaults/curated),,solidcore,1,1,mitre_dc0056_windows_registry_key_creation__solidcore,mcafee:epo,defaults
+DC0056,Windows Registry Key Creation,(added by dc_defaults/curated),,solidcore,1,1,mitre_dc0056_windows_registry_key_creation__solidcore,mcafee:epo:syslog,defaults
 DC0056,Windows Registry Key Creation,WinEventLog:Sysmon,13,sysmon,1,1,mitre_dc0056_windows_registry_key_creation__sysmon,XmlWinEventLog:Microsoft-Windows-Sysmon/Operational,defaults
 DC0056,Windows Registry Key Creation,(added by dc_defaults/curated),,wineventlog,1,1,mitre_dc0056_windows_registry_key_creation__wineventlog,XmlWinEventLog:Security,defaults
 DC0057,Snapshot Creation,azure:activity,1,azure_activity,0,1,mitre_dc0057_snapshot_creation__azure_activity,mscs:azure:audit,defaults
@@ -543,11 +543,11 @@ DC0058,Snapshot Modification,AWS:CloudTrail,3,aws,0,0,,aws:cloudtrail|aws:cloudw
 DC0059,File Metadata,NSM:Flow,2,corelight,1,1,mitre_dc0059_file_metadata__corelight,corelight_files|corelight_pe,defaults
 DC0059,File Metadata,NSM:Flow,2,palo_alto,1,1,mitre_dc0059_file_metadata__palo_alto,pan:threat,defaults
 DC0059,File Metadata,networkdevice:syslog,2,palo_alto,1,1,mitre_dc0059_file_metadata__palo_alto,pan:threat,defaults
-DC0059,File Metadata,EDR:file,4,solidcore,1,1,mitre_dc0059_file_metadata__solidcore,mcafee:epo,defaults
-DC0059,File Metadata,linux:fim,1,solidcore,1,1,mitre_dc0059_file_metadata__solidcore,mcafee:epo,defaults
+DC0059,File Metadata,EDR:file,4,solidcore,1,1,mitre_dc0059_file_metadata__solidcore,mcafee:epo:syslog,defaults
+DC0059,File Metadata,linux:fim,1,solidcore,1,1,mitre_dc0059_file_metadata__solidcore,mcafee:epo:syslog,defaults
 DC0059,File Metadata,EDR:file,4,sysmon,1,1,mitre_dc0059_file_metadata__sysmon,XmlWinEventLog:Microsoft-Windows-Sysmon/Operational,defaults
 DC0059,File Metadata,WinEventLog:Sysmon,24,sysmon,1,1,mitre_dc0059_file_metadata__sysmon,XmlWinEventLog:Microsoft-Windows-Sysmon/Operational,defaults
-DC0059,File Metadata,EDR:detection,2,trellix_epo,1,1,mitre_dc0059_file_metadata__trellix_epo,mcafee:epo,derived
+DC0059,File Metadata,EDR:detection,2,trellix_epo,1,1,mitre_dc0059_file_metadata__trellix_epo,mcafee:epo:syslog,derived
 DC0059,File Metadata,WinEventLog:Microsoft-Windows-CodeIntegrity/Operational,8,wineventlog,1,1,mitre_dc0059_file_metadata__wineventlog,XmlWinEventLog:Microsoft-Windows-CodeIntegrity/Operational|XmlWinEventLog:Microsoft-Windows-Windows Defender/Operational|XmlWinEventLog:Security,defaults
 DC0059,File Metadata,WinEventLog:Microsoft-Windows-Windows Defender/Operational,5,wineventlog,1,1,mitre_dc0059_file_metadata__wineventlog,XmlWinEventLog:Microsoft-Windows-CodeIntegrity/Operational|XmlWinEventLog:Microsoft-Windows-Windows Defender/Operational|XmlWinEventLog:Security,defaults
 DC0059,File Metadata,WinEventLog:Security,4,wineventlog,1,1,mitre_dc0059_file_metadata__wineventlog,XmlWinEventLog:Microsoft-Windows-CodeIntegrity/Operational|XmlWinEventLog:Microsoft-Windows-Windows Defender/Operational|XmlWinEventLog:Security,defaults
@@ -587,7 +587,7 @@ DC0061,File Modification,networkdevice:config,18,palo_alto,1,1,mitre_dc0061_file
 DC0061,File Modification,networkdevice:firmware,1,palo_alto,1,1,mitre_dc0061_file_modification__palo_alto,pan:config,defaults
 DC0061,File Modification,networkdevice:runtime,1,palo_alto,1,1,mitre_dc0061_file_modification__palo_alto,pan:config,defaults
 DC0061,File Modification,networkdevice:syslog,6,palo_alto,1,1,mitre_dc0061_file_modification__palo_alto,pan:config,defaults
-DC0061,File Modification,linux:fim,2,solidcore,1,1,mitre_dc0061_file_modification__solidcore,mcafee:epo,defaults
+DC0061,File Modification,linux:fim,2,solidcore,1,1,mitre_dc0061_file_modification__solidcore,mcafee:epo:syslog,defaults
 DC0061,File Modification,WinEventLog:Sysmon,15,sysmon,1,1,mitre_dc0061_file_modification__sysmon,XmlWinEventLog:Microsoft-Windows-Sysmon/Operational,defaults
 DC0061,File Modification,WinEventLog:Microsoft-Windows-CodeIntegrity/Operational,2,wineventlog,1,1,mitre_dc0061_file_modification__wineventlog,XmlWinEventLog:Security,defaults
 DC0061,File Modification,WinEventLog:Security,13,wineventlog,1,1,mitre_dc0061_file_modification__wineventlog,XmlWinEventLog:Security,defaults
@@ -632,7 +632,7 @@ DC0061,File Modification,iOS:unifiedlog,1,mobile,0,0,,mobile:telemetry,derived
 DC0061,File Modification,mobile:ForensicArtifacts,6,mobile,0,0,,mobile:telemetry,derived
 DC0062,Snapshot Metadata,AWS:CloudTrail,4,aws,0,0,,aws:cloudtrail|aws:cloudwatchlogs|aws:cloudwatchlogs:vpcflow,derived
 DC0062,Snapshot Metadata,gcp:audit,1,gcp,0,0,,google:gcp:pubsub:message,derived
-DC0063,Windows Registry Key Modification,(added by dc_defaults/curated),,solidcore,1,1,mitre_dc0063_windows_registry_key_modification__solidcore,mcafee:epo,defaults
+DC0063,Windows Registry Key Modification,(added by dc_defaults/curated),,solidcore,1,1,mitre_dc0063_windows_registry_key_modification__solidcore,mcafee:epo:syslog,defaults
 DC0063,Windows Registry Key Modification,WinEventLog:Sysmon,58,sysmon,1,1,mitre_dc0063_windows_registry_key_modification__sysmon,XmlWinEventLog:Microsoft-Windows-Sysmon/Operational,defaults
 DC0063,Windows Registry Key Modification,WinEventLog:Security,37,wineventlog,1,1,mitre_dc0063_windows_registry_key_modification__wineventlog,XmlWinEventLog:Security,defaults
 DC0063,Windows Registry Key Modification,m365:unified,2,m365_unified,0,0,,o365:management:activity,derived
@@ -644,7 +644,7 @@ DC0064,Command Execution,networkdevice:config,3,palo_alto,1,1,mitre_dc0064_comma
 DC0064,Command Execution,networkdevice:syslog,36,palo_alto,1,1,mitre_dc0064_command_execution__palo_alto,pan:config|pan:system,defaults
 DC0064,Command Execution,WinEventLog:PowerShell,72,powershell_logging,1,1,mitre_dc0064_command_execution__powershell_logging,XmlWinEventLog:Microsoft-Windows-PowerShell/Operational,defaults
 DC0064,Command Execution,EDR:cli,2,sysmon,1,1,mitre_dc0064_command_execution__sysmon,XmlWinEventLog:Microsoft-Windows-Sysmon/Operational,defaults
-DC0064,Command Execution,EDR:AMSI,2,trellix_epo,1,1,mitre_dc0064_command_execution__trellix_epo,mcafee:epo,defaults
+DC0064,Command Execution,EDR:AMSI,2,trellix_epo,1,1,mitre_dc0064_command_execution__trellix_epo,mcafee:epo:syslog,defaults
 DC0064,Command Execution,WinEventLog:Microsoft-Office-Alerts,4,wineventlog,1,1,mitre_dc0064_command_execution__wineventlog,XmlWinEventLog:Security,defaults
 DC0064,Command Execution,WinEventLog:Microsoft-Office/OutlookAddinMonitor,2,wineventlog,1,1,mitre_dc0064_command_execution__wineventlog,XmlWinEventLog:Security,defaults
 DC0064,Command Execution,WinEventLog:Security,3,wineventlog,1,1,mitre_dc0064_command_execution__wineventlog,XmlWinEventLog:Security,defaults

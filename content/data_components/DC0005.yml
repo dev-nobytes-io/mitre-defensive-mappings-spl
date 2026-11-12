@@ -111,8 +111,8 @@ derived:
     in_scope: true
     eventtype: mitre_dc0005_scheduled_job_metadata__wineventlog
     search: >-
-      index=wineventlog sourcetype=XmlWinEventLog:Microsoft-Windows-TaskScheduler/Operational EventCode IN (106,
-      140, 200, 201)
+      index=wineventlog source="XmlWinEventLog:Microsoft-Windows-TaskScheduler/Operational" EventCode IN (106, 140,
+      200, 201)
     constraint_origin: defaults
     broad_refs: 2
     sources:
@@ -123,7 +123,7 @@ derived:
     have: false
     in_scope: true
     eventtype: mitre_dc0005_scheduled_job_metadata__esxi_syslog
-    search: index=vmware sourcetype=vmware:esxlog:syslog
+    search: index=vmware sourcetype="vmware:esxlog:syslog"
     constraint_origin: derived
     broad_refs: 0
     sources:

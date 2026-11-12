@@ -95,7 +95,8 @@ class DCView:
 def _constraint_parts(fv: FeedView) -> list[str]:
     parts: list[str] = []
     if fv.sourcetypes:
-        parts.append("sourcetype=" + fv.sourcetypes[0] if len(fv.sourcetypes) == 1 else "sourcetype IN (" + ", ".join(_q(s) for s in fv.sourcetypes) + ")")
+        fld = constraint_field(fv.feed)
+        parts.append(f"{fld}=" + _q(fv.sourcetypes[0]) if len(fv.sourcetypes) == 1 else f"{fld} IN (" + ", ".join(_q(s) for s in fv.sourcetypes) + ")")
     if fv.event_codes:
         parts.append("EventCode IN (" + ", ".join(str(c) for c in fv.event_codes) + ")")
     if fv.record_types:
@@ -109,6 +110,11 @@ def _constraint_parts(fv: FeedView) -> list[str]:
     elif fv.filters:
         parts.append("(" + " OR ".join(f"({f})" for f in fv.filters) + ")")
     return parts
+
+
+def constraint_field(feed: str) -> str:
+    """Field the feed's values are matched on in eventtypes: sourcetype (default) or source."""
+    return config.feed(feed).get("constraint_field", "sourcetype")
 
 
 def _q(s: str) -> str:

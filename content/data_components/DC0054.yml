@@ -104,7 +104,7 @@ derived:
     have: true
     in_scope: true
     eventtype: mitre_dc0054_drive_access__sysmon
-    search: index=sysmon sourcetype=XmlWinEventLog:Microsoft-Windows-Sysmon/Operational EventCode IN (9)
+    search: index=sysmon source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode IN (9)
     constraint_origin: defaults
     broad_refs: 0
     sources:
@@ -115,7 +115,7 @@ derived:
     in_scope: true
     eventtype: mitre_dc0054_drive_access__auditd
     search: >-
-      index=linux sourcetype=linux:audit type IN (PATH, SYSCALL) (syscall IN (open, openat, read, write) OR SYSCALL
+      index=linux sourcetype="linux:audit" type IN (PATH, SYSCALL) (syscall IN (open, openat, read, write) OR SYSCALL
       IN (open, openat, read, write)) (name="/dev/sd*" OR name="/dev/nvme*" OR name="/dev/mapper/*")
     constraint_origin: defaults
     broad_refs: 0

@@ -665,7 +665,7 @@ derived:
     have: true
     in_scope: true
     eventtype: mitre_dc0078_network_traffic_flow__palo_alto
-    search: index=pan_logs sourcetype=pan:traffic
+    search: index=pan_logs sourcetype="pan:traffic"
     constraint_origin: defaults
     broad_refs: 0
     sources:
@@ -682,7 +682,7 @@ derived:
     have: true
     in_scope: true
     eventtype: mitre_dc0078_network_traffic_flow__sysmon
-    search: index=sysmon sourcetype=XmlWinEventLog:Microsoft-Windows-Sysmon/Operational EventCode IN (3)
+    search: index=sysmon source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode IN (3)
     constraint_origin: defaults
     broad_refs: 0
     sources:
@@ -692,7 +692,7 @@ derived:
     have: true
     in_scope: true
     eventtype: mitre_dc0078_network_traffic_flow__wineventlog
-    search: index=wineventlog sourcetype=XmlWinEventLog:Security EventCode IN (5156, 5157)
+    search: index=wineventlog source="XmlWinEventLog:Security" EventCode IN (5156, 5157)
     constraint_origin: defaults
     broad_refs: 2
     sources:
@@ -703,7 +703,7 @@ derived:
     have: true
     in_scope: true
     eventtype: mitre_dc0078_network_traffic_flow__wireshark
-    search: index=pcap sourcetype=wireshark:json
+    search: index=pcap sourcetype="wireshark:json"
     constraint_origin: derived
     broad_refs: 0
     sources:
@@ -714,8 +714,8 @@ derived:
     in_scope: true
     eventtype: mitre_dc0078_network_traffic_flow__auditd
     search: >-
-      index=linux sourcetype=linux:audit type IN (SYSCALL) (syscall IN (connect, recvfrom, sendmsg, sendto) OR SYSCALL
-      IN (connect, recvfrom, sendmsg, sendto))
+      index=linux sourcetype="linux:audit" type IN (SYSCALL) (syscall IN (connect, recvfrom, sendmsg, sendto) OR
+      SYSCALL IN (connect, recvfrom, sendmsg, sendto))
     constraint_origin: defaults
     broad_refs: 0
     sources:
@@ -725,7 +725,7 @@ derived:
     have: false
     in_scope: true
     eventtype: mitre_dc0078_network_traffic_flow__edr_telemetry
-    search: index=edr sourcetype=edr:telemetry
+    search: index=edr sourcetype="edr:telemetry"
     constraint_origin: derived
     broad_refs: 2
     sources:
@@ -771,7 +771,7 @@ derived:
     have: false
     in_scope: true
     eventtype: mitre_dc0078_network_traffic_flow__netflow
-    search: index=netflow sourcetype=stream:netflow
+    search: index=netflow sourcetype="stream:netflow"
     constraint_origin: derived
     broad_refs: 26
     sources:
@@ -783,7 +783,7 @@ derived:
     have: false
     in_scope: true
     eventtype: mitre_dc0078_network_traffic_flow__vcenter
-    search: index=vmware sourcetype=vmware:vclog:vpxd
+    search: index=vmware sourcetype="vmware:vclog:vpxd"
     constraint_origin: derived
     broad_refs: 10
     sources:
