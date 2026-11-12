@@ -89,4 +89,5 @@ def test_sigma_rules_parse_and_convert(model):
         for q in out:
             assert "index=" in q or "eventtype" in q, f"{p.name}: converted query is not scoped to a feed or data component: {q[:120]}"
             assert 'source="WinEventLog:' not in q, f"{p.name}: classic WinEventLog source contradicts XML collection"
+            assert "EventID=" not in q and "EventID IN" not in q, f"{p.name}: Splunk_TA_windows field is EventCode, not EventID"
     assert seen == expected

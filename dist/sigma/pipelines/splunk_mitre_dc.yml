@@ -1217,3 +1217,10 @@ transformations:
   - type: logsource
     product: m365
     service: defender
+- id: windows_eventid_to_eventcode
+  type: field_name_mapping
+  mapping:
+    EventID: EventCode
+  rule_conditions:
+  - type: logsource
+    product: windows

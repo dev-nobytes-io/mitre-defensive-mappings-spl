@@ -110,6 +110,13 @@ class SigmaRenderer:
                 "conditions": cond,
                 "rule_conditions": [{"type": "logsource", "product": sg["product"], "service": sg["service"]}],
             })
+        # Splunk_TA_windows exposes the event id as EventCode; Sigma rules use EventID
+        transformations.append({
+            "id": "windows_eventid_to_eventcode",
+            "type": "field_name_mapping",
+            "mapping": {"EventID": "EventCode"},
+            "rule_conditions": [{"type": "logsource", "product": "windows"}],
+        })
         pipeline = {
             "name": f"MITRE ATT&CK v{m.version} data components -> Splunk eventtypes",
             "priority": 30,
