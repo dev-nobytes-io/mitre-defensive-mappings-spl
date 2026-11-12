@@ -1,0 +1,21 @@
+id: RISK0003
+curated:
+  status: implemented
+  title: Ransomware precursors on one host
+  shape: risk_threshold
+  severity: critical
+  summary: >-
+    Two or more of the ransomware preparation and execution analytics fire on the same host within an
+    hour: recovery inhibited (AN0933), service stop burst (AN0061), security tooling tampered with
+    (AN1369), event logs cleared (AN1472), ransom notes dropped (AN0602).
+  scope: [AN0933, AN0061, AN1369, AN1472, AN0602]
+  group_by: risk_object
+  risk_object_types: [system]
+  window: 1h
+  condition: distinct_analytics >= 2
+  finding_title: Ransomware precursors on $risk_object$
+  security_domain: endpoint
+  false_positives:
+    - Decommissioning or reimaging scripts that stop services and clear logs; exclude the hosts during the change window.
+  sigma:
+    not_expressible: Operates on Enterprise Security risk events, which Sigma does not model.

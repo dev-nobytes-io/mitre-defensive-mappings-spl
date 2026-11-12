@@ -148,6 +148,8 @@ def validate(m: AttackModel) -> list[str]:
     # ---- analytics
     from .analytics import validate_analytics
     errors += validate_analytics(m)
+    from .strategies import validate_strategies
+    errors += validate_strategies(m)
 
     # ---- docs exist
     for v in views:

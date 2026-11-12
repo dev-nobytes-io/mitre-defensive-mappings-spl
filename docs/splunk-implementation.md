@@ -12,6 +12,18 @@ Eventtypes describe *what an event is*. They cannot carry environment specifics 
 
 Analytics bind each ATT&CK mutable element to one of these, or to a macro of their own (`mitre_an0061_threshold`, `mitre_an1030_access_mask`), or leave it to their `mitre_anXXXX_filter` macro; the analytic's page lists every element and where it landed. `mitremap validate` rejects an analytic whose declared binding is never used by the search.
 
+## 2b. Detection strategies: sequences, risk rules, delegation
+
+Because a strategy's analytics are platform variants, "correlating the analytics of a strategy" is rarely what you want. Each strategy takes one of three shapes:
+
+* **Delegated** (default, 36 strategies): the analytics' own findings and risk events are the strategy's output. Nothing extra runs.
+* **Sequence** (6): a hand-written search over raw events that implements the chain the single-leg analytic left in its `gaps` field, joined on a real key: Sysmon process GUID for LSASS access then dump write, host and file path for document write then execution, host and task command for task creation then Task Scheduler launch. Sequences write a finding and risk, like a TTP analytic.
+* **Risk rule** (4 strategy-scoped, 3 cross-strategy): generated from parameters (scope, `group_by` risk or threat object, window, condition) over the Risk data model. They write a finding only, never risk, so no rule reads its own output. Strategy-scoped rules look for spread (one source address on three hosts); cross-strategy rules look for breadth (three strategies or tactics on one object) or a named precursor set (ransomware).
+
+Risk rules recover the analytic or strategy id from the rule name in `source` and enrich it from the TA's ATT&CK lookups. That avoids depending on how custom annotation frameworks are flattened into risk-event fields, which differs between ES versions.
+
+**Asset and identity correlation is a prerequisite for the risk layer.** Endpoint analytics raise risk on host names, network analytics on IP addresses. Unless ES Asset and Identity management maps a host's IPs to its name, a host's endpoint and network risk land on two different risk objects and cross-feed rules (DET0400, RISK0001) undercount. Populate the asset lookup with `ip`, `nt_host` and `dns` before enabling them.
+
 Two conventions keep the searches portable:
 
 * **Per-log sourcetype macros.** Feeds that ship several logs get `mitre_st_<feed>_<log>` (`mitre_st_corelight_http`, `mitre_st_palo_alto_config`), generated from `stack.yml`, so an analytic writes `` `mitre_dc0085_corelight` `mitre_st_corelight_http` `` and never a sourcetype name.

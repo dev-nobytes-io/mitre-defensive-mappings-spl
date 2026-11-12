@@ -1,0 +1,19 @@
+id: RISK0002
+curated:
+  status: implemented
+  title: High accumulated risk on one risk object
+  shape: risk_threshold
+  severity: medium
+  summary: >-
+    One host or user accumulates a total risk score of 150 or more from MITRE content within 24 hours,
+    regardless of how many strategies contributed. Catches repeated high-score events that RISK0001's
+    diversity condition does not.
+  scope: all
+  group_by: risk_object
+  window: 24h
+  condition: risk_score >= 150
+  finding_title: Risk threshold exceeded on $risk_object$
+  false_positives:
+    - A single noisy analytic repeating on one host; throttle or tune that analytic rather than raising the threshold.
+  sigma:
+    not_expressible: Operates on Enterprise Security risk scores, which Sigma does not model.

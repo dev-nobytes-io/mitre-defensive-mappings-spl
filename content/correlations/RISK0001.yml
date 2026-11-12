@@ -1,0 +1,19 @@
+id: RISK0001
+curated:
+  status: implemented
+  title: Several ATT&CK detection strategies or tactics on one risk object
+  shape: risk_threshold
+  severity: high
+  summary: >-
+    One host or user accumulates risk from three or more distinct ATT&CK detection strategies, or across
+    three or more tactics, within 24 hours. This is the main risk-based finding: individually weak
+    anomalies that together describe an intrusion.
+  scope: all
+  group_by: risk_object
+  window: 24h
+  condition: distinct_strategies >= 3 OR distinct_tactics >= 3
+  finding_title: Multiple ATT&CK strategies on $risk_object$
+  false_positives:
+    - Administrators and IT automation that trip several discovery and execution anomalies in a day; tune the underlying analytics first.
+  sigma:
+    not_expressible: Operates on Enterprise Security risk events, which Sigma does not model.

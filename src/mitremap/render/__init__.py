@@ -20,6 +20,6 @@ class Renderer(Protocol):
 
 
 def all_renderers() -> dict[str, "Renderer"]:
-    from . import detections, docs, docs_analytics, esql, kql, sigma, splunk
+    from . import detections, docs, docs_analytics, docs_strategies, esql, kql, sigma, splunk
     return {r.name: r for r in (splunk.SplunkRenderer(), detections.DetectionsRenderer(), sigma.SigmaRenderer(), kql.KqlRenderer(), esql.EsqlRenderer(),
-                                docs.DocsRenderer(), docs_analytics.AnalyticsDocsRenderer())}
+                                docs.DocsRenderer(), docs_analytics.AnalyticsDocsRenderer(), docs_strategies.StrategiesDocsRenderer())}

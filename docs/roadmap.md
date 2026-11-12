@@ -37,9 +37,15 @@ Remaining:
 * Analytics for Linux, ESXi, containers and Azure once those feeds are ticked (564 are waiting on a feed).
 * Optional consolidation of same-shape analytics (the discovery set) into one scheduled search per data component where search concurrency is tight.
 
-## Phase 3: detection strategies
+## Phase 3 (in progress): detection strategies
 
-`content/detection_strategies/DETxxxx.yml` with `shape: risk_incident | correlation | notable`, the analytics it combines and the window. Rendered as ES finding-based detections over the Risk data model (count distinct `mitre_an` within `mitre_det` per risk object) or correlation searches, plus Sigma correlation rules. The `gaps` text on each analytic page already names the legs it leaves to this layer.
+Done: strategy and correlation schema (`content/detection_strategies/`, `content/correlations/`), `new-strategy` scaffolding, generated risk rules over the Risk data model, sequence validation, Sigma correlation rules for sequences, docs per strategy, and the first set: 6 sequences (DET0363 LSASS access then dump, DET0085 SYSTEM plus SAM hive save, DET0294 document write then execute, DET0394 web-root write then web shell, DET0365 Run key then execution, DET0441 task creation then Task Scheduler launch), 4 strategy risk rules (DET0530 and DET0327 spread from one source, DET0027 spread to one domain, DET0400 endpoint and network DNS agreement) and 3 cross-strategy correlations (RISK0001 breadth, RISK0002 score, RISK0003 ransomware precursors).
+
+Remaining:
+
+* Sequences for the other strategies whose analytics name a chain (`gaps` on each analytic page lists them).
+* A data-check correlation per data component: no events from a ticked feed in 24 hours raises Host Status risk.
+* Tune RISK0001/RISK0002 thresholds against a month of production risk data before enabling.
 
 ## Phase 4: more languages and platforms
 

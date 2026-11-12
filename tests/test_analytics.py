@@ -78,7 +78,7 @@ def test_sigma_rules_parse_and_convert(model):
     ours = ProcessingPipeline.from_yaml((DIST_DIR / "sigma" / "pipelines" / "splunk_mitre_dc.yml").read_text())
     expected = {v.id.lower() for v in implemented_views(model) if (v.curated.get("sigma") or {}) and not v.curated["sigma"].get("not_expressible")}
     seen = set()
-    for p in sorted(RULES.glob("*.yml")):
+    for p in sorted(RULES.glob("an*.yml")):
         seen.add(p.name.split("_")[0])
         docs = [d for d in yaml.safe_load_all(p.read_text()) if d]
         assert all(d.get("mitre_analytic") for d in docs), p.name
