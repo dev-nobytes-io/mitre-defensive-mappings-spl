@@ -10,7 +10,7 @@ flowchart LR
     SYS[Sysmon<br/>TA-microsoft-sysmon]
     CL[Corelight<br/>corelight_*]
     PAN[Palo Alto<br/>pan:*]
-    EPO[Trellix ePO<br/>mcafee:epo]
+    EPO[Trellix ePO<br/>mcafee:epo:syslog]
     SC[Solidcore via ePO]
     WS[Wireshark<br/>hunt only]
   end
@@ -54,7 +54,7 @@ Log forwarding profiles must be attached to every security rule, and system/conf
 
 ATT&CK has no Trellix-specific log source names, so these feeds are mapped as *alternative providers* for components where the product observes the same thing:
 
-* ePO/ENS threat events (`mcafee:epo`): Host Status (AV disabled, tamper, update failure), Malware Metadata/Content, Application Log Content, and the `EDR:detection` / `EDR:AMSI` / `etw:Microsoft-Antimalware-Scan-Interface` references via ENS's AMSI integration.
+* ePO/ENS threat events (`mcafee:epo:syslog`, the sourcetype of Splunk's ePO Syslog add-on): Host Status (AV disabled, tamper, update failure), Malware Metadata/Content, Application Log Content, and the `EDR:detection` / `EDR:AMSI` / `etw:Microsoft-Antimalware-Scan-Interface` references via ENS's AMSI integration.
 * Solidcore (Application and Change Control) events arrive through ePO with event names such as `FILE_CREATED`, `FILE_MODIFIED`, `FILE_DELETED`, `FILE_ATTR_MODIFIED`, `EXECUTION_DENIED`, `PROCESS_HIJACK_ATTEMPTED`, `REG_VALUE_MODIFIED`, `WRITE_DENIED`, `READ_DENIED`. They are mapped to File Creation/Modification/Deletion/Access/Metadata, Registry Key Creation/Modification/Deletion, Module Load and Process Creation (denied). **Verify the field that carries the event name in your TA version** (`threat_name` or `event_description`) and adjust the filters in `config/dc_defaults.yml`; the shipped filters check both.
 
 ## Wireshark (`wireshark`)

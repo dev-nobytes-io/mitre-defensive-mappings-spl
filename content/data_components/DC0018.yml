@@ -373,7 +373,7 @@ derived:
     have: true
     in_scope: true
     eventtype: mitre_dc0018_host_status__trellix_epo
-    search: index=epo sourcetype="mcafee:epo"
+    search: index=epo sourcetype="mcafee:epo:syslog"
     constraint_origin: defaults
     broad_refs: 0
     sources:

@@ -43,7 +43,7 @@ Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
 | Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `solidcore` | live | sourcetype=`mcafee:epo` | `(threat_name IN (REG_VALUE_MODIFIED, REG_KEY_MODIFIED) OR event_description IN (REG_VALUE_MODIFIED, REG_KEY_MODIFIED)) (product_name="Solidcore*")` | defaults | Arrives through the ePO TA; Solidcore events carry event names such as FILE_CREATED, FILE_MODIFIED, FILE_DELETED, EXECUTION_DENIED, REG_VALUE_MODIFIED, PROCESS_HIJACK_ATTEMPTED. Verify field names (threat_name / event_description) in your data. |
+| `solidcore` | live | sourcetype=`mcafee:epo:syslog` | `(threat_name IN (REG_VALUE_MODIFIED, REG_KEY_MODIFIED) OR event_description IN (REG_VALUE_MODIFIED, REG_KEY_MODIFIED)) (product_name="Solidcore*")` | defaults | Arrives through the ePO TA; Solidcore events carry event names such as FILE_CREATED, FILE_MODIFIED, FILE_DELETED, EXECUTION_DENIED, REG_VALUE_MODIFIED, PROCESS_HIJACK_ATTEMPTED. Verify field names (threat_name / event_description) in your data. |
 | `sysmon` | live | source=`XmlWinEventLog:Microsoft-Windows-Sysmon/Operational` | `EventCode IN (13, 14)` | defaults | Splunk Add-on for Sysmon (needs Splunk_TA_windows for XML parsing) |
 | `wineventlog` | live | source=`XmlWinEventLog:Security` | `EventCode IN (4657, 4663, 4670)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true) |
 
@@ -64,7 +64,7 @@ Eventtypes (literal constraints, see `dist/splunk/TA-mitre-attack-datacomponents
 
 ```ini
 [mitre_dc0063_windows_registry_key_modification__solidcore]
-search = index=epo sourcetype="mcafee:epo" (threat_name IN (REG_VALUE_MODIFIED, REG_KEY_MODIFIED) OR event_description IN (REG_VALUE_MODIFIED, REG_KEY_MODIFIED)) (product_name="Solidcore*")
+search = index=epo sourcetype="mcafee:epo:syslog" (threat_name IN (REG_VALUE_MODIFIED, REG_KEY_MODIFIED) OR event_description IN (REG_VALUE_MODIFIED, REG_KEY_MODIFIED)) (product_name="Solidcore*")
 
 [mitre_dc0063_windows_registry_key_modification__sysmon]
 search = index=sysmon source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode IN (13, 14)

@@ -238,7 +238,7 @@ derived:
     in_scope: true
     eventtype: mitre_dc0040_file_deletion__solidcore
     search: >-
-      index=epo sourcetype="mcafee:epo" (threat_name=FILE_DELETED OR event_description=FILE_DELETED) (product_name="Solidcore*")
+      index=epo sourcetype="mcafee:epo:syslog" (threat_name=FILE_DELETED OR event_description=FILE_DELETED) (product_name="Solidcore*")
     constraint_origin: defaults
     broad_refs: 0
     sources:

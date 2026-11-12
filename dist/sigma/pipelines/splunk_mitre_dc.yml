@@ -936,7 +936,7 @@ transformations:
   type: add_condition
   conditions:
     index: epo
-    sourcetype: mcafee:epo
+    sourcetype: mcafee:epo:syslog
   rule_conditions:
   - type: logsource
     product: windows

@@ -311,7 +311,7 @@ derived:
     in_scope: true
     eventtype: mitre_dc0016_module_load__solidcore
     search: >-
-      index=epo sourcetype="mcafee:epo" (threat_name=PROCESS_HIJACK_ATTEMPTED OR event_description=PROCESS_HIJACK_ATTEMPTED)
+      index=epo sourcetype="mcafee:epo:syslog" (threat_name=PROCESS_HIJACK_ATTEMPTED OR event_description=PROCESS_HIJACK_ATTEMPTED)
       (product_name="Solidcore*")
     constraint_origin: defaults
     broad_refs: 0

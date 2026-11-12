@@ -754,7 +754,7 @@ derived:
     have: true
     in_scope: true
     eventtype: mitre_dc0064_command_execution__trellix_epo
-    search: index=epo sourcetype="mcafee:epo" (threat_type="AMSI*" OR threat_name="AMSI*")
+    search: index=epo sourcetype="mcafee:epo:syslog" (threat_type="AMSI*" OR threat_name="AMSI*")
     constraint_origin: defaults
     broad_refs: 0
     sources:

@@ -451,8 +451,8 @@ derived:
     in_scope: true
     eventtype: mitre_dc0039_file_creation__solidcore
     search: >-
-      index=epo sourcetype="mcafee:epo" (threat_name IN (FILE_CREATED, FILE_RENAMED) OR event_description IN (FILE_CREATED,
-      FILE_RENAMED)) (product_name="Solidcore*")
+      index=epo sourcetype="mcafee:epo:syslog" (threat_name IN (FILE_CREATED, FILE_RENAMED) OR event_description
+      IN (FILE_CREATED, FILE_RENAMED)) (product_name="Solidcore*")
     constraint_origin: defaults
     broad_refs: 0
     sources:

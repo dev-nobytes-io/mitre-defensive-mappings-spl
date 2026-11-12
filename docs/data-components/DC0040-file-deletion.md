@@ -67,7 +67,7 @@ Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
 | Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `solidcore` | live | sourcetype=`mcafee:epo` | `(threat_name=FILE_DELETED OR event_description=FILE_DELETED) (product_name="Solidcore*")` | defaults | Arrives through the ePO TA; Solidcore events carry event names such as FILE_CREATED, FILE_MODIFIED, FILE_DELETED, EXECUTION_DENIED, REG_VALUE_MODIFIED, PROCESS_HIJACK_ATTEMPTED. Verify field names (threat_name / event_description) in your data. |
+| `solidcore` | live | sourcetype=`mcafee:epo:syslog` | `(threat_name=FILE_DELETED OR event_description=FILE_DELETED) (product_name="Solidcore*")` | defaults | Arrives through the ePO TA; Solidcore events carry event names such as FILE_CREATED, FILE_MODIFIED, FILE_DELETED, EXECUTION_DENIED, REG_VALUE_MODIFIED, PROCESS_HIJACK_ATTEMPTED. Verify field names (threat_name / event_description) in your data. |
 | `sysmon` | live | source=`XmlWinEventLog:Microsoft-Windows-Sysmon/Operational` | `EventCode IN (23, 26)` | defaults | Splunk Add-on for Sysmon (needs Splunk_TA_windows for XML parsing) |
 | `wineventlog` | live | source=`XmlWinEventLog:Security` | `EventCode IN (4660, 4663)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true) |
 | `auditd` | ready (tick in stack.yml) | sourcetype=`linux:audit` | `type IN (PATH, SYSCALL) (syscall IN (rename, renameat, rmdir, unlink, unlinkat) OR SYSCALL IN (rename, renameat, rmdir, unlink, unlinkat))` | defaults | Splunk Add-on for Unix and Linux (linux:audit) or auditd -> auditbeat/syslog |
@@ -96,7 +96,7 @@ Eventtypes (literal constraints, see `dist/splunk/TA-mitre-attack-datacomponents
 
 ```ini
 [mitre_dc0040_file_deletion__solidcore]
-search = index=epo sourcetype="mcafee:epo" (threat_name=FILE_DELETED OR event_description=FILE_DELETED) (product_name="Solidcore*")
+search = index=epo sourcetype="mcafee:epo:syslog" (threat_name=FILE_DELETED OR event_description=FILE_DELETED) (product_name="Solidcore*")
 
 [mitre_dc0040_file_deletion__sysmon]
 search = index=sysmon source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode IN (23, 26)

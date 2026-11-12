@@ -533,7 +533,7 @@ derived:
     in_scope: true
     eventtype: mitre_dc0059_file_metadata__solidcore
     search: >-
-      index=epo sourcetype="mcafee:epo" (threat_name IN (FILE_ATTR_MODIFIED, FILE_SOLIDIFIED, FILE_UNSOLIDIFIED)
+      index=epo sourcetype="mcafee:epo:syslog" (threat_name IN (FILE_ATTR_MODIFIED, FILE_SOLIDIFIED, FILE_UNSOLIDIFIED)
       OR event_description IN (FILE_ATTR_MODIFIED, FILE_SOLIDIFIED, FILE_UNSOLIDIFIED)) (product_name="Solidcore*")
     constraint_origin: defaults
     broad_refs: 5
@@ -556,7 +556,7 @@ derived:
     have: true
     in_scope: true
     eventtype: mitre_dc0059_file_metadata__trellix_epo
-    search: index=epo sourcetype="mcafee:epo"
+    search: index=epo sourcetype="mcafee:epo:syslog"
     constraint_origin: derived
     broad_refs: 2
     sources:

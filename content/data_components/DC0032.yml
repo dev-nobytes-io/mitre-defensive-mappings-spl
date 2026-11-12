@@ -595,7 +595,8 @@ derived:
     in_scope: true
     eventtype: mitre_dc0032_process_creation__solidcore
     search: >-
-      index=epo sourcetype="mcafee:epo" (threat_name=EXECUTION_DENIED OR event_description=EXECUTION_DENIED) (product_name="Solidcore*")
+      index=epo sourcetype="mcafee:epo:syslog" (threat_name=EXECUTION_DENIED OR event_description=EXECUTION_DENIED)
+      (product_name="Solidcore*")
     constraint_origin: defaults
     broad_refs: 0
     sources:

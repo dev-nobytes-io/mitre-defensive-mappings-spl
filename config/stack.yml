@@ -146,8 +146,8 @@ feeds:
     have: true
     platforms: [Windows, Linux]
     index: epo
-    ta: Splunk Add-on for McAfee ePO (mcafee:epo). Verify the sourcetype against your installed TA version.
-    sourcetype: "mcafee:epo"
+    ta: Splunk Add-on for McAfee ePO Syslog (sourcetype mcafee:epo:syslog, documented by Splunk). If ePO data arrives another way (DB Connect pull, a community Trellix REST add-on such as trellix_epo:threat_events), change the sourcetype here.
+    sourcetype: "mcafee:epo:syslog"
     prerequisites:
       - ePO configured to forward threat events to Splunk (syslog or DB pull); confirm product_name/threat_type fields populate.
       - ENS AMSI and Exploit Prevention enabled if AMSI-type analytics are expected.
@@ -159,7 +159,7 @@ feeds:
     platforms: [Windows, Linux]
     index: epo
     ta: Arrives through the ePO TA; Solidcore events carry event names such as FILE_CREATED, FILE_MODIFIED, FILE_DELETED, EXECUTION_DENIED, REG_VALUE_MODIFIED, PROCESS_HIJACK_ATTEMPTED. Verify field names (threat_name / event_description) in your data.
-    sourcetype: "mcafee:epo"
+    sourcetype: "mcafee:epo:syslog"
     filter: 'product_name="Solidcore*"'
     prerequisites:
       - Change Control file and registry monitoring rules scoped to the paths/keys of interest; Application Control in Enabled (not Observe) mode for EXECUTION_DENIED.
@@ -347,6 +347,8 @@ feeds:
     index: k8s
     ta: Splunk OpenTelemetry Collector for Kubernetes / Splunk Connect for Kubernetes
     sourcetypes: ["kube:apiserver-audit", "kube:objects:events"]
+    # kube:apiserver-audit is the value Splunk's OpenTelemetry Collector examples set for the API server
+    # audit file via logsCollection.extraFileLogs (com.splunk.sourcetype). It only exists if you configure that input.
     prerequisites: [Audit policy at Metadata level minimum, RequestResponse for secrets/pods/exec; ship the audit log file from control-plane nodes.]
     unlocks: Container Creation/Start, Pod Creation/Enumeration, User Account Authentication (k8s), Cloud Service Enumeration - about 30 references.
 

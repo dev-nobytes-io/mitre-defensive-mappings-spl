@@ -642,9 +642,9 @@ derived:
     in_scope: true
     eventtype: mitre_dc0061_file_modification__solidcore
     search: >-
-      index=epo sourcetype="mcafee:epo" (threat_name IN (FILE_MODIFIED, FILE_ATTR_MODIFIED, FILE_RENAMED, WRITE_DENIED,
-      OWNERSHIP_DENIED) OR event_description IN (FILE_MODIFIED, FILE_ATTR_MODIFIED, FILE_RENAMED, WRITE_DENIED,
-      OWNERSHIP_DENIED)) (product_name="Solidcore*")
+      index=epo sourcetype="mcafee:epo:syslog" (threat_name IN (FILE_MODIFIED, FILE_ATTR_MODIFIED, FILE_RENAMED,
+      WRITE_DENIED, OWNERSHIP_DENIED) OR event_description IN (FILE_MODIFIED, FILE_ATTR_MODIFIED, FILE_RENAMED,
+      WRITE_DENIED, OWNERSHIP_DENIED)) (product_name="Solidcore*")
     constraint_origin: defaults
     broad_refs: 2
     sources:

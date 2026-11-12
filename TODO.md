@@ -45,7 +45,8 @@ Work on a branch, open a draft PR, keep `make build` idempotent and the tests gr
 
 - [x] **Windows feeds match on `source`, not `sourcetype`.** Splunk Add-on for Windows 5.0+ and the current Sysmon add-on use `sourcetype=XmlWinEventLog` with the channel in `source=XmlWinEventLog:<channel>`. The eventtypes use `sourcetype=XmlWinEventLog:<channel>`, which only matches pre-5.0 add-ons. Fix: per-feed `constraint_field: source` for wineventlog, sysmon and powershell_logging; matching on source works for old and new add-on versions. Done when the eventtypes, Sigma pipeline, docs and tests use `source=` for these feeds.
 - [x] **Sigma chain drops `splunk_windows`.** That pipeline adds `source="WinEventLog:<channel>"` (classic rendering), which contradicts XML collection. Our pipeline should emit the XML `source` itself; tests and docs should chain `sysmon` plus ours only.
-- [ ] **Verify remaining sourcetype names** against installed add-ons and record the result in `config/stack.yml`: Trellix ePO (`mcafee:epo` from DB pull vs `mcafee:epo:syslog`), the Solidcore event-name field (`threat_name` vs `event_description`), Kubernetes audit (`kube:apiserver-audit` depends on the collector), container runtime.
+- [x] **Verify remaining sourcetype names.** Trellix ePO and Solidcore now use `mcafee:epo:syslog` (Splunk's ePO Syslog add-on; `mcafee:epo` was not a documented sourcetype). Kubernetes audit `kube:apiserver-audit` is the value Splunk's collector examples set, and only exists if that file input is configured (noted in `stack.yml`).
+- [ ] **Confirm ePO and Solidcore field names in real data.** The filters assume `threat_name`, `threat_type`, `event_description` and `product_name`; the ePO Syslog add-on's extractions are unverified here. One search over a day of `mcafee:epo:syslog` settles it; then fix `config/dc_defaults.yml` and `stack.yml` filters.
 
 ### P1: operational safety net
 

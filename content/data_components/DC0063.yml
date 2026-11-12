@@ -123,7 +123,7 @@ derived:
     in_scope: true
     eventtype: mitre_dc0063_windows_registry_key_modification__solidcore
     search: >-
-      index=epo sourcetype="mcafee:epo" (threat_name IN (REG_VALUE_MODIFIED, REG_KEY_MODIFIED) OR event_description
+      index=epo sourcetype="mcafee:epo:syslog" (threat_name IN (REG_VALUE_MODIFIED, REG_KEY_MODIFIED) OR event_description
       IN (REG_VALUE_MODIFIED, REG_KEY_MODIFIED)) (product_name="Solidcore*")
     constraint_origin: defaults
     broad_refs: 0

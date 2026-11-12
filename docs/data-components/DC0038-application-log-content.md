@@ -74,7 +74,7 @@ Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 |---|---|---|---|---|---|
 | `corelight` | live | sourcetype=`corelight_http`, sourcetype=`corelight_notice`, sourcetype=`corelight_smtp`, sourcetype=`corelight_ssh` | `(whole feed)` | defaults | Corelight App for Splunk (corelight_<log>). For TA_zeek use prefix zeek: and suffix :json. |
 | `palo_alto` | live | sourcetype=`pan:globalprotect`, sourcetype=`pan:system`, sourcetype=`pan:threat` | `(whole feed)` | defaults | Splunk Add-on for Palo Alto Networks (pan:*) |
-| `trellix_epo` | live | sourcetype=`mcafee:epo` | `(whole feed)` | defaults | Splunk Add-on for McAfee ePO (mcafee:epo). Verify the sourcetype against your installed TA version. |
+| `trellix_epo` | live | sourcetype=`mcafee:epo:syslog` | `(whole feed)` | defaults | Splunk Add-on for McAfee ePO Syslog (sourcetype mcafee:epo:syslog, documented by Splunk). If ePO data arrives another way (DB Connect pull, a community Trellix REST add-on such as trellix_epo:threat_events), change the sourcetype here. |
 | `wineventlog` | live | source=`XmlWinEventLog:Application`, source=`XmlWinEventLog:Security`, source=`XmlWinEventLog:System` | `EventCode IN (104, 1000, 1020, 1063, 1102, 1341, 1342, 6416)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true) |
 | `azure_activity` | ready (tick in stack.yml) | sourcetype=`mscs:azure:audit` | `(whole feed)` | derived | Splunk Add-on for Microsoft Cloud Services (mscs:azure:audit) |
 | `azure_entra` | ready (tick in stack.yml) | sourcetype=`azure:aad:audit`, sourcetype=`azure:aad:signin` | `(whole feed)` | defaults | Splunk Add-on for Microsoft Azure (azure:aad:signin, azure:aad:audit) or Microsoft Cloud Services add-on via Event Hub |
@@ -123,7 +123,7 @@ search = index=corelight sourcetype IN (corelight_http, corelight_notice, coreli
 search = index=pan_logs sourcetype IN ("pan:globalprotect", "pan:system", "pan:threat")
 
 [mitre_dc0038_application_log_content__trellix_epo]
-search = index=epo sourcetype="mcafee:epo"
+search = index=epo sourcetype="mcafee:epo:syslog"
 
 [mitre_dc0038_application_log_content__wineventlog]
 search = index=wineventlog source IN ("XmlWinEventLog:Application", "XmlWinEventLog:Security", "XmlWinEventLog:System") EventCode IN (104, 1000, 1020, 1063, 1102, 1341, 1342, 6416)

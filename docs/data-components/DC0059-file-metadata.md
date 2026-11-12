@@ -78,9 +78,9 @@ Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 |---|---|---|---|---|---|
 | `corelight` | live | sourcetype=`corelight_files`, sourcetype=`corelight_pe` | `(whole feed)` | defaults | Corelight App for Splunk (corelight_<log>). For TA_zeek use prefix zeek: and suffix :json. |
 | `palo_alto` | live | sourcetype=`pan:threat` | `(log_subtype=wildfire OR log_subtype=virus)` | defaults | Splunk Add-on for Palo Alto Networks (pan:*) |
-| `solidcore` | live | sourcetype=`mcafee:epo` | `(threat_name IN (FILE_ATTR_MODIFIED, FILE_SOLIDIFIED, FILE_UNSOLIDIFIED) OR event_description IN (FILE_ATTR_MODIFIED, FILE_SOLIDIFIED, FILE_UNSOLIDIFIED)) (product_name="Solidcore*")` | defaults | Arrives through the ePO TA; Solidcore events carry event names such as FILE_CREATED, FILE_MODIFIED, FILE_DELETED, EXECUTION_DENIED, REG_VALUE_MODIFIED, PROCESS_HIJACK_ATTEMPTED. Verify field names (threat_name / event_description) in your data. |
+| `solidcore` | live | sourcetype=`mcafee:epo:syslog` | `(threat_name IN (FILE_ATTR_MODIFIED, FILE_SOLIDIFIED, FILE_UNSOLIDIFIED) OR event_description IN (FILE_ATTR_MODIFIED, FILE_SOLIDIFIED, FILE_UNSOLIDIFIED)) (product_name="Solidcore*")` | defaults | Arrives through the ePO TA; Solidcore events carry event names such as FILE_CREATED, FILE_MODIFIED, FILE_DELETED, EXECUTION_DENIED, REG_VALUE_MODIFIED, PROCESS_HIJACK_ATTEMPTED. Verify field names (threat_name / event_description) in your data. |
 | `sysmon` | live | source=`XmlWinEventLog:Microsoft-Windows-Sysmon/Operational` | `EventCode IN (2, 11, 15)` | defaults | Splunk Add-on for Sysmon (needs Splunk_TA_windows for XML parsing) |
-| `trellix_epo` | live | sourcetype=`mcafee:epo` | `(whole feed)` | derived | Splunk Add-on for McAfee ePO (mcafee:epo). Verify the sourcetype against your installed TA version. |
+| `trellix_epo` | live | sourcetype=`mcafee:epo:syslog` | `(whole feed)` | derived | Splunk Add-on for McAfee ePO Syslog (sourcetype mcafee:epo:syslog, documented by Splunk). If ePO data arrives another way (DB Connect pull, a community Trellix REST add-on such as trellix_epo:threat_events), change the sourcetype here. |
 | `wineventlog` | live | source=`XmlWinEventLog:Microsoft-Windows-CodeIntegrity/Operational`, source=`XmlWinEventLog:Microsoft-Windows-Windows Defender/Operational`, source=`XmlWinEventLog:Security` | `EventCode IN (1116, 1117, 3033, 4663, 4670)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true) |
 | `auditd` | ready (tick in stack.yml) | sourcetype=`linux:audit` | `type IN (PATH, SYSCALL) (syscall IN (chmod, chown, fchmod, fchmodat, fchown, fchownat, fsetxattr, lchown, lsetxattr, removexattr, setxattr) OR SYSCALL IN (chmod, chown, fchmod, fchmodat, fchown, fchownat, fsetxattr, lchown, lsetxattr, removexattr, setxattr))` | defaults | Splunk Add-on for Unix and Linux (linux:audit) or auditd -> auditbeat/syslog |
 | `ebpf` | ready (tick in stack.yml) | sourcetype=`falco` | `(whole feed)` | derived | Vendor specific (falco JSON, tetragon) |
@@ -122,13 +122,13 @@ search = index=corelight sourcetype IN (corelight_files, corelight_pe)
 search = index=pan_logs sourcetype="pan:threat" (log_subtype=wildfire OR log_subtype=virus)
 
 [mitre_dc0059_file_metadata__solidcore]
-search = index=epo sourcetype="mcafee:epo" (threat_name IN (FILE_ATTR_MODIFIED, FILE_SOLIDIFIED, FILE_UNSOLIDIFIED) OR event_description IN (FILE_ATTR_MODIFIED, FILE_SOLIDIFIED, FILE_UNSOLIDIFIED)) (product_name="Solidcore*")
+search = index=epo sourcetype="mcafee:epo:syslog" (threat_name IN (FILE_ATTR_MODIFIED, FILE_SOLIDIFIED, FILE_UNSOLIDIFIED) OR event_description IN (FILE_ATTR_MODIFIED, FILE_SOLIDIFIED, FILE_UNSOLIDIFIED)) (product_name="Solidcore*")
 
 [mitre_dc0059_file_metadata__sysmon]
 search = index=sysmon source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode IN (2, 11, 15)
 
 [mitre_dc0059_file_metadata__trellix_epo]
-search = index=epo sourcetype="mcafee:epo"
+search = index=epo sourcetype="mcafee:epo:syslog"
 
 [mitre_dc0059_file_metadata__wineventlog]
 search = index=wineventlog source IN ("XmlWinEventLog:Microsoft-Windows-CodeIntegrity/Operational", "XmlWinEventLog:Microsoft-Windows-Windows Defender/Operational", "XmlWinEventLog:Security") EventCode IN (1116, 1117, 3033, 4663, 4670)

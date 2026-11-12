@@ -15,8 +15,8 @@ This is the checklist behind `config/stack.yml`. Tick `have: true` for what reac
 | ☐ | `etw` | ETW providers not surfaced by Sysmon (Kernel-Process, Win32k, WinINet, RPC, DotNETRuntime, AMSI, Token...) | Windows | `etw` | `etw:json` | 6 | 28 | yes |
 | ☐ | `windows_osquery` | osquery on Windows | Windows | `osquery` | `osquery:results` | 2 | 2 | yes |
 | ☐ | `autoruns` | Sysinternals Autoruns scans | Windows | `wineventlog` | `autoruns` | 1 | 1 | yes |
-| ☑ | `trellix_epo` | Trellix ePO events (ENS threat/AMSI/adaptive threat protection, ePO audit) | Windows, Linux | `epo` | `mcafee:epo` | 7 | 5 | yes |
-| ☑ | `solidcore` | Trellix Application and Change Control (Solidcore) via ePO | Windows, Linux | `epo` | `mcafee:epo` | 10 | 4 | yes |
+| ☑ | `trellix_epo` | Trellix ePO events (ENS threat/AMSI/adaptive threat protection, ePO audit) | Windows, Linux | `epo` | `mcafee:epo:syslog` | 7 | 5 | yes |
+| ☑ | `solidcore` | Trellix Application and Change Control (Solidcore) via ePO | Windows, Linux | `epo` | `mcafee:epo:syslog` | 10 | 4 | yes |
 | ☐ | `edr_telemetry` | EDR raw telemetry (memory, hunting, script block, syscall) - e.g. Trellix EDR, Defender for Endpoint advanced hunting | Windows, Linux | `edr` | `edr:telemetry` | 8 | 14 | yes |
 | ☑ | `corelight` | Corelight / Zeek network logs | Windows, Linux, macOS, ESXi, Network Devices, Containers | `corelight` | `corelight_{log}` | 15 | 284 | yes |
 | ☑ | `palo_alto` | Palo Alto Networks PAN-OS (traffic, threat, URL, system, config, GlobalProtect) | Network Devices, Windows, Linux, ESXi, Containers | `pan_logs` | `pan:{log}` | 24 | 322 | yes |

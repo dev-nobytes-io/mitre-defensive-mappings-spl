@@ -71,7 +71,7 @@ Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
 | Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `solidcore` | live | sourcetype=`mcafee:epo` | `(threat_name=READ_DENIED OR event_description=READ_DENIED) (product_name="Solidcore*")` | defaults | Arrives through the ePO TA; Solidcore events carry event names such as FILE_CREATED, FILE_MODIFIED, FILE_DELETED, EXECUTION_DENIED, REG_VALUE_MODIFIED, PROCESS_HIJACK_ATTEMPTED. Verify field names (threat_name / event_description) in your data. |
+| `solidcore` | live | sourcetype=`mcafee:epo:syslog` | `(threat_name=READ_DENIED OR event_description=READ_DENIED) (product_name="Solidcore*")` | defaults | Arrives through the ePO TA; Solidcore events carry event names such as FILE_CREATED, FILE_MODIFIED, FILE_DELETED, EXECUTION_DENIED, REG_VALUE_MODIFIED, PROCESS_HIJACK_ATTEMPTED. Verify field names (threat_name / event_description) in your data. |
 | `wineventlog` | live | source=`XmlWinEventLog:Security` | `EventCode IN (4656, 4663)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true) |
 | `auditd` | ready (tick in stack.yml) | sourcetype=`linux:audit` | `type IN (PATH, SYSCALL) (syscall IN (access, open, openat, openat2, read, readlink, stat) OR SYSCALL IN (access, open, openat, openat2, read, readlink, stat))` | defaults | Splunk Add-on for Unix and Linux (linux:audit) or auditd -> auditbeat/syslog |
 | `ebpf` | ready (tick in stack.yml) | sourcetype=`falco` | `(whole feed)` | derived | Vendor specific (falco JSON, tetragon) |
@@ -100,7 +100,7 @@ Eventtypes (literal constraints, see `dist/splunk/TA-mitre-attack-datacomponents
 
 ```ini
 [mitre_dc0055_file_access__solidcore]
-search = index=epo sourcetype="mcafee:epo" (threat_name=READ_DENIED OR event_description=READ_DENIED) (product_name="Solidcore*")
+search = index=epo sourcetype="mcafee:epo:syslog" (threat_name=READ_DENIED OR event_description=READ_DENIED) (product_name="Solidcore*")
 
 [mitre_dc0055_file_access__wineventlog]
 search = index=wineventlog source="XmlWinEventLog:Security" EventCode IN (4656, 4663)

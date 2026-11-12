@@ -55,7 +55,7 @@ derived:
     in_scope: true
     eventtype: mitre_dc0045_windows_registry_key_deletion__solidcore
     search: >-
-      index=epo sourcetype="mcafee:epo" (threat_name IN (REG_KEY_DELETED, REG_VALUE_DELETED) OR event_description
+      index=epo sourcetype="mcafee:epo:syslog" (threat_name IN (REG_KEY_DELETED, REG_VALUE_DELETED) OR event_description
       IN (REG_KEY_DELETED, REG_VALUE_DELETED)) (product_name="Solidcore*")
     constraint_origin: defaults
     broad_refs: 0
