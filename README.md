@@ -12,7 +12,7 @@ flowchart LR
   FEED --> ET["Splunk eventtype<br/>mitre_dcXXXX_name__feed"]
   ET --> UMB["Umbrella eventtype<br/>mitre_dcXXXX_name"]
   UMB --> RULE["Analytic as ES detection + Sigma rule<br/>TTP / Anomaly / Hunting (+ baselines)<br/>65 implemented"]
-  UMB --> SEQ["Strategy sequence<br/>raw-event chain, 6"]
+  UMB --> SEQ["Strategy sequence<br/>raw-event chain, 8"]
   RULE -- "risk events" --> RISK[("Risk data model")]
   SEQ -- "risk events" --> RISK
   RISK --> CORR["Strategy risk rules (4) and<br/>cross-strategy correlations (3)"]
@@ -22,7 +22,7 @@ flowchart LR
   class RULE,SEQ,CORR part
 ```
 
-Green is complete for every data component. Amber is in progress: 65 analytics, chosen by technique prevalence on the ticked feeds ([backlog](docs/analytics/backlog.md) for the rest), and a detection-strategy layer of 6 sequences, 4 strategy risk rules and 3 cross-strategy correlations ([strategies](docs/strategies/README.md)).
+Green is complete for every data component. Amber is in progress: 65 analytics, chosen by technique prevalence on the ticked feeds ([backlog](docs/analytics/backlog.md) for the rest), and a detection-strategy layer of 8 sequences, 4 strategy risk rules and 3 cross-strategy correlations ([strategies](docs/strategies/README.md)).
 
 **Resuming work?** [TODO.md](TODO.md) has the current state, conventions and the ordered next steps; [docs/roadmap.md](docs/roadmap.md) has the phased map.
 

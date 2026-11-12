@@ -54,7 +54,7 @@ sigma: {logsource, detection}  # or rules: [...] + correlation: {...}, or not_ex
 
 ## Phase 3: detection strategies (in progress)
 
-Done: strategy and correlation schema (`new-strategy`), generated risk rules over the Risk data model, 6 sequences, 4 strategy risk rules, 3 cross-strategy correlations. Next: sequences for the strategies listed in TODO P2, and threshold tuning of RISK0001 and RISK0002 against real risk data.
+Done: strategy and correlation schema (`new-strategy`), generated risk rules over the Risk data model, 8 sequences, 4 strategy risk rules, 3 cross-strategy correlations. Next: sequences for the strategies listed in TODO P2, and threshold tuning of RISK0001 and RISK0002 against real risk data.
 
 ## Phase 0 and validation: before production (next)
 

@@ -10,7 +10,7 @@ The single place to pick this project up again. Read **Where things stand**, run
 | Feed checklist | 44 feeds; 8 ticked (Windows Event Logs, PowerShell, Sysmon, Corelight, Palo Alto, Trellix ePO, Solidcore, Wireshark hunt-only) | `config/stack.yml`, `docs/checklist.md` |
 | Data components | All 106 mapped; 372 eventtypes, tags, macros, metadata and tuning lookups | `content/data_components/`, `dist/splunk/TA-mitre-attack-datacomponents/` |
 | Analytics | 65 of 1773 implemented (20 TTP, 36 anomaly, 9 hunting, 1 baseline); 446 more coverable by ticked feeds | `content/analytics/`, `docs/analytics/backlog.md` |
-| Detection strategies | 6 sequences, 4 strategy risk rules, 3 cross-strategy correlations; 52 strategies delegated | `content/detection_strategies/`, `content/correlations/` |
+| Detection strategies | 8 sequences, 4 strategy risk rules, 3 cross-strategy correlations; 50 strategies delegated | `content/detection_strategies/`, `content/correlations/` |
 | Telemetry health | HEALTH0001 expected telemetry missing or silent, HEALTH0002 host stopped reporting | `src/mitremap/health.py`, `docs/health.md` |
 | Sigma | Data-component pipeline; one rule file per analytic and per sequence strategy | `dist/sigma/` |
 | KQL / ES\|QL | Renderer stubs and config keys only | `src/mitremap/render/{kql,esql}.py` |
@@ -62,7 +62,8 @@ Work on a branch, open a draft PR, keep `make build` idempotent and the tests gr
 - [x] **Analytics, batch 2** (16 done: AN1040, AN0392, AN0237, AN1070, AN1031, AN0980, AN1064, AN0724, AN0577, AN0903, AN0589, AN0324, AN0516, AN1325, AN0846, AN1095).
 - [ ] **Analytics needing care:** AN1465 native API, AN0400/AN1496 crypto library loads, AN0066 packing, AN0243 keylogging. These depend on Sysmon ImageLoad (EventCode 7) volume; decide the Sysmon config scope first.
 - [ ] **Network-device CLI analytics** (AN1457, AN1044, AN0099, AN0563, AN0257, AN1073, AN1587, AN0434): need PAN-OS administrator activity audit logs. Confirm that the log exists and its sourcetype, then implement as hunting.
-- [ ] **More sequences** where an implemented analytic's `gaps` names a chain: DET0530 (5145 ADMIN$ write, then service or process on the target), DET0140 file deletion after execution (after AN0392), DET0364 WMI process create plus remote connection (after AN1031), DET0215 ransom notes plus mass rename.
+- [x] **Sequences batch 2:** DET0364 remote WMI creation then execution on the target (cross-host join), DET0140 run from a staging path then deleted.
+- [ ] **More sequences:** DET0530 (5145 ADMIN$ write, then service or process on the target; needs Detailed File Share auditing), DET0215 ransom notes plus mass rename, DET0087 encoded file chain beyond AN0237, DET0378 obfuscated file then execution.
 - [ ] **Consolidate hunting searches** (AN1452, AN0095, AN0559, AN0254 and future discovery hunts) into one dashboard with a panel per analytic.
 
 ### P3: validation against real data
