@@ -30,6 +30,8 @@ feeds:
     index: wineventlog
     ta: Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true)
     constraint_field: source
+    host_feed: true
+    host_feed_value: "XmlWinEventLog:Security"   # the channel every Windows host writes
     sourcetype_template: "XmlWinEventLog:{channel}"
     default_channels: [Security, System, Application]
     prerequisites:
@@ -48,6 +50,7 @@ feeds:
     index: sysmon
     ta: Splunk Add-on for Sysmon (needs Splunk_TA_windows for XML parsing)
     constraint_field: source
+    host_feed: true          # reports per endpoint; HEALTH0002 watches for hosts that stop sending it
     sourcetype: "XmlWinEventLog:Microsoft-Windows-Sysmon/Operational"
     prerequisites:
       - Sysmon deployed with a maintained modular configuration (e.g. sysmon-modular or SwiftOnSecurity). Event IDs referenced by a data component only exist if the config includes that rule group (ProcessAccess=10, ImageLoad=7, DNS=22, FileDelete=23/26, ClipboardChange=24, ProcessTampering=25, FileBlock=27/28 are off in minimal configs).

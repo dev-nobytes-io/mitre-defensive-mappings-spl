@@ -11,6 +11,7 @@ The single place to pick this project up again. Read **Where things stand**, run
 | Data components | All 106 mapped; 372 eventtypes, tags, macros, metadata and tuning lookups | `content/data_components/`, `dist/splunk/TA-mitre-attack-datacomponents/` |
 | Analytics | 49 of 1773 implemented (18 TTP, 27 anomaly, 4 hunting, 1 baseline); 462 more coverable by ticked feeds | `content/analytics/`, `docs/analytics/backlog.md` |
 | Detection strategies | 6 sequences, 4 strategy risk rules, 3 cross-strategy correlations; 36 strategies delegated | `content/detection_strategies/`, `content/correlations/` |
+| Telemetry health | HEALTH0001 expected telemetry missing or silent, HEALTH0002 host stopped reporting | `src/mitremap/health.py`, `docs/health.md` |
 | Sigma | Data-component pipeline; one rule file per analytic and per sequence strategy | `dist/sigma/` |
 | KQL / ES\|QL | Renderer stubs and config keys only | `src/mitremap/render/{kql,esql}.py` |
 | Validation | `mitremap validate` plus pytest; CI rebuilds and fails on drift | `tests/`, `.github/workflows/ci.yml` |
@@ -50,8 +51,8 @@ Work on a branch, open a draft PR, keep `make build` idempotent and the tests gr
 
 ### P1: operational safety net
 
-- [ ] **Telemetry health detection.** A generated lookup of every (index, sourcetype or source) that a live eventtype depends on, and a detection that reports which are never seen in 7 days (configuration gap: the eventtype gives false coverage) and which went silent in the last N hours (outage). Thresholds in macros.
-- [ ] **Per-host feed dropout.** Hosts that sent Sysmon (or Security) in the previous 7 days but nothing in the last 4 hours; the usual sign of a stopped or tampered agent. Raise Host Status risk so it feeds the correlations.
+- [x] **Telemetry health detection.** (HEALTH0001, `mitre_expected_telemetry` lookup, `docs/health.md`) A generated lookup of every (index, sourcetype or source) that a live eventtype depends on, and a detection that reports which are never seen in 7 days (configuration gap: the eventtype gives false coverage) and which went silent in the last N hours (outage). Thresholds in macros.
+- [x] **Per-host feed dropout.** (HEALTH0002; uses the indexed `host`, so Windows Event Forwarding needs host set from `Computer`) Hosts that sent Sysmon (or Security) in the previous 7 days but nothing in the last 4 hours; the usual sign of a stopped or tampered agent. Raise Host Status risk so it feeds the correlations.
 - [ ] **Asset and identity starter.** Document, or generate a template for, the ES asset lookup (`ip`, `nt_host`, `dns`) the cross-feed risk rules depend on. Add a check that risk objects from Corelight and Palo Alto resolve to assets.
 
 ### P2: content growth (Windows and network, feeds already ticked)

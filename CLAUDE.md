@@ -18,7 +18,7 @@ make diff FROM=20.0 TO=20.1                   # ATT&CK changelog
 ## What you edit, what you don't
 
 * Edit: `config/*.yml`, the `curated` block of `content/**/*.yml`, `src/mitremap/`, `tests/`, and the hand-written docs (`README.md`, `TODO.md`, `docs/model.md`, `docs/splunk-implementation.md`, `docs/data-sources.md`, `docs/roadmap.md`, the READMEs under `content/`).
-* Never hand-edit: `dist/**`, `docs/data-components/**`, `docs/analytics/**`, `docs/strategies/**`, `docs/coverage.md`, `docs/gaps.md`, `docs/checklist.md`, `docs/changelog/**`, or the `attack`/`derived` blocks of content YAML. Rebuild instead.
+* Never hand-edit: `dist/**`, `docs/data-components/**`, `docs/analytics/**`, `docs/strategies/**`, `docs/coverage.md`, `docs/gaps.md`, `docs/checklist.md`, `docs/health.md`, `docs/changelog/**`, or the `attack`/`derived` blocks of content YAML. Rebuild instead.
 * `make build` must be idempotent: run it twice and `git status` must show no change (CI checks this).
 
 ## Rules the validator enforces

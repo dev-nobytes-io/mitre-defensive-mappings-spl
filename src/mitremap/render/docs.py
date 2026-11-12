@@ -64,7 +64,44 @@ class DocsRenderer:
         out.append(self._coverage(m, views))
         out.append(self._gaps(m, views))
         out.append(self._checklist(m, views))
+        out.append(self._health(m, views))
         return out
+
+    # ------------------------------------------------------------------ health
+    def _health(self, m: AttackModel, views: list[DCView]) -> Path:
+        from collections import Counter
+        from ..health import expected_telemetry, host_scope, index_scope, rules
+        rows = expected_telemetry(views)
+        live = [r for r in rows if r.have]
+        per_feed = Counter(r.feed for r in live)
+        L = ["# Telemetry health", "",
+             "What must arrive in Splunk for the live eventtypes to mean anything, and the two detections that check it. "
+             "Generated from `config/stack.yml`; the same list ships as the `mitre_expected_telemetry` lookup.", "",
+             "```mermaid", "flowchart LR",
+             '  ST["config/stack.yml<br/>ticked feeds"] --> LK[("mitre_expected_telemetry<br/>index + sourcetype/source")]',
+             '  LK --> H1{{"HEALTH0001<br/>not seen in 7 days / silent"}}',
+             '  TS[("tstats over<br/>' + index_scope().replace('"', "'") + '")] --> H1',
+             '  H1 --> F1["finding: configuration gap or outage"]',
+             '  HS[("tstats by host over<br/>host-reporting feeds")] --> H2{{"HEALTH0002<br/>host stopped reporting"}}',
+             '  H2 --> F2["finding + Host Status risk (T1685)"]', "```", "",
+             "## Detections", "", "| Id | Detection | Output | Schedule |", "|---|---|---|---|"]
+        for r in rules():
+            L.append(f"| {r.id} | {r.title} | {'finding + risk' if r.risk else 'finding'} | `{r.cron}` |")
+        L += ["", *[f"**{r.id}.** {r.summary}" + "\n" for r in rules()],
+              "Thresholds: `mitre_health_silence_hours` and `mitre_health_host_silence_hours` (TA macros, default 4). "
+              f"Host-reporting scope: `{host_scope()}`.", "",
+              "**Not seen in 7 days does not always mean broken.** Some channels are off by default in Windows (TaskScheduler, WMI-Activity, CodeIntegrity, "
+              "Kernel-Boot) and some Corelight logs are quiet on small networks. Each row says which data components depend on it, so either collect it "
+              "or accept that those components are not really covered.", "",
+              f"## Expected telemetry ({len(live)} values across {len(per_feed)} ticked feeds)", "",
+              "| Feed | Index | Field | Value | Data components | Eventtypes |", "|---|---|---|---|---|---|"]
+        for r in live:
+            dcs = ", ".join(r.data_components[:8]) + (f" … {len(r.data_components) - 8} more" if len(r.data_components) > 8 else "")
+            L.append(f"| `{r.feed}` | `{r.index}` | {r.field} | `{r.value}` | {dcs} | {r.eventtypes} |")
+        L.append("")
+        p = DOCS_DIR / "health.md"
+        p.write_text("\n".join(L), encoding="utf-8")
+        return p
 
     # ------------------------------------------------------------------ per DC
     def _dc_page(self, m: AttackModel, v: DCView) -> Path:

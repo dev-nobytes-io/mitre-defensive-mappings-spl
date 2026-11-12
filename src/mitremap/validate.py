@@ -150,6 +150,7 @@ def validate(m: AttackModel) -> list[str]:
     errors += validate_analytics(m)
     from .strategies import validate_strategies
     errors += validate_strategies(m)
+    errors += _validate_health(views)
 
     # ---- docs exist
     for v in views:
@@ -157,3 +158,31 @@ def validate(m: AttackModel) -> list[str]:
         if not (DOCS_DIR / "data-components" / dc_page_name(v)).exists():
             errors.append(f"missing doc page for {v.dc.id}")
     return errors
+
+
+def _validate_health(views) -> list[str]:
+    from .analytics import EXTERNAL_MACROS, _conf_sections, _macro_index, lint_spl, lookups_used, macros_used
+    from .health import expected_telemetry, rules
+    errs = []
+    ta = DIST_DIR / "splunk" / APP / "default"
+    da = DIST_DIR / "splunk" / "DA-ESS-mitre-attack-detections" / "default"
+    macros = _macro_index(_conf_sections(ta / "macros.conf") | _conf_sections(da / "macros.conf"))
+    lookups = _conf_sections(ta / "transforms.conf") | _conf_sections(da / "transforms.conf")
+    stanzas = _conf_sections(da / "savedsearches.conf")
+    for r in rules():
+        for e in lint_spl(r.spl):
+            errs.append(f"{r.id}: spl: {e}")
+        for name, n in macros_used(r.spl):
+            if name not in macros and name not in EXTERNAL_MACROS:
+                errs.append(f"{r.id}: unknown macro `{name}`")
+        for lk in lookups_used(r.spl):
+            if lk not in lookups:
+                errs.append(f"{r.id}: unknown lookup {lk}")
+        if f"MITRE - {r.id} - {r.title} - Rule" not in stanzas:
+            errs.append(f"{r.id}: stanza missing from savedsearches.conf")
+    rows = expected_telemetry(views)
+    for feed, f in config.stack().items():
+        if f.get("have") and not f.get("hunt_only") and not f.get("virtual") and f.get("render") is not False:
+            if not any(r.feed == feed for r in rows):
+                errs.append(f"expected telemetry has no row for ticked feed {feed}")
+    return errs
