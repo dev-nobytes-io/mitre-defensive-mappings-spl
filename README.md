@@ -12,26 +12,27 @@ flowchart LR
   FEED --> ET["Splunk eventtype<br/>mitre_dcXXXX_name__feed"]
   ET --> UMB["Umbrella eventtype<br/>mitre_dcXXXX_name"]
   UMB --> RULE["Analytic as ES detection + Sigma rule<br/>TTP / Anomaly / Hunting (+ baselines)<br/>49 implemented"]
-  RULE -. phase 3 .-> CORR["Detection strategy as<br/>correlation / risk incident rule"]
+  UMB --> SEQ["Strategy sequence<br/>raw-event chain, 6"]
+  RULE -- "risk events" --> RISK[("Risk data model")]
+  SEQ -- "risk events" --> RISK
+  RISK --> CORR["Strategy risk rules (4) and<br/>cross-strategy correlations (3)"]
   classDef done fill:#d4edda,stroke:#2e7d32,color:#1b1b1b
   classDef part fill:#fff3cd,stroke:#b26a00,color:#1b1b1b
-  classDef later fill:#eeeeee,stroke:#888,color:#1b1b1b,stroke-dasharray: 4 4
   class DC,LS,FEED,ET,UMB done
-  class RULE part
-  class CORR later
+  class RULE,SEQ,CORR part
 ```
 
-Green is complete for every data component. Amber is in progress: 49 analytics are implemented as ES detections and Sigma rules, chosen by technique prevalence on the ticked feeds; the [backlog](docs/analytics/backlog.md) ranks the rest. The detection-strategy layer is next.
+Green is complete for every data component. Amber is in progress: 49 analytics, chosen by technique prevalence on the ticked feeds ([backlog](docs/analytics/backlog.md) for the rest), and a detection-strategy layer of 6 sequences, 4 strategy risk rules and 3 cross-strategy correlations ([strategies](docs/strategies/README.md)).
 
 ## What you get
 
 | Output | Where | Notes |
 |---|---|---|
 | Splunk TA | `dist/splunk/TA-mitre-attack-datacomponents/` | `eventtypes.conf` (one per component per feed, plus umbrella), `tags.conf` (ATT&CK tags + CIM tags where safe), `macros.conf` (index, per-component, `_dm`, `_filter`, environment tunables), `transforms.conf` + `lookups/` (ATT&CK metadata, tuning allowlists with seed rows). |
-| Detections app | `dist/splunk/DA-ESS-mitre-attack-detections/` | One ES 8 detection per implemented analytic, all disabled. Content type decides the action: TTP → finding + risk, Anomaly → risk only, Hunting → none. Per-analytic `mitre_anXXXX_filter` macro and tunables bound to ATT&CK mutable elements; baseline searches and their lookups. |
+| Detections app | `dist/splunk/DA-ESS-mitre-attack-detections/` | One ES 8 detection per implemented analytic, strategy sequence, strategy risk rule and cross-strategy correlation, all disabled. Content type decides the action: TTP → finding + risk, Anomaly → risk only, Hunting → none. Per-analytic `mitre_anXXXX_filter` macro and tunables bound to ATT&CK mutable elements; baseline searches and their lookups. |
 | Sigma | `dist/sigma/` | `logsources.yml` (component ↔ Sigma logsource), `pipelines/splunk_mitre_dc.yml` (pySigma pipeline that scopes converted rules with the component eventtypes) and `rules/` (one file per implemented analytic, with correlation rules where needed). |
-| Docs | `docs/` | One page per component ([index](docs/data-components/README.md)) and per analytic ([index](docs/analytics/README.md), [backlog](docs/analytics/backlog.md)), [coverage](docs/coverage.md), [gaps](docs/gaps.md), [checklist](docs/checklist.md), [model](docs/model.md), [Splunk implementation guidance](docs/splunk-implementation.md), [data sources](docs/data-sources.md), [roadmap](docs/roadmap.md), [changelog 20.0→20.1](docs/changelog/attack-20.0-to-20.1.md). |
-| Content | `content/data_components/*.yml`, `content/analytics/*.yml` | One YAML per component and per implemented analytic: regenerated ATT&CK/derived blocks plus a hand-written `curated` block (for analytics: content type, SPL, risk, tuning bindings, Sigma). |
+| Docs | `docs/` | One page per component ([index](docs/data-components/README.md)) per analytic ([index](docs/analytics/README.md), [backlog](docs/analytics/backlog.md)) and per strategy ([index](docs/strategies/README.md)), [coverage](docs/coverage.md), [gaps](docs/gaps.md), [checklist](docs/checklist.md), [model](docs/model.md), [Splunk implementation guidance](docs/splunk-implementation.md), [data sources](docs/data-sources.md), [roadmap](docs/roadmap.md), [changelog 20.0→20.1](docs/changelog/attack-20.0-to-20.1.md). |
+| Content | `content/data_components/`, `content/analytics/`, `content/detection_strategies/`, `content/correlations/` | One YAML per component, implemented analytic, implemented strategy and cross-strategy correlation: regenerated ATT&CK blocks plus a hand-written `curated` block. |
 
 ## The checklist
 
@@ -45,6 +46,7 @@ make build      # scaffold -> render -> validate (idempotent; CI fails on drift)
 make test
 make diff FROM=20.0 TO=20.1
 python -m mitremap new-analytic AN0123   # scaffold the next analytic from the backlog
+python -m mitremap new-strategy DET0123  # scaffold a strategy sequence or risk rule
 ```
 
 To move to a new ATT&CK release: `python -m mitremap fetch --version 20.2`, then `make build`, review `docs/changelog/` and the `derived` diffs in `content/`.
@@ -58,8 +60,8 @@ For each (component, feed) eventtype the search constraint comes from, in order:
 ```
 attack/        manifest + slim gzipped STIX extract (pinned 20.1)
 config/        stack.yml (checklist), log_sources.yml (name -> feeds), dc_defaults.yml, cim.yml, sigma.yml, platforms.yml
-content/       data_components/*.yml and analytics/*.yml (curated + derived); detection_strategies/ holds the phase-3 schema
-src/mitremap/  fetch, model, logsources (resolver + channel parsers), build, scaffold, analytics, render/{splunk,detections,sigma,docs,docs_analytics,kql,esql}, validate, diff, cli
+content/       data_components/, analytics/, detection_strategies/, correlations/ (curated + regenerated ATT&CK blocks)
+src/mitremap/  fetch, model, logsources (resolver + channel parsers), build, scaffold, analytics, strategies, render/{splunk,detections,sigma,docs,docs_analytics,docs_strategies,kql,esql}, validate, diff, cli
 dist/          rendered Splunk apps (TA + detections), Sigma pipeline and rules (committed)
 docs/          rendered + hand-written documentation
 tests/         pytest
