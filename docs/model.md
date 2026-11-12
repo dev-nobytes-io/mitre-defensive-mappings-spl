@@ -17,7 +17,7 @@ classDiagram
   DataComponent "1" --> "0..n" LogSource : log_sources
 ```
 
-* A **detection strategy** is the per-technique plan (1:1 with techniques in 20.1). Its analytics are per-platform variants of that plan, not legs of a chain: of the 46 strategies with implemented analytics, only three have two, and in each the two are Windows and network-device variants. The multi-event chain is described inside each analytic.
+* A **detection strategy** is the per-technique plan (1:1 with techniques in 20.1). Its analytics are per-platform variants of that plan, not legs of a chain: of the 46 strategies that had implemented analytics when this was measured, only three had two, and in each the two are Windows and network-device variants. The multi-event chain is described inside each analytic.
 * An **analytic** is one platform-specific implementation of that plan, written as prose. It names the data components and log sources it reads and declares **mutable elements**: the thresholds, time windows and allow-lists that must be tuned per environment (`TimeWindow` appears on 581 analytics, `UserContext` on 230).
 * A **data component** is the observable (Process Creation, File Modification...). Since v18 it carries **log sources** directly; Data Source objects no longer exist.
 * A **log source** is `name` + free-text `channel`. Names are loosely standardised (`WinEventLog:Sysmon`, `auditd:SYSCALL`, `NSM:Flow`, `esxi:hostd`...), channels range from `EventCode=4688` to a paragraph of prose.
@@ -53,8 +53,8 @@ flowchart TB
 | Log source | literal `index`/`sourcetype`/field constraint inside an eventtype | `logsource` product/service | done |
 | Data component | umbrella eventtype, `mitre_dcXXXX*` macros, CIM tags, `_dm` macro | generic category (`process_creation`, `file_event`...) | done |
 | Mutable elements | per-analytic macros (`mitre_anXXXX_*`), shared macros and tuning lookups (`mitre_allowlist_*`, `mitre_asset_roles`, `mitre_account_roles`), baseline lookups | rule values | done for implemented analytics |
-| Analytic | ES 8 detection with a declared content type (TTP → finding + risk, Anomaly → risk, Hunting → no action); baselines attach as supporting searches | rule, plus correlation rule where needed | 49 implemented, rest in the backlog |
-| Detection strategy | delegated to its analytics, a raw-event **sequence** (finding + risk), or a **risk rule** over the Risk data model (finding only), chosen per DET | correlation rule (sequences); not expressible (risk rules) | 6 sequences, 4 risk rules, 36 delegated |
+| Analytic | ES 8 detection with a declared content type (TTP → finding + risk, Anomaly → risk, Hunting → no action); baselines attach as supporting searches | rule, plus correlation rule where needed | 65 implemented, rest in the backlog |
+| Detection strategy | delegated to its analytics, a raw-event **sequence** (finding + risk), or a **risk rule** over the Risk data model (finding only), chosen per DET | correlation rule (sequences); not expressible (risk rules) | 6 sequences, 4 risk rules, 52 delegated |
 | (cross-strategy) | risk rules over all MITRE risk events by risk object | not expressible | 3 correlations |
 
 ## Why eventtypes for data components

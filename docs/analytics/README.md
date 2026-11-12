@@ -1,21 +1,21 @@
 # Analytics (ATT&CK v20.1)
 
-49 of 1773 ATT&CK analytics are implemented as ES detections and Sigma rules; 511 are coverable by the feeds ticked in `config/stack.yml`. The rest are in the [backlog](backlog.md), ranked by technique prevalence.
+65 of 1773 ATT&CK analytics are implemented as ES detections and Sigma rules; 511 are coverable by the feeds ticked in `config/stack.yml`. The rest are in the [backlog](backlog.md), ranked by technique prevalence.
 
 ```mermaid
 pie showData
     title Implemented analytics by content type
-    "TTP (finding + risk)" : 18
-    "Anomaly (risk only)" : 27
-    "Hunting (no action)" : 4
+    "TTP (finding + risk)" : 20
+    "Anomaly (risk only)" : 36
+    "Hunting (no action)" : 9
 ```
 
 ```mermaid
 xychart-beta
     title "Implemented analytics by tactic"
-    x-axis ["command-and-control", "discovery", "stealth", "execution", "persistence", "privilege-escalation", "defense-impairment", "impact", "credential-access", "lateral-movement", "collection", "initial-access", "exfiltration"]
+    x-axis ["stealth", "discovery", "command-and-control", "execution", "privilege-escalation", "persistence", "collection", "defense-impairment", "impact", "credential-access", "lateral-movement", "initial-access", "exfiltration"]
     y-axis "analytics"
-    bar [9, 8, 8, 6, 6, 6, 4, 3, 3, 2, 1, 1, 1]
+    bar [14, 13, 9, 8, 7, 6, 4, 4, 3, 3, 3, 1, 1]
 ```
 
 | Analytic | Detection | Type | Severity | Technique | Tactics | Data components | Feeds |
@@ -25,27 +25,39 @@ xychart-beta
 | AN0075 | [HTTP to external hosts with a non-browser user agent](AN0075-http-to-external-hosts-with-a-non-browser-user-agent.md) | anomaly | medium | T1071.001 Web Protocols | command-and-control | DC0085 | corelight |
 | AN0079 | [Repeated HTTP requests carrying long encoded tokens in the URI](AN0079-repeated-http-requests-carrying-long-encoded-tokens-in-the-u.md) | anomaly | low | T1071.001 Web Protocols | command-and-control | DC0085 | corelight |
 | AN0578 | [cmd.exe started by an unusual parent or running a batch file from a staging path](AN0578-cmd-exe-started-by-an-unusual-parent-or-running-a-batch-file.md) | anomaly | low | T1059.003 Windows Command Shell | execution | DC0032 | sysmon, wineventlog |
+| AN1040 | [Recursive file and directory enumeration commands](AN1040-recursive-file-and-directory-enumeration-commands.md) | hunting | informational | T1083 File and Directory Discovery | discovery | DC0032 | sysmon, wineventlog |
 | AN0767 | [Built-in utility used to decode or reassemble a payload](AN0767-built-in-utility-used-to-decode-or-reassemble-a-payload.md) | ttp | medium | T1140 Deobfuscate/Decode Files or Information | stealth | DC0032 | sysmon, wineventlog |
+| AN0392 | [Secure deletion, self-deletion or interpreter removing executables](AN0392-secure-deletion-self-deletion-or-interpreter-removing-execut.md) | anomaly | medium | T1070.004 File Deletion | stealth | DC0032, DC0040 | sysmon |
 | AN0095 | [Process discovery commands](AN0095-process-discovery-commands.md) | hunting | informational | T1057 Process Discovery | discovery | DC0032 | sysmon, wineventlog |
 | AN0559 | [Network configuration discovery commands](AN0559-network-configuration-discovery-commands.md) | hunting | informational | T1016 System Network Configuration Discovery | discovery | DC0032 | sysmon, wineventlog |
 | AN1252 | [PowerShell started with encoded, download or in-memory execution arguments](AN1252-powershell-started-with-encoded-download-or-in-memory-execut.md) | anomaly | medium | T1059.001 PowerShell | execution | DC0032 | sysmon, wineventlog |
 | AN1032 | [Run key value pointing to a script or user-writable path](AN1032-run-key-value-pointing-to-a-script-or-user-writable-path.md) | anomaly | medium | T1547.001 Registry Run Keys / Startup Folder | persistence, privilege-escalation | DC0063 | sysmon |
+| AN0237 | [Binary written by a decoding utility, then executed or loaded](AN0237-binary-written-by-a-decoding-utility-then-executed-or-loaded.md) | ttp | high | T1027.013 Encrypted/Encoded File | stealth | DC0039, DC0032, DC0016 | sysmon |
 | AN0983 | [Windows system process name running from an unexpected directory](AN0983-windows-system-process-name-running-from-an-unexpected-direc.md) | ttp | medium | T1036.005 Match Legitimate Resource Name or Location | stealth | DC0032 | sysmon, wineventlog |
 | AN0254 | [User and session discovery commands](AN0254-user-and-session-discovery-commands.md) | hunting | informational | T1033 System Owner/User Discovery | discovery | DC0032 | sysmon, wineventlog |
+| AN1070 | [Search for credential files or sensitive document types](AN1070-search-for-credential-files-or-sensitive-document-types.md) | anomaly | medium | T1005 Data from Local System | collection | DC0032 | sysmon, wineventlog |
 | AN0819 | [Document or mail application spawned an interpreter or LOLBin](AN0819-document-or-mail-application-spawned-an-interpreter-or-lolbi.md) | ttp | high | T1204.002 Malicious File | execution | DC0032 | sysmon, wineventlog |
 | AN1221 | [Scheduled task registered with an interpreter or user-writable action](AN1221-scheduled-task-registered-with-an-interpreter-or-user-writab.md) | anomaly | medium | T1053.005 Scheduled Task | execution, persistence, privilege-escalation | DC0001 | wineventlog |
 | AN0781 | [Security-relevant registry value modified](AN0781-security-relevant-registry-value-modified.md) | ttp | medium | T1112 Modify Registry | defense-impairment, persistence | DC0063 | sysmon |
+| AN1031 | [WMI used to create processes locally or on remote hosts](AN1031-wmi-used-to-create-processes-locally-or-on-remote-hosts.md) | anomaly | medium | T1047 Windows Management Instrumentation | execution | DC0032 | sysmon, wineventlog |
 | AN0209 | [Script host chain from Office or into a second-stage interpreter](AN0209-script-host-chain-from-office-or-into-a-second-stage-interpr.md) | anomaly | medium | T1059.005 Visual Basic | execution | DC0032 | sysmon, wineventlog |
+| AN0980 | [Screenshot captured from a script or command-line tool](AN0980-screenshot-captured-from-a-script-or-command-line-tool.md) | anomaly | medium | T1113 Screen Capture | collection | DC0032, DC0039 | sysmon |
+| AN1064 | [Script host or LOLBin writing an archive or encoded file to a staging path](AN1064-script-host-or-lolbin-writing-an-archive-or-encoded-file-to-.md) | anomaly | low | T1027 Obfuscated Files or Information | stealth | DC0039 | sysmon |
+| AN0724 | [Many files written into a staging directory by one process](AN0724-many-files-written-into-a-staging-directory-by-one-process.md) | anomaly | medium | T1074.001 Local Data Staging | collection | DC0039 | sysmon |
 | AN1369 | [Security tooling disabled or tampered with](AN1369-security-tooling-disabled-or-tampered-with.md) | ttp | high | T1685 Disable or Modify Tools | defense-impairment | DC0063, DC0032 | sysmon |
 | AN1374 | [Firewall logging or monitoring configuration changed](AN1374-firewall-logging-or-monitoring-configuration-changed.md) | ttp | medium | T1685 Disable or Modify Tools | defense-impairment | DC0041 | palo_alto |
 | AN0048 | [Security software enumeration](AN0048-security-software-enumeration.md) | anomaly | low | T1518.001 Security Software Discovery | discovery | DC0032 | sysmon, wineventlog |
 | AN1527 | [Service installed with an interpreter or user-writable binary path](AN1527-service-installed-with-an-interpreter-or-user-writable-binar.md) | ttp | medium | T1543.003 Windows Service | persistence, privilege-escalation | DC0060 | wineventlog |
+| AN0577 | [Unsigned DLL loaded from a user-writable path by a trusted or relocated program](AN0577-unsigned-dll-loaded-from-a-user-writable-path-by-a-trusted-o.md) | anomaly | medium | T1574.001 DLL | stealth, execution | DC0016 | sysmon |
 | AN1583 | [Burst of remote system discovery commands](AN1583-burst-of-remote-system-discovery-commands.md) | anomaly | low | T1018 Remote System Discovery | discovery | DC0032 | sysmon, wineventlog |
+| AN0589 | [Registry queries for environment, software and security configuration](AN0589-registry-queries-for-environment-software-and-security-confi.md) | hunting | informational | T1012 Query Registry | discovery | DC0032 | sysmon, wineventlog |
 | AN0831 | [Archive created with a password, split volumes or a built-in packer](AN0831-archive-created-with-a-password-split-volumes-or-a-built-in-.md) | anomaly | low | T1560.001 Archive via Utility | collection | DC0032 | sysmon, wineventlog |
+| AN0903 | [Network connection and session discovery commands](AN0903-network-connection-and-session-discovery-commands.md) | hunting | informational | T1049 System Network Connections Discovery | discovery | DC0032 | sysmon, wineventlog |
 | AN1308 | [Rundll32 executing script, remote or user-writable payloads](AN1308-rundll32-executing-script-remote-or-user-writable-payloads.md) | ttp | medium | T1218.011 Rundll32 | stealth | DC0032 | sysmon, wineventlog |
 | AN1030 | [LSASS memory access by an unexpected process](AN1030-lsass-memory-access-by-an-unexpected-process.md) | ttp | high | T1003.001 LSASS Memory | credential-access | DC0035 | sysmon |
 | AN1258 | [ICMP session with unusual volume or duration](AN1258-icmp-session-with-unusual-volume-or-duration.md) | anomaly | medium | T1095 Non-Application Layer Protocol | command-and-control | DC0078 | corelight |
 | AN1543 | [Interactive or remote logon by a service account](AN1543-interactive-or-remote-logon-by-a-service-account.md) | anomaly | medium | T1078 Valid Accounts | stealth, persistence, privilege-escalation, initial-access | DC0067 | wineventlog |
+| AN0324 | [Service or task named like system software but running an untrusted binary](AN0324-service-or-task-named-like-system-software-but-running-an-un.md) | anomaly | medium | T1036.004 Masquerade Task or Service | stealth | DC0060, DC0001 | wineventlog |
 | AN0105 | [Browser credential store read by a non-browser process](AN0105-browser-credential-store-read-by-a-non-browser-process.md) | ttp | high | T1555.003 Credentials from Web Browsers | credential-access | DC0055 | wineventlog |
 | AN1057 | [Process connecting to many hosts or ports in one minute](AN1057-process-connecting-to-many-hosts-or-ports-in-one-minute.md) | anomaly | medium | T1046 Network Service Discovery | discovery | DC0082 | sysmon |
 | AN0931 | [First-seen RDP logon for a user, source and destination](AN0931-first-seen-rdp-logon-for-a-user-source-and-destination.md) | anomaly | medium | T1021.001 Remote Desktop Protocol | lateral-movement | DC0067 | wineventlog |
@@ -59,7 +71,11 @@ xychart-beta
 | AN0633 | [Office, script or proxy-execution process connecting out on a non-standard port](AN0633-office-script-or-proxy-execution-process-connecting-out-on-a.md) | anomaly | low | T1571 Non-Standard Port | command-and-control | DC0082 | sysmon |
 | AN1185 | [Service control manager started an unexpected binary](AN1185-service-control-manager-started-an-unexpected-binary.md) | anomaly | medium | T1569.002 Service Execution | execution | DC0032 | sysmon, wineventlog |
 | AN0355 | [Renamed system utility (file name does not match PE original name)](AN0355-renamed-system-utility-file-name-does-not-match-pe-original-.md) | ttp | medium | T1036 Masquerading | stealth | DC0032 | sysmon |
+| AN1325 | [Service enumeration commands](AN1325-service-enumeration-commands.md) | hunting | informational | T1007 System Service Discovery | discovery | DC0032 | sysmon, wineventlog |
+| AN0846 | [Local account and group enumeration commands](AN0846-local-account-and-group-enumeration-commands.md) | hunting | informational | T1087.001 Local Account | discovery | DC0032 | sysmon, wineventlog |
+| AN0516 | [File written over SMB, then executed on the target](AN0516-file-written-over-smb-then-executed-on-the-target.md) | ttp | high | T1570 Lateral Tool Transfer | lateral-movement | DC0039, DC0032 | sysmon |
 | AN0360 | [Interpreter started with a hidden window](AN0360-interpreter-started-with-a-hidden-window.md) | anomaly | low | T1564.003 Hidden Window | stealth | DC0032 | sysmon, wineventlog |
+| AN1095 | [Process handle opened for injection from unbacked memory](AN1095-process-handle-opened-for-injection-from-unbacked-memory.md) | anomaly | high | T1055.001 Dynamic-link Library Injection | stealth, privilege-escalation | DC0035 | sysmon |
 | AN1094 | [UAC bypass through auto-elevated binary hijack](AN1094-uac-bypass-through-auto-elevated-binary-hijack.md) | ttp | high | T1548.002 Bypass User Account Control | privilege-escalation | DC0063, DC0032 | sysmon |
 | AN1571 | [Large upload to a cloud storage application](AN1571-large-upload-to-a-cloud-storage-application.md) | anomaly | medium | T1567.002 Exfiltration to Cloud Storage | exfiltration | DC0082 | palo_alto |
 | AN1121 | [DNS tunnelling pattern from a non-browser process](AN1121-dns-tunnelling-pattern-from-a-non-browser-process.md) | anomaly | medium | T1071.004 DNS | command-and-control | DC0085 | sysmon |

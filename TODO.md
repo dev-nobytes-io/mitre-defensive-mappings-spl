@@ -9,15 +9,15 @@ The single place to pick this project up again. Read **Where things stand**, run
 | ATT&CK data | Enterprise v20.1 pinned (slim extract, sha256 in manifest); 20.0 to 20.1 changelog generated | `attack/`, `docs/changelog/` |
 | Feed checklist | 44 feeds; 8 ticked (Windows Event Logs, PowerShell, Sysmon, Corelight, Palo Alto, Trellix ePO, Solidcore, Wireshark hunt-only) | `config/stack.yml`, `docs/checklist.md` |
 | Data components | All 106 mapped; 372 eventtypes, tags, macros, metadata and tuning lookups | `content/data_components/`, `dist/splunk/TA-mitre-attack-datacomponents/` |
-| Analytics | 49 of 1773 implemented (18 TTP, 27 anomaly, 4 hunting, 1 baseline); 462 more coverable by ticked feeds | `content/analytics/`, `docs/analytics/backlog.md` |
-| Detection strategies | 6 sequences, 4 strategy risk rules, 3 cross-strategy correlations; 36 strategies delegated | `content/detection_strategies/`, `content/correlations/` |
+| Analytics | 65 of 1773 implemented (20 TTP, 36 anomaly, 9 hunting, 1 baseline); 446 more coverable by ticked feeds | `content/analytics/`, `docs/analytics/backlog.md` |
+| Detection strategies | 6 sequences, 4 strategy risk rules, 3 cross-strategy correlations; 52 strategies delegated | `content/detection_strategies/`, `content/correlations/` |
 | Telemetry health | HEALTH0001 expected telemetry missing or silent, HEALTH0002 host stopped reporting | `src/mitremap/health.py`, `docs/health.md` |
 | Sigma | Data-component pipeline; one rule file per analytic and per sequence strategy | `dist/sigma/` |
 | KQL / ES\|QL | Renderer stubs and config keys only | `src/mitremap/render/{kql,esql}.py` |
 | Validation | `mitremap validate` plus pytest; CI rebuilds and fails on drift | `tests/`, `.github/workflows/ci.yml` |
 | Real Splunk | **Never run.** Nothing has been loaded into a search head or ES | — |
 
-PRs so far: #1 data components, #2 analytics, #3 detection strategies (all merged).
+PRs so far: #1 data components, #2 analytics, #3 detection strategies (merged); #4 resume guide, Windows source fix, telemetry health, analytics batch 2.
 
 ## Resume in five minutes
 
@@ -58,7 +58,8 @@ Work on a branch, open a draft PR, keep `make build` idempotent and the tests gr
 
 ### P2: content growth (Windows and network, feeds already ticked)
 
-- [ ] **Analytics, next batch** (backlog order, Windows): AN1040 file and directory discovery, AN0392 file deletion, AN0237 encoded file decode-and-run, AN1070 local data collection, AN1031 WMI execution, AN0980 screen capture, AN1064 obfuscated files, AN0724 local staging, AN0577 DLL hijack, AN0903 netstat, AN0589 registry query, AN0324 masqueraded task or service, AN0516 lateral tool transfer, AN1325 service discovery, AN0846 local account discovery, AN1095 DLL injection.
+- [ ] **Analytics, batch 3** (Windows, backlog order): AN0178 malicious link, AN1254 ICMP/UDP from non-network processes, AN0643 code signing anomalies, AN0797 client exploitation chain, AN1229 proxy setup, AN0531 automated collection, AN0478 sandbox checks, AN1004 external remote services, AN0498 drive-by, AN0536 local storage discovery, AN1100 software discovery, AN1353 peripheral discovery, AN0590 domain account logon anomalies, AN1428 interpreter at unusual times. Regenerate the order from `docs/analytics/backlog.md` first.
+- [x] **Analytics, batch 2** (16 done: AN1040, AN0392, AN0237, AN1070, AN1031, AN0980, AN1064, AN0724, AN0577, AN0903, AN0589, AN0324, AN0516, AN1325, AN0846, AN1095).
 - [ ] **Analytics needing care:** AN1465 native API, AN0400/AN1496 crypto library loads, AN0066 packing, AN0243 keylogging. These depend on Sysmon ImageLoad (EventCode 7) volume; decide the Sysmon config scope first.
 - [ ] **Network-device CLI analytics** (AN1457, AN1044, AN0099, AN0563, AN0257, AN1073, AN1587, AN0434): need PAN-OS administrator activity audit logs. Confirm that the log exists and its sourcetype, then implement as hunting.
 - [ ] **More sequences** where an implemented analytic's `gaps` names a chain: DET0530 (5145 ADMIN$ write, then service or process on the target), DET0140 file deletion after execution (after AN0392), DET0364 WMI process create plus remote connection (after AN1031), DET0215 ransom notes plus mass rename.
