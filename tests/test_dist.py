@@ -69,3 +69,21 @@ detection:
 """)
     out = SplunkBackend(processing_pipeline=pipe).convert(rule)[0]
     assert "mitre_dc0032_process_creation__sysmon" in out
+
+
+def test_log_source_index(model):
+    """README block and docs/by-log-source.md list every feed, with working anchors."""
+    from mitremap import ROOT, config
+    readme = (ROOT / "README.md").read_text()
+    assert "<!-- BEGIN mitremap:log-sources -->" in readme and "<!-- END mitremap:log-sources -->" in readme
+    block = readme.split("<!-- BEGIN mitremap:log-sources -->")[1].split("<!-- END mitremap:log-sources -->")[0]
+    page = (DOCS_DIR / "by-log-source.md").read_text()
+    headings = set(re.findall(r"^### (\S+)$", page, re.M))
+    for name, f in config.stack().items():
+        if f.get("virtual"):
+            continue
+        assert name in headings, name
+        if f.get("render") is not False:
+            assert f"docs/by-log-source.md#{name})" in block, name
+    for target in re.findall(r"\]\(((?:analytics|data-components|strategies)/[^)#]+)\)", page):
+        assert (DOCS_DIR / target).exists(), target

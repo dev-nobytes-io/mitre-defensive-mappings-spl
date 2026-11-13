@@ -9,15 +9,16 @@ The single place to pick this project up again. Read **Where things stand**, run
 | ATT&CK data | Enterprise v20.1 pinned (slim extract, sha256 in manifest); 20.0 to 20.1 changelog generated | `attack/`, `docs/changelog/` |
 | Feed checklist | 44 feeds; 8 ticked (Windows Event Logs, PowerShell, Sysmon, Corelight, Palo Alto, Trellix ePO, Solidcore, Wireshark hunt-only) | `config/stack.yml`, `docs/checklist.md` |
 | Data components | All 106 mapped; 372 eventtypes, tags, macros, metadata and tuning lookups | `content/data_components/`, `dist/splunk/TA-mitre-attack-datacomponents/` |
-| Analytics | 65 of 1773 implemented (20 TTP, 36 anomaly, 9 hunting, 1 baseline); 446 more coverable by ticked feeds | `content/analytics/`, `docs/analytics/backlog.md` |
-| Detection strategies | 8 sequences, 4 strategy risk rules, 3 cross-strategy correlations; 50 strategies delegated | `content/detection_strategies/`, `content/correlations/` |
+| Analytics | 119 of 1773 implemented (33 TTP, 73 anomaly, 13 hunting, 1 baseline): 96 Windows, 23 Network Devices. Still coverable by ticked feeds: 330 Windows, 54 Network Devices | `content/analytics/`, `docs/analytics/backlog.md` |
+| Detection strategies | 8 sequences, 4 strategy risk rules, 3 cross-strategy correlations; 97 strategies delegated | `content/detection_strategies/`, `content/correlations/` |
+| Log-source index | README table and `docs/by-log-source.md`: per feed, the data components, analytics and sequences it supports | `src/mitremap/render/docs_logsources.py` |
 | Telemetry health | HEALTH0001 expected telemetry missing or silent, HEALTH0002 host stopped reporting | `src/mitremap/health.py`, `docs/health.md` |
 | Sigma | Data-component pipeline; one rule file per analytic and per sequence strategy | `dist/sigma/` |
 | KQL / ES\|QL | Renderer stubs and config keys only | `src/mitremap/render/{kql,esql}.py` |
 | Validation | `mitremap validate` plus pytest; CI rebuilds and fails on drift | `tests/`, `.github/workflows/ci.yml` |
 | Real Splunk | **Never run.** Nothing has been loaded into a search head or ES | — |
 
-PRs so far: #1 data components, #2 analytics, #3 detection strategies (merged); #4 resume guide, Windows source fix, telemetry health, analytics batch 2.
+PRs so far: #1 data components, #2 analytics, #3 detection strategies (merged); #4 resume guide, Windows source fix, telemetry health, analytics batch 2; #5 network batch 1, Windows batches 3 and 4, Palo Alto field verification, log-source index.
 
 ## Resume in five minutes
 
@@ -40,6 +41,10 @@ Work on a branch, open a draft PR, keep `make build` idempotent and the tests gr
 * Every analytic and sequence has Sigma, or `sigma.not_expressible` with a reason. Every Sigma file must convert through `dist/sigma/pipelines/splunk_mitre_dc.yml` with the Splunk backend.
 * Tunables live in macros or lookups, bound to the ATT&CK mutable element they implement. Thresholds are never literals in SPL.
 
+## Focus
+
+**Windows and network first** (decided 2026-11-13). Work only on analytics for the ATT&CK Windows and Network Devices platforms, plus network-sensor content (Corelight, Palo Alto) that serves them. Linux, ESXi, containers, Azure and other query languages (P4, P5) wait until the Windows and Network Devices backlog is worked down.
+
 ## Next up (in order)
 
 ### P0: correctness before anyone enables anything
@@ -58,10 +63,16 @@ Work on a branch, open a draft PR, keep `make build` idempotent and the tests gr
 
 ### P2: content growth (Windows and network, feeds already ticked)
 
-- [ ] **Analytics, batch 3** (Windows, backlog order): AN0178 malicious link, AN1254 ICMP/UDP from non-network processes, AN0643 code signing anomalies, AN0797 client exploitation chain, AN1229 proxy setup, AN0531 automated collection, AN0478 sandbox checks, AN1004 external remote services, AN0498 drive-by, AN0536 local storage discovery, AN1100 software discovery, AN1353 peripheral discovery, AN0590 domain account logon anomalies, AN1428 interpreter at unusual times. Regenerate the order from `docs/analytics/backlog.md` first.
+- [x] **Analytics, Windows batch 3** (16): AN1611, AN0406, AN1275, AN0797, AN0590, AN1235, AN0178, AN1254, AN0643, AN1229, AN0531, AN0478, AN1428, AN0536, AN1100, AN1353.
+- [x] **Analytics, network batch 1** (18): firewall as a device AN1525, AN1340, AN1287, AN1240, AN0354, AN0410, AN0855, AN1542, AN0276; network sensors AN1024, AN0926, AN0382, AN1173, AN0427, AN1500, AN0404, AN0005, AN1067.
+- [x] **Analytics, Windows batch 4** (20): AN0091 hidden files and ADS, AN1626 timestomp, AN1189 web-service C2 lookups, AN1458 password-protected or staged archives, AN1419 vulnerable driver or SYSTEM-from-user (TTP), AN1020 Tor/I2P client (TTP), AN1376 many uncommon ports, AN0856 credentials in files (TTP), AN1198 password stores (TTP), AN1551 environment checks then egress, AN1025 domain groups (hunting), AN0782 extracted then run, AN1076 Sysmon process tampering, AN0396 long sleeps, AN0965 clipboard, AN0411 mass deletion or wipe, AN0785 regsvr32, AN1397 mshta (TTP), AN0423 cleartext uploads, AN0016 domain trusts.
+- [ ] **Analytics, Windows batch 5** (backlog order, skipping the Sysmon ImageLoad items under "needing care"): AN0988 exfiltration over C2, AN1004 external remote services, AN0498 drive-by, AN1361 financial theft, AN1213 custom archiving, AN0317 local groups, AN0331 steganography, AN1113 automated exfiltration, AN1137 local accounts, AN0037 browser discovery, AN1061 rootkit, AN0271 window discovery, AN0327 remote-service exploitation, AN0445 msiexec, AN0520 indicator removal, AN0568 video capture, AN0875 sniffing, AN0922 external proxy, AN1015 internet connection discovery, AN1402 web session cookies. Regenerate the order from `docs/analytics/backlog.md` first.
+- [ ] **Analytics, network batch 2** (Network Devices, backlog order): AN0404-style flow analytics are done; next AN1084 shell on appliances, AN1432 CLI interpreter use, AN0208 internal proxy, AN0879 sniffing, AN0285 input capture, AN1451 traffic signalling, AN0845 port knocking, AN0763 encrypted channel, AN0826 adversary-in-the-middle, AN1151 hide infrastructure, AN0015 boundary bridging. Several need PAN-OS administrator audit logs (CLI); check each analytic's log sources first.
+- [ ] **Endpoint-security analytics:** Trellix ePO and Solidcore feed 17 data components but no analytic reads them yet (AV detection, tamper, AMSI, Solidcore EXECUTION_DENIED and change-control events). Blocked on the P0 field-name check.
 - [x] **Analytics, batch 2** (16 done: AN1040, AN0392, AN0237, AN1070, AN1031, AN0980, AN1064, AN0724, AN0577, AN0903, AN0589, AN0324, AN0516, AN1325, AN0846, AN1095).
 - [ ] **Analytics needing care:** AN1465 native API, AN0400/AN1496 crypto library loads, AN0066 packing, AN0243 keylogging. These depend on Sysmon ImageLoad (EventCode 7) volume; decide the Sysmon config scope first.
 - [ ] **Network-device CLI analytics** (AN1457, AN1044, AN0099, AN0563, AN0257, AN1073, AN1587, AN0434): need PAN-OS administrator activity audit logs. Confirm that the log exists and its sourcetype, then implement as hunting.
+- [x] **Palo Alto field names verified** against the add-on source (Palo Alto-maintained Splunk_TA_paloalto 6.2.0 transforms) and Splunk's current add-on docs: config logs `cmd`, `path`, `admin`, `client`, `result`; system logs `log_subtype`, `event_id` (alias `signature`), `description`; traffic `app`, `bytes_out`, `bytes_in`, `dest_port`, `http_category`; threat `raw_category`, `url`. Splunk's add-on 1.0.0 removed `before_change_detail`/`after_change_detail`, so firewall-rule analytics see which rule changed, not its content. `pan:globalprotect` and `pan:decryption` exist in Splunk's current add-on.
 - [x] **Sequences batch 2:** DET0364 remote WMI creation then execution on the target (cross-host join), DET0140 run from a staging path then deleted.
 - [ ] **More sequences:** DET0530 (5145 ADMIN$ write, then service or process on the target; needs Detailed File Share auditing), DET0215 ransom notes plus mass rename, DET0087 encoded file chain beyond AN0237, DET0378 obfuscated file then execution.
 - [ ] **Consolidate hunting searches** (AN1452, AN0095, AN0559, AN0254 and future discovery hunts) into one dashboard with a panel per analytic.
@@ -97,6 +108,7 @@ Work on a branch, open a draft PR, keep `make build` idempotent and the tests gr
 * Risk rules recover analytic ids from the rule name (`source`), not from custom annotation field paths.
 * Everything ships disabled.
 * The feed checklist is the user's to tick; nothing is labelled unavailable by the author.
+* Windows and Network Devices are worked first; other platforms wait (see **Focus**).
 
 ## Known limitations
 

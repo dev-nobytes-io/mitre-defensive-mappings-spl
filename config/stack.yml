@@ -25,6 +25,7 @@ feeds:
   # ------------------------------------------------------------ Windows host
   wineventlog:
     label: Windows Event Logs
+    category: Windows endpoint
     have: true
     platforms: [Windows]
     index: wineventlog
@@ -45,6 +46,7 @@ feeds:
 
   sysmon:
     label: Sysmon (Microsoft-Windows-Sysmon/Operational)
+    category: Windows endpoint
     have: true
     platforms: [Windows]
     index: sysmon
@@ -59,6 +61,7 @@ feeds:
 
   powershell_logging:
     label: PowerShell Operational channel (4103/4104) - part of Windows Event Logs, listed separately because it needs its own GPO and input
+    category: Windows endpoint
     have: true
     platforms: [Windows]
     index: wineventlog
@@ -72,6 +75,7 @@ feeds:
 
   windows_firewall_log:
     label: Windows Firewall text log (pfirewall.log)
+    category: Windows endpoint
     have: false
     platforms: [Windows]
     index: wineventlog
@@ -82,6 +86,7 @@ feeds:
 
   windows_perfmon:
     label: Windows Performance counters
+    category: Windows endpoint
     have: false
     platforms: [Windows]
     index: perfmon
@@ -91,6 +96,7 @@ feeds:
 
   windows_dns_server:
     label: Windows DNS Server analytical / debug log
+    category: Windows endpoint
     have: false
     platforms: [Windows]
     index: wineventlog
@@ -100,6 +106,7 @@ feeds:
 
   windows_dhcp:
     label: Windows DHCP server log
+    category: Windows endpoint
     have: false
     platforms: [Windows]
     index: wineventlog
@@ -109,6 +116,7 @@ feeds:
 
   iis:
     label: IIS access and configuration logs
+    category: Windows endpoint
     have: false
     platforms: [Windows]
     index: web
@@ -118,6 +126,7 @@ feeds:
 
   etw:
     label: ETW providers not surfaced by Sysmon (Kernel-Process, Win32k, WinINet, RPC, DotNETRuntime, AMSI, Token...)
+    category: Windows endpoint
     have: false
     platforms: [Windows]
     index: etw
@@ -127,6 +136,7 @@ feeds:
 
   windows_osquery:
     label: osquery on Windows
+    category: Windows endpoint
     have: false
     platforms: [Windows]
     index: osquery
@@ -136,6 +146,7 @@ feeds:
 
   autoruns:
     label: Sysinternals Autoruns scans
+    category: Windows endpoint
     have: false
     platforms: [Windows]
     index: wineventlog
@@ -146,6 +157,7 @@ feeds:
   # ------------------------------------------------------------ endpoint security
   trellix_epo:
     label: Trellix ePO events (ENS threat/AMSI/adaptive threat protection, ePO audit)
+    category: Endpoint security
     have: true
     platforms: [Windows, Linux]
     index: epo
@@ -158,6 +170,7 @@ feeds:
 
   solidcore:
     label: Trellix Application and Change Control (Solidcore) via ePO
+    category: Endpoint security
     have: true
     platforms: [Windows, Linux]
     index: epo
@@ -170,6 +183,7 @@ feeds:
 
   edr_telemetry:
     label: EDR raw telemetry (memory, hunting, script block, syscall) - e.g. Trellix EDR, Defender for Endpoint advanced hunting
+    category: Endpoint security
     have: false
     platforms: [Windows, Linux]
     index: edr
@@ -180,6 +194,7 @@ feeds:
   # ------------------------------------------------------------ network
   corelight:
     label: Corelight / Zeek network logs
+    category: Network
     have: true
     platforms: [Windows, Linux, macOS, ESXi, Network Devices, Containers]
     index: corelight
@@ -193,6 +208,7 @@ feeds:
 
   palo_alto:
     label: Palo Alto Networks PAN-OS (traffic, threat, URL, system, config, GlobalProtect)
+    category: Network
     have: true
     platforms: [Network Devices, Windows, Linux, ESXi, Containers]
     index: pan_logs
@@ -208,6 +224,7 @@ feeds:
 
   wireshark:
     label: Wireshark / tshark packet captures (ad hoc)
+    category: Network
     have: true
     platforms: [Windows, Linux, Network Devices]
     index: pcap
@@ -218,6 +235,7 @@ feeds:
 
   netdev_syslog:
     label: Router / switch / non-PAN firewall syslog, config change and AAA logs
+    category: Network
     have: false
     platforms: [Network Devices]
     index: netops
@@ -228,6 +246,7 @@ feeds:
 
   snmp:
     label: SNMP traps / polling
+    category: Network
     have: false
     platforms: [Network Devices]
     index: netops
@@ -237,6 +256,7 @@ feeds:
 
   netflow:
     label: NetFlow / IPFIX (non-Zeek flow)
+    category: Network
     have: false
     platforms: [Network Devices, Linux, Containers]
     index: netflow
@@ -247,6 +267,7 @@ feeds:
   # ------------------------------------------------------------ Linux
   auditd:
     label: Linux auditd (SYSCALL/EXECVE/PATH/CONFIG_CHANGE/USER_LOGIN...)
+    category: Linux
     have: false
     platforms: [Linux, Containers]
     index: linux
@@ -259,6 +280,7 @@ feeds:
 
   linux_syslog:
     label: Linux syslog / journald (messages, secure/auth, cron, kernel, daemon)
+    category: Linux
     have: false
     platforms: [Linux, Containers]
     index: linux
@@ -268,6 +290,7 @@ feeds:
 
   linux_osquery:
     label: osquery on Linux
+    category: Linux
     have: false
     platforms: [Linux, Containers]
     index: osquery
@@ -277,6 +300,7 @@ feeds:
 
   sysmon_linux:
     label: Sysmon for Linux
+    category: Linux
     have: false
     platforms: [Linux]
     index: linux
@@ -286,6 +310,7 @@ feeds:
 
   iptables:
     label: iptables / nftables LOG target via kernel syslog
+    category: Linux
     have: false
     platforms: [Linux]
     index: linux
@@ -296,6 +321,7 @@ feeds:
 
   ebpf:
     label: eBPF runtime security (Falco, Tetragon, Tracee)
+    category: Linux
     have: false
     platforms: [Linux, Containers]
     index: linux
@@ -306,6 +332,7 @@ feeds:
   # ------------------------------------------------------------ Azure
   azure_entra:
     label: Microsoft Entra ID sign-in and audit logs
+    category: Azure and identity
     have: false
     platforms: [Identity Provider, IaaS, Office Suite, Windows]
     index: azure
@@ -316,6 +343,7 @@ feeds:
 
   azure_activity:
     label: Azure Activity Log (subscription control plane) and Azure Policy
+    category: Azure and identity
     have: false
     platforms: [IaaS]
     index: azure
@@ -326,6 +354,7 @@ feeds:
 
   azure_resource:
     label: Azure resource diagnostic logs (NSG flow, VM guest, Key Vault, Storage)
+    category: Azure and identity
     have: false
     platforms: [IaaS]
     index: azure
@@ -335,6 +364,7 @@ feeds:
 
   m365_defender:
     label: Microsoft Defender XDR / Defender for Identity alerts and Graph API logs
+    category: Azure and identity
     have: false
     platforms: [Windows, Identity Provider, Office Suite]
     index: azure
@@ -345,6 +375,7 @@ feeds:
   # ------------------------------------------------------------ Containers
   kubernetes_audit:
     label: Kubernetes API server audit log and cluster events
+    category: Containers
     have: false
     platforms: [Containers]
     index: k8s
@@ -357,6 +388,7 @@ feeds:
 
   container_runtime:
     label: Docker / containerd daemon and runtime events
+    category: Containers
     have: false
     platforms: [Containers]
     index: k8s
@@ -367,6 +399,7 @@ feeds:
   # ------------------------------------------------------------ ESXi / vSphere
   esxi_syslog:
     label: ESXi host logs via remote syslog (hostd, vmkernel, shell, vobd, vpxa, auth, esxupdate)
+    category: VMware ESXi
     have: false
     platforms: [ESXi]
     index: vmware
@@ -379,6 +412,7 @@ feeds:
 
   vcenter:
     label: vCenter vpxd logs and events
+    category: VMware ESXi
     have: false
     platforms: [ESXi]
     index: vmware
@@ -389,6 +423,7 @@ feeds:
   # ------------------------------------------------------------ out of scope platforms (still tickable)
   macos:
     label: macOS unified log / Endpoint Security / osquery / FSEvents
+    category: Not yet in scope
     have: false
     render: false
     platforms: [macOS]
@@ -399,6 +434,7 @@ feeds:
 
   m365_unified:
     label: Microsoft 365 unified audit log (Exchange, SharePoint, Teams, Purview)
+    category: Not yet in scope
     have: false
     render: false
     platforms: [Office Suite, SaaS, Identity Provider, Windows]
@@ -409,6 +445,7 @@ feeds:
 
   aws:
     label: AWS CloudTrail / VPC Flow / CloudWatch / Bedrock
+    category: Not yet in scope
     have: false
     render: false
     platforms: [IaaS, SaaS, Containers]
@@ -419,6 +456,7 @@ feeds:
 
   gcp:
     label: Google Cloud audit / VPC flow / Workspace admin
+    category: Not yet in scope
     have: false
     render: false
     platforms: [IaaS, SaaS, Identity Provider]
@@ -429,6 +467,7 @@ feeds:
 
   okta:
     label: Okta System Log
+    category: Not yet in scope
     have: false
     render: false
     platforms: [Identity Provider, SaaS]
@@ -439,6 +478,7 @@ feeds:
 
   saas:
     label: SaaS application audit logs (GitHub, Slack, Salesforce, Zoom, Box, Confluence, Google Workspace...)
+    category: Not yet in scope
     have: false
     render: false
     platforms: [SaaS]
@@ -449,6 +489,7 @@ feeds:
 
   mobile:
     label: Mobile EDR / MDM telemetry
+    category: Not yet in scope
     have: false
     render: false
     platforms: []
@@ -459,6 +500,7 @@ feeds:
 
   ot:
     label: OT / ICS application and protocol logs
+    category: Not yet in scope
     have: false
     render: false
     platforms: []
@@ -469,6 +511,7 @@ feeds:
 
   threat_intel:
     label: External reconnaissance sources (internet scan data, domain registration, malware repositories, persona monitoring)
+    category: Not yet in scope
     have: false
     render: false
     platforms: [PRE]
@@ -479,6 +522,7 @@ feeds:
 
   unspecified:
     label: ATT&CK left the provider generic (e.g. "Process", "File", "Network Traffic")
+    category: Generic
     have: false
     platforms: []
     index: ""

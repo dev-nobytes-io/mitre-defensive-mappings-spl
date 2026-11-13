@@ -19,7 +19,7 @@ def main(argv: list[str] | None = None) -> int:
     ns = sub.add_parser("new-strategy", help="scaffold content/detection_strategies/<DET id>.yml for an ATT&CK detection strategy")
     ns.add_argument("det_id", nargs="+")
     r = sub.add_parser("render", help="render Splunk, Sigma and docs")
-    r.add_argument("--target", action="append", choices=["splunk", "detections", "sigma", "docs", "docs_analytics", "docs_strategies", "kql", "esql"], help="restrict to a renderer (repeatable)")
+    r.add_argument("--target", action="append", choices=["splunk", "detections", "sigma", "docs", "docs_analytics", "docs_strategies", "docs_logsources", "kql", "esql"], help="restrict to a renderer (repeatable)")
     sub.add_parser("validate", help="consistency checks")
     sub.add_parser("build", help="scaffold + render + validate")
     d = sub.add_parser("diff", help="changelog between two ATT&CK versions")
@@ -55,7 +55,7 @@ def main(argv: list[str] | None = None) -> int:
         from .build import build_all
         from .render import all_renderers
         views = build_all(m)
-        targets = getattr(a, "target", None) or ["splunk", "detections", "sigma", "docs", "docs_analytics", "docs_strategies"]
+        targets = getattr(a, "target", None) or ["splunk", "detections", "sigma", "docs", "docs_analytics", "docs_strategies", "docs_logsources"]
         for name, r in all_renderers().items():
             if name not in targets:
                 continue

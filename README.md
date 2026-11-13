@@ -11,7 +11,7 @@ flowchart LR
   LS --> FEED["Feed in your stack<br/>config/stack.yml"]
   FEED --> ET["Splunk eventtype<br/>mitre_dcXXXX_name__feed"]
   ET --> UMB["Umbrella eventtype<br/>mitre_dcXXXX_name"]
-  UMB --> RULE["Analytic as ES detection + Sigma rule<br/>TTP / Anomaly / Hunting (+ baselines)<br/>65 implemented"]
+  UMB --> RULE["Analytic as ES detection + Sigma rule<br/>TTP / Anomaly / Hunting (+ baselines)<br/>119 implemented"]
   UMB --> SEQ["Strategy sequence<br/>raw-event chain, 8"]
   RULE -- "risk events" --> RISK[("Risk data model")]
   SEQ -- "risk events" --> RISK
@@ -22,9 +22,58 @@ flowchart LR
   class RULE,SEQ,CORR part
 ```
 
-Green is complete for every data component. Amber is in progress: 65 analytics, chosen by technique prevalence on the ticked feeds ([backlog](docs/analytics/backlog.md) for the rest), and a detection-strategy layer of 8 sequences, 4 strategy risk rules and 3 cross-strategy correlations ([strategies](docs/strategies/README.md)).
+Green is complete for every data component. Amber is in progress: 119 analytics, chosen by technique prevalence on the ticked feeds ([backlog](docs/analytics/backlog.md) for the rest), and a detection-strategy layer of 8 sequences, 4 strategy risk rules and 3 cross-strategy correlations ([strategies](docs/strategies/README.md)).
 
 **Resuming work?** [TODO.md](TODO.md) has the current state, conventions and the ordered next steps; [docs/roadmap.md](docs/roadmap.md) has the phased map.
+
+## Content by log source
+
+What you can run with the logs you have. Generated from `config/stack.yml` on every build; do not edit between the markers.
+
+<!-- BEGIN mitremap:log-sources -->
+
+With the feeds ticked in `config/stack.yml`: **64** data components live, **119** analytics and **8** strategy sequences runnable. Each count links to the full list in [docs/by-log-source.md](docs/by-log-source.md).
+
+| Category | Feed | Have | Data components | Analytics | Sequences |
+|---|---|---|---|---|---|
+| Windows endpoint | [`wineventlog`](docs/by-log-source.md#wineventlog) | ☑ | [55](docs/by-log-source.md#wineventlog) | [49](docs/by-log-source.md#wineventlog) | [2](docs/by-log-source.md#wineventlog) |
+|  | [`sysmon`](docs/by-log-source.md#sysmon) | ☑ | [26](docs/by-log-source.md#sysmon) | [86](docs/by-log-source.md#sysmon) | [8](docs/by-log-source.md#sysmon) |
+|  | [`powershell_logging`](docs/by-log-source.md#powershell_logging) | ☑ | [3](docs/by-log-source.md#powershell_logging) | [4](docs/by-log-source.md#powershell_logging) | 0 |
+|  | [`windows_firewall_log`](docs/by-log-source.md#windows_firewall_log) | ☐ | [1](docs/by-log-source.md#windows_firewall_log) | 0 | 0 |
+|  | [`windows_perfmon`](docs/by-log-source.md#windows_perfmon) | ☐ | [1](docs/by-log-source.md#windows_perfmon) | 0 | 0 |
+|  | [`windows_dns_server`](docs/by-log-source.md#windows_dns_server) | ☐ | [2](docs/by-log-source.md#windows_dns_server) | 0 | 0 |
+|  | [`windows_dhcp`](docs/by-log-source.md#windows_dhcp) | ☐ | 0 | 0 | 0 |
+|  | [`iis`](docs/by-log-source.md#iis) | ☐ | [2](docs/by-log-source.md#iis) | 0 | 0 |
+|  | [`etw`](docs/by-log-source.md#etw) | ☐ | [6](docs/by-log-source.md#etw) | 0 | 0 |
+|  | [`windows_osquery`](docs/by-log-source.md#windows_osquery) | ☐ | [2](docs/by-log-source.md#windows_osquery) | 0 | 0 |
+|  | [`autoruns`](docs/by-log-source.md#autoruns) | ☐ | [1](docs/by-log-source.md#autoruns) | 0 | 0 |
+| Endpoint security | [`trellix_epo`](docs/by-log-source.md#trellix_epo) | ☑ | [7](docs/by-log-source.md#trellix_epo) | 0 | 0 |
+|  | [`solidcore`](docs/by-log-source.md#solidcore) | ☑ | [10](docs/by-log-source.md#solidcore) | 0 | 0 |
+|  | [`edr_telemetry`](docs/by-log-source.md#edr_telemetry) | ☐ | [8](docs/by-log-source.md#edr_telemetry) | 0 | 0 |
+| Network | [`corelight`](docs/by-log-source.md#corelight) | ☑ | [15](docs/by-log-source.md#corelight) | [11](docs/by-log-source.md#corelight) | 0 |
+|  | [`palo_alto`](docs/by-log-source.md#palo_alto) | ☑ | [24](docs/by-log-source.md#palo_alto) | [14](docs/by-log-source.md#palo_alto) | 0 |
+|  | [`wireshark`](docs/by-log-source.md#wireshark) | ☑ | [2](docs/by-log-source.md#wireshark) | 0 | 0 |
+|  | [`netdev_syslog`](docs/by-log-source.md#netdev_syslog) | ☐ | [6](docs/by-log-source.md#netdev_syslog) | 0 | 0 |
+|  | [`snmp`](docs/by-log-source.md#snmp) | ☐ | [1](docs/by-log-source.md#snmp) | 0 | 0 |
+|  | [`netflow`](docs/by-log-source.md#netflow) | ☐ | [2](docs/by-log-source.md#netflow) | 0 | 0 |
+| Linux | [`auditd`](docs/by-log-source.md#auditd) | ☐ | [33](docs/by-log-source.md#auditd) | 0 | 0 |
+|  | [`linux_syslog`](docs/by-log-source.md#linux_syslog) | ☐ | [16](docs/by-log-source.md#linux_syslog) | 0 | 0 |
+|  | [`linux_osquery`](docs/by-log-source.md#linux_osquery) | ☐ | [7](docs/by-log-source.md#linux_osquery) | 0 | 0 |
+|  | [`sysmon_linux`](docs/by-log-source.md#sysmon_linux) | ☐ | [5](docs/by-log-source.md#sysmon_linux) | 0 | 0 |
+|  | [`iptables`](docs/by-log-source.md#iptables) | ☐ | [1](docs/by-log-source.md#iptables) | 0 | 0 |
+|  | [`ebpf`](docs/by-log-source.md#ebpf) | ☐ | [8](docs/by-log-source.md#ebpf) | 0 | 0 |
+| Azure and identity | [`azure_entra`](docs/by-log-source.md#azure_entra) | ☐ | [14](docs/by-log-source.md#azure_entra) | 0 | 0 |
+|  | [`azure_activity`](docs/by-log-source.md#azure_activity) | ☐ | [13](docs/by-log-source.md#azure_activity) | 0 | 0 |
+|  | [`azure_resource`](docs/by-log-source.md#azure_resource) | ☐ | [1](docs/by-log-source.md#azure_resource) | 0 | 0 |
+|  | [`m365_defender`](docs/by-log-source.md#m365_defender) | ☐ | 0 | 0 | 0 |
+| Containers | [`kubernetes_audit`](docs/by-log-source.md#kubernetes_audit) | ☐ | [18](docs/by-log-source.md#kubernetes_audit) | 0 | 0 |
+|  | [`container_runtime`](docs/by-log-source.md#container_runtime) | ☐ | [10](docs/by-log-source.md#container_runtime) | 0 | 0 |
+| VMware ESXi | [`esxi_syslog`](docs/by-log-source.md#esxi_syslog) | ☐ | [27](docs/by-log-source.md#esxi_syslog) | 0 | 0 |
+|  | [`vcenter`](docs/by-log-source.md#vcenter) | ☐ | [3](docs/by-log-source.md#vcenter) | 0 | 0 |
+
+Feeds for platforms not yet in scope (macOS, Microsoft 365, AWS, GCP, Okta, SaaS) are listed in the [full index](docs/by-log-source.md#not-yet-in-scope).
+
+<!-- END mitremap:log-sources -->
 
 ## What you get
 

@@ -5,7 +5,7 @@ Phases and where each stands. The ordered, checkbox-level work list is [TODO.md]
 ```mermaid
 flowchart LR
   P1["1. Data components<br/>eventtypes, tags, macros, lookups"]:::done
-  P2["2. Analytics<br/>ES detections + Sigma<br/>65 of ~510 coverable"]:::part
+  P2["2. Analytics<br/>ES detections + Sigma<br/>119 of ~510 coverable"]:::part
   P3["3. Detection strategies<br/>sequences, risk rules,<br/>correlations"]:::part
   P0["0. Correctness and health<br/>Windows source matching,<br/>telemetry health checks"]:::next
   PV["Validation in Splunk<br/>replayed attack data,<br/>AppInspect, tuning"]:::next
@@ -28,7 +28,7 @@ Feed checklist, log-source normalisation, per-component eventtypes, tags, macros
 
 ## Phase 2: analytics (in progress)
 
-Done: schema and scaffolding (`new-analytic`), validation, ES 8 detections app, Sigma rules with correlation support, per-analytic docs, prioritised backlog, 65 analytics (20 TTP, 36 anomaly, 9 hunting). Next: the batches listed in TODO P2, then `reviewed` status after production tuning.
+Done: schema and scaffolding (`new-analytic`), validation, ES 8 detections app, Sigma rules with correlation support, per-analytic docs, prioritised backlog, 119 analytics (33 TTP, 73 anomaly, 13 hunting). Next: the batches listed in TODO P2, then `reviewed` status after production tuning.
 
 The `curated` schema of `content/analytics/ANxxxx.yml`:
 

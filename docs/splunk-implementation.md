@@ -16,7 +16,7 @@ Analytics bind each ATT&CK mutable element to one of these, or to a macro of the
 
 Because a strategy's analytics are platform variants, "correlating the analytics of a strategy" is rarely what you want. Each strategy takes one of three shapes:
 
-* **Delegated** (default, 50 strategies): the analytics' own findings and risk events are the strategy's output. Nothing extra runs.
+* **Delegated** (default, 97 strategies): the analytics' own findings and risk events are the strategy's output. Nothing extra runs.
 * **Sequence** (8): a hand-written search over raw events that implements the chain the single-leg analytic left in its `gaps` field, joined on a real key: Sysmon process GUID for LSASS access then dump write, host and file path for document write then execution, host and task command for task creation then Task Scheduler launch. Sequences write a finding and risk, like a TTP analytic.
 * **Risk rule** (4 strategy-scoped, 3 cross-strategy): generated from parameters (scope, `group_by` risk or threat object, window, condition) over the Risk data model. They write a finding only, never risk, so no rule reads its own output. Strategy-scoped rules look for spread (one source address on three hosts); cross-strategy rules look for breadth (three strategies or tactics on one object) or a named precursor set (ransomware).
 
@@ -48,7 +48,7 @@ ATT&CK analytics vary from "process X spawned by Y" (a specific behaviour) to "u
 | **Hunting** | Pivot material for an analyst | scheduled search, no adaptive response; dashboard panel | Enumeration analytics, context collection, anything with "monitor for" and no decision boundary |
 | **Baseline** | Produces reference data others consume | `outputlookup` on a daily schedule | Attached to an analytic whose mutable element is a learned set (first-seen pairs, known parents, normal volumes); not a content type of its own |
 
-A content type is suggested from the analytic text (discovery-only tactics → Hunting; threshold, window and rarity language → Anomaly; otherwise TTP) and shown in the backlog, but the author decides. In the implemented set the split is 20 TTP, 36 Anomaly, 9 Hunting, with one baseline (first-seen RDP pairs for AN0931). Detection strategies (phase 3) then pick their own shape: a **risk incident rule** when the DET's analytics are anomalies (count distinct `mitre_an` per risk object within the DET over a window), a plain **correlation search / notable** when one TTP analytic is sufficient on its own.
+A content type is suggested from the analytic text (discovery-only tactics → Hunting; threshold, window and rarity language → Anomaly; otherwise TTP) and shown in the backlog, but the author decides. In the implemented set the split is 28 TTP, 59 Anomaly, 12 Hunting, with one baseline (first-seen RDP pairs for AN0931). Detection strategies (phase 3) then pick their own shape: a **risk incident rule** when the DET's analytics are anomalies (count distinct `mitre_an` per risk object within the DET over a window), a plain **correlation search / notable** when one TTP analytic is sufficient on its own.
 
 Custom annotation frameworks make this work: every detection will carry `action.correlationsearch.annotations = {"mitre_attack": ["T1059.001"], "mitre_det": ["DET0039"], "mitre_an": ["AN0110"], "mitre_dc": ["DC0032"]}`, so the Risk data model and the ES Detections page can group and filter by any layer.
 

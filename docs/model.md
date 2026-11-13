@@ -53,8 +53,8 @@ flowchart TB
 | Log source | literal `index`/`sourcetype`/field constraint inside an eventtype | `logsource` product/service | done |
 | Data component | umbrella eventtype, `mitre_dcXXXX*` macros, CIM tags, `_dm` macro | generic category (`process_creation`, `file_event`...) | done |
 | Mutable elements | per-analytic macros (`mitre_anXXXX_*`), shared macros and tuning lookups (`mitre_allowlist_*`, `mitre_asset_roles`, `mitre_account_roles`), baseline lookups | rule values | done for implemented analytics |
-| Analytic | ES 8 detection with a declared content type (TTP → finding + risk, Anomaly → risk, Hunting → no action); baselines attach as supporting searches | rule, plus correlation rule where needed | 65 implemented, rest in the backlog |
-| Detection strategy | delegated to its analytics, a raw-event **sequence** (finding + risk), or a **risk rule** over the Risk data model (finding only), chosen per DET | correlation rule (sequences); not expressible (risk rules) | 8 sequences, 4 risk rules, 50 delegated |
+| Analytic | ES 8 detection with a declared content type (TTP → finding + risk, Anomaly → risk, Hunting → no action); baselines attach as supporting searches | rule, plus correlation rule where needed | 99 implemented, rest in the backlog |
+| Detection strategy | delegated to its analytics, a raw-event **sequence** (finding + risk), or a **risk rule** over the Risk data model (finding only), chosen per DET | correlation rule (sequences); not expressible (risk rules) | 8 sequences, 4 risk rules, 79 delegated |
 | (cross-strategy) | risk rules over all MITRE risk events by risk object | not expressible | 3 correlations |
 
 ## Why eventtypes for data components
