@@ -1,21 +1,21 @@
 # Analytics (ATT&CK v20.1)
 
-65 of 1773 ATT&CK analytics are implemented as ES detections and Sigma rules; 511 are coverable by the feeds ticked in `config/stack.yml`. The rest are in the [backlog](backlog.md), ranked by technique prevalence.
+83 of 1773 ATT&CK analytics are implemented as ES detections and Sigma rules; 511 are coverable by the feeds ticked in `config/stack.yml`. The rest are in the [backlog](backlog.md), ranked by technique prevalence.
 
 ```mermaid
 pie showData
     title Implemented analytics by content type
-    "TTP (finding + risk)" : 20
-    "Anomaly (risk only)" : 36
+    "TTP (finding + risk)" : 24
+    "Anomaly (risk only)" : 50
     "Hunting (no action)" : 9
 ```
 
 ```mermaid
 xychart-beta
     title "Implemented analytics by tactic"
-    x-axis ["stealth", "discovery", "command-and-control", "execution", "privilege-escalation", "persistence", "collection", "defense-impairment", "impact", "credential-access", "lateral-movement", "initial-access", "exfiltration"]
+    x-axis ["stealth", "command-and-control", "discovery", "persistence", "privilege-escalation", "execution", "defense-impairment", "credential-access", "impact", "collection", "lateral-movement", "exfiltration", "initial-access"]
     y-axis "analytics"
-    bar [14, 13, 9, 8, 7, 6, 4, 4, 3, 3, 3, 1, 1]
+    bar [17, 16, 13, 10, 9, 8, 6, 5, 4, 4, 3, 2, 2]
 ```
 
 | Analytic | Detection | Type | Severity | Technique | Tactics | Data components | Feeds |
@@ -40,9 +40,11 @@ xychart-beta
 | AN1221 | [Scheduled task registered with an interpreter or user-writable action](AN1221-scheduled-task-registered-with-an-interpreter-or-user-writab.md) | anomaly | medium | T1053.005 Scheduled Task | execution, persistence, privilege-escalation | DC0001 | wineventlog |
 | AN0781 | [Security-relevant registry value modified](AN0781-security-relevant-registry-value-modified.md) | ttp | medium | T1112 Modify Registry | defense-impairment, persistence | DC0063 | sysmon |
 | AN1031 | [WMI used to create processes locally or on remote hosts](AN1031-wmi-used-to-create-processes-locally-or-on-remote-hosts.md) | anomaly | medium | T1047 Windows Management Instrumentation | execution | DC0032 | sysmon, wineventlog |
+| AN0404 | [Long-lived or high-volume external session with no identified protocol](AN0404-long-lived-or-high-volume-external-session-with-no-identifie.md) | anomaly | low | T1573.001 Symmetric Cryptography | command-and-control | DC0078 | corelight |
 | AN0209 | [Script host chain from Office or into a second-stage interpreter](AN0209-script-host-chain-from-office-or-into-a-second-stage-interpr.md) | anomaly | medium | T1059.005 Visual Basic | execution | DC0032 | sysmon, wineventlog |
 | AN0980 | [Screenshot captured from a script or command-line tool](AN0980-screenshot-captured-from-a-script-or-command-line-tool.md) | anomaly | medium | T1113 Screen Capture | collection | DC0032, DC0039 | sysmon |
 | AN1064 | [Script host or LOLBin writing an archive or encoded file to a staging path](AN1064-script-host-or-lolbin-writing-an-archive-or-encoded-file-to-.md) | anomaly | low | T1027 Obfuscated Files or Information | stealth | DC0039 | sysmon |
+| AN1067 | [Executable transferred under a non-executable file name](AN1067-executable-transferred-under-a-non-executable-file-name.md) | ttp | medium | T1027 Obfuscated Files or Information | stealth | DC0085 | corelight |
 | AN0724 | [Many files written into a staging directory by one process](AN0724-many-files-written-into-a-staging-directory-by-one-process.md) | anomaly | medium | T1074.001 Local Data Staging | collection | DC0039 | sysmon |
 | AN1369 | [Security tooling disabled or tampered with](AN1369-security-tooling-disabled-or-tampered-with.md) | ttp | high | T1685 Disable or Modify Tools | defense-impairment | DC0063, DC0032 | sysmon |
 | AN1374 | [Firewall logging or monitoring configuration changed](AN1374-firewall-logging-or-monitoring-configuration-changed.md) | ttp | medium | T1685 Disable or Modify Tools | defense-impairment | DC0041 | palo_alto |
@@ -60,6 +62,7 @@ xychart-beta
 | AN0324 | [Service or task named like system software but running an untrusted binary](AN0324-service-or-task-named-like-system-software-but-running-an-un.md) | anomaly | medium | T1036.004 Masquerade Task or Service | stealth | DC0060, DC0001 | wineventlog |
 | AN0105 | [Browser credential store read by a non-browser process](AN0105-browser-credential-store-read-by-a-non-browser-process.md) | ttp | high | T1555.003 Credentials from Web Browsers | credential-access | DC0055 | wineventlog |
 | AN1057 | [Process connecting to many hosts or ports in one minute](AN1057-process-connecting-to-many-hosts-or-ports-in-one-minute.md) | anomaly | medium | T1046 Network Service Discovery | discovery | DC0082 | sysmon |
+| AN1500 | [TLS to an external host on an unusual port with an unvalidated certificate](AN1500-tls-to-an-external-host-on-an-unusual-port-with-an-unvalidat.md) | anomaly | medium | T1573.002 Asymmetric Cryptography | command-and-control | DC0085 | corelight |
 | AN0931 | [First-seen RDP logon for a user, source and destination](AN0931-first-seen-rdp-logon-for-a-user-source-and-destination.md) | anomaly | medium | T1021.001 Remote Desktop Protocol | lateral-movement | DC0067 | wineventlog |
 | AN1108 | [Web server process spawned a shell or script interpreter](AN1108-web-server-process-spawned-a-shell-or-script-interpreter.md) | ttp | high | T1505.003 Web Shell | persistence | DC0032 | sysmon, wineventlog |
 | AN1394 | [Command line with obfuscation markers](AN1394-command-line-with-obfuscation-markers.md) | anomaly | medium | T1027.010 Command Obfuscation | stealth | DC0032 | sysmon, wineventlog |
@@ -82,9 +85,24 @@ xychart-beta
 | AN1124 | [DNS tunnelling pattern from a client (network view)](AN1124-dns-tunnelling-pattern-from-a-client-network-view.md) | anomaly | medium | T1071.004 DNS | command-and-control | DC0085 | corelight |
 | AN1483 | [Port forwarding or tunnelling tool started](AN1483-port-forwarding-or-tunnelling-tool-started.md) | ttp | medium | T1572 Protocol Tunneling | command-and-control | DC0032 | sysmon, wineventlog |
 | AN0933 | [Shadow copies, backups or boot recovery disabled with native utilities](AN0933-shadow-copies-backups-or-boot-recovery-disabled-with-native-.md) | ttp | high | T1490 Inhibit System Recovery | impact | DC0032 | sysmon, wineventlog |
+| AN1024 | [Tor or other onion-routing traffic through the firewall](AN1024-tor-or-other-onion-routing-traffic-through-the-firewall.md) | ttp | high | T1090.003 Multi-hop Proxy | command-and-control | DC0078 | palo_alto |
 | AN0061 | [Burst of service stop or disable commands](AN0061-burst-of-service-stop-or-disable-commands.md) | anomaly | medium | T1489 Service Stop | impact | DC0032 | sysmon, wineventlog |
 | AN0235 | [SAM, SYSTEM or SECURITY hive dumped from the command line](AN0235-sam-system-or-security-hive-dumped-from-the-command-line.md) | ttp | high | T1003.002 Security Account Manager | credential-access | DC0032 | sysmon, wineventlog |
 | AN1472 | [Windows event log cleared](AN1472-windows-event-log-cleared.md) | ttp | high | T1685.005 Clear Windows Event Logs | defense-impairment | DC0038, DC0032 | wineventlog, sysmon |
+| AN1240 | [Administrator account added on the firewall](AN1240-administrator-account-added-on-the-firewall.md) | ttp | medium | T1136.001 Local Account | persistence | DC0014 | palo_alto |
+| AN0427 | [Large cleartext upload to an external host](AN0427-large-cleartext-upload-to-an-external-host.md) | anomaly | medium | T1048.003 Exfiltration Over Unencrypted Non-C2 Protocol | exfiltration | DC0078 | corelight |
+| AN0410 | [Security rules deleted or default rules changed on the firewall](AN0410-security-rules-deleted-or-default-rules-changed-on-the-firew.md) | anomaly | medium | T1686 Disable or Modify System Firewall | defense-impairment | DC0051 | palo_alto |
+| AN0926 | [Proxy-avoidance sites or anonymising proxy applications](AN0926-proxy-avoidance-sites-or-anonymising-proxy-applications.md) | anomaly | medium | T1090.002 External Proxy | command-and-control | DC0085, DC0078 | palo_alto |
+| AN1542 | [Firewall restart or shutdown](AN1542-firewall-restart-or-shutdown.md) | anomaly | medium | T1529 System Shutdown/Reboot | impact | DC0018 | palo_alto |
+| AN1173 | [FTP or TFTP to the internet, or FTP on a non-standard port](AN1173-ftp-or-tftp-to-the-internet-or-ftp-on-a-non-standard-port.md) | anomaly | medium | T1071.002 File Transfer Protocols | command-and-control | DC0078 | corelight |
+| AN1340 | [One source failing to authenticate as many accounts on the firewall](AN1340-one-source-failing-to-authenticate-as-many-accounts-on-the-f.md) | anomaly | high | T1110.003 Password Spraying | credential-access | DC0002 | palo_alto |
+| AN0382 | [SMTP to the internet from a host that is not a mail server](AN0382-smtp-to-the-internet-from-a-host-that-is-not-a-mail-server.md) | anomaly | medium | T1071.003 Mail Protocols | command-and-control | DC0085 | corelight |
+| AN1525 | [Repeated authentication failures for one account on the firewall](AN1525-repeated-authentication-failures-for-one-account-on-the-fire.md) | anomaly | medium | T1110.001 Password Guessing | credential-access | DC0002 | palo_alto |
+| AN0354 | [SSH public key added to a firewall administrator](AN0354-ssh-public-key-added-to-a-firewall-administrator.md) | ttp | high | T1098.004 SSH Authorized Keys | persistence, privilege-escalation | DC0064 | palo_alto |
+| AN1287 | [Login to the firewall with a default account name](AN1287-login-to-the-firewall-with-a-default-account-name.md) | anomaly | medium | T1078.001 Default Accounts | stealth, persistence, privilege-escalation, initial-access | DC0002 | palo_alto |
+| AN0855 | [Bulk or API-driven security and NAT rule changes on the firewall](AN0855-bulk-or-api-driven-security-and-nat-rule-changes-on-the-fire.md) | anomaly | medium | T1686.002 Network Device Firewall | defense-impairment | DC0051 | palo_alto |
+| AN0276 | [PAN-OS software installed, upgraded or downgraded](AN0276-pan-os-software-installed-upgraded-or-downgraded.md) | anomaly | medium | T1542.001 System Firmware | stealth, persistence | DC0004 | palo_alto |
+| AN0005 | [Publish/subscribe protocol to an external broker](AN0005-publish-subscribe-protocol-to-an-external-broker.md) | anomaly | low | T1071.005 Publish/Subscribe Protocols | command-and-control | DC0078 | corelight |
 
 ## Authoring
 

@@ -40,6 +40,10 @@ Work on a branch, open a draft PR, keep `make build` idempotent and the tests gr
 * Every analytic and sequence has Sigma, or `sigma.not_expressible` with a reason. Every Sigma file must convert through `dist/sigma/pipelines/splunk_mitre_dc.yml` with the Splunk backend.
 * Tunables live in macros or lookups, bound to the ATT&CK mutable element they implement. Thresholds are never literals in SPL.
 
+## Focus
+
+**Windows and network first** (decided 2026-11-13). Work only on analytics for the ATT&CK Windows and Network Devices platforms, plus network-sensor content (Corelight, Palo Alto) that serves them. Linux, ESXi, containers, Azure and other query languages (P4, P5) wait until the Windows and Network Devices backlog is worked down.
+
 ## Next up (in order)
 
 ### P0: correctness before anyone enables anything
@@ -62,6 +66,7 @@ Work on a branch, open a draft PR, keep `make build` idempotent and the tests gr
 - [x] **Analytics, batch 2** (16 done: AN1040, AN0392, AN0237, AN1070, AN1031, AN0980, AN1064, AN0724, AN0577, AN0903, AN0589, AN0324, AN0516, AN1325, AN0846, AN1095).
 - [ ] **Analytics needing care:** AN1465 native API, AN0400/AN1496 crypto library loads, AN0066 packing, AN0243 keylogging. These depend on Sysmon ImageLoad (EventCode 7) volume; decide the Sysmon config scope first.
 - [ ] **Network-device CLI analytics** (AN1457, AN1044, AN0099, AN0563, AN0257, AN1073, AN1587, AN0434): need PAN-OS administrator activity audit logs. Confirm that the log exists and its sourcetype, then implement as hunting.
+- [x] **Palo Alto field names verified** against the add-on source (Palo Alto-maintained Splunk_TA_paloalto 6.2.0 transforms) and Splunk's current add-on docs: config logs `cmd`, `path`, `admin`, `client`, `result`; system logs `log_subtype`, `event_id` (alias `signature`), `description`; traffic `app`, `bytes_out`, `bytes_in`, `dest_port`, `http_category`; threat `raw_category`, `url`. Splunk's add-on 1.0.0 removed `before_change_detail`/`after_change_detail`, so firewall-rule analytics see which rule changed, not its content. `pan:globalprotect` and `pan:decryption` exist in Splunk's current add-on.
 - [x] **Sequences batch 2:** DET0364 remote WMI creation then execution on the target (cross-host join), DET0140 run from a staging path then deleted.
 - [ ] **More sequences:** DET0530 (5145 ADMIN$ write, then service or process on the target; needs Detailed File Share auditing), DET0215 ransom notes plus mass rename, DET0087 encoded file chain beyond AN0237, DET0378 obfuscated file then execution.
 - [ ] **Consolidate hunting searches** (AN1452, AN0095, AN0559, AN0254 and future discovery hunts) into one dashboard with a panel per analytic.
@@ -97,6 +102,7 @@ Work on a branch, open a draft PR, keep `make build` idempotent and the tests gr
 * Risk rules recover analytic ids from the rule name (`source`), not from custom annotation field paths.
 * Everything ships disabled.
 * The feed checklist is the user's to tick; nothing is labelled unavailable by the author.
+* Windows and Network Devices are worked first; other platforms wait (see **Focus**).
 
 ## Known limitations
 
