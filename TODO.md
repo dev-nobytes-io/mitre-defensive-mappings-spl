@@ -9,8 +9,8 @@ The single place to pick this project up again. Read **Where things stand**, run
 | ATT&CK data | Enterprise v20.1 pinned (slim extract, sha256 in manifest); 20.0 to 20.1 changelog generated | `attack/`, `docs/changelog/` |
 | Feed checklist | 44 feeds; 8 ticked (Windows Event Logs, PowerShell, Sysmon, Corelight, Palo Alto, Trellix ePO, Solidcore, Wireshark hunt-only) | `config/stack.yml`, `docs/checklist.md` |
 | Data components | All 106 mapped; 372 eventtypes, tags, macros, metadata and tuning lookups | `content/data_components/`, `dist/splunk/TA-mitre-attack-datacomponents/` |
-| Analytics | 99 of 1773 implemented (28 TTP, 59 anomaly, 12 hunting, 1 baseline): 76 Windows, 23 Network Devices. Still coverable by ticked feeds: 350 Windows, 54 Network Devices | `content/analytics/`, `docs/analytics/backlog.md` |
-| Detection strategies | 8 sequences, 4 strategy risk rules, 3 cross-strategy correlations; 79 strategies delegated | `content/detection_strategies/`, `content/correlations/` |
+| Analytics | 119 of 1773 implemented (33 TTP, 73 anomaly, 13 hunting, 1 baseline): 96 Windows, 23 Network Devices. Still coverable by ticked feeds: 330 Windows, 54 Network Devices | `content/analytics/`, `docs/analytics/backlog.md` |
+| Detection strategies | 8 sequences, 4 strategy risk rules, 3 cross-strategy correlations; 97 strategies delegated | `content/detection_strategies/`, `content/correlations/` |
 | Log-source index | README table and `docs/by-log-source.md`: per feed, the data components, analytics and sequences it supports | `src/mitremap/render/docs_logsources.py` |
 | Telemetry health | HEALTH0001 expected telemetry missing or silent, HEALTH0002 host stopped reporting | `src/mitremap/health.py`, `docs/health.md` |
 | Sigma | Data-component pipeline; one rule file per analytic and per sequence strategy | `dist/sigma/` |
@@ -18,7 +18,7 @@ The single place to pick this project up again. Read **Where things stand**, run
 | Validation | `mitremap validate` plus pytest; CI rebuilds and fails on drift | `tests/`, `.github/workflows/ci.yml` |
 | Real Splunk | **Never run.** Nothing has been loaded into a search head or ES | — |
 
-PRs so far: #1 data components, #2 analytics, #3 detection strategies (merged); #4 resume guide, Windows source fix, telemetry health, analytics batch 2.
+PRs so far: #1 data components, #2 analytics, #3 detection strategies (merged); #4 resume guide, Windows source fix, telemetry health, analytics batch 2; #5 network batch 1, Windows batches 3 and 4, Palo Alto field verification, log-source index.
 
 ## Resume in five minutes
 
@@ -65,7 +65,8 @@ Work on a branch, open a draft PR, keep `make build` idempotent and the tests gr
 
 - [x] **Analytics, Windows batch 3** (16): AN1611, AN0406, AN1275, AN0797, AN0590, AN1235, AN0178, AN1254, AN0643, AN1229, AN0531, AN0478, AN1428, AN0536, AN1100, AN1353.
 - [x] **Analytics, network batch 1** (18): firewall as a device AN1525, AN1340, AN1287, AN1240, AN0354, AN0410, AN0855, AN1542, AN0276; network sensors AN1024, AN0926, AN0382, AN1173, AN0427, AN1500, AN0404, AN0005, AN1067.
-- [ ] **Analytics, Windows batch 4** (backlog order): AN0091 hidden files, AN1626 timestomp, AN1189 web service C2, AN1458 archive collected data, AN1419 exploitation for privilege escalation, AN1020 multi-hop proxy (endpoint), AN1376 fallback channels, AN0856 credentials in files, AN1198 password stores, AN1551 execution guardrails, AN1025 domain groups, AN0782 compression, AN1076 process hollowing, AN0396 time-based checks, AN0965 clipboard, AN0411 data destruction, AN0785 regsvr32, AN1397 mshta, AN0423 exfil over non-C2 protocol, AN0016 domain trusts. Regenerate the order from `docs/analytics/backlog.md` first.
+- [x] **Analytics, Windows batch 4** (20): AN0091 hidden files and ADS, AN1626 timestomp, AN1189 web-service C2 lookups, AN1458 password-protected or staged archives, AN1419 vulnerable driver or SYSTEM-from-user (TTP), AN1020 Tor/I2P client (TTP), AN1376 many uncommon ports, AN0856 credentials in files (TTP), AN1198 password stores (TTP), AN1551 environment checks then egress, AN1025 domain groups (hunting), AN0782 extracted then run, AN1076 Sysmon process tampering, AN0396 long sleeps, AN0965 clipboard, AN0411 mass deletion or wipe, AN0785 regsvr32, AN1397 mshta (TTP), AN0423 cleartext uploads, AN0016 domain trusts.
+- [ ] **Analytics, Windows batch 5** (backlog order, skipping the Sysmon ImageLoad items under "needing care"): AN0988 exfiltration over C2, AN1004 external remote services, AN0498 drive-by, AN1361 financial theft, AN1213 custom archiving, AN0317 local groups, AN0331 steganography, AN1113 automated exfiltration, AN1137 local accounts, AN0037 browser discovery, AN1061 rootkit, AN0271 window discovery, AN0327 remote-service exploitation, AN0445 msiexec, AN0520 indicator removal, AN0568 video capture, AN0875 sniffing, AN0922 external proxy, AN1015 internet connection discovery, AN1402 web session cookies. Regenerate the order from `docs/analytics/backlog.md` first.
 - [ ] **Analytics, network batch 2** (Network Devices, backlog order): AN0404-style flow analytics are done; next AN1084 shell on appliances, AN1432 CLI interpreter use, AN0208 internal proxy, AN0879 sniffing, AN0285 input capture, AN1451 traffic signalling, AN0845 port knocking, AN0763 encrypted channel, AN0826 adversary-in-the-middle, AN1151 hide infrastructure, AN0015 boundary bridging. Several need PAN-OS administrator audit logs (CLI); check each analytic's log sources first.
 - [ ] **Endpoint-security analytics:** Trellix ePO and Solidcore feed 17 data components but no analytic reads them yet (AV detection, tamper, AMSI, Solidcore EXECUTION_DENIED and change-control events). Blocked on the P0 field-name check.
 - [x] **Analytics, batch 2** (16 done: AN1040, AN0392, AN0237, AN1070, AN1031, AN0980, AN1064, AN0724, AN0577, AN0903, AN0589, AN0324, AN0516, AN1325, AN0846, AN1095).

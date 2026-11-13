@@ -16,7 +16,7 @@ Analytics bind each ATT&CK mutable element to one of these, or to a macro of the
 
 Because a strategy's analytics are platform variants, "correlating the analytics of a strategy" is rarely what you want. Each strategy takes one of three shapes:
 
-* **Delegated** (default, 79 strategies): the analytics' own findings and risk events are the strategy's output. Nothing extra runs.
+* **Delegated** (default, 97 strategies): the analytics' own findings and risk events are the strategy's output. Nothing extra runs.
 * **Sequence** (8): a hand-written search over raw events that implements the chain the single-leg analytic left in its `gaps` field, joined on a real key: Sysmon process GUID for LSASS access then dump write, host and file path for document write then execution, host and task command for task creation then Task Scheduler launch. Sequences write a finding and risk, like a TTP analytic.
 * **Risk rule** (4 strategy-scoped, 3 cross-strategy): generated from parameters (scope, `group_by` risk or threat object, window, condition) over the Risk data model. They write a finding only, never risk, so no rule reads its own output. Strategy-scoped rules look for spread (one source address on three hosts); cross-strategy rules look for breadth (three strategies or tactics on one object) or a named precursor set (ransomware).
 

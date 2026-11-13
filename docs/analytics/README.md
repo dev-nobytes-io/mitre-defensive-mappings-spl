@@ -1,21 +1,21 @@
 # Analytics (ATT&CK v20.1)
 
-99 of 1773 ATT&CK analytics are implemented as ES detections and Sigma rules; 511 are coverable by the feeds ticked in `config/stack.yml`. The rest are in the [backlog](backlog.md), ranked by technique prevalence.
+119 of 1773 ATT&CK analytics are implemented as ES detections and Sigma rules; 511 are coverable by the feeds ticked in `config/stack.yml`. The rest are in the [backlog](backlog.md), ranked by technique prevalence.
 
 ```mermaid
 pie showData
     title Implemented analytics by content type
-    "TTP (finding + risk)" : 28
-    "Anomaly (risk only)" : 59
-    "Hunting (no action)" : 12
+    "TTP (finding + risk)" : 33
+    "Anomaly (risk only)" : 73
+    "Hunting (no action)" : 13
 ```
 
 ```mermaid
 xychart-beta
     title "Implemented analytics by tactic"
-    x-axis ["stealth", "command-and-control", "discovery", "persistence", "execution", "privilege-escalation", "defense-impairment", "credential-access", "collection", "impact", "lateral-movement", "initial-access", "exfiltration"]
+    x-axis ["stealth", "command-and-control", "discovery", "persistence", "privilege-escalation", "execution", "credential-access", "defense-impairment", "collection", "impact", "exfiltration", "lateral-movement", "initial-access"]
     y-axis "analytics"
-    bar [19, 18, 17, 12, 11, 10, 8, 7, 5, 4, 3, 3, 2]
+    bar [27, 21, 20, 12, 12, 11, 9, 8, 7, 5, 3, 3, 3]
 ```
 
 | Analytic | Detection | Type | Severity | Technique | Tactics | Data components | Feeds |
@@ -87,24 +87,44 @@ xychart-beta
 | AN0360 | [Interpreter started with a hidden window](AN0360-interpreter-started-with-a-hidden-window.md) | anomaly | low | T1564.003 Hidden Window | stealth | DC0032 | sysmon, wineventlog |
 | AN0478 | [Burst of virtual-machine and sandbox detection checks](AN0478-burst-of-virtual-machine-and-sandbox-detection-checks.md) | anomaly | medium | T1497.001 System Checks | stealth, discovery | DC0032 | sysmon, wineventlog |
 | AN1095 | [Process handle opened for injection from unbacked memory](AN1095-process-handle-opened-for-injection-from-unbacked-memory.md) | anomaly | high | T1055.001 Dynamic-link Library Injection | stealth, privilege-escalation | DC0035 | sysmon |
+| AN0091 | [File hidden with attrib or written to an alternate data stream](AN0091-file-hidden-with-attrib-or-written-to-an-alternate-data-stre.md) | anomaly | medium | T1564.001 Hidden Files and Directories | stealth | DC0032, DC0039 | sysmon |
 | AN1094 | [UAC bypass through auto-elevated binary hijack](AN1094-uac-bypass-through-auto-elevated-binary-hijack.md) | ttp | high | T1548.002 Bypass User Account Control | privilege-escalation | DC0063, DC0032 | sysmon |
+| AN1626 | [File creation time moved backwards (timestomp)](AN1626-file-creation-time-moved-backwards-timestomp.md) | anomaly | medium | T1070.006 Timestomp | stealth | DC0061, DC0029 | sysmon, powershell_logging |
 | AN1571 | [Large upload to a cloud storage application](AN1571-large-upload-to-a-cloud-storage-application.md) | anomaly | medium | T1567.002 Exfiltration to Cloud Storage | exfiltration | DC0082 | palo_alto |
+| AN1189 | [Non-browser process resolving web services used for C2](AN1189-non-browser-process-resolving-web-services-used-for-c2.md) | anomaly | medium | T1102 Web Service | command-and-control | DC0085 | sysmon |
+| AN1458 | [Password-protected archive or archive written to a staging folder](AN1458-password-protected-archive-or-archive-written-to-a-staging-f.md) | anomaly | medium | T1560 Archive Collected Data | collection | DC0032, DC0039 | sysmon |
 | AN1100 | [Installed software enumeration](AN1100-installed-software-enumeration.md) | hunting | informational | T1518 Software Discovery | discovery | DC0032 | sysmon, wineventlog |
 | AN1353 | [Peripheral and USB device enumeration](AN1353-peripheral-and-usb-device-enumeration.md) | hunting | informational | T1120 Peripheral Device Discovery | discovery | DC0032 | sysmon, wineventlog |
+| AN1419 | [Vulnerable or out-of-place driver loaded, or SYSTEM process spawned by a user process](AN1419-vulnerable-or-out-of-place-driver-loaded-or-system-process-s.md) | ttp | high | T1068 Exploitation for Privilege Escalation | privilege-escalation | DC0079, DC0032 | sysmon |
 | AN1121 | [DNS tunnelling pattern from a non-browser process](AN1121-dns-tunnelling-pattern-from-a-non-browser-process.md) | anomaly | medium | T1071.004 DNS | command-and-control | DC0085 | sysmon |
 | AN1124 | [DNS tunnelling pattern from a client (network view)](AN1124-dns-tunnelling-pattern-from-a-client-network-view.md) | anomaly | medium | T1071.004 DNS | command-and-control | DC0085 | corelight |
 | AN0590 | [One domain account logging on to many hosts in an hour](AN0590-one-domain-account-logging-on-to-many-hosts-in-an-hour.md) | anomaly | medium | T1078.002 Domain Accounts | stealth, persistence, privilege-escalation, initial-access | DC0067 | wineventlog |
 | AN1428 | [Command interpreter used by a person outside working hours](AN1428-command-interpreter-used-by-a-person-outside-working-hours.md) | anomaly | low | T1059 Command and Scripting Interpreter | execution | DC0032 | sysmon, wineventlog |
 | AN1483 | [Port forwarding or tunnelling tool started](AN1483-port-forwarding-or-tunnelling-tool-started.md) | ttp | medium | T1572 Protocol Tunneling | command-and-control | DC0032 | sysmon, wineventlog |
 | AN0933 | [Shadow copies, backups or boot recovery disabled with native utilities](AN0933-shadow-copies-backups-or-boot-recovery-disabled-with-native-.md) | ttp | high | T1490 Inhibit System Recovery | impact | DC0032 | sysmon, wineventlog |
+| AN1020 | [Tor or I2P client running on an endpoint](AN1020-tor-or-i2p-client-running-on-an-endpoint.md) | ttp | medium | T1090.003 Multi-hop Proxy | command-and-control | DC0032, DC0082, DC0085 | sysmon |
 | AN1024 | [Tor or other onion-routing traffic through the firewall](AN1024-tor-or-other-onion-routing-traffic-through-the-firewall.md) | ttp | high | T1090.003 Multi-hop Proxy | command-and-control | DC0078 | palo_alto |
 | AN0061 | [Burst of service stop or disable commands](AN0061-burst-of-service-stop-or-disable-commands.md) | anomaly | medium | T1489 Service Stop | impact | DC0032 | sysmon, wineventlog |
+| AN1376 | [One process connecting out on many uncommon ports](AN1376-one-process-connecting-out-on-many-uncommon-ports.md) | anomaly | low | T1008 Fallback Channels | command-and-control | DC0082 | sysmon |
+| AN0856 | [Command-line search for credentials in files](AN0856-command-line-search-for-credentials-in-files.md) | ttp | medium | T1552.001 Credentials In Files | credential-access | DC0032 | sysmon |
 | AN0235 | [SAM, SYSTEM or SECURITY hive dumped from the command line](AN0235-sam-system-or-security-hive-dumped-from-the-command-line.md) | ttp | high | T1003.002 Security Account Manager | credential-access | DC0032 | sysmon, wineventlog |
 | AN1472 | [Windows event log cleared](AN1472-windows-event-log-cleared.md) | ttp | high | T1685.005 Clear Windows Event Logs | defense-impairment | DC0038, DC0032 | wineventlog, sysmon |
+| AN1198 | [Password store read by something other than its owner](AN1198-password-store-read-by-something-other-than-its-owner.md) | ttp | high | T1555 Credentials from Password Stores | credential-access | DC0032, DC0055 | sysmon, wineventlog |
+| AN1551 | [Environment checks by a process that then talks to the internet](AN1551-environment-checks-by-a-process-that-then-talks-to-the-inter.md) | anomaly | medium | T1480 Execution Guardrails | stealth | DC0032, DC0082 | sysmon |
+| AN1025 | [Domain group enumeration](AN1025-domain-group-enumeration.md) | hunting | informational | T1069.002 Domain Groups | discovery | DC0032 | sysmon, wineventlog |
+| AN0782 | [Executable extracted from an archive and run within minutes](AN0782-executable-extracted-from-an-archive-and-run-within-minutes.md) | anomaly | medium | T1027.015 Compression | stealth | DC0039, DC0032 | sysmon |
+| AN1076 | [Process image replaced in memory (Sysmon process tampering)](AN1076-process-image-replaced-in-memory-sysmon-process-tampering.md) | anomaly | high | T1055.012 Process Hollowing | stealth, privilege-escalation | DC0020 | sysmon |
+| AN0396 | [Long sleep through ping, timeout or Start-Sleep on a command line](AN0396-long-sleep-through-ping-timeout-or-start-sleep-on-a-command-.md) | anomaly | low | T1497.003 Time Based Checks | stealth, discovery | DC0032 | sysmon |
+| AN0965 | [Clipboard read from a script or command line](AN0965-clipboard-read-from-a-script-or-command-line.md) | anomaly | low | T1115 Clipboard Data | collection | DC0032, DC0029 | sysmon, powershell_logging |
+| AN0411 | [Mass file deletion by one process, or disk wipe commands](AN0411-mass-file-deletion-by-one-process-or-disk-wipe-commands.md) | anomaly | high | T1485 Data Destruction | impact | DC0040, DC0032 | sysmon |
 | AN1611 | [NTDS.dit extracted with ntdsutil, shadow copies or esentutl](AN1611-ntds-dit-extracted-with-ntdsutil-shadow-copies-or-esentutl.md) | ttp | critical | T1003.003 NTDS | credential-access | DC0032 | sysmon, wineventlog |
+| AN0785 | [Regsvr32 running a scriptlet, a remote or user-folder DLL, or connecting out](AN0785-regsvr32-running-a-scriptlet-a-remote-or-user-folder-dll-or-.md) | anomaly | medium | T1218.010 Regsvr32 | stealth | DC0032, DC0082 | sysmon |
 | AN1235 | [Local account created on a host that is not a domain controller](AN1235-local-account-created-on-a-host-that-is-not-a-domain-control.md) | anomaly | medium | T1136.001 Local Account | persistence | DC0014, DC0032 | wineventlog, sysmon |
 | AN1240 | [Administrator account added on the firewall](AN1240-administrator-account-added-on-the-firewall.md) | ttp | medium | T1136.001 Local Account | persistence | DC0014 | palo_alto |
+| AN1397 | [Mshta running inline script or remote HTA, connecting out, or spawning a shell](AN1397-mshta-running-inline-script-or-remote-hta-connecting-out-or-.md) | ttp | high | T1218.005 Mshta | stealth | DC0032, DC0082 | sysmon |
+| AN0423 | [File upload over cleartext HTTP, FTP or TFTP from the command line](AN0423-file-upload-over-cleartext-http-ftp-or-tftp-from-the-command.md) | anomaly | medium | T1048.003 Exfiltration Over Unencrypted Non-C2 Protocol | exfiltration | DC0032 | sysmon |
 | AN0427 | [Large cleartext upload to an external host](AN0427-large-cleartext-upload-to-an-external-host.md) | anomaly | medium | T1048.003 Exfiltration Over Unencrypted Non-C2 Protocol | exfiltration | DC0078 | corelight |
+| AN0016 | [Domain trust enumeration](AN0016-domain-trust-enumeration.md) | anomaly | low | T1482 Domain Trust Discovery | discovery | DC0032, DC0029 | sysmon, powershell_logging |
 | AN0406 | [Windows Firewall disabled or its service stopped](AN0406-windows-firewall-disabled-or-its-service-stopped.md) | ttp | high | T1686 Disable or Modify System Firewall | defense-impairment | DC0032, DC0063 | sysmon |
 | AN0410 | [Security rules deleted or default rules changed on the firewall](AN0410-security-rules-deleted-or-default-rules-changed-on-the-firew.md) | anomaly | medium | T1686 Disable or Modify System Firewall | defense-impairment | DC0051 | palo_alto |
 | AN1275 | [Many logon failures followed by a success for the same account and source](AN1275-many-logon-failures-followed-by-a-success-for-the-same-accou.md) | ttp | medium | T1110 Brute Force | credential-access | DC0002 | wineventlog |

@@ -11,7 +11,7 @@ flowchart LR
   LS --> FEED["Feed in your stack<br/>config/stack.yml"]
   FEED --> ET["Splunk eventtype<br/>mitre_dcXXXX_name__feed"]
   ET --> UMB["Umbrella eventtype<br/>mitre_dcXXXX_name"]
-  UMB --> RULE["Analytic as ES detection + Sigma rule<br/>TTP / Anomaly / Hunting (+ baselines)<br/>99 implemented"]
+  UMB --> RULE["Analytic as ES detection + Sigma rule<br/>TTP / Anomaly / Hunting (+ baselines)<br/>119 implemented"]
   UMB --> SEQ["Strategy sequence<br/>raw-event chain, 8"]
   RULE -- "risk events" --> RISK[("Risk data model")]
   SEQ -- "risk events" --> RISK
@@ -22,7 +22,7 @@ flowchart LR
   class RULE,SEQ,CORR part
 ```
 
-Green is complete for every data component. Amber is in progress: 99 analytics, chosen by technique prevalence on the ticked feeds ([backlog](docs/analytics/backlog.md) for the rest), and a detection-strategy layer of 8 sequences, 4 strategy risk rules and 3 cross-strategy correlations ([strategies](docs/strategies/README.md)).
+Green is complete for every data component. Amber is in progress: 119 analytics, chosen by technique prevalence on the ticked feeds ([backlog](docs/analytics/backlog.md) for the rest), and a detection-strategy layer of 8 sequences, 4 strategy risk rules and 3 cross-strategy correlations ([strategies](docs/strategies/README.md)).
 
 **Resuming work?** [TODO.md](TODO.md) has the current state, conventions and the ordered next steps; [docs/roadmap.md](docs/roadmap.md) has the phased map.
 
@@ -32,13 +32,13 @@ What you can run with the logs you have. Generated from `config/stack.yml` on ev
 
 <!-- BEGIN mitremap:log-sources -->
 
-With the feeds ticked in `config/stack.yml`: **64** data components live, **99** analytics and **8** strategy sequences runnable. Each count links to the full list in [docs/by-log-source.md](docs/by-log-source.md).
+With the feeds ticked in `config/stack.yml`: **64** data components live, **119** analytics and **8** strategy sequences runnable. Each count links to the full list in [docs/by-log-source.md](docs/by-log-source.md).
 
 | Category | Feed | Have | Data components | Analytics | Sequences |
 |---|---|---|---|---|---|
-| Windows endpoint | [`wineventlog`](docs/by-log-source.md#wineventlog) | ☑ | [55](docs/by-log-source.md#wineventlog) | [47](docs/by-log-source.md#wineventlog) | [2](docs/by-log-source.md#wineventlog) |
-|  | [`sysmon`](docs/by-log-source.md#sysmon) | ☑ | [26](docs/by-log-source.md#sysmon) | [66](docs/by-log-source.md#sysmon) | [8](docs/by-log-source.md#sysmon) |
-|  | [`powershell_logging`](docs/by-log-source.md#powershell_logging) | ☑ | [3](docs/by-log-source.md#powershell_logging) | [1](docs/by-log-source.md#powershell_logging) | 0 |
+| Windows endpoint | [`wineventlog`](docs/by-log-source.md#wineventlog) | ☑ | [55](docs/by-log-source.md#wineventlog) | [49](docs/by-log-source.md#wineventlog) | [2](docs/by-log-source.md#wineventlog) |
+|  | [`sysmon`](docs/by-log-source.md#sysmon) | ☑ | [26](docs/by-log-source.md#sysmon) | [86](docs/by-log-source.md#sysmon) | [8](docs/by-log-source.md#sysmon) |
+|  | [`powershell_logging`](docs/by-log-source.md#powershell_logging) | ☑ | [3](docs/by-log-source.md#powershell_logging) | [4](docs/by-log-source.md#powershell_logging) | 0 |
 |  | [`windows_firewall_log`](docs/by-log-source.md#windows_firewall_log) | ☐ | [1](docs/by-log-source.md#windows_firewall_log) | 0 | 0 |
 |  | [`windows_perfmon`](docs/by-log-source.md#windows_perfmon) | ☐ | [1](docs/by-log-source.md#windows_perfmon) | 0 | 0 |
 |  | [`windows_dns_server`](docs/by-log-source.md#windows_dns_server) | ☐ | [2](docs/by-log-source.md#windows_dns_server) | 0 | 0 |
