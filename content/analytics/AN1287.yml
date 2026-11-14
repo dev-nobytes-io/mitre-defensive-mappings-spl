@@ -32,7 +32,7 @@ attack:
   - field: InterfaceType
     description: Telnet and HTTP-based access to network devices should be blocked and monitored if enabled.
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: ttp
   suggested_tuning:
   - element: Username

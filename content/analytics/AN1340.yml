@@ -30,7 +30,7 @@ attack:
   - field: InterfaceFilter
     description: Limit detection to console/SSH vs web UI interfaces
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: ttp
   suggested_tuning:
   - element: AuthFailureBurst

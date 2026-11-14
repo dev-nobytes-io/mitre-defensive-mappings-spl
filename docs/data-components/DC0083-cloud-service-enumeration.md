@@ -2,7 +2,7 @@
 
 [ATT&CK](https://attack.mitre.org/datacomponents/DC0083) · version 3.0 · modified 2026-10-13 · ATT&CK release 20.1
 
-Status: **Ready** (needs a feed you have not ticked) · umbrella eventtype `mitre_dc0083_cloud_service_enumeration`
+Umbrella eventtype `mitre_dc0083_cloud_service_enumeration` over 2 feed(s)
 
 > Cloud service enumeration involves listing or querying available cloud services in a cloud control plane. This activity is often performed to identify resources such as virtual machines, storage buckets, compute clusters, or other services within a cloud environment. Examples include API calls like `AWS ECS ListServices`, `Azure ListAllResources`, or `Google Cloud ListInstances`. Examples:   AWS Cloud Service Enumeration: The adversary gathers details about existing ECS services to identify opportunities for privilege escalation or exfiltration. - Azure Resource Enumeration: The adversary collects information about virtual machines, resource groups, and other Azure assets for reconnaissance purposes. - Google Cloud Resource Enumeration: The attacker seeks to map the environment and find misconfigured or underutilized resources for exploitation. - Office 365 Service Enumeration: The attacker may look for data repositories or collaboration tools to exfiltrate sensitive information.
 
@@ -25,19 +25,16 @@ flowchart LR
   DC --> LS1["azure:signinlogs<br/>2 refs"]
   LS1 --> F_azure_entra
   F_azure_entra --> ET_azure_entra[/"mitre_dc0083_cloud_service_enumeration__azure_entra"/]
-  class F_azure_entra ready
-  classDef live fill:#d4edda,stroke:#2e7d32,color:#1b1b1b
-  classDef ready fill:#fff3cd,stroke:#b26a00,color:#1b1b1b
 ```
 
 ## Requirements
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
+| Feed | Schedule | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `azure_activity` | ready (tick in stack.yml) | sourcetype=`mscs:azure:audit` | `(whole feed)` | defaults | Splunk Add-on for Microsoft Cloud Services (mscs:azure:audit) |
-| `azure_entra` | ready (tick in stack.yml) | sourcetype=`azure:aad:audit` | `(whole feed)` | defaults | Splunk Add-on for Microsoft Azure (azure:aad:signin, azure:aad:audit) or Microsoft Cloud Services add-on via Event Hub |
+| `azure_activity` | scheduled | sourcetype=`mscs:azure:audit` | `(whole feed)` | defaults | Splunk Add-on for Microsoft Cloud Services (mscs:azure:audit) |
+| `azure_entra` | scheduled | sourcetype=`azure:aad:audit` | `(whole feed)` | defaults | Splunk Add-on for Microsoft Azure (azure:aad:signin, azure:aad:audit) or Microsoft Cloud Services add-on via Event Hub |
 
 Collection prerequisites:
 
@@ -56,11 +53,9 @@ Eventtypes (literal constraints, see `dist/splunk/TA-mitre-attack-datacomponents
 ```ini
 [mitre_dc0083_cloud_service_enumeration__azure_activity]
 search = index=azure sourcetype="mscs:azure:audit"
-disabled = 1
 
 [mitre_dc0083_cloud_service_enumeration__azure_entra]
 search = index=azure sourcetype="azure:aad:audit"
-disabled = 1
 
 [mitre_dc0083_cloud_service_enumeration]
 search = eventtype=mitre_dc0083_cloud_service_enumeration__azure_activity OR eventtype=mitre_dc0083_cloud_service_enumeration__azure_entra

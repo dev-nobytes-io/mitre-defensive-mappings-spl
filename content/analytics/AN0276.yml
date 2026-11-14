@@ -38,7 +38,7 @@ attack:
   - field: SourceIPWhitelist
     description: List of trusted management IPs allowed to initiate firmware uploads.
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: ttp
   suggested_tuning:
   - element: ApprovedFirmwareHashes

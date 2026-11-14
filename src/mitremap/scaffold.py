@@ -51,7 +51,7 @@ def derived_block(v: DCView) -> dict:
     feeds = []
     for f in v.feeds:
         feeds.append({
-            "feed": f.feed, "have": f.have, "in_scope": f.in_scope,
+            "feed": f.feed, "in_scope": f.in_scope,
             "eventtype": f.eventtype if f.in_scope else None,
             "search": eventtype_search(f) if f.in_scope else None,
             "constraint_origin": f.origin,

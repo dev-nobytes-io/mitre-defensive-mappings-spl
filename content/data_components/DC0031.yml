@@ -60,7 +60,6 @@ derived:
     - New kext entries not signed by Apple or outside standard identifier prefix
   feeds:
   - feed: auditd
-    have: false
     in_scope: true
     eventtype: mitre_dc0031_kernel_module_load__auditd
     search: >-
@@ -72,7 +71,6 @@ derived:
     - (added by dc_defaults/curated)
     cim_tags: false
   - feed: esxi_syslog
-    have: false
     in_scope: true
     eventtype: mitre_dc0031_kernel_module_load__esxi_syslog
     search: index=vmware sourcetype="vmware:esxlog:vmkernel"
@@ -82,7 +80,6 @@ derived:
     - esxi:vmkernel
     cim_tags: false
   - feed: linux_syslog
-    have: false
     in_scope: true
     eventtype: mitre_dc0031_kernel_module_load__linux_syslog
     search: index=linux sourcetype IN (linux_messages_syslog, linux_secure, syslog) (kernel)
@@ -92,7 +89,6 @@ derived:
     - (added by dc_defaults/curated)
     cim_tags: false
   - feed: macos
-    have: false
     in_scope: false
     eventtype: null
     search: null

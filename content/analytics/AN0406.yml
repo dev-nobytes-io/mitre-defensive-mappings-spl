@@ -35,7 +35,7 @@ attack:
   - field: AlertThreshold
     description: Number of firewall rule changes within a time window before triggering alert.
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: ttp
   suggested_tuning:
   - element: MonitoredCommands

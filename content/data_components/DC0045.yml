@@ -51,7 +51,6 @@ derived:
     - None
   feeds:
   - feed: solidcore
-    have: true
     in_scope: true
     eventtype: mitre_dc0045_windows_registry_key_deletion__solidcore
     search: >-
@@ -63,7 +62,6 @@ derived:
     - (added by dc_defaults/curated)
     cim_tags: false
   - feed: sysmon
-    have: true
     in_scope: true
     eventtype: mitre_dc0045_windows_registry_key_deletion__sysmon
     search: index=sysmon source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode IN (12)
@@ -73,7 +71,6 @@ derived:
     - Windows Registry Key
     cim_tags: true
   - feed: wineventlog
-    have: true
     in_scope: true
     eventtype: mitre_dc0045_windows_registry_key_deletion__wineventlog
     search: index=wineventlog source="XmlWinEventLog:Security" EventCode IN (4657, 4660, 4663)

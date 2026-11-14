@@ -2,7 +2,7 @@
 
 [ATT&CK](https://attack.mitre.org/datacomponents/DC0019) · version 2.0 · modified 2025-10-21 · ATT&CK release 20.1
 
-Status: **Ready** (needs a feed you have not ticked) · umbrella eventtype `mitre_dc0019_pod_creation`
+Umbrella eventtype `mitre_dc0019_pod_creation` over 1 feed(s)
 
 > The initial deployment or instantiation of a new pod in a containerized environment. This includes creating a pod manually, through orchestration tools (Kubernetes), or via Infrastructure-as-Code (IaC) configurations. A Pod is the smallest deployable unit in Kubernetes, typically containing one or more containers. Creation methods include: - Direct pod deployment (`kubectl run`, `kubectl apply`) - Automated deployment via CI/CD pipelines (e.g., ArgoCD, Jenkins, GitOps) - Infrastructure-as-Code (IaC) templates (e.g., Terraform, Helm Charts) - API-based deployments via Kubernetes control plane (create_pod API calls) - Pods can be ephemeral (short-lived) or persistent (part of a StatefulSet or Deployment).  *Data Collection Measures:*  - Kubernetes Audit Logs     - Captures all API requests, including pod `create` events. - Kube-api server Logs	     - Monitors API calls related to pod deployments and modifications. Related Events: `PodSandboxChanged`, `SyncLoop`, `Created pod` - Container Runtime Logs	     - Logs from CRI-O, containerd, or Docker capture pod creation events. Related Events: `container start`, `container create` - Cloud Provider Logs	     - GKE, EKS, AKS logs provide insights into Kubernetes API interactions. - SIEM & Log Aggregation	     - Integrates Kubernetes logs into SIEM solutions. - EDR/XDR Solutions	     - Monitors container-based activity for anomalous pod creations.
 
@@ -23,18 +23,15 @@ flowchart LR
   F_kubernetes_audit["Kubernetes API server audit log and cluster events"]
   LS0 --> F_kubernetes_audit
   F_kubernetes_audit --> ET_kubernetes_audit[/"mitre_dc0019_pod_creation__kubernetes_audit"/]
-  class F_kubernetes_audit ready
-  classDef live fill:#d4edda,stroke:#2e7d32,color:#1b1b1b
-  classDef ready fill:#fff3cd,stroke:#b26a00,color:#1b1b1b
 ```
 
 ## Requirements
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
+| Feed | Schedule | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `kubernetes_audit` | ready (tick in stack.yml) | sourcetype=`kube:apiserver-audit` | `verb IN (create) (objectRef.resource=pods)` | defaults | Splunk OpenTelemetry Collector for Kubernetes / Splunk Connect for Kubernetes |
+| `kubernetes_audit` | scheduled | sourcetype=`kube:apiserver-audit` | `verb IN (create) (objectRef.resource=pods)` | defaults | Splunk OpenTelemetry Collector for Kubernetes / Splunk Connect for Kubernetes |
 
 Collection prerequisites:
 
@@ -48,7 +45,6 @@ Eventtypes (literal constraints, see `dist/splunk/TA-mitre-attack-datacomponents
 ```ini
 [mitre_dc0019_pod_creation__kubernetes_audit]
 search = index=k8s sourcetype="kube:apiserver-audit" verb IN (create) (objectRef.resource=pods)
-disabled = 1
 
 [mitre_dc0019_pod_creation]
 search = eventtype=mitre_dc0019_pod_creation__kubernetes_audit

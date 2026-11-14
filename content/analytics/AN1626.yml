@@ -40,7 +40,7 @@ attack:
   - field: TimestampDeltaThreshold
     description: Trigger on excessive backdating (e.g., >90 days)
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: anomaly
   suggested_tuning:
   - element: TimeWindow

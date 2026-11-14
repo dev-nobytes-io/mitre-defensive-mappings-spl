@@ -74,30 +74,7 @@ derived:
     - dmesg or syslog for module loads
     - Driver load events or firmware load failures for hardware devices
   feeds:
-  - feed: sysmon
-    have: true
-    in_scope: true
-    eventtype: mitre_dc0079_driver_load__sysmon
-    search: index=sysmon source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode IN (6)
-    constraint_origin: defaults
-    broad_refs: 0
-    sources:
-    - WinEventLog:Sysmon
-    cim_tags: false
-  - feed: wineventlog
-    have: true
-    in_scope: true
-    eventtype: mitre_dc0079_driver_load__wineventlog
-    search: >-
-      index=wineventlog source IN ("XmlWinEventLog:Microsoft-Windows-CodeIntegrity/Operational", "XmlWinEventLog:System")
-      EventCode IN (3033, 3077, 7045)
-    constraint_origin: defaults
-    broad_refs: 0
-    sources:
-    - (added by dc_defaults/curated)
-    cim_tags: false
   - feed: auditd
-    have: false
     in_scope: true
     eventtype: mitre_dc0079_driver_load__auditd
     search: >-
@@ -109,7 +86,6 @@ derived:
     - (added by dc_defaults/curated)
     cim_tags: false
   - feed: linux_syslog
-    have: false
     in_scope: true
     eventtype: mitre_dc0079_driver_load__linux_syslog
     search: index=linux sourcetype IN (linux_messages_syslog, linux_secure, syslog) (kernel)
@@ -117,6 +93,26 @@ derived:
     broad_refs: 4
     sources:
     - linux:syslog
+    cim_tags: false
+  - feed: sysmon
+    in_scope: true
+    eventtype: mitre_dc0079_driver_load__sysmon
+    search: index=sysmon source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode IN (6)
+    constraint_origin: defaults
+    broad_refs: 0
+    sources:
+    - WinEventLog:Sysmon
+    cim_tags: false
+  - feed: wineventlog
+    in_scope: true
+    eventtype: mitre_dc0079_driver_load__wineventlog
+    search: >-
+      index=wineventlog source IN ("XmlWinEventLog:Microsoft-Windows-CodeIntegrity/Operational", "XmlWinEventLog:System")
+      EventCode IN (3033, 3077, 7045)
+    constraint_origin: defaults
+    broad_refs: 0
+    sources:
+    - (added by dc_defaults/curated)
     cim_tags: false
 curated:
   justification: >-

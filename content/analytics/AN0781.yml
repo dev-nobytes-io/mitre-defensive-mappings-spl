@@ -43,7 +43,7 @@ attack:
   - field: SignatureCheck
     description: Flag unsigned executables or abnormal parent-child lineage performing registry modification
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: ttp
   suggested_tuning:
   - element: RegistryKeyPathPatterns

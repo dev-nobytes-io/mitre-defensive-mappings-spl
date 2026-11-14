@@ -2,7 +2,7 @@
 
 [ATT&CK](https://attack.mitre.org/datacomponents/DC0063) · version 2.0 · modified 2026-10-13 · ATT&CK release 20.1
 
-Status: **Live** · umbrella eventtype `mitre_dc0063_windows_registry_key_modification`
+Umbrella eventtype `mitre_dc0063_windows_registry_key_modification` over 3 feed(s)
 
 > Changes made to an existing registry key or its values. These modifications can include altering permissions, modifying stored data, or updating configuration settings.  *Data Collection Measures:*  - Windows Event Logs     - Event ID 4657 - Registry Value Modified: Logs changes to registry values, including modifications to startup entries, security settings, or system configurations. - Sysmon (System Monitor) for Windows     - Sysmon Event ID 13 - Registry Value Set: Captures changes to specific registry values.     - Sysmon Event ID 14 - Registry Key & Value Renamed: Logs renaming of registry keys, which may indicate evasion attempts. - Endpoint Detection and Response (EDR) Solutions     - Monitor registry modifications for suspicious behavior.
 
@@ -26,11 +26,7 @@ flowchart LR
   F_wineventlog["Windows Event Logs"]
   LS1 --> F_wineventlog
   F_sysmon --> ET_sysmon[/"mitre_dc0063_windows_registry_key_modification__sysmon"/]
-  class F_sysmon live
   F_wineventlog --> ET_wineventlog[/"mitre_dc0063_windows_registry_key_modification__wineventlog"/]
-  class F_wineventlog live
-  classDef live fill:#d4edda,stroke:#2e7d32,color:#1b1b1b
-  classDef ready fill:#fff3cd,stroke:#b26a00,color:#1b1b1b
 ```
 
 ## Requirements
@@ -41,11 +37,11 @@ Component specific:
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
+| Feed | Schedule | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `solidcore` | live | sourcetype=`mcafee:epo:syslog` | `(threat_name IN (REG_VALUE_MODIFIED, REG_KEY_MODIFIED) OR event_description IN (REG_VALUE_MODIFIED, REG_KEY_MODIFIED)) (product_name="Solidcore*")` | defaults | Arrives through the ePO TA; Solidcore events carry event names such as FILE_CREATED, FILE_MODIFIED, FILE_DELETED, EXECUTION_DENIED, REG_VALUE_MODIFIED, PROCESS_HIJACK_ATTEMPTED. Verify field names (threat_name / event_description) in your data. |
-| `sysmon` | live | source=`XmlWinEventLog:Microsoft-Windows-Sysmon/Operational` | `EventCode IN (13, 14)` | defaults | Splunk Add-on for Sysmon (needs Splunk_TA_windows for XML parsing) |
-| `wineventlog` | live | source=`XmlWinEventLog:Security` | `EventCode IN (4657, 4663, 4670)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true) |
+| `solidcore` | scheduled | sourcetype=`mcafee:epo:syslog` | `(threat_name IN (REG_VALUE_MODIFIED, REG_KEY_MODIFIED) OR event_description IN (REG_VALUE_MODIFIED, REG_KEY_MODIFIED)) (product_name="Solidcore*")` | defaults | Arrives through the ePO TA; Solidcore events carry event names such as FILE_CREATED, FILE_MODIFIED, FILE_DELETED, EXECUTION_DENIED, REG_VALUE_MODIFIED, PROCESS_HIJACK_ATTEMPTED. Verify field names (threat_name / event_description) in your data. |
+| `sysmon` | scheduled | source=`XmlWinEventLog:Microsoft-Windows-Sysmon/Operational` | `EventCode IN (13, 14)` | defaults | Splunk Add-on for Sysmon (needs Splunk_TA_windows for XML parsing) |
+| `wineventlog` | scheduled | source=`XmlWinEventLog:Security` | `EventCode IN (4657, 4663, 4670)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true) |
 
 Collection prerequisites:
 

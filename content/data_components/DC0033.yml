@@ -138,18 +138,7 @@ derived:
     channels:
     - None
   feeds:
-  - feed: sysmon
-    have: true
-    in_scope: true
-    eventtype: mitre_dc0033_process_termination__sysmon
-    search: index=sysmon source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode IN (5)
-    constraint_origin: defaults
-    broad_refs: 0
-    sources:
-    - WinEventLog:Sysmon
-    cim_tags: true
   - feed: auditd
-    have: false
     in_scope: true
     eventtype: mitre_dc0033_process_termination__auditd
     search: >-
@@ -161,7 +150,6 @@ derived:
     - auditd:SYSCALL
     cim_tags: false
   - feed: container_runtime
-    have: false
     in_scope: true
     eventtype: mitre_dc0033_process_termination__container_runtime
     search: index=k8s sourcetype="docker:events" (status IN (die, kill, stop))
@@ -171,7 +159,6 @@ derived:
     - docker:events
     cim_tags: false
   - feed: esxi_syslog
-    have: false
     in_scope: true
     eventtype: mitre_dc0033_process_termination__esxi_syslog
     search: index=vmware sourcetype="vmware:esxlog:hostd"
@@ -180,8 +167,16 @@ derived:
     sources:
     - esxi:hostd
     cim_tags: false
+  - feed: sysmon
+    in_scope: true
+    eventtype: mitre_dc0033_process_termination__sysmon
+    search: index=sysmon source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode IN (5)
+    constraint_origin: defaults
+    broad_refs: 0
+    sources:
+    - WinEventLog:Sysmon
+    cim_tags: true
   - feed: macos
-    have: false
     in_scope: false
     eventtype: null
     search: null

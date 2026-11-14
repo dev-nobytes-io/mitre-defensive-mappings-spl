@@ -41,7 +41,7 @@ attack:
   - field: TimeWindow
     description: Capture unusual spikes in outbound connections over a short period.
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: anomaly
   suggested_tuning:
   - element: ParentProcessName

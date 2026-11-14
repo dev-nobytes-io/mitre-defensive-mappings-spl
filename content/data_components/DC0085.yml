@@ -731,8 +731,29 @@ derived:
     channels:
     - network.query*
   feeds:
+  - feed: auditd
+    in_scope: true
+    eventtype: mitre_dc0085_network_traffic_content__auditd
+    search: >-
+      index=linux sourcetype="linux:audit" type IN (SYSCALL) (syscall IN (recvfrom, recvmsg, sendmsg, sendto) OR
+      SYSCALL IN (recvfrom, recvmsg, sendmsg, sendto))
+    constraint_origin: defaults
+    broad_refs: 0
+    sources:
+    - auditd:SYSCALL
+    - ebpf:syscalls
+    cim_tags: false
+  - feed: azure_resource
+    in_scope: true
+    eventtype: mitre_dc0085_network_traffic_content__azure_resource
+    search: >-
+      index=azure sourcetype="mscs:azure:eventhub" (category=NetworkSecurityGroupFlowEvent OR category=FlowLogFlowEvent)
+    constraint_origin: derived
+    broad_refs: 0
+    sources:
+    - azure:vpcflow
+    cim_tags: false
   - feed: corelight
-    have: true
     in_scope: true
     eventtype: mitre_dc0085_network_traffic_content__corelight
     search: >-
@@ -752,8 +773,54 @@ derived:
     - dns:query
     - networkdevice:IDS
     cim_tags: true
+  - feed: ebpf
+    in_scope: true
+    eventtype: mitre_dc0085_network_traffic_content__ebpf
+    search: index=linux sourcetype=falco
+    constraint_origin: derived
+    broad_refs: 2
+    sources:
+    - ebpf:syscalls
+    cim_tags: false
+  - feed: edr_telemetry
+    in_scope: true
+    eventtype: mitre_dc0085_network_traffic_content__edr_telemetry
+    search: index=edr sourcetype="edr:telemetry"
+    constraint_origin: derived
+    broad_refs: 2
+    sources:
+    - EDR:hunting
+    cim_tags: false
+  - feed: iis
+    in_scope: true
+    eventtype: mitre_dc0085_network_traffic_content__iis
+    search: index=web sourcetype="ms:iis:auto"
+    constraint_origin: derived
+    broad_refs: 4
+    sources:
+    - ApplicationLog:IIS
+    - webserver:applog
+    cim_tags: false
+  - feed: kubernetes_audit
+    in_scope: true
+    eventtype: mitre_dc0085_network_traffic_content__kubernetes_audit
+    search: index=k8s sourcetype="kube:container:ingress-nginx"
+    constraint_origin: derived
+    broad_refs: 2
+    sources:
+    - ApplicationLog:Ingress
+    cim_tags: false
+  - feed: linux_syslog
+    in_scope: true
+    eventtype: mitre_dc0085_network_traffic_content__linux_syslog
+    search: index=linux sourcetype=access_combined
+    constraint_origin: defaults
+    broad_refs: 14
+    sources:
+    - linux:syslog
+    - webserver:applog
+    cim_tags: false
   - feed: palo_alto
-    have: true
     in_scope: true
     eventtype: mitre_dc0085_network_traffic_content__palo_alto
     search: index=pan_logs sourcetype IN ("pan:decryption", "pan:threat")
@@ -772,7 +839,6 @@ derived:
     - networkdevice:syslog
     cim_tags: true
   - feed: sysmon
-    have: true
     in_scope: true
     eventtype: mitre_dc0085_network_traffic_content__sysmon
     search: index=sysmon source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode IN (22)
@@ -782,8 +848,16 @@ derived:
     - WinEventLog:Sysmon
     - dns:query
     cim_tags: false
+  - feed: windows_dns_server
+    in_scope: true
+    eventtype: mitre_dc0085_network_traffic_content__windows_dns_server
+    search: index=wineventlog sourcetype="MSAD:NT6:DNS"
+    constraint_origin: derived
+    broad_refs: 5
+    sources:
+    - dns:query
+    cim_tags: false
   - feed: wineventlog
-    have: true
     in_scope: true
     eventtype: mitre_dc0085_network_traffic_content__wineventlog
     search: >-
@@ -796,7 +870,6 @@ derived:
     - WinEventLog:System
     cim_tags: false
   - feed: wireshark
-    have: true
     in_scope: true
     eventtype: mitre_dc0085_network_traffic_content__wireshark
     search: index=pcap sourcetype="wireshark:json"
@@ -805,94 +878,7 @@ derived:
     sources:
     - NSM:Content
     cim_tags: false
-  - feed: auditd
-    have: false
-    in_scope: true
-    eventtype: mitre_dc0085_network_traffic_content__auditd
-    search: >-
-      index=linux sourcetype="linux:audit" type IN (SYSCALL) (syscall IN (recvfrom, recvmsg, sendmsg, sendto) OR
-      SYSCALL IN (recvfrom, recvmsg, sendmsg, sendto))
-    constraint_origin: defaults
-    broad_refs: 0
-    sources:
-    - auditd:SYSCALL
-    - ebpf:syscalls
-    cim_tags: false
-  - feed: azure_resource
-    have: false
-    in_scope: true
-    eventtype: mitre_dc0085_network_traffic_content__azure_resource
-    search: >-
-      index=azure sourcetype="mscs:azure:eventhub" (category=NetworkSecurityGroupFlowEvent OR category=FlowLogFlowEvent)
-    constraint_origin: derived
-    broad_refs: 0
-    sources:
-    - azure:vpcflow
-    cim_tags: false
-  - feed: ebpf
-    have: false
-    in_scope: true
-    eventtype: mitre_dc0085_network_traffic_content__ebpf
-    search: index=linux sourcetype=falco
-    constraint_origin: derived
-    broad_refs: 2
-    sources:
-    - ebpf:syscalls
-    cim_tags: false
-  - feed: edr_telemetry
-    have: false
-    in_scope: true
-    eventtype: mitre_dc0085_network_traffic_content__edr_telemetry
-    search: index=edr sourcetype="edr:telemetry"
-    constraint_origin: derived
-    broad_refs: 2
-    sources:
-    - EDR:hunting
-    cim_tags: false
-  - feed: iis
-    have: false
-    in_scope: true
-    eventtype: mitre_dc0085_network_traffic_content__iis
-    search: index=web sourcetype="ms:iis:auto"
-    constraint_origin: derived
-    broad_refs: 4
-    sources:
-    - ApplicationLog:IIS
-    - webserver:applog
-    cim_tags: false
-  - feed: kubernetes_audit
-    have: false
-    in_scope: true
-    eventtype: mitre_dc0085_network_traffic_content__kubernetes_audit
-    search: index=k8s sourcetype="kube:container:ingress-nginx"
-    constraint_origin: derived
-    broad_refs: 2
-    sources:
-    - ApplicationLog:Ingress
-    cim_tags: false
-  - feed: linux_syslog
-    have: false
-    in_scope: true
-    eventtype: mitre_dc0085_network_traffic_content__linux_syslog
-    search: index=linux sourcetype=access_combined
-    constraint_origin: defaults
-    broad_refs: 14
-    sources:
-    - linux:syslog
-    - webserver:applog
-    cim_tags: false
-  - feed: windows_dns_server
-    have: false
-    in_scope: true
-    eventtype: mitre_dc0085_network_traffic_content__windows_dns_server
-    search: index=wineventlog sourcetype="MSAD:NT6:DNS"
-    constraint_origin: derived
-    broad_refs: 5
-    sources:
-    - dns:query
-    cim_tags: false
   - feed: aws
-    have: false
     in_scope: false
     eventtype: null
     search: null
@@ -903,7 +889,6 @@ derived:
     - AWS:VPCFlowLogs
     cim_tags: false
   - feed: gcp
-    have: false
     in_scope: false
     eventtype: null
     search: null
@@ -914,7 +899,6 @@ derived:
     - gcp:vpcflow
     cim_tags: false
   - feed: m365_unified
-    have: false
     in_scope: false
     eventtype: null
     search: null
@@ -924,7 +908,6 @@ derived:
     - m365:office
     cim_tags: false
   - feed: macos
-    have: false
     in_scope: false
     eventtype: null
     search: null
@@ -934,7 +917,6 @@ derived:
     - macos:unifiedlog
     cim_tags: false
   - feed: mobile
-    have: false
     in_scope: false
     eventtype: null
     search: null
@@ -946,7 +928,6 @@ derived:
     - iOS:unifiedlog
     cim_tags: false
   - feed: ot
-    have: false
     in_scope: false
     eventtype: null
     search: null
@@ -956,7 +937,6 @@ derived:
     - otids:ProtocolDecoder
     cim_tags: false
   - feed: saas
-    have: false
     in_scope: false
     eventtype: null
     search: null

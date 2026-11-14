@@ -2,7 +2,7 @@
 
 [ATT&CK](https://attack.mitre.org/datacomponents/DC0049) · version 2.0 · modified 2025-10-21 · ATT&CK release 20.1
 
-Status: **Ready** (needs a feed you have not ticked) · umbrella eventtype `mitre_dc0049_snapshot_deletion`
+Umbrella eventtype `mitre_dc0049_snapshot_deletion` over 2 feed(s)
 
 > The removal of a point-in-time backup of a cloud storage volume, virtual machine (VM), or database.  *Data Collection Measures:*  - AWS CloudTrail     - Logs `DeleteSnapshot` API calls in EC2, RDS, and EBS services. - Azure Monitor Logs     - Tracks snapshot deletions via `Microsoft.Compute/snapshots/delete` API calls. - Google Cloud Logging     - Detects snapshot removal through `compute.disks.deleteSnapshot` events.
 
@@ -23,19 +23,16 @@ flowchart LR
   F_esxi_syslog["ESXi host logs via remote syslog"]
   LS0 --> F_esxi_syslog
   F_esxi_syslog --> ET_esxi_syslog[/"mitre_dc0049_snapshot_deletion__esxi_syslog"/]
-  class F_esxi_syslog ready
-  classDef live fill:#d4edda,stroke:#2e7d32,color:#1b1b1b
-  classDef ready fill:#fff3cd,stroke:#b26a00,color:#1b1b1b
 ```
 
 ## Requirements
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
+| Feed | Schedule | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `azure_activity` | ready (tick in stack.yml) | sourcetype=`mscs:azure:audit` | `(operationName="Microsoft.Compute/snapshots/delete")` | defaults | Splunk Add-on for Microsoft Cloud Services (mscs:azure:audit) |
-| `esxi_syslog` | ready (tick in stack.yml) | sourcetype=`vmware:esxlog:hostd` | `(snapshot)` | defaults | Splunk Add-on for VMware ESXi Logs (vmware:esxlog:<log>) |
+| `azure_activity` | scheduled | sourcetype=`mscs:azure:audit` | `(operationName="Microsoft.Compute/snapshots/delete")` | defaults | Splunk Add-on for Microsoft Cloud Services (mscs:azure:audit) |
+| `esxi_syslog` | scheduled | sourcetype=`vmware:esxlog:hostd` | `(snapshot)` | defaults | Splunk Add-on for VMware ESXi Logs (vmware:esxlog:<log>) |
 
 Collection prerequisites:
 
@@ -49,11 +46,9 @@ Eventtypes (literal constraints, see `dist/splunk/TA-mitre-attack-datacomponents
 ```ini
 [mitre_dc0049_snapshot_deletion__azure_activity]
 search = index=azure sourcetype="mscs:azure:audit" (operationName="Microsoft.Compute/snapshots/delete")
-disabled = 1
 
 [mitre_dc0049_snapshot_deletion__esxi_syslog]
 search = index=vmware sourcetype="vmware:esxlog:hostd" (snapshot)
-disabled = 1
 
 [mitre_dc0049_snapshot_deletion]
 search = eventtype=mitre_dc0049_snapshot_deletion__azure_activity OR eventtype=mitre_dc0049_snapshot_deletion__esxi_syslog

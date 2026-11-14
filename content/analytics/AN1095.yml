@@ -48,7 +48,7 @@ attack:
   - field: ParentProcessAnomalyThreshold
     description: Degree of deviation from expected parent-child lineage
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: anomaly
   suggested_tuning:
   - element: InjectedDLLSignatureStatus

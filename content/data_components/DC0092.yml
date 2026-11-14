@@ -45,7 +45,6 @@ derived:
     - ModifyVolume
   feeds:
   - feed: kubernetes_audit
-    have: false
     in_scope: true
     eventtype: mitre_dc0092_volume_modification__kubernetes_audit
     search: >-
@@ -57,7 +56,6 @@ derived:
     - kubernetes:apiserver
     cim_tags: false
   - feed: aws
-    have: false
     in_scope: false
     eventtype: null
     search: null

@@ -2,7 +2,7 @@
 
 [ATT&CK](https://attack.mitre.org/datacomponents/DC0036) · version 2.0 · modified 2025-10-21 · ATT&CK release 20.1
 
-Status: **Ready** (needs a feed you have not ticked) · umbrella eventtype `mitre_dc0036_image_modification`
+Umbrella eventtype `mitre_dc0036_image_modification` over 1 feed(s)
 
 > Changes made to a virtual machine image, including setting and/or control data (ex: Azure Compute Service Images PATCH)
 
@@ -23,18 +23,15 @@ flowchart LR
   F_container_runtime["Docker / containerd daemon and runtime events"]
   LS0 --> F_container_runtime
   F_container_runtime --> ET_container_runtime[/"mitre_dc0036_image_modification__container_runtime"/]
-  class F_container_runtime ready
-  classDef live fill:#d4edda,stroke:#2e7d32,color:#1b1b1b
-  classDef ready fill:#fff3cd,stroke:#b26a00,color:#1b1b1b
 ```
 
 ## Requirements
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
+| Feed | Schedule | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `container_runtime` | ready (tick in stack.yml) | sourcetype=`docker:daemon` | `(status IN (tag, untag, push))` | defaults | docker events scripted input or OpenTelemetry (docker:events, containerd) |
+| `container_runtime` | scheduled | sourcetype=`docker:daemon` | `(status IN (tag, untag, push))` | defaults | docker events scripted input or OpenTelemetry (docker:events, containerd) |
 
 Review notes: `container_runtime` has 2 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *defaults*.
 
@@ -45,7 +42,6 @@ Eventtypes (literal constraints, see `dist/splunk/TA-mitre-attack-datacomponents
 ```ini
 [mitre_dc0036_image_modification__container_runtime]
 search = index=k8s sourcetype="docker:daemon" (status IN (tag, untag, push))
-disabled = 1
 
 [mitre_dc0036_image_modification]
 search = eventtype=mitre_dc0036_image_modification__container_runtime

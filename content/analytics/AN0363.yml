@@ -40,7 +40,7 @@ attack:
   - field: SourceHost
     description: Restrict detection to non-DC or non-admin systems where such commands are unexpected.
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: hunting
   suggested_tuning:
   - element: CommandLinePattern

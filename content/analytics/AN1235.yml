@@ -36,7 +36,7 @@ attack:
   - field: UserContext
     description: Correlate if process runs under SYSTEM, Administrator, or untrusted account
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: ttp
   suggested_tuning:
   - element: ParentProcessName

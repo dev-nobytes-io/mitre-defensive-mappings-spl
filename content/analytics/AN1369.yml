@@ -41,7 +41,7 @@ attack:
   - field: ServiceNames
     description: Customizable list of security service names per enterprise deployment.
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: ttp
   suggested_tuning:
   - element: ProcessNameExclusions

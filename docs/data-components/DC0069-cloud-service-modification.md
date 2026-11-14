@@ -2,7 +2,7 @@
 
 [ATT&CK](https://attack.mitre.org/datacomponents/DC0069) · version 2.0 · modified 2025-11-12 · ATT&CK release 20.1
 
-Status: **Ready** (needs a feed you have not ticked) · umbrella eventtype `mitre_dc0069_cloud_service_modification`
+Umbrella eventtype `mitre_dc0069_cloud_service_modification` over 2 feed(s)
 
 > Cloud service modification refers to changes made to the configuration, settings, or data of a cloud service. These modifications can include administrative changes such as enabling or disabling features, altering permissions, or deleting critical components. Monitoring these changes is critical to detect potential misconfigurations or malicious activity. Examples:   - AWS Cloud Service Modifications: A user disables AWS CloudTrail logging (StopLogging) or deletes a CloudWatch configuration rule (DeleteConfigRule). - Azure Cloud Service Modifications: Changes to Azure Role-Based Access Control (RBAC) roles, such as adding a new Contributor role to a sensitive resource. - Google Cloud Service Modifications: Deletion of a Google Cloud Storage bucket or disabling a Google Cloud Function. - Office 365 Cloud Service Modifications: Altering mailbox permissions or disabling auditing in Microsoft 365.
 
@@ -28,11 +28,7 @@ flowchart LR
   F_azure_entra["Microsoft Entra ID sign-in and audit logs"]
   LS2 --> F_azure_entra
   F_azure_activity --> ET_azure_activity[/"mitre_dc0069_cloud_service_modification__azure_activity"/]
-  class F_azure_activity ready
   F_azure_entra --> ET_azure_entra[/"mitre_dc0069_cloud_service_modification__azure_entra"/]
-  class F_azure_entra ready
-  classDef live fill:#d4edda,stroke:#2e7d32,color:#1b1b1b
-  classDef ready fill:#fff3cd,stroke:#b26a00,color:#1b1b1b
 ```
 
 ## Requirements
@@ -43,10 +39,10 @@ Component specific:
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
+| Feed | Schedule | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `azure_activity` | ready (tick in stack.yml) | sourcetype=`mscs:azure:audit` | `(whole feed)` | defaults | Splunk Add-on for Microsoft Cloud Services (mscs:azure:audit) |
-| `azure_entra` | ready (tick in stack.yml) | sourcetype=`azure:aad:audit` | `(whole feed)` | defaults | Splunk Add-on for Microsoft Azure (azure:aad:signin, azure:aad:audit) or Microsoft Cloud Services add-on via Event Hub |
+| `azure_activity` | scheduled | sourcetype=`mscs:azure:audit` | `(whole feed)` | defaults | Splunk Add-on for Microsoft Cloud Services (mscs:azure:audit) |
+| `azure_entra` | scheduled | sourcetype=`azure:aad:audit` | `(whole feed)` | defaults | Splunk Add-on for Microsoft Azure (azure:aad:signin, azure:aad:audit) or Microsoft Cloud Services add-on via Event Hub |
 
 Collection prerequisites:
 
@@ -65,11 +61,9 @@ Eventtypes (literal constraints, see `dist/splunk/TA-mitre-attack-datacomponents
 ```ini
 [mitre_dc0069_cloud_service_modification__azure_activity]
 search = index=azure sourcetype="mscs:azure:audit"
-disabled = 1
 
 [mitre_dc0069_cloud_service_modification__azure_entra]
 search = index=azure sourcetype="azure:aad:audit"
-disabled = 1
 
 [mitre_dc0069_cloud_service_modification]
 search = eventtype=mitre_dc0069_cloud_service_modification__azure_activity OR eventtype=mitre_dc0069_cloud_service_modification__azure_entra

@@ -2,7 +2,7 @@
 
 [ATT&CK](https://attack.mitre.org/datacomponents/DC0012) · version 2.0 · modified 2025-10-21 · ATT&CK release 20.1
 
-Status: **Live** · umbrella eventtype `mitre_dc0012_scheduled_job_modification`
+Umbrella eventtype `mitre_dc0012_scheduled_job_modification` over 2 feed(s)
 
 > Changes made to an existing scheduled job, including modifications to its execution parameters, command payload, or execution timing.
 
@@ -25,50 +25,45 @@ flowchart LR
   DC --> LS1["WinEventLog:Security<br/>2 refs"]
   F_wineventlog["Windows Event Logs"]
   LS1 --> F_wineventlog
-  F_wineventlog --> ET_wineventlog[/"mitre_dc0012_scheduled_job_modification__wineventlog"/]
-  class F_wineventlog live
   F_auditd --> ET_auditd[/"mitre_dc0012_scheduled_job_modification__auditd"/]
-  class F_auditd ready
-  classDef live fill:#d4edda,stroke:#2e7d32,color:#1b1b1b
-  classDef ready fill:#fff3cd,stroke:#b26a00,color:#1b1b1b
+  F_wineventlog --> ET_wineventlog[/"mitre_dc0012_scheduled_job_modification__wineventlog"/]
 ```
 
 ## Requirements
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
+| Feed | Schedule | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `wineventlog` | live | source=`XmlWinEventLog:Microsoft-Windows-TaskScheduler/Operational`, source=`XmlWinEventLog:Security` | `EventCode IN (140, 4702)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true) |
-| `auditd` | ready (tick in stack.yml) | sourcetype=`linux:audit` | `type IN (CONFIG_CHANGE, PATH) (name="/etc/cron*" OR name="/var/spool/cron/*")` | defaults | Splunk Add-on for Unix and Linux (linux:audit) or auditd -> auditbeat/syslog |
+| `auditd` | scheduled | sourcetype=`linux:audit` | `type IN (CONFIG_CHANGE, PATH) (name="/etc/cron*" OR name="/var/spool/cron/*")` | defaults | Splunk Add-on for Unix and Linux (linux:audit) or auditd -> auditbeat/syslog |
+| `wineventlog` | scheduled | source=`XmlWinEventLog:Microsoft-Windows-TaskScheduler/Operational`, source=`XmlWinEventLog:Security` | `EventCode IN (140, 4702)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true) |
 
 Collection prerequisites:
 
+- **auditd**: audit rules for execve, connect, open/openat on sensitive paths, ptrace, module load, mount, setuid; a Neo23x0/auditd baseline or Florian Roth's rule set is a reasonable start.
+- **auditd**: log_format = ENRICHED in auditd.conf so syscall names and uids resolve (otherwise syscall numbers are architecture dependent).
 - **wineventlog**: Advanced Audit Policy configured (at minimum Process Creation, Logon, Account Management, Object Access, Policy Change, Privilege Use, Detailed Tracking). Without the matching subcategory the EventCodes below never fire.
 - **wineventlog**: Include command line in process creation events enabled for 4688 (Computer Configuration > Administrative Templates > System > Audit Process Creation).
 - **wineventlog**: PowerShell Script Block Logging (4104) and Module Logging (4103) enabled via GPO for the PowerShell/Operational channel.
 - **wineventlog**: Object access events (4656/4663/4657/4660/4670) require SACLs on the files/keys of interest.
 - **wineventlog**: Non-default channels (TaskScheduler, WMI-Activity, CodeIntegrity, Defender, Firewall, WinRM, SMBClient/Server...) must be listed as inputs in Splunk_TA_windows inputs.conf; several are disabled by default in Windows.
-- **auditd**: audit rules for execve, connect, open/openat on sensitive paths, ptrace, module load, mount, setuid; a Neo23x0/auditd baseline or Florian Roth's rule set is a reasonable start.
-- **auditd**: log_format = ENRICHED in auditd.conf so syscall names and uids resolve (otherwise syscall numbers are architecture dependent).
 
 ## Splunk
 
 Eventtypes (literal constraints, see `dist/splunk/TA-mitre-attack-datacomponents/default/eventtypes.conf`):
 
 ```ini
+[mitre_dc0012_scheduled_job_modification__auditd]
+search = index=linux sourcetype="linux:audit" type IN (CONFIG_CHANGE, PATH) (name="/etc/cron*" OR name="/var/spool/cron/*")
+
 [mitre_dc0012_scheduled_job_modification__wineventlog]
 search = index=wineventlog source IN ("XmlWinEventLog:Microsoft-Windows-TaskScheduler/Operational", "XmlWinEventLog:Security") EventCode IN (140, 4702)
 
-[mitre_dc0012_scheduled_job_modification__auditd]
-search = index=linux sourcetype="linux:audit" type IN (CONFIG_CHANGE, PATH) (name="/etc/cron*" OR name="/var/spool/cron/*")
-disabled = 1
-
 [mitre_dc0012_scheduled_job_modification]
-search = eventtype=mitre_dc0012_scheduled_job_modification__wineventlog OR eventtype=mitre_dc0012_scheduled_job_modification__auditd
+search = eventtype=mitre_dc0012_scheduled_job_modification__auditd OR eventtype=mitre_dc0012_scheduled_job_modification__wineventlog
 ```
 
-Macros for analytics: `` `mitre_dc0012` `` (umbrella), `` `mitre_dc0012_wineventlog` ``, `` `mitre_dc0012_auditd` ``, `` `mitre_dc0012_filter` `` (site exclusions).
+Macros for analytics: `` `mitre_dc0012` `` (umbrella), `` `mitre_dc0012_auditd` ``, `` `mitre_dc0012_wineventlog` ``, `` `mitre_dc0012_filter` `` (site exclusions).
 CIM: no data model mapping; analytics on this component run as raw eventtype searches.
 
 ## Sigma

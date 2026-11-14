@@ -36,7 +36,7 @@ attack:
   - field: ImageExtension
     description: To detect file writes (e.g., .bmp, .png) that deviate from typical user activity
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: anomaly
   suggested_tuning:
   - element: ParentProcessName

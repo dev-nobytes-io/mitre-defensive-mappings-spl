@@ -30,7 +30,7 @@ attack:
   - field: OutflowToInflowRatio
     description: Outbound email bytes vastly exceed response
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: ttp
   suggested_tuning:
   - element: ExternalMailRelayFilter

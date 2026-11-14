@@ -2,7 +2,7 @@
 
 [ATT&CK](https://attack.mitre.org/datacomponents/DC0050) · version 2.0 · modified 2025-11-12 · ATT&CK release 20.1
 
-Status: **Live** · umbrella eventtype `mitre_dc0050_windows_registry_key_access`
+Umbrella eventtype `mitre_dc0050_windows_registry_key_access` over 2 feed(s)
 
 > The action of opening a specific Windows Registry key, typically to read its associated value. This activity can be used for system configuration, application settings retrieval, and security policies.
 
@@ -28,12 +28,8 @@ flowchart LR
   DC --> LS2["Autoruns:RegistryScan<br/>2 refs"]
   F_autoruns["Sysinternals Autoruns scans"]
   LS2 --> F_autoruns
-  F_wineventlog --> ET_wineventlog[/"mitre_dc0050_windows_registry_key_access__wineventlog"/]
-  class F_wineventlog live
   F_autoruns --> ET_autoruns[/"mitre_dc0050_windows_registry_key_access__autoruns"/]
-  class F_autoruns ready
-  classDef live fill:#d4edda,stroke:#2e7d32,color:#1b1b1b
-  classDef ready fill:#fff3cd,stroke:#b26a00,color:#1b1b1b
+  F_wineventlog --> ET_wineventlog[/"mitre_dc0050_windows_registry_key_access__wineventlog"/]
 ```
 
 ## Requirements
@@ -44,10 +40,10 @@ Component specific:
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
+| Feed | Schedule | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `wineventlog` | live | source=`XmlWinEventLog:Security` | `EventCode IN (4656, 4663)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true) |
-| `autoruns` | ready (tick in stack.yml) | sourcetype=`autoruns` | `(whole feed)` | derived | TA-autoruns (scripted input) |
+| `autoruns` | scheduled | sourcetype=`autoruns` | `(whole feed)` | derived | TA-autoruns (scripted input) |
+| `wineventlog` | scheduled | source=`XmlWinEventLog:Security` | `EventCode IN (4656, 4663)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true) |
 
 Collection prerequisites:
 
@@ -64,18 +60,17 @@ Review notes: `autoruns` has 2 ATT&CK reference(s) with no usable event filter (
 Eventtypes (literal constraints, see `dist/splunk/TA-mitre-attack-datacomponents/default/eventtypes.conf`):
 
 ```ini
+[mitre_dc0050_windows_registry_key_access__autoruns]
+search = index=wineventlog sourcetype=autoruns
+
 [mitre_dc0050_windows_registry_key_access__wineventlog]
 search = index=wineventlog source="XmlWinEventLog:Security" EventCode IN (4656, 4663)
 
-[mitre_dc0050_windows_registry_key_access__autoruns]
-search = index=wineventlog sourcetype=autoruns
-disabled = 1
-
 [mitre_dc0050_windows_registry_key_access]
-search = eventtype=mitre_dc0050_windows_registry_key_access__wineventlog OR eventtype=mitre_dc0050_windows_registry_key_access__autoruns
+search = eventtype=mitre_dc0050_windows_registry_key_access__autoruns OR eventtype=mitre_dc0050_windows_registry_key_access__wineventlog
 ```
 
-Macros for analytics: `` `mitre_dc0050` `` (umbrella), `` `mitre_dc0050_wineventlog` ``, `` `mitre_dc0050_autoruns` ``, `` `mitre_dc0050_filter` `` (site exclusions).
+Macros for analytics: `` `mitre_dc0050` `` (umbrella), `` `mitre_dc0050_autoruns` ``, `` `mitre_dc0050_wineventlog` ``, `` `mitre_dc0050_filter` `` (site exclusions).
 CIM: `Endpoint.Registry` via `` `mitre_dc0050_dm` `` / `` `mitre_dc0050_dm_where` `` for `tstats`. CIM tags emitted for: none (no feed is known CIM-compliant for this model).
 
 ## Sigma

@@ -56,7 +56,7 @@ attack:
       Define logic for parent-child mismatch (e.g., non-elevated process spawning auto-elevated one) to flag uncommon
       elevation paths.
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: anomaly
   suggested_tuning:
   - element: TimeWindow

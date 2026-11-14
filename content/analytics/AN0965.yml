@@ -36,7 +36,7 @@ attack:
   - field: ParentProcessName
     description: Tunable list of expected/benign clipboard accessors.
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: ttp
   suggested_tuning:
   - element: TimeWindow

@@ -2,7 +2,7 @@
 
 [ATT&CK](https://attack.mitre.org/datacomponents/DC0068) · version 2.0 · modified 2025-11-12 · ATT&CK release 20.1
 
-Status: **Live** · umbrella eventtype `mitre_dc0068_active_directory_object_deletion`
+Umbrella eventtype `mitre_dc0068_active_directory_object_deletion` over 1 feed(s)
 
 > Object deletion in AD (e.g., user accounts, groups, OUs) is logged as Event ID 5141. Examples:  - User Account: Deleted user. - Group: Deleted security/distribution group. - Organizational Unit (OU): Loss of configurations or policies. - Service Account: Disrupted operations or cover tracks. - Trust Object: Removed domain trust, disrupting connectivity.  *Data Collection Measures:*  - Audit Policy:     - Enable "Audit Directory Service Changes" (Success and Failure).     - Path: `Computer Configuration > Policies > Windows Settings > Security Settings > Advanced Audit Policy Configuration > Audit Policies > Directory Service Changes`.     - Key Event: Event ID 5141. - Log Forwarding: Use WEF to centralize logs for SIEM tools (e.g., Splunk). - Enable EDR Monitoring:     - Detect processes or users that initiate unauthorized object deletions.     - Monitor tools and scripts that may delete key directory objects.
 
@@ -23,18 +23,15 @@ flowchart LR
   F_wineventlog["Windows Event Logs"]
   LS0 --> F_wineventlog
   F_wineventlog --> ET_wineventlog[/"mitre_dc0068_active_directory_object_deletion__wineventlog"/]
-  class F_wineventlog live
-  classDef live fill:#d4edda,stroke:#2e7d32,color:#1b1b1b
-  classDef ready fill:#fff3cd,stroke:#b26a00,color:#1b1b1b
 ```
 
 ## Requirements
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
+| Feed | Schedule | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `wineventlog` | live | source=`XmlWinEventLog:Security` | `EventCode IN (4929, 5141)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true) |
+| `wineventlog` | scheduled | source=`XmlWinEventLog:Security` | `EventCode IN (4929, 5141)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true) |
 
 Collection prerequisites:
 

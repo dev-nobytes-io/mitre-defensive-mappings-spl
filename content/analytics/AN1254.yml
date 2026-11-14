@@ -36,7 +36,7 @@ attack:
   - field: ProtocolUsageBaseline
     description: Baseline which protocols are normal per host or segment (ICMP, UDP, etc.).
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: anomaly
   suggested_tuning:
   - element: ProcessContextAllowList

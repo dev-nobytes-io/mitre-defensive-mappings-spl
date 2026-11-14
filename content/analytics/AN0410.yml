@@ -28,7 +28,7 @@ attack:
   - field: AuthorizedAdmins
     description: List of approved admin accounts allowed to modify firewall ACLs.
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: ttp
   suggested_tuning:
   - element: AuthorizedAdmins

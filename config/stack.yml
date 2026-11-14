@@ -1,9 +1,14 @@
 # ---------------------------------------------------------------------------
-# LOG SOURCE CHECKLIST
+# LOG SOURCE CATALOGUE
 #
-# Tick `have: true` for every feed that reaches your Splunk. The generator reads
-# this file to decide which data-component eventtypes are "live", which are
-# "ready when you forward the feed", and what the gaps report says.
+# Every feed the mappings know about, with the index, sourcetypes and add-on each
+# one is expected to arrive with. There is no per-site "have" flag: every feed on
+# an in-scope platform is rendered, and readers keep their own inventory with the
+# unchecked checklists in docs/checklist.md and docs/by-log-source.md. Eventtypes
+# for a feed you do not collect match nothing; disable them in local/ if you like.
+#
+# `render: false` keeps a feed out of the build (platform not in scope yet);
+# `hunt_only` ships its eventtypes disabled; `virtual` marks placeholder providers.
 #
 # `index` and `sourcetypes` are substituted literally into eventtypes.conf
 # (eventtypes cannot expand macros). Change them here and rebuild, or override
@@ -26,7 +31,6 @@ feeds:
   wineventlog:
     label: Windows Event Logs
     category: Windows endpoint
-    have: true
     platforms: [Windows]
     index: wineventlog
     ta: Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true)
@@ -47,7 +51,6 @@ feeds:
   sysmon:
     label: Sysmon (Microsoft-Windows-Sysmon/Operational)
     category: Windows endpoint
-    have: true
     platforms: [Windows]
     index: sysmon
     ta: Splunk Add-on for Sysmon (needs Splunk_TA_windows for XML parsing)
@@ -62,7 +65,6 @@ feeds:
   powershell_logging:
     label: PowerShell Operational channel (4103/4104) - part of Windows Event Logs, listed separately because it needs its own GPO and input
     category: Windows endpoint
-    have: true
     platforms: [Windows]
     index: wineventlog
     ta: Splunk Add-on for Microsoft Windows
@@ -76,7 +78,6 @@ feeds:
   windows_firewall_log:
     label: Windows Firewall text log (pfirewall.log)
     category: Windows endpoint
-    have: false
     platforms: [Windows]
     index: wineventlog
     ta: Splunk_TA_windows (monitor input on %systemroot%\System32\LogFiles\Firewall\pfirewall.log)
@@ -87,7 +88,6 @@ feeds:
   windows_perfmon:
     label: Windows Performance counters
     category: Windows endpoint
-    have: false
     platforms: [Windows]
     index: perfmon
     ta: Splunk_TA_windows perfmon inputs
@@ -97,7 +97,6 @@ feeds:
   windows_dns_server:
     label: Windows DNS Server analytical / debug log
     category: Windows endpoint
-    have: false
     platforms: [Windows]
     index: wineventlog
     ta: Splunk_TA_windows (MSAD:NT6:DNS) or Microsoft-Windows-DNS-Server/Analytical ETW
@@ -107,7 +106,6 @@ feeds:
   windows_dhcp:
     label: Windows DHCP server log
     category: Windows endpoint
-    have: false
     platforms: [Windows]
     index: wineventlog
     ta: Splunk_TA_windows
@@ -117,7 +115,6 @@ feeds:
   iis:
     label: IIS access and configuration logs
     category: Windows endpoint
-    have: false
     platforms: [Windows]
     index: web
     ta: Splunk Add-on for Microsoft IIS
@@ -127,7 +124,6 @@ feeds:
   etw:
     label: ETW providers not surfaced by Sysmon (Kernel-Process, Win32k, WinINet, RPC, DotNETRuntime, AMSI, Token...)
     category: Windows endpoint
-    have: false
     platforms: [Windows]
     index: etw
     ta: Requires a user-mode ETW consumer (SilkETW/Sealighter, Splunk Stream for NDIS, or an EDR that exposes the provider). No standard Splunk TA.
@@ -137,7 +133,6 @@ feeds:
   windows_osquery:
     label: osquery on Windows
     category: Windows endpoint
-    have: false
     platforms: [Windows]
     index: osquery
     ta: osquery TA (osquery:results)
@@ -147,7 +142,6 @@ feeds:
   autoruns:
     label: Sysinternals Autoruns scans
     category: Windows endpoint
-    have: false
     platforms: [Windows]
     index: wineventlog
     ta: TA-autoruns (scripted input)
@@ -158,7 +152,6 @@ feeds:
   trellix_epo:
     label: Trellix ePO events (ENS threat/AMSI/adaptive threat protection, ePO audit)
     category: Endpoint security
-    have: true
     platforms: [Windows, Linux]
     index: epo
     ta: Splunk Add-on for McAfee ePO Syslog (sourcetype mcafee:epo:syslog, documented by Splunk). If ePO data arrives another way (DB Connect pull, a community Trellix REST add-on such as trellix_epo:threat_events), change the sourcetype here.
@@ -171,7 +164,6 @@ feeds:
   solidcore:
     label: Trellix Application and Change Control (Solidcore) via ePO
     category: Endpoint security
-    have: true
     platforms: [Windows, Linux]
     index: epo
     ta: Arrives through the ePO TA; Solidcore events carry event names such as FILE_CREATED, FILE_MODIFIED, FILE_DELETED, EXECUTION_DENIED, REG_VALUE_MODIFIED, PROCESS_HIJACK_ATTEMPTED. Verify field names (threat_name / event_description) in your data.
@@ -184,7 +176,6 @@ feeds:
   edr_telemetry:
     label: EDR raw telemetry (memory, hunting, script block, syscall) - e.g. Trellix EDR, Defender for Endpoint advanced hunting
     category: Endpoint security
-    have: false
     platforms: [Windows, Linux]
     index: edr
     ta: Vendor specific
@@ -195,7 +186,6 @@ feeds:
   corelight:
     label: Corelight / Zeek network logs
     category: Network
-    have: true
     platforms: [Windows, Linux, macOS, ESXi, Network Devices, Containers]
     index: corelight
     ta: "Corelight App for Splunk (corelight_<log>). For TA_zeek use prefix zeek: and suffix :json."
@@ -209,7 +199,6 @@ feeds:
   palo_alto:
     label: Palo Alto Networks PAN-OS (traffic, threat, URL, system, config, GlobalProtect)
     category: Network
-    have: true
     platforms: [Network Devices, Windows, Linux, ESXi, Containers]
     index: pan_logs
     ta: Splunk Add-on for Palo Alto Networks (pan:*)
@@ -225,7 +214,6 @@ feeds:
   wireshark:
     label: Wireshark / tshark packet captures (ad hoc)
     category: Network
-    have: true
     platforms: [Windows, Linux, Network Devices]
     index: pcap
     ta: None standard. tshark -T ek output (wireshark:json) or Splunk Stream for continuous capture.
@@ -236,7 +224,6 @@ feeds:
   netdev_syslog:
     label: Router / switch / non-PAN firewall syslog, config change and AAA logs
     category: Network
-    have: false
     platforms: [Network Devices]
     index: netops
     ta: Cisco Networks Add-on (cisco:ios, cisco:asa), Juniper/Arista TAs, or generic syslog
@@ -247,7 +234,6 @@ feeds:
   snmp:
     label: SNMP traps / polling
     category: Network
-    have: false
     platforms: [Network Devices]
     index: netops
     ta: Splunk Connect for SNMP
@@ -257,7 +243,6 @@ feeds:
   netflow:
     label: NetFlow / IPFIX (non-Zeek flow)
     category: Network
-    have: false
     platforms: [Network Devices, Linux, Containers]
     index: netflow
     ta: Splunk Stream or Splunk Add-on for NetFlow
@@ -268,7 +253,6 @@ feeds:
   auditd:
     label: Linux auditd (SYSCALL/EXECVE/PATH/CONFIG_CHANGE/USER_LOGIN...)
     category: Linux
-    have: false
     platforms: [Linux, Containers]
     index: linux
     ta: Splunk Add-on for Unix and Linux (linux:audit) or auditd -> auditbeat/syslog
@@ -281,7 +265,6 @@ feeds:
   linux_syslog:
     label: Linux syslog / journald (messages, secure/auth, cron, kernel, daemon)
     category: Linux
-    have: false
     platforms: [Linux, Containers]
     index: linux
     ta: Splunk Add-on for Unix and Linux (syslog, linux_secure, linux_messages_syslog)
@@ -291,7 +274,6 @@ feeds:
   linux_osquery:
     label: osquery on Linux
     category: Linux
-    have: false
     platforms: [Linux, Containers]
     index: osquery
     ta: osquery TA
@@ -301,7 +283,6 @@ feeds:
   sysmon_linux:
     label: Sysmon for Linux
     category: Linux
-    have: false
     platforms: [Linux]
     index: linux
     ta: Splunk Add-on for Sysmon for Linux
@@ -311,7 +292,6 @@ feeds:
   iptables:
     label: iptables / nftables LOG target via kernel syslog
     category: Linux
-    have: false
     platforms: [Linux]
     index: linux
     ta: Splunk Add-on for Unix and Linux (syslog)
@@ -322,7 +302,6 @@ feeds:
   ebpf:
     label: eBPF runtime security (Falco, Tetragon, Tracee)
     category: Linux
-    have: false
     platforms: [Linux, Containers]
     index: linux
     ta: Vendor specific (falco JSON, tetragon)
@@ -333,7 +312,6 @@ feeds:
   azure_entra:
     label: Microsoft Entra ID sign-in and audit logs
     category: Azure and identity
-    have: false
     platforms: [Identity Provider, IaaS, Office Suite, Windows]
     index: azure
     ta: Splunk Add-on for Microsoft Azure (azure:aad:signin, azure:aad:audit) or Microsoft Cloud Services add-on via Event Hub
@@ -344,7 +322,6 @@ feeds:
   azure_activity:
     label: Azure Activity Log (subscription control plane) and Azure Policy
     category: Azure and identity
-    have: false
     platforms: [IaaS]
     index: azure
     ta: Splunk Add-on for Microsoft Cloud Services (mscs:azure:audit)
@@ -355,7 +332,6 @@ feeds:
   azure_resource:
     label: Azure resource diagnostic logs (NSG flow, VM guest, Key Vault, Storage)
     category: Azure and identity
-    have: false
     platforms: [IaaS]
     index: azure
     ta: Splunk Add-on for Microsoft Cloud Services (mscs:azure:eventhub)
@@ -365,7 +341,6 @@ feeds:
   m365_defender:
     label: Microsoft Defender XDR / Defender for Identity alerts and Graph API logs
     category: Azure and identity
-    have: false
     platforms: [Windows, Identity Provider, Office Suite]
     index: azure
     ta: Splunk Add-on for Microsoft Security
@@ -376,7 +351,6 @@ feeds:
   kubernetes_audit:
     label: Kubernetes API server audit log and cluster events
     category: Containers
-    have: false
     platforms: [Containers]
     index: k8s
     ta: Splunk OpenTelemetry Collector for Kubernetes / Splunk Connect for Kubernetes
@@ -389,7 +363,6 @@ feeds:
   container_runtime:
     label: Docker / containerd daemon and runtime events
     category: Containers
-    have: false
     platforms: [Containers]
     index: k8s
     ta: docker events scripted input or OpenTelemetry (docker:events, containerd)
@@ -400,7 +373,6 @@ feeds:
   esxi_syslog:
     label: ESXi host logs via remote syslog (hostd, vmkernel, shell, vobd, vpxa, auth, esxupdate)
     category: VMware ESXi
-    have: false
     platforms: [ESXi]
     index: vmware
     ta: Splunk Add-on for VMware ESXi Logs (vmware:esxlog:<log>)
@@ -413,18 +385,16 @@ feeds:
   vcenter:
     label: vCenter vpxd logs and events
     category: VMware ESXi
-    have: false
     platforms: [ESXi]
     index: vmware
     ta: Splunk Add-on for VMware (vmware:vclog:vpxd)
     sourcetype: "vmware:vclog:vpxd"
     unlocks: esxi:vpxd references (about 14) - VM lifecycle, permission changes, host add/remove.
 
-  # ------------------------------------------------------------ out of scope platforms (still tickable)
+  # ------------------------------------------------------------ out of scope platforms
   macos:
     label: macOS unified log / Endpoint Security / osquery / FSEvents
     category: Not yet in scope
-    have: false
     render: false
     platforms: [macOS]
     index: macos
@@ -435,7 +405,6 @@ feeds:
   m365_unified:
     label: Microsoft 365 unified audit log (Exchange, SharePoint, Teams, Purview)
     category: Not yet in scope
-    have: false
     render: false
     platforms: [Office Suite, SaaS, Identity Provider, Windows]
     index: o365
@@ -446,7 +415,6 @@ feeds:
   aws:
     label: AWS CloudTrail / VPC Flow / CloudWatch / Bedrock
     category: Not yet in scope
-    have: false
     render: false
     platforms: [IaaS, SaaS, Containers]
     index: aws
@@ -457,7 +425,6 @@ feeds:
   gcp:
     label: Google Cloud audit / VPC flow / Workspace admin
     category: Not yet in scope
-    have: false
     render: false
     platforms: [IaaS, SaaS, Identity Provider]
     index: gcp
@@ -468,7 +435,6 @@ feeds:
   okta:
     label: Okta System Log
     category: Not yet in scope
-    have: false
     render: false
     platforms: [Identity Provider, SaaS]
     index: okta
@@ -479,7 +445,6 @@ feeds:
   saas:
     label: SaaS application audit logs (GitHub, Slack, Salesforce, Zoom, Box, Confluence, Google Workspace...)
     category: Not yet in scope
-    have: false
     render: false
     platforms: [SaaS]
     index: saas
@@ -490,7 +455,6 @@ feeds:
   mobile:
     label: Mobile EDR / MDM telemetry
     category: Not yet in scope
-    have: false
     render: false
     platforms: []
     index: mobile
@@ -501,7 +465,6 @@ feeds:
   ot:
     label: OT / ICS application and protocol logs
     category: Not yet in scope
-    have: false
     render: false
     platforms: []
     index: ot
@@ -512,7 +475,6 @@ feeds:
   threat_intel:
     label: External reconnaissance sources (internet scan data, domain registration, malware repositories, persona monitoring)
     category: Not yet in scope
-    have: false
     render: false
     platforms: [PRE]
     index: threatintel
@@ -523,7 +485,6 @@ feeds:
   unspecified:
     label: ATT&CK left the provider generic (e.g. "Process", "File", "Network Traffic")
     category: Generic
-    have: false
     platforms: []
     index: ""
     ta: n/a

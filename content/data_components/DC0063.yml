@@ -119,7 +119,6 @@ derived:
       authorized data acquisition service
   feeds:
   - feed: solidcore
-    have: true
     in_scope: true
     eventtype: mitre_dc0063_windows_registry_key_modification__solidcore
     search: >-
@@ -131,7 +130,6 @@ derived:
     - (added by dc_defaults/curated)
     cim_tags: false
   - feed: sysmon
-    have: true
     in_scope: true
     eventtype: mitre_dc0063_windows_registry_key_modification__sysmon
     search: index=sysmon source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode IN (13, 14)
@@ -141,7 +139,6 @@ derived:
     - WinEventLog:Sysmon
     cim_tags: true
   - feed: wineventlog
-    have: true
     in_scope: true
     eventtype: mitre_dc0063_windows_registry_key_modification__wineventlog
     search: index=wineventlog source="XmlWinEventLog:Security" EventCode IN (4657, 4663, 4670)
@@ -151,7 +148,6 @@ derived:
     - WinEventLog:Security
     cim_tags: false
   - feed: m365_unified
-    have: false
     in_scope: false
     eventtype: null
     search: null
@@ -161,7 +157,6 @@ derived:
     - m365:unified
     cim_tags: false
   - feed: macos
-    have: false
     in_scope: false
     eventtype: null
     search: null
@@ -171,7 +166,6 @@ derived:
     - macos:unifiedlog
     cim_tags: false
   - feed: ot
-    have: false
     in_scope: false
     eventtype: null
     search: null

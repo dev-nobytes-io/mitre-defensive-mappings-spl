@@ -34,7 +34,7 @@ attack:
   - field: SessionDurationThreshold
     description: Long ICMP/UDP sessions beyond expected limits (e.g., >5min).
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: anomaly
   suggested_tuning:
   - element: ProtocolEntropyThreshold

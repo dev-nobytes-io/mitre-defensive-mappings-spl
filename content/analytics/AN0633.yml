@@ -39,7 +39,7 @@ attack:
   - field: TimeWindow
     description: Correlate process creation and network activity within N seconds.
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: anomaly
   suggested_tuning:
   - element: PortThresholds

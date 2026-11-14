@@ -87,7 +87,6 @@ derived:
     - Pod spec triggering build or custom controller activity invoking image builds
   feeds:
   - feed: container_runtime
-    have: false
     in_scope: true
     eventtype: mitre_dc0015_image_creation__container_runtime
     search: >-
@@ -99,7 +98,6 @@ derived:
     - docker:daemon
     cim_tags: false
   - feed: kubernetes_audit
-    have: false
     in_scope: true
     eventtype: mitre_dc0015_image_creation__kubernetes_audit
     search: index=k8s sourcetype="kube:apiserver-audit" verb IN (create) (objectRef.resource=pods)
@@ -110,7 +108,6 @@ derived:
     - kubernetes:audit
     cim_tags: false
   - feed: aws
-    have: false
     in_scope: false
     eventtype: null
     search: null

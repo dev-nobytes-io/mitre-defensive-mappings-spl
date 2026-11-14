@@ -306,44 +306,7 @@ derived:
     channels:
     - None
   feeds:
-  - feed: solidcore
-    have: true
-    in_scope: true
-    eventtype: mitre_dc0016_module_load__solidcore
-    search: >-
-      index=epo sourcetype="mcafee:epo:syslog" (threat_name=PROCESS_HIJACK_ATTEMPTED OR event_description=PROCESS_HIJACK_ATTEMPTED)
-      (product_name="Solidcore*")
-    constraint_origin: defaults
-    broad_refs: 0
-    sources:
-    - (added by dc_defaults/curated)
-    cim_tags: false
-  - feed: sysmon
-    have: true
-    in_scope: true
-    eventtype: mitre_dc0016_module_load__sysmon
-    search: index=sysmon source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode IN (7)
-    constraint_origin: defaults
-    broad_refs: 0
-    sources:
-    - WinEventLog:Sysmon
-    - etw:Microsoft-Windows-Kernel-ImageLoad
-    cim_tags: false
-  - feed: wineventlog
-    have: true
-    in_scope: true
-    eventtype: mitre_dc0016_module_load__wineventlog
-    search: >-
-      index=wineventlog source IN ("XmlWinEventLog:Application", "XmlWinEventLog:Microsoft-Windows-CodeIntegrity/Operational",
-      "XmlWinEventLog:Security") EventCode IN (3033, 3063, 3077, 8001)
-    constraint_origin: defaults
-    broad_refs: 2
-    sources:
-    - WinEventLog:Application
-    - WinEventLog:Security
-    cim_tags: false
   - feed: auditd
-    have: false
     in_scope: true
     eventtype: mitre_dc0016_module_load__auditd
     search: >-
@@ -356,7 +319,6 @@ derived:
     - auditd:SYSCALL
     cim_tags: false
   - feed: etw
-    have: false
     in_scope: true
     eventtype: mitre_dc0016_module_load__etw
     search: index=etw sourcetype="etw:json" (ProviderName="Microsoft-Windows-Kernel-ImageLoad")
@@ -365,8 +327,28 @@ derived:
     sources:
     - etw:Microsoft-Windows-Kernel-ImageLoad
     cim_tags: false
+  - feed: solidcore
+    in_scope: true
+    eventtype: mitre_dc0016_module_load__solidcore
+    search: >-
+      index=epo sourcetype="mcafee:epo:syslog" (threat_name=PROCESS_HIJACK_ATTEMPTED OR event_description=PROCESS_HIJACK_ATTEMPTED)
+      (product_name="Solidcore*")
+    constraint_origin: defaults
+    broad_refs: 0
+    sources:
+    - (added by dc_defaults/curated)
+    cim_tags: false
+  - feed: sysmon
+    in_scope: true
+    eventtype: mitre_dc0016_module_load__sysmon
+    search: index=sysmon source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode IN (7)
+    constraint_origin: defaults
+    broad_refs: 0
+    sources:
+    - WinEventLog:Sysmon
+    - etw:Microsoft-Windows-Kernel-ImageLoad
+    cim_tags: false
   - feed: sysmon_linux
-    have: false
     in_scope: true
     eventtype: mitre_dc0016_module_load__sysmon_linux
     search: index=linux sourcetype="sysmon:linux" EventCode IN (7)
@@ -375,8 +357,19 @@ derived:
     sources:
     - linux:Sysmon
     cim_tags: false
+  - feed: wineventlog
+    in_scope: true
+    eventtype: mitre_dc0016_module_load__wineventlog
+    search: >-
+      index=wineventlog source IN ("XmlWinEventLog:Application", "XmlWinEventLog:Microsoft-Windows-CodeIntegrity/Operational",
+      "XmlWinEventLog:Security") EventCode IN (3033, 3063, 3077, 8001)
+    constraint_origin: defaults
+    broad_refs: 2
+    sources:
+    - WinEventLog:Application
+    - WinEventLog:Security
+    cim_tags: false
   - feed: m365_unified
-    have: false
     in_scope: false
     eventtype: null
     search: null
@@ -386,7 +379,6 @@ derived:
     - m365:unified
     cim_tags: false
   - feed: macos
-    have: false
     in_scope: false
     eventtype: null
     search: null
@@ -399,7 +391,6 @@ derived:
     - macos:unifiedlog
     cim_tags: false
   - feed: mobile
-    have: false
     in_scope: false
     eventtype: null
     search: null

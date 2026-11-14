@@ -41,7 +41,7 @@ attack:
   - field: ExecutionContext
     description: Whether the execution came from SYSTEM, service accounts, or user contexts
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: anomaly
   suggested_tuning:
   - element: TaskNameSimilarityThreshold

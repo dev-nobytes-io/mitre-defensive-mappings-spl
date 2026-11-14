@@ -89,7 +89,7 @@ attack:
       Statistical baseline for normal delay between discovery and execution activities - establish through historical
       analysis
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: anomaly
   suggested_tuning:
   - element: DiscoveryTimeWindow

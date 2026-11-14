@@ -41,7 +41,7 @@ attack:
   - field: UserContext
     description: Privilege level or impersonated user deleting sensitive files.
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: anomaly
   suggested_tuning:
   - element: TimeWindow

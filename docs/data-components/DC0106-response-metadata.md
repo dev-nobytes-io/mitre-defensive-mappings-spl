@@ -2,7 +2,7 @@
 
 [ATT&CK](https://attack.mitre.org/datacomponents/DC0106) · version 2.0 · modified 2025-10-21 · ATT&CK release 20.1
 
-Status: **Live** · umbrella eventtype `mitre_dc0106_response_metadata`
+Umbrella eventtype `mitre_dc0106_response_metadata` over 2 feed(s)
 
 > Contextual information about an Internet-facing resource collected during a scan, including details such as open ports, running services, protocols, and versions. This metadata is typically derived from interpreting scan results and helps build a profile of the targeted system. Examples:   - Port and Service Details:     - Open ports (e.g., 22, 80, 443).     - Identified services running on those ports (e.g., SSH, HTTP, HTTPS). - Service Versions: Detected software version information (e.g., Apache 2.4.41, OpenSSH 8.2). - Operating System Information: OS fingerprinting data (e.g., Linux Kernel 5.4.0). - TLS/SSL Certificate Data: Information about the TLS/SSL certificate, such as the expiration date, issuer, and cipher suites.  *Data Collection Measures:*  - Scanning Tools:     - Nmap: Collects port, service, and version information using commands like nmap -sV <IP>.     - Masscan: High-speed scanning tool for discovering open ports and active services.     - Zmap: Focused on large-scale Internet scanning, collecting metadata about discovered services.     - Shodan API: Retrieves scan metadata for publicly exposed devices and services. - Network Logs:     - Use logs from firewalls, intrusion detection systems (IDS), or intrusion prevention systems (IPS) to gather metadata from scan attempts. Example: Zeek or Suricata logs for incoming scan traffic. - OSINT Platforms: Platforms like Censys, GreyNoise, or Shodan provide aggregated metadata about Internet-facing resources. - Cloud Metadata Services: AWS Security Hub, Azure Monitor, or GCP Security Command Center can collect and centralize scan-related metadata for Internet-facing resources in cloud environments.
 
@@ -25,21 +25,17 @@ flowchart LR
   F_palo_alto["Palo Alto Networks PAN-OS"]
   LS0 --> F_palo_alto
   F_corelight --> ET_corelight[/"mitre_dc0106_response_metadata__corelight"/]
-  class F_corelight live
   F_palo_alto --> ET_palo_alto[/"mitre_dc0106_response_metadata__palo_alto"/]
-  class F_palo_alto live
-  classDef live fill:#d4edda,stroke:#2e7d32,color:#1b1b1b
-  classDef ready fill:#fff3cd,stroke:#b26a00,color:#1b1b1b
 ```
 
 ## Requirements
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
+| Feed | Schedule | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `corelight` | live | sourcetype=`corelight_dns`, sourcetype=`corelight_http`, sourcetype=`corelight_ssl`, sourcetype=`corelight_x509` | `(whole feed)` | defaults | Corelight App for Splunk (corelight_<log>). For TA_zeek use prefix zeek: and suffix :json. |
-| `palo_alto` | live | sourcetype=`pan:threat`, sourcetype=`pan:traffic` | `(whole feed)` | defaults | Splunk Add-on for Palo Alto Networks (pan:*) |
+| `corelight` | scheduled | sourcetype=`corelight_dns`, sourcetype=`corelight_http`, sourcetype=`corelight_ssl`, sourcetype=`corelight_x509` | `(whole feed)` | defaults | Corelight App for Splunk (corelight_<log>). For TA_zeek use prefix zeek: and suffix :json. |
+| `palo_alto` | scheduled | sourcetype=`pan:threat`, sourcetype=`pan:traffic` | `(whole feed)` | defaults | Splunk Add-on for Palo Alto Networks (pan:*) |
 
 Collection prerequisites:
 

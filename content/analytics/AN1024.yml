@@ -40,7 +40,7 @@ attack:
   - field: RelayChainSignature
     description: Track known multi-hop pattern signatures or port hopping techniques.
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: ttp
   suggested_tuning:
   - element: VPNConfigWhitelist

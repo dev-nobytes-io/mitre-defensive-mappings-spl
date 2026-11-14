@@ -73,8 +73,16 @@ derived:
     channels:
     - OAuth grants or tokens issued without expected user consent
   feeds:
+  - feed: azure_entra
+    in_scope: true
+    eventtype: mitre_dc0006_web_credential_creation__azure_entra
+    search: index=azure sourcetype IN ("azure:aad:audit", "azure:aad:signin")
+    constraint_origin: defaults
+    broad_refs: 2
+    sources:
+    - azure:signinlogs
+    cim_tags: false
   - feed: wineventlog
-    have: true
     in_scope: true
     eventtype: mitre_dc0006_web_credential_creation__wineventlog
     search: >-
@@ -85,18 +93,7 @@ derived:
     sources:
     - WinEventLog:ADFS
     cim_tags: false
-  - feed: azure_entra
-    have: false
-    in_scope: true
-    eventtype: mitre_dc0006_web_credential_creation__azure_entra
-    search: index=azure sourcetype IN ("azure:aad:audit", "azure:aad:signin")
-    constraint_origin: defaults
-    broad_refs: 2
-    sources:
-    - azure:signinlogs
-    cim_tags: false
   - feed: aws
-    have: false
     in_scope: false
     eventtype: null
     search: null
@@ -106,7 +103,6 @@ derived:
     - AWS:CloudTrail
     cim_tags: false
   - feed: m365_unified
-    have: false
     in_scope: false
     eventtype: null
     search: null

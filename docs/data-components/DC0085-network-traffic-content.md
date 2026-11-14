@@ -2,7 +2,7 @@
 
 [ATT&CK](https://attack.mitre.org/datacomponents/DC0085) · version 2.2 · modified 2026-11-03 · ATT&CK release 20.1
 
-Status: **Live** · umbrella eventtype `mitre_dc0085_network_traffic_content`
+Umbrella eventtype `mitre_dc0085_network_traffic_content` over 13 feed(s)
 
 > The full packet capture (PCAP) or session data that logs both protocol headers and payload content. This allows analysts to inspect command and control (C2) traffic, exfiltration, and other suspicious activity within network communications. Unlike metadata-based logs, full content analysis enables deeper protocol inspection, payload decoding, and forensic investigations.  *Data Collection Measures:*  - Network Packet Capture (Full Content Logging)     - Wireshark / tcpdump / tshark         - Full packet captures (PCAP files) for manual analysis or IDS correlation. `tcpdump -i eth0 -w capture.pcap`     - Zeek (formerly Bro)         - Extracts protocol headers and payload details into structured logs. `echo "redef Log::default_store = Log::ASCII;" > local.zeek | zeek -Cr capture.pcap local.zeek`     - Suricata / Snort (IDS/IPS with PCAP Logging)         - Deep packet inspection (DPI) with signature-based and behavioral analysis. `suricata -c /etc/suricata/suricata.yaml -i eth0 -l /var/log/suricata` - Host-Based Collection     - Sysmon Event ID 22 – DNS Query Logging, Captures DNS requests made by processes, useful for detecting C2 domains.     - Sysmon Event ID 3 – Network Connection Initiated, Logs process-to-network connection relationships.     - AuditD (Linux) – syscall=connect, Monitors outbound network requests from processes. `auditctl -a always,exit -F arch=b64 -S connect -k network_activity` - Cloud & SaaS Traffic Collection     - AWS VPC Flow Logs / Azure NSG Flow Logs / Google VPC Flow Logs, Captures metadata about inbound/outbound network traffic.     - Cloud IDS (AWS GuardDuty, Azure Sentinel, Google Chronicle), Detects malicious activity in cloud environments by analyzing network traffic patterns.
 
@@ -58,19 +58,11 @@ flowchart LR
   LS9 --> F_corelight
   DC --> MORE["... 23 more log sources"]
   F_corelight --> ET_corelight[/"mitre_dc0085_network_traffic_content__corelight"/]
-  class F_corelight live
-  F_palo_alto --> ET_palo_alto[/"mitre_dc0085_network_traffic_content__palo_alto"/]
-  class F_palo_alto live
-  F_sysmon --> ET_sysmon[/"mitre_dc0085_network_traffic_content__sysmon"/]
-  class F_sysmon live
-  F_wireshark --> ET_wireshark[/"mitre_dc0085_network_traffic_content__wireshark"/]
-  class F_wireshark live
   F_linux_syslog --> ET_linux_syslog[/"mitre_dc0085_network_traffic_content__linux_syslog"/]
-  class F_linux_syslog ready
+  F_palo_alto --> ET_palo_alto[/"mitre_dc0085_network_traffic_content__palo_alto"/]
+  F_sysmon --> ET_sysmon[/"mitre_dc0085_network_traffic_content__sysmon"/]
   F_windows_dns_server --> ET_windows_dns_server[/"mitre_dc0085_network_traffic_content__windows_dns_server"/]
-  class F_windows_dns_server ready
-  classDef live fill:#d4edda,stroke:#2e7d32,color:#1b1b1b
-  classDef ready fill:#fff3cd,stroke:#b26a00,color:#1b1b1b
+  F_wireshark --> ET_wireshark[/"mitre_dc0085_network_traffic_content__wireshark"/]
 ```
 
 ## Requirements
@@ -83,26 +75,30 @@ Component specific:
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
+| Feed | Schedule | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `corelight` | live | sourcetype=`corelight_dce_rpc`, sourcetype=`corelight_dns`, sourcetype=`corelight_files`, sourcetype=`corelight_ftp`, sourcetype=`corelight_http`, sourcetype=`corelight_kerberos`, sourcetype=`corelight_ldap`, sourcetype=`corelight_notice`, sourcetype=`corelight_ntlm`, sourcetype=`corelight_rdp`, sourcetype=`corelight_smb_files`, sourcetype=`corelight_smtp`, sourcetype=`corelight_ssh`, sourcetype=`corelight_ssl`, sourcetype=`corelight_weird`, sourcetype=`corelight_x509` | `(whole feed)` | defaults | Corelight App for Splunk (corelight_<log>). For TA_zeek use prefix zeek: and suffix :json. |
-| `palo_alto` | live | sourcetype=`pan:decryption`, sourcetype=`pan:threat` | `(whole feed)` | defaults | Splunk Add-on for Palo Alto Networks (pan:*) |
-| `sysmon` | live | source=`XmlWinEventLog:Microsoft-Windows-Sysmon/Operational` | `EventCode IN (22)` | defaults | Splunk Add-on for Sysmon (needs Splunk_TA_windows for XML parsing) |
-| `wineventlog` | live | source=`XmlWinEventLog:Microsoft-Windows-Windows Defender/Operational` | `EventCode IN (1116, 1117)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true) |
-| `wireshark` | hunt-only | sourcetype=`wireshark:json` | `(whole feed)` | derived | None standard. tshark -T ek output (wireshark:json) or Splunk Stream for continuous capture. |
-| `auditd` | ready (tick in stack.yml) | sourcetype=`linux:audit` | `type IN (SYSCALL) (syscall IN (recvfrom, recvmsg, sendmsg, sendto) OR SYSCALL IN (recvfrom, recvmsg, sendmsg, sendto))` | defaults | Splunk Add-on for Unix and Linux (linux:audit) or auditd -> auditbeat/syslog |
-| `azure_resource` | ready (tick in stack.yml) | sourcetype=`mscs:azure:eventhub` | `(category=NetworkSecurityGroupFlowEvent OR category=FlowLogFlowEvent)` | derived | Splunk Add-on for Microsoft Cloud Services (mscs:azure:eventhub) |
-| `ebpf` | ready (tick in stack.yml) | sourcetype=`falco` | `(whole feed)` | derived | Vendor specific (falco JSON, tetragon) |
-| `edr_telemetry` | ready (tick in stack.yml) | sourcetype=`edr:telemetry` | `(whole feed)` | derived | Vendor specific |
-| `iis` | ready (tick in stack.yml) | sourcetype=`ms:iis:auto` | `(whole feed)` | derived | Splunk Add-on for Microsoft IIS |
-| `kubernetes_audit` | ready (tick in stack.yml) | sourcetype=`kube:container:ingress-nginx` | `(whole feed)` | derived | Splunk OpenTelemetry Collector for Kubernetes / Splunk Connect for Kubernetes |
-| `linux_syslog` | ready (tick in stack.yml) | sourcetype=`access_combined` | `(whole feed)` | defaults | Splunk Add-on for Unix and Linux (syslog, linux_secure, linux_messages_syslog) |
-| `windows_dns_server` | ready (tick in stack.yml) | sourcetype=`MSAD:NT6:DNS` | `(whole feed)` | derived | Splunk_TA_windows (MSAD:NT6:DNS) or Microsoft-Windows-DNS-Server/Analytical ETW |
+| `auditd` | scheduled | sourcetype=`linux:audit` | `type IN (SYSCALL) (syscall IN (recvfrom, recvmsg, sendmsg, sendto) OR SYSCALL IN (recvfrom, recvmsg, sendmsg, sendto))` | defaults | Splunk Add-on for Unix and Linux (linux:audit) or auditd -> auditbeat/syslog |
+| `azure_resource` | scheduled | sourcetype=`mscs:azure:eventhub` | `(category=NetworkSecurityGroupFlowEvent OR category=FlowLogFlowEvent)` | derived | Splunk Add-on for Microsoft Cloud Services (mscs:azure:eventhub) |
+| `corelight` | scheduled | sourcetype=`corelight_dce_rpc`, sourcetype=`corelight_dns`, sourcetype=`corelight_files`, sourcetype=`corelight_ftp`, sourcetype=`corelight_http`, sourcetype=`corelight_kerberos`, sourcetype=`corelight_ldap`, sourcetype=`corelight_notice`, sourcetype=`corelight_ntlm`, sourcetype=`corelight_rdp`, sourcetype=`corelight_smb_files`, sourcetype=`corelight_smtp`, sourcetype=`corelight_ssh`, sourcetype=`corelight_ssl`, sourcetype=`corelight_weird`, sourcetype=`corelight_x509` | `(whole feed)` | defaults | Corelight App for Splunk (corelight_<log>). For TA_zeek use prefix zeek: and suffix :json. |
+| `ebpf` | scheduled | sourcetype=`falco` | `(whole feed)` | derived | Vendor specific (falco JSON, tetragon) |
+| `edr_telemetry` | scheduled | sourcetype=`edr:telemetry` | `(whole feed)` | derived | Vendor specific |
+| `iis` | scheduled | sourcetype=`ms:iis:auto` | `(whole feed)` | derived | Splunk Add-on for Microsoft IIS |
+| `kubernetes_audit` | scheduled | sourcetype=`kube:container:ingress-nginx` | `(whole feed)` | derived | Splunk OpenTelemetry Collector for Kubernetes / Splunk Connect for Kubernetes |
+| `linux_syslog` | scheduled | sourcetype=`access_combined` | `(whole feed)` | defaults | Splunk Add-on for Unix and Linux (syslog, linux_secure, linux_messages_syslog) |
+| `palo_alto` | scheduled | sourcetype=`pan:decryption`, sourcetype=`pan:threat` | `(whole feed)` | defaults | Splunk Add-on for Palo Alto Networks (pan:*) |
+| `sysmon` | scheduled | source=`XmlWinEventLog:Microsoft-Windows-Sysmon/Operational` | `EventCode IN (22)` | defaults | Splunk Add-on for Sysmon (needs Splunk_TA_windows for XML parsing) |
+| `windows_dns_server` | scheduled | sourcetype=`MSAD:NT6:DNS` | `(whole feed)` | derived | Splunk_TA_windows (MSAD:NT6:DNS) or Microsoft-Windows-DNS-Server/Analytical ETW |
+| `wineventlog` | scheduled | source=`XmlWinEventLog:Microsoft-Windows-Windows Defender/Operational` | `EventCode IN (1116, 1117)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true) |
+| `wireshark` | hunt-only (eventtype disabled) | sourcetype=`wireshark:json` | `(whole feed)` | derived | None standard. tshark -T ek output (wireshark:json) or Splunk Stream for continuous capture. |
 
 Collection prerequisites:
 
+- **auditd**: audit rules for execve, connect, open/openat on sensitive paths, ptrace, module load, mount, setuid; a Neo23x0/auditd baseline or Florian Roth's rule set is a reasonable start.
+- **auditd**: log_format = ENRICHED in auditd.conf so syscall names and uids resolve (otherwise syscall numbers are architecture dependent).
 - **corelight**: Sensor placement covering east-west (DC, server VLANs) and north-south; without internal taps the lateral-movement components are blind.
 - **corelight**: Enable the log set above; files/pe/smb_* and ldap/kerberos/ntlm are what distinguish Corelight from flow data.
+- **kubernetes_audit**: Audit policy at Metadata level minimum
+- **kubernetes_audit**: RequestResponse for secrets/pods/exec; ship the audit log file from control-plane nodes.
 - **palo_alto**: Log forwarding profiles attached to every security rule (traffic start+end, threat, url, wildfire, data).
 - **palo_alto**: System and Config logs forwarded from each firewall / Panorama; GlobalProtect logs enabled.
 - **palo_alto**: URL filtering and Threat Prevention licensed for pan:threat subtypes url/vulnerability/virus/spyware.
@@ -114,26 +110,46 @@ Collection prerequisites:
 - **wineventlog**: PowerShell Script Block Logging (4104) and Module Logging (4103) enabled via GPO for the PowerShell/Operational channel.
 - **wineventlog**: Object access events (4656/4663/4657/4660/4670) require SACLs on the files/keys of interest.
 - **wineventlog**: Non-default channels (TaskScheduler, WMI-Activity, CodeIntegrity, Defender, Firewall, WinRM, SMBClient/Server...) must be listed as inputs in Splunk_TA_windows inputs.conf; several are disabled by default in Windows.
-- **auditd**: audit rules for execve, connect, open/openat on sensitive paths, ptrace, module load, mount, setuid; a Neo23x0/auditd baseline or Florian Roth's rule set is a reasonable start.
-- **auditd**: log_format = ENRICHED in auditd.conf so syscall names and uids resolve (otherwise syscall numbers are architecture dependent).
-- **kubernetes_audit**: Audit policy at Metadata level minimum
-- **kubernetes_audit**: RequestResponse for secrets/pods/exec; ship the audit log file from control-plane nodes.
 
-Review notes: `corelight` has 17 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *defaults*; `sysmon` has 2 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *defaults*; `wineventlog` has 2 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *defaults*; `ebpf` has 2 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *derived*; `edr_telemetry` has 2 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *derived*; `iis` has 4 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *derived*; `kubernetes_audit` has 2 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *derived*; `linux_syslog` has 14 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *defaults*; `windows_dns_server` has 5 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *derived*.
+Review notes: `corelight` has 17 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *defaults*; `ebpf` has 2 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *derived*; `edr_telemetry` has 2 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *derived*; `iis` has 4 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *derived*; `kubernetes_audit` has 2 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *derived*; `linux_syslog` has 14 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *defaults*; `sysmon` has 2 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *defaults*; `windows_dns_server` has 5 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *derived*; `wineventlog` has 2 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *defaults*.
 
 ## Splunk
 
 Eventtypes (literal constraints, see `dist/splunk/TA-mitre-attack-datacomponents/default/eventtypes.conf`):
 
 ```ini
+[mitre_dc0085_network_traffic_content__auditd]
+search = index=linux sourcetype="linux:audit" type IN (SYSCALL) (syscall IN (recvfrom, recvmsg, sendmsg, sendto) OR SYSCALL IN (recvfrom, recvmsg, sendmsg, sendto))
+
+[mitre_dc0085_network_traffic_content__azure_resource]
+search = index=azure sourcetype="mscs:azure:eventhub" (category=NetworkSecurityGroupFlowEvent OR category=FlowLogFlowEvent)
+
 [mitre_dc0085_network_traffic_content__corelight]
 search = index=corelight sourcetype IN (corelight_dce_rpc, corelight_dns, corelight_files, corelight_ftp, corelight_http, corelight_kerberos, corelight_ldap, corelight_notice, corelight_ntlm, corelight_rdp, corelight_smb_files, corelight_smtp, corelight_ssh, corelight_ssl, corelight_weird, corelight_x509)
+
+[mitre_dc0085_network_traffic_content__ebpf]
+search = index=linux sourcetype=falco
+
+[mitre_dc0085_network_traffic_content__edr_telemetry]
+search = index=edr sourcetype="edr:telemetry"
+
+[mitre_dc0085_network_traffic_content__iis]
+search = index=web sourcetype="ms:iis:auto"
+
+[mitre_dc0085_network_traffic_content__kubernetes_audit]
+search = index=k8s sourcetype="kube:container:ingress-nginx"
+
+[mitre_dc0085_network_traffic_content__linux_syslog]
+search = index=linux sourcetype=access_combined
 
 [mitre_dc0085_network_traffic_content__palo_alto]
 search = index=pan_logs sourcetype IN ("pan:decryption", "pan:threat")
 
 [mitre_dc0085_network_traffic_content__sysmon]
 search = index=sysmon source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode IN (22)
+
+[mitre_dc0085_network_traffic_content__windows_dns_server]
+search = index=wineventlog sourcetype="MSAD:NT6:DNS"
 
 [mitre_dc0085_network_traffic_content__wineventlog]
 search = index=wineventlog source="XmlWinEventLog:Microsoft-Windows-Windows Defender/Operational" EventCode IN (1116, 1117)
@@ -142,43 +158,11 @@ search = index=wineventlog source="XmlWinEventLog:Microsoft-Windows-Windows Defe
 search = index=pcap sourcetype="wireshark:json"
 disabled = 1
 
-[mitre_dc0085_network_traffic_content__auditd]
-search = index=linux sourcetype="linux:audit" type IN (SYSCALL) (syscall IN (recvfrom, recvmsg, sendmsg, sendto) OR SYSCALL IN (recvfrom, recvmsg, sendmsg, sendto))
-disabled = 1
-
-[mitre_dc0085_network_traffic_content__azure_resource]
-search = index=azure sourcetype="mscs:azure:eventhub" (category=NetworkSecurityGroupFlowEvent OR category=FlowLogFlowEvent)
-disabled = 1
-
-[mitre_dc0085_network_traffic_content__ebpf]
-search = index=linux sourcetype=falco
-disabled = 1
-
-[mitre_dc0085_network_traffic_content__edr_telemetry]
-search = index=edr sourcetype="edr:telemetry"
-disabled = 1
-
-[mitre_dc0085_network_traffic_content__iis]
-search = index=web sourcetype="ms:iis:auto"
-disabled = 1
-
-[mitre_dc0085_network_traffic_content__kubernetes_audit]
-search = index=k8s sourcetype="kube:container:ingress-nginx"
-disabled = 1
-
-[mitre_dc0085_network_traffic_content__linux_syslog]
-search = index=linux sourcetype=access_combined
-disabled = 1
-
-[mitre_dc0085_network_traffic_content__windows_dns_server]
-search = index=wineventlog sourcetype="MSAD:NT6:DNS"
-disabled = 1
-
 [mitre_dc0085_network_traffic_content]
-search = eventtype=mitre_dc0085_network_traffic_content__corelight OR eventtype=mitre_dc0085_network_traffic_content__palo_alto OR eventtype=mitre_dc0085_network_traffic_content__sysmon OR eventtype=mitre_dc0085_network_traffic_content__wineventlog OR eventtype=mitre_dc0085_network_traffic_content__wireshark OR eventtype=mitre_dc0085_network_traffic_content__auditd OR eventtype=mitre_dc0085_network_traffic_content__azure_resource OR eventtype=mitre_dc0085_network_traffic_content__ebpf OR eventtype=mitre_dc0085_network_traffic_content__edr_telemetry OR eventtype=mitre_dc0085_network_traffic_content__iis OR eventtype=mitre_dc0085_network_traffic_content__kubernetes_audit OR eventtype=mitre_dc0085_network_traffic_content__linux_syslog OR eventtype=mitre_dc0085_network_traffic_content__windows_dns_server
+search = eventtype=mitre_dc0085_network_traffic_content__auditd OR eventtype=mitre_dc0085_network_traffic_content__azure_resource OR eventtype=mitre_dc0085_network_traffic_content__corelight OR eventtype=mitre_dc0085_network_traffic_content__ebpf OR eventtype=mitre_dc0085_network_traffic_content__edr_telemetry OR eventtype=mitre_dc0085_network_traffic_content__iis OR eventtype=mitre_dc0085_network_traffic_content__kubernetes_audit OR eventtype=mitre_dc0085_network_traffic_content__linux_syslog OR eventtype=mitre_dc0085_network_traffic_content__palo_alto OR eventtype=mitre_dc0085_network_traffic_content__sysmon OR eventtype=mitre_dc0085_network_traffic_content__windows_dns_server OR eventtype=mitre_dc0085_network_traffic_content__wineventlog OR eventtype=mitre_dc0085_network_traffic_content__wireshark
 ```
 
-Macros for analytics: `` `mitre_dc0085` `` (umbrella), `` `mitre_dc0085_corelight` ``, `` `mitre_dc0085_palo_alto` ``, `` `mitre_dc0085_sysmon` ``, `` `mitre_dc0085_wineventlog` ``, `` `mitre_dc0085_wireshark` ``, `` `mitre_dc0085_auditd` ``, `` `mitre_dc0085_azure_resource` ``, `` `mitre_dc0085_ebpf` ``, `` `mitre_dc0085_edr_telemetry` ``, `` `mitre_dc0085_iis` ``, `` `mitre_dc0085_kubernetes_audit` ``, `` `mitre_dc0085_linux_syslog` ``, `` `mitre_dc0085_windows_dns_server` ``, `` `mitre_dc0085_filter` `` (site exclusions).
+Macros for analytics: `` `mitre_dc0085` `` (umbrella), `` `mitre_dc0085_auditd` ``, `` `mitre_dc0085_azure_resource` ``, `` `mitre_dc0085_corelight` ``, `` `mitre_dc0085_ebpf` ``, `` `mitre_dc0085_edr_telemetry` ``, `` `mitre_dc0085_iis` ``, `` `mitre_dc0085_kubernetes_audit` ``, `` `mitre_dc0085_linux_syslog` ``, `` `mitre_dc0085_palo_alto` ``, `` `mitre_dc0085_sysmon` ``, `` `mitre_dc0085_windows_dns_server` ``, `` `mitre_dc0085_wineventlog` ``, `` `mitre_dc0085_wireshark` ``, `` `mitre_dc0085_filter` `` (site exclusions).
 CIM: `Web.Web` via `` `mitre_dc0085_dm` `` / `` `mitre_dc0085_dm_where` `` for `tstats`. CIM tags emitted for: `corelight`, `palo_alto`.
 
 ## Sigma

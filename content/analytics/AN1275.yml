@@ -31,7 +31,7 @@ attack:
   - field: FailureThreshold
     description: Count of failed logons before raising an alert (e.g., 10-15)
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: anomaly
   suggested_tuning:
   - element: TimeWindow

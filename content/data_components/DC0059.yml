@@ -507,78 +507,7 @@ derived:
     channels:
     - installed binary hash does not match vendor-published checksum for claimed version
   feeds:
-  - feed: corelight
-    have: true
-    in_scope: true
-    eventtype: mitre_dc0059_file_metadata__corelight
-    search: index=corelight sourcetype IN (corelight_files, corelight_pe)
-    constraint_origin: defaults
-    broad_refs: 2
-    sources:
-    - NSM:Flow
-    cim_tags: false
-  - feed: palo_alto
-    have: true
-    in_scope: true
-    eventtype: mitre_dc0059_file_metadata__palo_alto
-    search: index=pan_logs sourcetype="pan:threat" (log_subtype=wildfire OR log_subtype=virus)
-    constraint_origin: defaults
-    broad_refs: 0
-    sources:
-    - NSM:Flow
-    - networkdevice:syslog
-    cim_tags: false
-  - feed: solidcore
-    have: true
-    in_scope: true
-    eventtype: mitre_dc0059_file_metadata__solidcore
-    search: >-
-      index=epo sourcetype="mcafee:epo:syslog" (threat_name IN (FILE_ATTR_MODIFIED, FILE_SOLIDIFIED, FILE_UNSOLIDIFIED)
-      OR event_description IN (FILE_ATTR_MODIFIED, FILE_SOLIDIFIED, FILE_UNSOLIDIFIED)) (product_name="Solidcore*")
-    constraint_origin: defaults
-    broad_refs: 5
-    sources:
-    - EDR:file
-    - linux:fim
-    cim_tags: false
-  - feed: sysmon
-    have: true
-    in_scope: true
-    eventtype: mitre_dc0059_file_metadata__sysmon
-    search: index=sysmon source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode IN (2, 11, 15)
-    constraint_origin: defaults
-    broad_refs: 0
-    sources:
-    - EDR:file
-    - WinEventLog:Sysmon
-    cim_tags: true
-  - feed: trellix_epo
-    have: true
-    in_scope: true
-    eventtype: mitre_dc0059_file_metadata__trellix_epo
-    search: index=epo sourcetype="mcafee:epo:syslog"
-    constraint_origin: derived
-    broad_refs: 2
-    sources:
-    - EDR:detection
-    cim_tags: false
-  - feed: wineventlog
-    have: true
-    in_scope: true
-    eventtype: mitre_dc0059_file_metadata__wineventlog
-    search: >-
-      index=wineventlog source IN ("XmlWinEventLog:Microsoft-Windows-CodeIntegrity/Operational", "XmlWinEventLog:Microsoft-Windows-Windows
-      Defender/Operational", "XmlWinEventLog:Security") EventCode IN (1116, 1117, 3033, 4663, 4670)
-    constraint_origin: defaults
-    broad_refs: 14
-    sources:
-    - WinEventLog:Microsoft-Windows-CodeIntegrity/Operational
-    - WinEventLog:Microsoft-Windows-Windows Defender/Operational
-    - WinEventLog:Security
-    - WinEventLog:Setup
-    cim_tags: false
   - feed: auditd
-    have: false
     in_scope: true
     eventtype: mitre_dc0059_file_metadata__auditd
     search: >-
@@ -594,8 +523,16 @@ derived:
     - ebpf:syscalls
     - linux:fim
     cim_tags: false
+  - feed: corelight
+    in_scope: true
+    eventtype: mitre_dc0059_file_metadata__corelight
+    search: index=corelight sourcetype IN (corelight_files, corelight_pe)
+    constraint_origin: defaults
+    broad_refs: 2
+    sources:
+    - NSM:Flow
+    cim_tags: false
   - feed: ebpf
-    have: false
     in_scope: true
     eventtype: mitre_dc0059_file_metadata__ebpf
     search: index=linux sourcetype=falco
@@ -605,7 +542,6 @@ derived:
     - ebpf:syscalls
     cim_tags: false
   - feed: edr_telemetry
-    have: false
     in_scope: true
     eventtype: mitre_dc0059_file_metadata__edr_telemetry
     search: index=edr sourcetype="edr:telemetry"
@@ -616,7 +552,6 @@ derived:
     - EDR:file
     cim_tags: false
   - feed: linux_osquery
-    have: false
     in_scope: true
     eventtype: mitre_dc0059_file_metadata__linux_osquery
     search: index=osquery sourcetype="osquery:results" (name=file OR name=hash OR name=file_events)
@@ -625,8 +560,62 @@ derived:
     sources:
     - linux:osquery
     cim_tags: false
+  - feed: palo_alto
+    in_scope: true
+    eventtype: mitre_dc0059_file_metadata__palo_alto
+    search: index=pan_logs sourcetype="pan:threat" (log_subtype=wildfire OR log_subtype=virus)
+    constraint_origin: defaults
+    broad_refs: 0
+    sources:
+    - NSM:Flow
+    - networkdevice:syslog
+    cim_tags: false
+  - feed: solidcore
+    in_scope: true
+    eventtype: mitre_dc0059_file_metadata__solidcore
+    search: >-
+      index=epo sourcetype="mcafee:epo:syslog" (threat_name IN (FILE_ATTR_MODIFIED, FILE_SOLIDIFIED, FILE_UNSOLIDIFIED)
+      OR event_description IN (FILE_ATTR_MODIFIED, FILE_SOLIDIFIED, FILE_UNSOLIDIFIED)) (product_name="Solidcore*")
+    constraint_origin: defaults
+    broad_refs: 5
+    sources:
+    - EDR:file
+    - linux:fim
+    cim_tags: false
+  - feed: sysmon
+    in_scope: true
+    eventtype: mitre_dc0059_file_metadata__sysmon
+    search: index=sysmon source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode IN (2, 11, 15)
+    constraint_origin: defaults
+    broad_refs: 0
+    sources:
+    - EDR:file
+    - WinEventLog:Sysmon
+    cim_tags: true
+  - feed: trellix_epo
+    in_scope: true
+    eventtype: mitre_dc0059_file_metadata__trellix_epo
+    search: index=epo sourcetype="mcafee:epo:syslog"
+    constraint_origin: derived
+    broad_refs: 2
+    sources:
+    - EDR:detection
+    cim_tags: false
+  - feed: wineventlog
+    in_scope: true
+    eventtype: mitre_dc0059_file_metadata__wineventlog
+    search: >-
+      index=wineventlog source IN ("XmlWinEventLog:Microsoft-Windows-CodeIntegrity/Operational", "XmlWinEventLog:Microsoft-Windows-Windows
+      Defender/Operational", "XmlWinEventLog:Security") EventCode IN (1116, 1117, 3033, 4663, 4670)
+    constraint_origin: defaults
+    broad_refs: 14
+    sources:
+    - WinEventLog:Microsoft-Windows-CodeIntegrity/Operational
+    - WinEventLog:Microsoft-Windows-Windows Defender/Operational
+    - WinEventLog:Security
+    - WinEventLog:Setup
+    cim_tags: false
   - feed: macos
-    have: false
     in_scope: false
     eventtype: null
     search: null
@@ -644,7 +633,6 @@ derived:
     - macos:unifiedlog
     cim_tags: false
   - feed: mobile
-    have: false
     in_scope: false
     eventtype: null
     search: null
@@ -655,7 +643,6 @@ derived:
     - mobile:ForensicArtifacts
     cim_tags: false
   - feed: saas
-    have: false
     in_scope: false
     eventtype: null
     search: null

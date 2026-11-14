@@ -42,7 +42,7 @@ attack:
   - field: UserContext
     description: User accounts permitted to use sanctioned cloud services versus unexpected accounts.
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: anomaly
   suggested_tuning:
   - element: CloudStorageDomains

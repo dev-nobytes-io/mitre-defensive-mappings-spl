@@ -43,7 +43,7 @@ attack:
   - field: TimeWindow
     description: Correlate rapid file delete/overwrite behavior from same process/user.
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: anomaly
   suggested_tuning:
   - element: TargetFilename

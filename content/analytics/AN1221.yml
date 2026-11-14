@@ -56,7 +56,7 @@ attack:
   - field: CommandLineEntropyThreshold
     description: Flags tasks executing heavily obfuscated PowerShell or binary blobs via base64 or encoding.
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: anomaly
   suggested_tuning:
   - element: TimeWindow

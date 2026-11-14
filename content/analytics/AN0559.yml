@@ -36,7 +36,7 @@ attack:
   - field: TimeWindow
     description: Cluster enumeration commands within short time windows
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: hunting
   suggested_tuning:
   - element: ParentProcess

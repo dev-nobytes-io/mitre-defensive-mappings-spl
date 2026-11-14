@@ -48,7 +48,7 @@ attack:
   - field: NewUserPrivilegeThreshold
     description: Flag new users making changes without observed privilege elevation path
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: anomaly
   suggested_tuning:
   - element: TrustedAdminIPs

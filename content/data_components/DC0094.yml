@@ -49,7 +49,6 @@ derived:
     - Add member to group
   feeds:
   - feed: wineventlog
-    have: true
     in_scope: true
     eventtype: mitre_dc0094_group_modification__wineventlog
     search: >-
@@ -61,7 +60,6 @@ derived:
     - (added by dc_defaults/curated)
     cim_tags: true
   - feed: m365_unified
-    have: false
     in_scope: false
     eventtype: null
     search: null

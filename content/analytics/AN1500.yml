@@ -34,7 +34,7 @@ attack:
   - field: CertValidationPolicy
     description: Thresholds for rejecting untrusted/self-signed certs.
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: ttp
   suggested_tuning:
   - element: PortProfiles

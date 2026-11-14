@@ -46,20 +46,7 @@ derived:
     channels:
     - Volume Shadow Copy Creation
   feeds:
-  - feed: wineventlog
-    have: true
-    in_scope: true
-    eventtype: mitre_dc0097_volume_creation__wineventlog
-    search: >-
-      index=wineventlog source IN ("XmlWinEventLog:Microsoft-Windows-VSS", "XmlWinEventLog:System") EventCode IN
-      (12, 7036, 8224)
-    constraint_origin: defaults
-    broad_refs: 2
-    sources:
-    - WinEventLog:Microsoft-Windows-VSS
-    cim_tags: false
   - feed: esxi_syslog
-    have: false
     in_scope: true
     eventtype: mitre_dc0097_volume_creation__esxi_syslog
     search: index=vmware sourcetype IN ("vmware:esxlog:hostd", "vmware:esxlog:vmkernel")
@@ -69,7 +56,6 @@ derived:
     - (added by dc_defaults/curated)
     cim_tags: false
   - feed: kubernetes_audit
-    have: false
     in_scope: true
     eventtype: mitre_dc0097_volume_creation__kubernetes_audit
     search: >-
@@ -80,8 +66,18 @@ derived:
     sources:
     - (added by dc_defaults/curated)
     cim_tags: false
+  - feed: wineventlog
+    in_scope: true
+    eventtype: mitre_dc0097_volume_creation__wineventlog
+    search: >-
+      index=wineventlog source IN ("XmlWinEventLog:Microsoft-Windows-VSS", "XmlWinEventLog:System") EventCode IN
+      (12, 7036, 8224)
+    constraint_origin: defaults
+    broad_refs: 2
+    sources:
+    - WinEventLog:Microsoft-Windows-VSS
+    cim_tags: false
   - feed: aws
-    have: false
     in_scope: false
     eventtype: null
     search: null

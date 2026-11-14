@@ -39,7 +39,7 @@ attack:
   - field: UserContext
     description: Whether the activity occurs in SYSTEM or user context may affect legitimacy scoring.
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: ttp
   suggested_tuning:
   - element: SleepDurationThreshold

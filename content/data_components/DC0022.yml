@@ -48,7 +48,6 @@ derived:
     - DeleteBucket, DeleteDBCluster, DeleteSnapshot, TerminateInstances
   feeds:
   - feed: aws
-    have: false
     in_scope: false
     eventtype: null
     search: null

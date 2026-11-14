@@ -70,18 +70,7 @@ derived:
     channels:
     - CreateAccessKey, ImportKeyPair, CreateLoginProfile, CreateKeyPair
   feeds:
-  - feed: wineventlog
-    have: true
-    in_scope: true
-    eventtype: mitre_dc0087_active_directory_object_creation__wineventlog
-    search: index=wineventlog source="XmlWinEventLog:Security" EventCode IN (4928, 5137)
-    constraint_origin: defaults
-    broad_refs: 0
-    sources:
-    - WinEventLog:Security
-    cim_tags: true
   - feed: azure_entra
-    have: false
     in_scope: true
     eventtype: mitre_dc0087_active_directory_object_creation__azure_entra
     search: index=azure sourcetype="azure:aad:audit"
@@ -90,8 +79,16 @@ derived:
     sources:
     - azure:audit
     cim_tags: false
+  - feed: wineventlog
+    in_scope: true
+    eventtype: mitre_dc0087_active_directory_object_creation__wineventlog
+    search: index=wineventlog source="XmlWinEventLog:Security" EventCode IN (4928, 5137)
+    constraint_origin: defaults
+    broad_refs: 0
+    sources:
+    - WinEventLog:Security
+    cim_tags: true
   - feed: aws
-    have: false
     in_scope: false
     eventtype: null
     search: null

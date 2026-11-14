@@ -142,19 +142,7 @@ derived:
     channels:
     - /proc/[pid]/maps, /proc/[pid]/mem
   feeds:
-  - feed: sysmon
-    have: true
-    in_scope: true
-    eventtype: mitre_dc0020_process_modification__sysmon
-    search: index=sysmon source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode IN (8, 10, 25)
-    constraint_origin: defaults
-    broad_refs: 0
-    sources:
-    - WinEventLog:Sysmon
-    - etw:Microsoft-Windows-Kernel-Process
-    cim_tags: false
   - feed: auditd
-    have: false
     in_scope: true
     eventtype: mitre_dc0020_process_modification__auditd
     search: >-
@@ -166,7 +154,6 @@ derived:
     - auditd:SYSCALL
     cim_tags: false
   - feed: ebpf
-    have: false
     in_scope: true
     eventtype: mitre_dc0020_process_modification__ebpf
     search: index=linux sourcetype=falco
@@ -176,7 +163,6 @@ derived:
     - ebpf:tracepoints
     cim_tags: false
   - feed: etw
-    have: false
     in_scope: true
     eventtype: mitre_dc0020_process_modification__etw
     search: index=etw sourcetype="etw:json" (ProviderName="Microsoft-Windows-Kernel-Process")
@@ -185,8 +171,17 @@ derived:
     sources:
     - etw:Microsoft-Windows-Kernel-Process
     cim_tags: false
+  - feed: sysmon
+    in_scope: true
+    eventtype: mitre_dc0020_process_modification__sysmon
+    search: index=sysmon source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode IN (8, 10, 25)
+    constraint_origin: defaults
+    broad_refs: 0
+    sources:
+    - WinEventLog:Sysmon
+    - etw:Microsoft-Windows-Kernel-Process
+    cim_tags: false
   - feed: macos
-    have: false
     in_scope: false
     eventtype: null
     search: null

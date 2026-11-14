@@ -61,7 +61,6 @@ derived:
     - DescribeCluster, ListClusters, ListNodegroups
   feeds:
   - feed: container_runtime
-    have: false
     in_scope: true
     eventtype: mitre_dc0091_container_enumeration__container_runtime
     search: >-
@@ -73,7 +72,6 @@ derived:
     - docker:daemon
     cim_tags: false
   - feed: aws
-    have: false
     in_scope: false
     eventtype: null
     search: null

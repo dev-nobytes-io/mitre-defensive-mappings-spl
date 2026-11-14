@@ -55,7 +55,6 @@ derived:
     - None
   feeds:
   - feed: threat_intel
-    have: false
     in_scope: false
     eventtype: null
     search: null

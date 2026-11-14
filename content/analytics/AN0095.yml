@@ -39,7 +39,7 @@ attack:
   - field: TimeWindow
     description: Helps detect bursty discovery behavior within a short timeframe
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: hunting
   suggested_tuning:
   - element: ParentProcessName

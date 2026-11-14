@@ -2,7 +2,7 @@
 
 [ATT&CK](https://attack.mitre.org/datacomponents/DC0033) · version 2.0 · modified 2026-10-13 · ATT&CK release 20.1
 
-Status: **Live** · umbrella eventtype `mitre_dc0033_process_termination`
+Umbrella eventtype `mitre_dc0033_process_termination` over 4 feed(s)
 
 > The exit or termination of a running process on a system. This can occur due to normal operations, user-initiated commands, or malicious actions such as process termination by malware to disable security controls.
 
@@ -37,16 +37,10 @@ flowchart LR
   DC --> LS5["docker:events<br/>2 refs"]
   F_container_runtime["Docker / containerd daemon and runtime events"]
   LS5 --> F_container_runtime
-  F_sysmon --> ET_sysmon[/"mitre_dc0033_process_termination__sysmon"/]
-  class F_sysmon live
   F_auditd --> ET_auditd[/"mitre_dc0033_process_termination__auditd"/]
-  class F_auditd ready
   F_container_runtime --> ET_container_runtime[/"mitre_dc0033_process_termination__container_runtime"/]
-  class F_container_runtime ready
   F_esxi_syslog --> ET_esxi_syslog[/"mitre_dc0033_process_termination__esxi_syslog"/]
-  class F_esxi_syslog ready
-  classDef live fill:#d4edda,stroke:#2e7d32,color:#1b1b1b
-  classDef ready fill:#fff3cd,stroke:#b26a00,color:#1b1b1b
+  F_sysmon --> ET_sysmon[/"mitre_dc0033_process_termination__sysmon"/]
 ```
 
 ## Requirements
@@ -57,20 +51,20 @@ Component specific:
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
+| Feed | Schedule | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `sysmon` | live | source=`XmlWinEventLog:Microsoft-Windows-Sysmon/Operational` | `EventCode IN (5)` | defaults | Splunk Add-on for Sysmon (needs Splunk_TA_windows for XML parsing) |
-| `auditd` | ready (tick in stack.yml) | sourcetype=`linux:audit` | `type IN (SYSCALL) (syscall IN (exit_group, kill, tgkill, tkill) OR SYSCALL IN (exit_group, kill, tgkill, tkill))` | defaults | Splunk Add-on for Unix and Linux (linux:audit) or auditd -> auditbeat/syslog |
-| `container_runtime` | ready (tick in stack.yml) | sourcetype=`docker:events` | `(status IN (die, kill, stop))` | defaults | docker events scripted input or OpenTelemetry (docker:events, containerd) |
-| `esxi_syslog` | ready (tick in stack.yml) | sourcetype=`vmware:esxlog:hostd` | `(whole feed)` | derived | Splunk Add-on for VMware ESXi Logs (vmware:esxlog:<log>) |
+| `auditd` | scheduled | sourcetype=`linux:audit` | `type IN (SYSCALL) (syscall IN (exit_group, kill, tgkill, tkill) OR SYSCALL IN (exit_group, kill, tgkill, tkill))` | defaults | Splunk Add-on for Unix and Linux (linux:audit) or auditd -> auditbeat/syslog |
+| `container_runtime` | scheduled | sourcetype=`docker:events` | `(status IN (die, kill, stop))` | defaults | docker events scripted input or OpenTelemetry (docker:events, containerd) |
+| `esxi_syslog` | scheduled | sourcetype=`vmware:esxlog:hostd` | `(whole feed)` | derived | Splunk Add-on for VMware ESXi Logs (vmware:esxlog:<log>) |
+| `sysmon` | scheduled | source=`XmlWinEventLog:Microsoft-Windows-Sysmon/Operational` | `EventCode IN (5)` | defaults | Splunk Add-on for Sysmon (needs Splunk_TA_windows for XML parsing) |
 
 Collection prerequisites:
 
-- **sysmon**: Sysmon deployed with a maintained modular configuration (e.g. sysmon-modular or SwiftOnSecurity). Event IDs referenced by a data component only exist if the config includes that rule group (ProcessAccess=10, ImageLoad=7, DNS=22, FileDelete=23/26, ClipboardChange=24, ProcessTampering=25, FileBlock=27/28 are off in minimal configs).
-- **sysmon**: Hashes configured (SHA256 at least, IMPHASH useful) for File/Process metadata components.
 - **auditd**: audit rules for execve, connect, open/openat on sensitive paths, ptrace, module load, mount, setuid; a Neo23x0/auditd baseline or Florian Roth's rule set is a reasonable start.
 - **auditd**: log_format = ENRICHED in auditd.conf so syscall names and uids resolve (otherwise syscall numbers are architecture dependent).
 - **esxi_syslog**: Syslog.global.logHost set on every host; ESXi Shell/SSH audit enabled; consider Syslog.global.auditRecord (ESXi 8).
+- **sysmon**: Sysmon deployed with a maintained modular configuration (e.g. sysmon-modular or SwiftOnSecurity). Event IDs referenced by a data component only exist if the config includes that rule group (ProcessAccess=10, ImageLoad=7, DNS=22, FileDelete=23/26, ClipboardChange=24, ProcessTampering=25, FileBlock=27/28 are off in minimal configs).
+- **sysmon**: Hashes configured (SHA256 at least, IMPHASH useful) for File/Process metadata components.
 
 Review notes: `container_runtime` has 2 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *defaults*.
 
@@ -79,26 +73,23 @@ Review notes: `container_runtime` has 2 ATT&CK reference(s) with no usable event
 Eventtypes (literal constraints, see `dist/splunk/TA-mitre-attack-datacomponents/default/eventtypes.conf`):
 
 ```ini
-[mitre_dc0033_process_termination__sysmon]
-search = index=sysmon source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode IN (5)
-
 [mitre_dc0033_process_termination__auditd]
 search = index=linux sourcetype="linux:audit" type IN (SYSCALL) (syscall IN (exit_group, kill, tgkill, tkill) OR SYSCALL IN (exit_group, kill, tgkill, tkill))
-disabled = 1
 
 [mitre_dc0033_process_termination__container_runtime]
 search = index=k8s sourcetype="docker:events" (status IN (die, kill, stop))
-disabled = 1
 
 [mitre_dc0033_process_termination__esxi_syslog]
 search = index=vmware sourcetype="vmware:esxlog:hostd"
-disabled = 1
+
+[mitre_dc0033_process_termination__sysmon]
+search = index=sysmon source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode IN (5)
 
 [mitre_dc0033_process_termination]
-search = eventtype=mitre_dc0033_process_termination__sysmon OR eventtype=mitre_dc0033_process_termination__auditd OR eventtype=mitre_dc0033_process_termination__container_runtime OR eventtype=mitre_dc0033_process_termination__esxi_syslog
+search = eventtype=mitre_dc0033_process_termination__auditd OR eventtype=mitre_dc0033_process_termination__container_runtime OR eventtype=mitre_dc0033_process_termination__esxi_syslog OR eventtype=mitre_dc0033_process_termination__sysmon
 ```
 
-Macros for analytics: `` `mitre_dc0033` `` (umbrella), `` `mitre_dc0033_sysmon` ``, `` `mitre_dc0033_auditd` ``, `` `mitre_dc0033_container_runtime` ``, `` `mitre_dc0033_esxi_syslog` ``, `` `mitre_dc0033_filter` `` (site exclusions).
+Macros for analytics: `` `mitre_dc0033` `` (umbrella), `` `mitre_dc0033_auditd` ``, `` `mitre_dc0033_container_runtime` ``, `` `mitre_dc0033_esxi_syslog` ``, `` `mitre_dc0033_sysmon` ``, `` `mitre_dc0033_filter` `` (site exclusions).
 CIM: `Endpoint.Processes` via `` `mitre_dc0033_dm` `` / `` `mitre_dc0033_dm_where` `` for `tstats`. CIM tags emitted for: `sysmon`.
 
 ## Sigma

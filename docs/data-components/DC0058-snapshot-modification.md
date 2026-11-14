@@ -2,7 +2,7 @@
 
 [ATT&CK](https://attack.mitre.org/datacomponents/DC0058) · version 2.0 · modified 2025-10-21 · ATT&CK release 20.1
 
-Status: **Out of scope** for the current platform set
+**Out of scope** for the current platform set
 
 > Changes made to a cloud snapshot's metadata, attributes, or control settings. These modifications may involve adjusting access permissions, changing retention policies, or altering encryption settings.   *Data Collection Measures:*  - AWS CloudTrail     - Tracks API calls such as `ModifySnapshotAttribute`, `ResetSnapshotAttribute`, and `ModifySnapshotTier`. - Azure Monitor Logs     - Logs changes via `Microsoft.Compute/snapshots/write`. - Google Cloud Logging     - Captures modifications through `compute.snapshots.setIamPolicy` and `compute.snapshots.patch`.
 
@@ -17,15 +17,13 @@ Analytic references by platform: IaaS 2
 ```mermaid
 flowchart LR
   DC["DC0058 Snapshot Modification"]
-  classDef live fill:#d4edda,stroke:#2e7d32,color:#1b1b1b
-  classDef ready fill:#fff3cd,stroke:#b26a00,color:#1b1b1b
 ```
 
 ## Requirements
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
+| Feed | Schedule | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
 
 ## Splunk

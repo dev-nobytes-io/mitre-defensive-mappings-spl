@@ -46,7 +46,7 @@ attack:
   - field: HostAccessPatterns
     description: Scope detection to uncommon or first-time access between source and destination hosts
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: anomaly
   suggested_tuning:
   - element: TimeWindow

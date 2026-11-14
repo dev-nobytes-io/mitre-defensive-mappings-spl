@@ -74,7 +74,6 @@ derived:
     - None
   feeds:
   - feed: corelight
-    have: true
     in_scope: true
     eventtype: mitre_dc0011_malware_content__corelight
     search: index=corelight sourcetype IN (corelight_files, corelight_pe)
@@ -84,7 +83,6 @@ derived:
     - (added by dc_defaults/curated)
     cim_tags: false
   - feed: palo_alto
-    have: true
     in_scope: true
     eventtype: mitre_dc0011_malware_content__palo_alto
     search: index=pan_logs sourcetype="pan:threat" (log_subtype IN (virus, wildfire))
@@ -94,7 +92,6 @@ derived:
     - (added by dc_defaults/curated)
     cim_tags: false
   - feed: trellix_epo
-    have: true
     in_scope: true
     eventtype: mitre_dc0011_malware_content__trellix_epo
     search: index=epo sourcetype="mcafee:epo:syslog"
@@ -104,7 +101,6 @@ derived:
     - (added by dc_defaults/curated)
     cim_tags: true
   - feed: threat_intel
-    have: false
     in_scope: false
     eventtype: null
     search: null

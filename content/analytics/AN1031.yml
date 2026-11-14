@@ -45,7 +45,7 @@ attack:
     description: >-
       Regex patterns to identify adversary-like usage (e.g., `wmic process call`, `powershell Invoke-WmiMethod`).
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: anomaly
   suggested_tuning:
   - element: WMIQueryScope

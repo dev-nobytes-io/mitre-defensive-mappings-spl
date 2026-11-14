@@ -37,7 +37,7 @@ attack:
   - field: UserContext
     description: Restrict detection to non-admin or interactive users if excessive FPs from sys admin activity
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: ttp
   suggested_tuning:
   - element: CompressedFileType

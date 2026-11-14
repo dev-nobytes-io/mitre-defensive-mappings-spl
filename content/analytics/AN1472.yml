@@ -42,7 +42,7 @@ attack:
   - field: TargetLogName
     description: Scope detection to Security, System, Application, or custom logs based on environment
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: ttp
   suggested_tuning:
   - element: TimeWindow

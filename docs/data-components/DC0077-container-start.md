@@ -2,7 +2,7 @@
 
 [ATT&CK](https://attack.mitre.org/datacomponents/DC0077) · version 2.0 · modified 2025-10-21 · ATT&CK release 20.1
 
-Status: **Ready** (needs a feed you have not ticked) · umbrella eventtype `mitre_dc0077_container_start`
+Umbrella eventtype `mitre_dc0077_container_start` over 2 feed(s)
 
 > "Container Start" data component captures events related to the activation or invocation of a container within a containerized environment. This includes starting a previously stopped container, restarting an existing container, or initializing a container for runtime. Monitoring these activities is critical for identifying unauthorized or unexpected container activations, which may indicate potential adversarial activity or misconfigurations. Examples:   - Docker Example: `docker start <container_name>`, `docker restart <container_name>` - Kubernetes Example: Kubernetes automatically restarts containers as part of pod lifecycle management (e.g., due to health checks or configuration changes). - Cloud-Native Example     - AWS ECS: API Call: StartTask to activate a stopped ECS task.     - Azure Container Instances: Command to restart a container group instance.     - GCP Kubernetes Engine: Automatic restarts as part of node or pod management.  This data component can be collected through the following measures:  - Docker Audit Logging: Enable Docker logging to capture start and restart events. Use tools like auditd to monitor terminal activity involving container lifecycle commands. - Kubernetes Audit Logs: Enable Kubernetes API server audit logging. - Cloud Provider Logs     - AWS CloudTrail: Capture StartTask or related API calls for ECS.     - Azure Monitor: Track activity in container groups that indicate start or restart events.     - GCP Cloud Logging: Record logs related to pod restarts or scaling events in Kubernetes Engine. - SIEM Integration: Collect logs from Docker, Kubernetes, and cloud services to correlate container start events.
 
@@ -28,21 +28,17 @@ flowchart LR
   DC --> LS2["containerd:events<br/>2 refs"]
   LS2 --> F_container_runtime
   F_container_runtime --> ET_container_runtime[/"mitre_dc0077_container_start__container_runtime"/]
-  class F_container_runtime ready
   F_kubernetes_audit --> ET_kubernetes_audit[/"mitre_dc0077_container_start__kubernetes_audit"/]
-  class F_kubernetes_audit ready
-  classDef live fill:#d4edda,stroke:#2e7d32,color:#1b1b1b
-  classDef ready fill:#fff3cd,stroke:#b26a00,color:#1b1b1b
 ```
 
 ## Requirements
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
+| Feed | Schedule | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `container_runtime` | ready (tick in stack.yml) | sourcetype=`containerd:events`, sourcetype=`docker:events` | `(status=start)` | defaults | docker events scripted input or OpenTelemetry (docker:events, containerd) |
-| `kubernetes_audit` | ready (tick in stack.yml) | sourcetype=`kube:objects:events` | `(reason=Started OR reason=Pulled OR reason=Created)` | defaults | Splunk OpenTelemetry Collector for Kubernetes / Splunk Connect for Kubernetes |
+| `container_runtime` | scheduled | sourcetype=`containerd:events`, sourcetype=`docker:events` | `(status=start)` | defaults | docker events scripted input or OpenTelemetry (docker:events, containerd) |
+| `kubernetes_audit` | scheduled | sourcetype=`kube:objects:events` | `(reason=Started OR reason=Pulled OR reason=Created)` | defaults | Splunk OpenTelemetry Collector for Kubernetes / Splunk Connect for Kubernetes |
 
 Collection prerequisites:
 
@@ -58,11 +54,9 @@ Eventtypes (literal constraints, see `dist/splunk/TA-mitre-attack-datacomponents
 ```ini
 [mitre_dc0077_container_start__container_runtime]
 search = index=k8s sourcetype IN ("containerd:events", "docker:events") (status=start)
-disabled = 1
 
 [mitre_dc0077_container_start__kubernetes_audit]
 search = index=k8s sourcetype="kube:objects:events" (reason=Started OR reason=Pulled OR reason=Created)
-disabled = 1
 
 [mitre_dc0077_container_start]
 search = eventtype=mitre_dc0077_container_start__container_runtime OR eventtype=mitre_dc0077_container_start__kubernetes_audit

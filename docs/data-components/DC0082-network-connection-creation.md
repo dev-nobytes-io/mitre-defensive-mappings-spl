@@ -2,7 +2,7 @@
 
 [ATT&CK](https://attack.mitre.org/datacomponents/DC0082) · version 2.2 · modified 2026-10-13 · ATT&CK release 20.1
 
-Status: **Live** · umbrella eventtype `mitre_dc0082_network_connection_creation`
+Umbrella eventtype `mitre_dc0082_network_connection_creation` over 11 feed(s)
 
 > The initial establishment of a network session, where a system or process initiates a connection to a local or remote endpoint. This typically involves capturing socket information (source/destination IP, ports, protocol) and tracking session metadata. Monitoring these events helps detect lateral movement, exfiltration, and command-and-control (C2) activities.  *Data Collection Measures:*  - Windows:     - Event ID 5156 – Filtering Platform Connection - Logs network connections permitted by Windows Filtering Platform (WFP).     - Sysmon Event ID 3 – Network Connection Initiated - Captures process, source/destination IP, ports, and parent process. - Linux/macOS:     - Netfilter (iptables), nftables logs - Tracks incoming and outgoing network connections.     - AuditD (`connect` syscall) - Logs TCP, UDP, and ICMP connections.     - Zeek (`conn.log`) - Captures protocol, duration, and bytes transferred. - Cloud & Network Infrastructure:     - AWS VPC Flow Logs / Azure NSG Flow Logs - Logs IP traffic at the network level in cloud environments.     - Zeek (conn.log) or Suricata (network events) - Captures packet metadata for detection and correlation. - Endpoint Detection & Response (EDR):     - Detect anomalous network activity such as new C2 connections or data exfiltration attempts.
 
@@ -51,22 +51,13 @@ flowchart LR
   LS9 --> F_palo_alto
   LS9 --> F_corelight
   DC --> MORE["... 10 more log sources"]
-  F_corelight --> ET_corelight[/"mitre_dc0082_network_connection_creation__corelight"/]
-  class F_corelight live
-  F_palo_alto --> ET_palo_alto[/"mitre_dc0082_network_connection_creation__palo_alto"/]
-  class F_palo_alto live
-  F_sysmon --> ET_sysmon[/"mitre_dc0082_network_connection_creation__sysmon"/]
-  class F_sysmon live
-  F_wineventlog --> ET_wineventlog[/"mitre_dc0082_network_connection_creation__wineventlog"/]
-  class F_wineventlog live
   F_auditd --> ET_auditd[/"mitre_dc0082_network_connection_creation__auditd"/]
-  class F_auditd ready
+  F_corelight --> ET_corelight[/"mitre_dc0082_network_connection_creation__corelight"/]
   F_esxi_syslog --> ET_esxi_syslog[/"mitre_dc0082_network_connection_creation__esxi_syslog"/]
-  class F_esxi_syslog ready
   F_linux_osquery --> ET_linux_osquery[/"mitre_dc0082_network_connection_creation__linux_osquery"/]
-  class F_linux_osquery ready
-  classDef live fill:#d4edda,stroke:#2e7d32,color:#1b1b1b
-  classDef ready fill:#fff3cd,stroke:#b26a00,color:#1b1b1b
+  F_palo_alto --> ET_palo_alto[/"mitre_dc0082_network_connection_creation__palo_alto"/]
+  F_sysmon --> ET_sysmon[/"mitre_dc0082_network_connection_creation__sysmon"/]
+  F_wineventlog --> ET_wineventlog[/"mitre_dc0082_network_connection_creation__wineventlog"/]
 ```
 
 ## Requirements
@@ -78,24 +69,28 @@ Component specific:
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
+| Feed | Schedule | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `corelight` | live | sourcetype=`corelight_conn` | `(whole feed)` | defaults | Corelight App for Splunk (corelight_<log>). For TA_zeek use prefix zeek: and suffix :json. |
-| `palo_alto` | live | sourcetype=`pan:traffic` | `(whole feed)` | defaults | Splunk Add-on for Palo Alto Networks (pan:*) |
-| `sysmon` | live | source=`XmlWinEventLog:Microsoft-Windows-Sysmon/Operational` | `EventCode IN (3)` | defaults | Splunk Add-on for Sysmon (needs Splunk_TA_windows for XML parsing) |
-| `wineventlog` | live | source=`XmlWinEventLog:Microsoft-Windows-Windows Firewall With Advanced Security/Firewall`, source=`XmlWinEventLog:Security` | `EventCode IN (5156, 5157, 5158)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true) |
-| `auditd` | ready (tick in stack.yml) | sourcetype=`linux:audit` | `type IN (SYSCALL) (syscall IN (accept, accept4, bind, connect, listen, socket) OR SYSCALL IN (accept, accept4, bind, connect, listen, socket))` | defaults | Splunk Add-on for Unix and Linux (linux:audit) or auditd -> auditbeat/syslog |
-| `ebpf` | ready (tick in stack.yml) | sourcetype=`falco` | `(whole feed)` | derived | Vendor specific (falco JSON, tetragon) |
-| `esxi_syslog` | ready (tick in stack.yml) | sourcetype=`vmware:esxlog:hostd`, sourcetype=`vmware:esxlog:vmkernel` | `(whole feed)` | defaults | Splunk Add-on for VMware ESXi Logs (vmware:esxlog:<log>) |
-| `linux_osquery` | ready (tick in stack.yml) | sourcetype=`osquery:results` | `(name=process_open_sockets OR name=socket_events OR name=listening_ports)` | defaults | osquery TA |
-| `netdev_syslog` | ready (tick in stack.yml) | sourcetype=`cisco:asa`, sourcetype=`cisco:ios`, sourcetype=`syslog` | `(whole feed)` | derived | Cisco Networks Add-on (cisco:ios, cisco:asa), Juniper/Arista TAs, or generic syslog |
-| `netflow` | ready (tick in stack.yml) | sourcetype=`stream:netflow` | `(whole feed)` | derived | Splunk Stream or Splunk Add-on for NetFlow |
-| `sysmon_linux` | ready (tick in stack.yml) | sourcetype=`sysmon:linux` | `EventCode IN (3)` | defaults | Splunk Add-on for Sysmon for Linux |
+| `auditd` | scheduled | sourcetype=`linux:audit` | `type IN (SYSCALL) (syscall IN (accept, accept4, bind, connect, listen, socket) OR SYSCALL IN (accept, accept4, bind, connect, listen, socket))` | defaults | Splunk Add-on for Unix and Linux (linux:audit) or auditd -> auditbeat/syslog |
+| `corelight` | scheduled | sourcetype=`corelight_conn` | `(whole feed)` | defaults | Corelight App for Splunk (corelight_<log>). For TA_zeek use prefix zeek: and suffix :json. |
+| `ebpf` | scheduled | sourcetype=`falco` | `(whole feed)` | derived | Vendor specific (falco JSON, tetragon) |
+| `esxi_syslog` | scheduled | sourcetype=`vmware:esxlog:hostd`, sourcetype=`vmware:esxlog:vmkernel` | `(whole feed)` | defaults | Splunk Add-on for VMware ESXi Logs (vmware:esxlog:<log>) |
+| `linux_osquery` | scheduled | sourcetype=`osquery:results` | `(name=process_open_sockets OR name=socket_events OR name=listening_ports)` | defaults | osquery TA |
+| `netdev_syslog` | scheduled | sourcetype=`cisco:asa`, sourcetype=`cisco:ios`, sourcetype=`syslog` | `(whole feed)` | derived | Cisco Networks Add-on (cisco:ios, cisco:asa), Juniper/Arista TAs, or generic syslog |
+| `netflow` | scheduled | sourcetype=`stream:netflow` | `(whole feed)` | derived | Splunk Stream or Splunk Add-on for NetFlow |
+| `palo_alto` | scheduled | sourcetype=`pan:traffic` | `(whole feed)` | defaults | Splunk Add-on for Palo Alto Networks (pan:*) |
+| `sysmon` | scheduled | source=`XmlWinEventLog:Microsoft-Windows-Sysmon/Operational` | `EventCode IN (3)` | defaults | Splunk Add-on for Sysmon (needs Splunk_TA_windows for XML parsing) |
+| `sysmon_linux` | scheduled | sourcetype=`sysmon:linux` | `EventCode IN (3)` | defaults | Splunk Add-on for Sysmon for Linux |
+| `wineventlog` | scheduled | source=`XmlWinEventLog:Microsoft-Windows-Windows Firewall With Advanced Security/Firewall`, source=`XmlWinEventLog:Security` | `EventCode IN (5156, 5157, 5158)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true) |
 
 Collection prerequisites:
 
+- **auditd**: audit rules for execve, connect, open/openat on sensitive paths, ptrace, module load, mount, setuid; a Neo23x0/auditd baseline or Florian Roth's rule set is a reasonable start.
+- **auditd**: log_format = ENRICHED in auditd.conf so syscall names and uids resolve (otherwise syscall numbers are architecture dependent).
 - **corelight**: Sensor placement covering east-west (DC, server VLANs) and north-south; without internal taps the lateral-movement components are blind.
 - **corelight**: Enable the log set above; files/pe/smb_* and ldap/kerberos/ntlm are what distinguish Corelight from flow data.
+- **esxi_syslog**: Syslog.global.logHost set on every host; ESXi Shell/SSH audit enabled; consider Syslog.global.auditRecord (ESXi 8).
+- **netdev_syslog**: Enable config-change archive logging and AAA command accounting; forward at informational level.
 - **palo_alto**: Log forwarding profiles attached to every security rule (traffic start+end, threat, url, wildfire, data).
 - **palo_alto**: System and Config logs forwarded from each firewall / Panorama; GlobalProtect logs enabled.
 - **palo_alto**: URL filtering and Threat Prevention licensed for pan:threat subtypes url/vulnerability/virus/spyware.
@@ -107,20 +102,34 @@ Collection prerequisites:
 - **wineventlog**: PowerShell Script Block Logging (4104) and Module Logging (4103) enabled via GPO for the PowerShell/Operational channel.
 - **wineventlog**: Object access events (4656/4663/4657/4660/4670) require SACLs on the files/keys of interest.
 - **wineventlog**: Non-default channels (TaskScheduler, WMI-Activity, CodeIntegrity, Defender, Firewall, WinRM, SMBClient/Server...) must be listed as inputs in Splunk_TA_windows inputs.conf; several are disabled by default in Windows.
-- **auditd**: audit rules for execve, connect, open/openat on sensitive paths, ptrace, module load, mount, setuid; a Neo23x0/auditd baseline or Florian Roth's rule set is a reasonable start.
-- **auditd**: log_format = ENRICHED in auditd.conf so syscall names and uids resolve (otherwise syscall numbers are architecture dependent).
-- **esxi_syslog**: Syslog.global.logHost set on every host; ESXi Shell/SSH audit enabled; consider Syslog.global.auditRecord (ESXi 8).
-- **netdev_syslog**: Enable config-change archive logging and AAA command accounting; forward at informational level.
 
-Review notes: `corelight` has 19 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *defaults*; `wineventlog` has 1 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *defaults*; `ebpf` has 2 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *derived*; `linux_osquery` has 6 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *defaults*; `netdev_syslog` has 3 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *derived*; `netflow` has 2 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *derived*.
+Review notes: `corelight` has 19 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *defaults*; `ebpf` has 2 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *derived*; `linux_osquery` has 6 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *defaults*; `netdev_syslog` has 3 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *derived*; `netflow` has 2 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *derived*; `wineventlog` has 1 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *defaults*.
 
 ## Splunk
 
 Eventtypes (literal constraints, see `dist/splunk/TA-mitre-attack-datacomponents/default/eventtypes.conf`):
 
 ```ini
+[mitre_dc0082_network_connection_creation__auditd]
+search = index=linux sourcetype="linux:audit" type IN (SYSCALL) (syscall IN (accept, accept4, bind, connect, listen, socket) OR SYSCALL IN (accept, accept4, bind, connect, listen, socket))
+
 [mitre_dc0082_network_connection_creation__corelight]
 search = index=corelight sourcetype=corelight_conn
+
+[mitre_dc0082_network_connection_creation__ebpf]
+search = index=linux sourcetype=falco
+
+[mitre_dc0082_network_connection_creation__esxi_syslog]
+search = index=vmware sourcetype IN ("vmware:esxlog:hostd", "vmware:esxlog:vmkernel")
+
+[mitre_dc0082_network_connection_creation__linux_osquery]
+search = index=osquery sourcetype="osquery:results" (name=process_open_sockets OR name=socket_events OR name=listening_ports)
+
+[mitre_dc0082_network_connection_creation__netdev_syslog]
+search = index=netops sourcetype IN ("cisco:asa", "cisco:ios", syslog)
+
+[mitre_dc0082_network_connection_creation__netflow]
+search = index=netflow sourcetype="stream:netflow"
 
 [mitre_dc0082_network_connection_creation__palo_alto]
 search = index=pan_logs sourcetype="pan:traffic"
@@ -128,42 +137,17 @@ search = index=pan_logs sourcetype="pan:traffic"
 [mitre_dc0082_network_connection_creation__sysmon]
 search = index=sysmon source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode IN (3)
 
+[mitre_dc0082_network_connection_creation__sysmon_linux]
+search = index=linux sourcetype="sysmon:linux" EventCode IN (3)
+
 [mitre_dc0082_network_connection_creation__wineventlog]
 search = index=wineventlog source IN ("XmlWinEventLog:Microsoft-Windows-Windows Firewall With Advanced Security/Firewall", "XmlWinEventLog:Security") EventCode IN (5156, 5157, 5158)
 
-[mitre_dc0082_network_connection_creation__auditd]
-search = index=linux sourcetype="linux:audit" type IN (SYSCALL) (syscall IN (accept, accept4, bind, connect, listen, socket) OR SYSCALL IN (accept, accept4, bind, connect, listen, socket))
-disabled = 1
-
-[mitre_dc0082_network_connection_creation__ebpf]
-search = index=linux sourcetype=falco
-disabled = 1
-
-[mitre_dc0082_network_connection_creation__esxi_syslog]
-search = index=vmware sourcetype IN ("vmware:esxlog:hostd", "vmware:esxlog:vmkernel")
-disabled = 1
-
-[mitre_dc0082_network_connection_creation__linux_osquery]
-search = index=osquery sourcetype="osquery:results" (name=process_open_sockets OR name=socket_events OR name=listening_ports)
-disabled = 1
-
-[mitre_dc0082_network_connection_creation__netdev_syslog]
-search = index=netops sourcetype IN ("cisco:asa", "cisco:ios", syslog)
-disabled = 1
-
-[mitre_dc0082_network_connection_creation__netflow]
-search = index=netflow sourcetype="stream:netflow"
-disabled = 1
-
-[mitre_dc0082_network_connection_creation__sysmon_linux]
-search = index=linux sourcetype="sysmon:linux" EventCode IN (3)
-disabled = 1
-
 [mitre_dc0082_network_connection_creation]
-search = eventtype=mitre_dc0082_network_connection_creation__corelight OR eventtype=mitre_dc0082_network_connection_creation__palo_alto OR eventtype=mitre_dc0082_network_connection_creation__sysmon OR eventtype=mitre_dc0082_network_connection_creation__wineventlog OR eventtype=mitre_dc0082_network_connection_creation__auditd OR eventtype=mitre_dc0082_network_connection_creation__ebpf OR eventtype=mitre_dc0082_network_connection_creation__esxi_syslog OR eventtype=mitre_dc0082_network_connection_creation__linux_osquery OR eventtype=mitre_dc0082_network_connection_creation__netdev_syslog OR eventtype=mitre_dc0082_network_connection_creation__netflow OR eventtype=mitre_dc0082_network_connection_creation__sysmon_linux
+search = eventtype=mitre_dc0082_network_connection_creation__auditd OR eventtype=mitre_dc0082_network_connection_creation__corelight OR eventtype=mitre_dc0082_network_connection_creation__ebpf OR eventtype=mitre_dc0082_network_connection_creation__esxi_syslog OR eventtype=mitre_dc0082_network_connection_creation__linux_osquery OR eventtype=mitre_dc0082_network_connection_creation__netdev_syslog OR eventtype=mitre_dc0082_network_connection_creation__netflow OR eventtype=mitre_dc0082_network_connection_creation__palo_alto OR eventtype=mitre_dc0082_network_connection_creation__sysmon OR eventtype=mitre_dc0082_network_connection_creation__sysmon_linux OR eventtype=mitre_dc0082_network_connection_creation__wineventlog
 ```
 
-Macros for analytics: `` `mitre_dc0082` `` (umbrella), `` `mitre_dc0082_corelight` ``, `` `mitre_dc0082_palo_alto` ``, `` `mitre_dc0082_sysmon` ``, `` `mitre_dc0082_wineventlog` ``, `` `mitre_dc0082_auditd` ``, `` `mitre_dc0082_ebpf` ``, `` `mitre_dc0082_esxi_syslog` ``, `` `mitre_dc0082_linux_osquery` ``, `` `mitre_dc0082_netdev_syslog` ``, `` `mitre_dc0082_netflow` ``, `` `mitre_dc0082_sysmon_linux` ``, `` `mitre_dc0082_filter` `` (site exclusions).
+Macros for analytics: `` `mitre_dc0082` `` (umbrella), `` `mitre_dc0082_auditd` ``, `` `mitre_dc0082_corelight` ``, `` `mitre_dc0082_ebpf` ``, `` `mitre_dc0082_esxi_syslog` ``, `` `mitre_dc0082_linux_osquery` ``, `` `mitre_dc0082_netdev_syslog` ``, `` `mitre_dc0082_netflow` ``, `` `mitre_dc0082_palo_alto` ``, `` `mitre_dc0082_sysmon` ``, `` `mitre_dc0082_sysmon_linux` ``, `` `mitre_dc0082_wineventlog` ``, `` `mitre_dc0082_filter` `` (site exclusions).
 CIM: `Network_Traffic.All_Traffic` via `` `mitre_dc0082_dm` `` / `` `mitre_dc0082_dm_where` `` for `tstats`. CIM tags emitted for: `corelight`, `palo_alto`, `sysmon`.
 
 ## Sigma

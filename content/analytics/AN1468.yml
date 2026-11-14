@@ -43,7 +43,7 @@ attack:
     description: >-
       List of suspicious binaries or tools executed post remote copy (e.g., cmd.exe, powershell.exe, runonce.exe)
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: ttp
   suggested_tuning:
   - element: ShareName

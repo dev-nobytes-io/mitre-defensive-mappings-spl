@@ -41,7 +41,6 @@ derived:
     - None
   feeds:
   - feed: palo_alto
-    have: true
     in_scope: true
     eventtype: mitre_dc0003_malware_metadata__palo_alto
     search: index=pan_logs sourcetype="pan:threat" (log_subtype IN (virus, wildfire, spyware, vulnerability))
@@ -51,7 +50,6 @@ derived:
     - (added by dc_defaults/curated)
     cim_tags: false
   - feed: trellix_epo
-    have: true
     in_scope: true
     eventtype: mitre_dc0003_malware_metadata__trellix_epo
     search: index=epo sourcetype="mcafee:epo:syslog"
@@ -61,7 +59,6 @@ derived:
     - (added by dc_defaults/curated)
     cim_tags: true
   - feed: wineventlog
-    have: true
     in_scope: true
     eventtype: mitre_dc0003_malware_metadata__wineventlog
     search: >-
@@ -73,7 +70,6 @@ derived:
     - (added by dc_defaults/curated)
     cim_tags: false
   - feed: threat_intel
-    have: false
     in_scope: false
     eventtype: null
     search: null

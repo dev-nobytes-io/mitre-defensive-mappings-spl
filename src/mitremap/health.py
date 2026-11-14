@@ -1,12 +1,13 @@
-"""Telemetry health: is the data every live eventtype depends on actually arriving?
+"""Telemetry health: is the data every eventtype depends on actually arriving?
 
 Generated, not hand-written: everything derives from config/stack.yml and the data
 component views.
 
-  TA lookup  mitre_expected_telemetry.csv   one row per (index, field, value) a ticked
+  TA lookup  mitre_expected_telemetry.csv   one row per (index, field, value) an in-scope
                                             feed's eventtypes match on, with the data
                                             components that depend on it
-  TA macros  mitre_health_index_scope       index IN (...) of ticked feeds
+  TA macros  mitre_health_feeds             which feeds the site collects (set by the reader)
+             mitre_health_index_scope       index IN (...) of in-scope feeds
              mitre_health_host_scope        host-reporting feeds (stack.yml host_feed)
              mitre_health_silence_hours     outage threshold
              mitre_health_host_silence_hours
@@ -19,7 +20,7 @@ from dataclasses import dataclass
 from collections import defaultdict
 
 from . import config
-from .build import DCView, constraint_field
+from .build import DCView, constraint_field, feed_in_scope
 
 WILDCARD = ("*", "?")
 
@@ -27,7 +28,6 @@ WILDCARD = ("*", "?")
 @dataclass
 class ExpectedRow:
     feed: str
-    have: bool
     index: str
     field: str
     value: str
@@ -48,37 +48,39 @@ def expected_telemetry(views: list[DCView]) -> list[ExpectedRow]:
                 k = (f.feed, feed["index"], constraint_field(f.feed), val)
                 acc[k]["dcs"].add(v.dc.id)
                 acc[k]["ets"] += 1
-    rows = [ExpectedRow(feed, bool(config.feed(feed).get("have")), idx, fld, val, sorted(a["dcs"]), a["ets"])
+    rows = [ExpectedRow(feed, idx, fld, val, sorted(a["dcs"]), a["ets"])
             for (feed, idx, fld, val), a in acc.items()]
-    return sorted(rows, key=lambda r: (not r.have, r.feed, r.field, r.value))
+    return sorted(rows, key=lambda r: (r.feed, r.field, r.value))
 
 
 def index_scope() -> str:
-    idx = sorted({f["index"] for f in config.stack().values() if f.get("have") and f.get("index") and not f.get("hunt_only")})
+    idx = sorted({f["index"] for n, f in config.stack().items() if feed_in_scope(n) and f.get("index") and not f.get("hunt_only")})
     return "index IN (" + ", ".join(idx) + ")"
 
 
 def host_scope() -> str:
     parts = []
     for name, f in config.stack().items():
-        if not (f.get("have") and f.get("host_feed")):
+        if not (feed_in_scope(name) and f.get("host_feed")):
             continue
         fld = f.get("constraint_field", "sourcetype")
         val = f.get("host_feed_value") or f.get("sourcetype")
         parts.append(f'(index={f["index"]} {fld}="{val}")')
-    return "(" + " OR ".join(parts) + ")" if parts else "(index=__no_host_feeds_ticked__)"
+    return "(" + " OR ".join(parts) + ")" if parts else "(index=__no_host_feeds__)"
 
 
 def ta_macros() -> list[tuple[str, str, str]]:
     return [
-        ("mitre_health_index_scope", index_scope(), "Indexes of ticked feeds (generated from config/stack.yml)."),
+        ("mitre_health_feeds", "feed=*", "Feeds this site collects, for HEALTH0001. Set to e.g. feed IN (sysmon, wineventlog); the default checks every in-scope feed."),
+        ("mitre_health_index_scope", index_scope(), "Indexes of in-scope feeds (generated from config/stack.yml)."),
         ("mitre_health_host_scope", host_scope(), "Feeds that report per endpoint (stack.yml host_feed), for per-host dropout checks."),
         ("mitre_health_silence_hours", "4", "Hours without events before expected telemetry counts as silent (HEALTH0001)."),
         ("mitre_health_host_silence_hours", "4", "Hours without events before a host counts as having stopped reporting (HEALTH0002)."),
     ]
 
 
-HEALTH0001_SPL = """| inputlookup mitre_expected_telemetry where have=1
+HEALTH0001_SPL = """| inputlookup mitre_expected_telemetry
+| search `mitre_health_feeds`
 | eval key=index."|".field."|".value
 | join type=left max=1 key
     [| tstats count as event_count latest(_time) as last_seen where `mitre_health_index_scope` earliest=-7d by index sourcetype source
@@ -119,7 +121,7 @@ def rules() -> list[HealthRule]:
     return [
         HealthRule(
             "HEALTH0001", "Telemetry an eventtype depends on is missing or silent",
-            "Compares every index and sourcetype or source that a ticked feed's eventtypes match on with what arrived in the last 7 days. "
+            "Compares every index and sourcetype or source that the eventtypes of the feeds in `mitre_health_feeds` match on with what arrived in the last 7 days. "
             "not_seen_7d means a data component looks covered but has no data (a configuration gap: wrong sourcetype, channel not collected, audit policy off). "
             "silent means it arrived earlier in the week but not in the last few hours (an outage).",
             HEALTH0001_SPL, "medium", "37 */4 * * *", "-15m", None, None, ["feed", "value"]),

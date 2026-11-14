@@ -2,7 +2,7 @@
 
 [ATT&CK](https://attack.mitre.org/datacomponents/DC0028) · version 2.0 · modified 2025-11-12 · ATT&CK release 20.1
 
-Status: **Ready** (needs a feed you have not ticked) · umbrella eventtype `mitre_dc0028_image_metadata`
+Umbrella eventtype `mitre_dc0028_image_metadata` over 1 feed(s)
 
 > contextual information associated with a virtual machine image, such as its name, resource group, status (active or inactive), type (custom or prebuilt), size, creation date, and permissions. This metadata is critical for understanding the state and configuration of virtual machine images in cloud environments. Examples:   - Azure Compute Service Image Metadata Example:     - Name: MyCustomImage     - Resource Group: MyResourceGroup     - State: Available     - Type: Managed Image - AWS EC2 AMI Metadata Example:     - Image ID: ami-1234567890abcdef0     - Name: ProdImage     - State: Available     - Platform: Windows - Google Cloud Compute Engine Image Metadata Example:     - Image Name: webserver-image     - Project: my-project-id     - Family: webserver     - Source Disk: my-disk-id - VMware vSphere Template Metadata Example:     - Name: LinuxTemplate     - Disk Size: 40GB     - Network Adapter: VM Network
 
@@ -29,18 +29,15 @@ flowchart LR
   F_kubernetes_audit["Kubernetes API server audit log and cluster events"]
   LS2 --> F_kubernetes_audit
   F_container_runtime --> ET_container_runtime[/"mitre_dc0028_image_metadata__container_runtime"/]
-  class F_container_runtime ready
-  classDef live fill:#d4edda,stroke:#2e7d32,color:#1b1b1b
-  classDef ready fill:#fff3cd,stroke:#b26a00,color:#1b1b1b
 ```
 
 ## Requirements
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
+| Feed | Schedule | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `container_runtime` | ready (tick in stack.yml) | sourcetype=`docker:events` | `(status IN (pull, tag))` | defaults | docker events scripted input or OpenTelemetry (docker:events, containerd) |
+| `container_runtime` | scheduled | sourcetype=`docker:events` | `(status IN (pull, tag))` | defaults | docker events scripted input or OpenTelemetry (docker:events, containerd) |
 
 Review notes: `container_runtime` has 2 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *defaults*.
 
@@ -51,7 +48,6 @@ Eventtypes (literal constraints, see `dist/splunk/TA-mitre-attack-datacomponents
 ```ini
 [mitre_dc0028_image_metadata__container_runtime]
 search = index=k8s sourcetype="docker:events" (status IN (pull, tag))
-disabled = 1
 
 [mitre_dc0028_image_metadata]
 search = eventtype=mitre_dc0028_image_metadata__container_runtime

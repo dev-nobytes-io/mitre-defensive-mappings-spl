@@ -70,7 +70,6 @@ derived:
     - DNS lookups resolving to domains with rapid changes in registration metadata
   feeds:
   - feed: corelight
-    have: true
     in_scope: true
     eventtype: mitre_dc0101_domain_registration__corelight
     search: index=corelight sourcetype IN (corelight_dns, corelight_x509)
@@ -80,7 +79,6 @@ derived:
     - dns:query
     cim_tags: false
   - feed: sysmon
-    have: true
     in_scope: true
     eventtype: mitre_dc0101_domain_registration__sysmon
     search: index=sysmon source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode IN (22)
@@ -90,7 +88,6 @@ derived:
     - dns:query
     cim_tags: false
   - feed: windows_dns_server
-    have: false
     in_scope: true
     eventtype: mitre_dc0101_domain_registration__windows_dns_server
     search: index=wineventlog sourcetype="MSAD:NT6:DNS"
@@ -100,7 +97,6 @@ derived:
     - dns:query
     cim_tags: false
   - feed: threat_intel
-    have: false
     in_scope: false
     eventtype: null
     search: null

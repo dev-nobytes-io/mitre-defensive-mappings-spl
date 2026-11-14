@@ -51,7 +51,7 @@ attack:
   - field: UnsignedBinaryAlert
     description: Raise alerts for unsigned binaries registered as services
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: anomaly
   suggested_tuning:
   - element: ServiceNamePattern

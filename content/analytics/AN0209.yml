@@ -41,7 +41,7 @@ attack:
   - field: ModuleName
     description: Loading of vbscript.dll, scrrun.dll, or other scripting engine modules.
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: anomaly
   suggested_tuning:
   - element: ParentProcess

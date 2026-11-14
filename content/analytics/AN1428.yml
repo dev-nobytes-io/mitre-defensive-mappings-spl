@@ -33,7 +33,7 @@ attack:
   - field: TimeWindow
     description: Used to restrict analysis to work hours or known admin maintenance windows.
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: ttp
   suggested_tuning:
   - element: CommandLinePattern

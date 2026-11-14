@@ -132,28 +132,7 @@ derived:
     channels:
     - user.lifecycle.create
   feeds:
-  - feed: palo_alto
-    have: true
-    in_scope: true
-    eventtype: mitre_dc0014_user_account_creation__palo_alto
-    search: index=pan_logs sourcetype="pan:config"
-    constraint_origin: defaults
-    broad_refs: 0
-    sources:
-    - networkdevice:syslog
-    cim_tags: false
-  - feed: wineventlog
-    have: true
-    in_scope: true
-    eventtype: mitre_dc0014_user_account_creation__wineventlog
-    search: index=wineventlog source="XmlWinEventLog:Security" EventCode IN (4720)
-    constraint_origin: defaults
-    broad_refs: 0
-    sources:
-    - WinEventLog:Security
-    cim_tags: true
   - feed: auditd
-    have: false
     in_scope: true
     eventtype: mitre_dc0014_user_account_creation__auditd
     search: >-
@@ -165,7 +144,6 @@ derived:
     - auditd:SYSCALL
     cim_tags: false
   - feed: azure_entra
-    have: false
     in_scope: true
     eventtype: mitre_dc0014_user_account_creation__azure_entra
     search: index=azure sourcetype="azure:aad:audit" (operationName="Add user")
@@ -175,7 +153,6 @@ derived:
     - azure:audit
     cim_tags: true
   - feed: linux_syslog
-    have: false
     in_scope: true
     eventtype: mitre_dc0014_user_account_creation__linux_syslog
     search: index=linux sourcetype=linux_secure (useradd OR adduser)
@@ -184,8 +161,25 @@ derived:
     sources:
     - (added by dc_defaults/curated)
     cim_tags: false
+  - feed: palo_alto
+    in_scope: true
+    eventtype: mitre_dc0014_user_account_creation__palo_alto
+    search: index=pan_logs sourcetype="pan:config"
+    constraint_origin: defaults
+    broad_refs: 0
+    sources:
+    - networkdevice:syslog
+    cim_tags: false
+  - feed: wineventlog
+    in_scope: true
+    eventtype: mitre_dc0014_user_account_creation__wineventlog
+    search: index=wineventlog source="XmlWinEventLog:Security" EventCode IN (4720)
+    constraint_origin: defaults
+    broad_refs: 0
+    sources:
+    - WinEventLog:Security
+    cim_tags: true
   - feed: aws
-    have: false
     in_scope: false
     eventtype: null
     search: null
@@ -195,7 +189,6 @@ derived:
     - AWS:CloudTrail
     cim_tags: false
   - feed: m365_unified
-    have: false
     in_scope: false
     eventtype: null
     search: null
@@ -205,7 +198,6 @@ derived:
     - m365:unified
     cim_tags: false
   - feed: saas
-    have: false
     in_scope: false
     eventtype: null
     search: null

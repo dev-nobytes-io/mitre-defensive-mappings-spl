@@ -9,10 +9,10 @@ transformations:
   type: add_condition
   conditions:
     eventtype:
+    - mitre_dc0032_process_creation__etw
     - mitre_dc0032_process_creation__solidcore
     - mitre_dc0032_process_creation__sysmon
     - mitre_dc0032_process_creation__wineventlog
-    - mitre_dc0032_process_creation__etw
   rule_conditions:
   - type: logsource
     product: windows
@@ -33,9 +33,9 @@ transformations:
   type: add_condition
   conditions:
     eventtype:
+    - mitre_dc0035_process_access__edr_telemetry
     - mitre_dc0035_process_access__sysmon
     - mitre_dc0035_process_access__wineventlog
-    - mitre_dc0035_process_access__edr_telemetry
   rule_conditions:
   - type: logsource
     product: windows
@@ -52,8 +52,8 @@ transformations:
   type: add_condition
   conditions:
     eventtype:
-    - mitre_dc0020_process_modification__sysmon
     - mitre_dc0020_process_modification__etw
+    - mitre_dc0020_process_modification__sysmon
   rule_conditions:
   - type: logsource
     product: windows
@@ -62,10 +62,10 @@ transformations:
   type: add_condition
   conditions:
     eventtype:
+    - mitre_dc0016_module_load__etw
     - mitre_dc0016_module_load__solidcore
     - mitre_dc0016_module_load__sysmon
     - mitre_dc0016_module_load__wineventlog
-    - mitre_dc0016_module_load__etw
   rule_conditions:
   - type: logsource
     product: windows
@@ -246,11 +246,11 @@ transformations:
   type: add_condition
   conditions:
     eventtype:
-    - mitre_dc0085_network_traffic_content__sysmon
-    - mitre_dc0085_network_traffic_content__wineventlog
     - mitre_dc0085_network_traffic_content__edr_telemetry
     - mitre_dc0085_network_traffic_content__iis
+    - mitre_dc0085_network_traffic_content__sysmon
     - mitre_dc0085_network_traffic_content__windows_dns_server
+    - mitre_dc0085_network_traffic_content__wineventlog
   rule_conditions:
   - type: logsource
     product: windows
@@ -259,9 +259,9 @@ transformations:
   type: add_condition
   conditions:
     eventtype:
+    - mitre_dc0035_process_access__edr_telemetry
     - mitre_dc0035_process_access__sysmon
     - mitre_dc0035_process_access__wineventlog
-    - mitre_dc0035_process_access__edr_telemetry
   rule_conditions:
   - type: logsource
     product: windows
@@ -288,11 +288,11 @@ transformations:
   type: add_condition
   conditions:
     eventtype:
+    - mitre_dc0029_script_execution__edr_telemetry
+    - mitre_dc0029_script_execution__etw
     - mitre_dc0029_script_execution__powershell_logging
     - mitre_dc0029_script_execution__trellix_epo
     - mitre_dc0029_script_execution__wineventlog
-    - mitre_dc0029_script_execution__edr_telemetry
-    - mitre_dc0029_script_execution__etw
   rule_conditions:
   - type: logsource
     product: windows
@@ -301,11 +301,11 @@ transformations:
   type: add_condition
   conditions:
     eventtype:
+    - mitre_dc0029_script_execution__edr_telemetry
+    - mitre_dc0029_script_execution__etw
     - mitre_dc0029_script_execution__powershell_logging
     - mitre_dc0029_script_execution__trellix_epo
     - mitre_dc0029_script_execution__wineventlog
-    - mitre_dc0029_script_execution__edr_telemetry
-    - mitre_dc0029_script_execution__etw
   rule_conditions:
   - type: logsource
     product: windows
@@ -325,10 +325,10 @@ transformations:
   type: add_condition
   conditions:
     eventtype:
-    - mitre_dc0021_os_api_execution__sysmon
-    - mitre_dc0021_os_api_execution__wineventlog
     - mitre_dc0021_os_api_execution__edr_telemetry
     - mitre_dc0021_os_api_execution__etw
+    - mitre_dc0021_os_api_execution__sysmon
+    - mitre_dc0021_os_api_execution__wineventlog
   rule_conditions:
   - type: logsource
     product: windows
@@ -347,8 +347,8 @@ transformations:
     eventtype:
     - mitre_dc0018_host_status__sysmon
     - mitre_dc0018_host_status__trellix_epo
-    - mitre_dc0018_host_status__wineventlog
     - mitre_dc0018_host_status__windows_perfmon
+    - mitre_dc0018_host_status__wineventlog
   rule_conditions:
   - type: logsource
     product: windows
@@ -375,9 +375,9 @@ transformations:
   type: add_condition
   conditions:
     eventtype:
+    - mitre_dc0038_application_log_content__iis
     - mitre_dc0038_application_log_content__trellix_epo
     - mitre_dc0038_application_log_content__wineventlog
-    - mitre_dc0038_application_log_content__iis
   rule_conditions:
   - type: logsource
     product: windows

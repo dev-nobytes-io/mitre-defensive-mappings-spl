@@ -623,57 +623,7 @@ derived:
     channels:
     - evt.type=write
   feeds:
-  - feed: palo_alto
-    have: true
-    in_scope: true
-    eventtype: mitre_dc0061_file_modification__palo_alto
-    search: index=pan_logs sourcetype="pan:config"
-    constraint_origin: defaults
-    broad_refs: 0
-    sources:
-    - networkdevice:audit
-    - networkdevice:config
-    - networkdevice:firmware
-    - networkdevice:runtime
-    - networkdevice:syslog
-    cim_tags: false
-  - feed: solidcore
-    have: true
-    in_scope: true
-    eventtype: mitre_dc0061_file_modification__solidcore
-    search: >-
-      index=epo sourcetype="mcafee:epo:syslog" (threat_name IN (FILE_MODIFIED, FILE_ATTR_MODIFIED, FILE_RENAMED,
-      WRITE_DENIED, OWNERSHIP_DENIED) OR event_description IN (FILE_MODIFIED, FILE_ATTR_MODIFIED, FILE_RENAMED,
-      WRITE_DENIED, OWNERSHIP_DENIED)) (product_name="Solidcore*")
-    constraint_origin: defaults
-    broad_refs: 2
-    sources:
-    - linux:fim
-    cim_tags: false
-  - feed: sysmon
-    have: true
-    in_scope: true
-    eventtype: mitre_dc0061_file_modification__sysmon
-    search: index=sysmon source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode IN (2, 11, 15)
-    constraint_origin: defaults
-    broad_refs: 0
-    sources:
-    - WinEventLog:Sysmon
-    cim_tags: true
-  - feed: wineventlog
-    have: true
-    in_scope: true
-    eventtype: mitre_dc0061_file_modification__wineventlog
-    search: index=wineventlog source="XmlWinEventLog:Security" EventCode IN (4663, 4670)
-    constraint_origin: defaults
-    broad_refs: 2
-    sources:
-    - WinEventLog:Microsoft-Windows-CodeIntegrity/Operational
-    - WinEventLog:Security
-    - WinEventLog:System
-    cim_tags: false
   - feed: auditd
-    have: false
     in_scope: true
     eventtype: mitre_dc0061_file_modification__auditd
     search: >-
@@ -690,7 +640,6 @@ derived:
     - linux:fim
     cim_tags: false
   - feed: ebpf
-    have: false
     in_scope: true
     eventtype: mitre_dc0061_file_modification__ebpf
     search: index=linux sourcetype=falco
@@ -701,7 +650,6 @@ derived:
     - sysdig:file
     cim_tags: false
   - feed: esxi_syslog
-    have: false
     in_scope: true
     eventtype: mitre_dc0061_file_modification__esxi_syslog
     search: index=vmware sourcetype IN ("vmware:esxlog:hostd", "vmware:esxlog:shell", "vmware:esxlog:vmkernel")
@@ -715,7 +663,6 @@ derived:
     - esxi:vmkernel
     cim_tags: false
   - feed: linux_syslog
-    have: false
     in_scope: true
     eventtype: mitre_dc0061_file_modification__linux_syslog
     search: index=linux sourcetype IN (linux_messages_syslog, linux_secure, syslog) (process=fwupd)
@@ -726,7 +673,6 @@ derived:
     - linux:syslog
     cim_tags: false
   - feed: netdev_syslog
-    have: false
     in_scope: true
     eventtype: mitre_dc0061_file_modification__netdev_syslog
     search: index=netops sourcetype IN ("cisco:asa", "cisco:ios", syslog)
@@ -740,8 +686,52 @@ derived:
     - networkdevice:runtime
     - networkdevice:syslog
     cim_tags: false
+  - feed: palo_alto
+    in_scope: true
+    eventtype: mitre_dc0061_file_modification__palo_alto
+    search: index=pan_logs sourcetype="pan:config"
+    constraint_origin: defaults
+    broad_refs: 0
+    sources:
+    - networkdevice:audit
+    - networkdevice:config
+    - networkdevice:firmware
+    - networkdevice:runtime
+    - networkdevice:syslog
+    cim_tags: false
+  - feed: solidcore
+    in_scope: true
+    eventtype: mitre_dc0061_file_modification__solidcore
+    search: >-
+      index=epo sourcetype="mcafee:epo:syslog" (threat_name IN (FILE_MODIFIED, FILE_ATTR_MODIFIED, FILE_RENAMED,
+      WRITE_DENIED, OWNERSHIP_DENIED) OR event_description IN (FILE_MODIFIED, FILE_ATTR_MODIFIED, FILE_RENAMED,
+      WRITE_DENIED, OWNERSHIP_DENIED)) (product_name="Solidcore*")
+    constraint_origin: defaults
+    broad_refs: 2
+    sources:
+    - linux:fim
+    cim_tags: false
+  - feed: sysmon
+    in_scope: true
+    eventtype: mitre_dc0061_file_modification__sysmon
+    search: index=sysmon source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode IN (2, 11, 15)
+    constraint_origin: defaults
+    broad_refs: 0
+    sources:
+    - WinEventLog:Sysmon
+    cim_tags: true
+  - feed: wineventlog
+    in_scope: true
+    eventtype: mitre_dc0061_file_modification__wineventlog
+    search: index=wineventlog source="XmlWinEventLog:Security" EventCode IN (4663, 4670)
+    constraint_origin: defaults
+    broad_refs: 2
+    sources:
+    - WinEventLog:Microsoft-Windows-CodeIntegrity/Operational
+    - WinEventLog:Security
+    - WinEventLog:System
+    cim_tags: false
   - feed: gcp
-    have: false
     in_scope: false
     eventtype: null
     search: null
@@ -751,7 +741,6 @@ derived:
     - gcp:audit
     cim_tags: false
   - feed: m365_unified
-    have: false
     in_scope: false
     eventtype: null
     search: null
@@ -761,7 +750,6 @@ derived:
     - m365:office
     cim_tags: false
   - feed: macos
-    have: false
     in_scope: false
     eventtype: null
     search: null
@@ -781,7 +769,6 @@ derived:
     - macos:unifiedlog
     cim_tags: false
   - feed: mobile
-    have: false
     in_scope: false
     eventtype: null
     search: null

@@ -2,7 +2,7 @@
 
 [ATT&CK](https://attack.mitre.org/datacomponents/DC0064) · version 2.2 · modified 2026-10-13 · ATT&CK release 20.1
 
-Status: **Live** · umbrella eventtype `mitre_dc0064_command_execution`
+Umbrella eventtype `mitre_dc0064_command_execution` over 13 feed(s)
 
 > Command Execution involves monitoring and capturing the execution of textual commands (including shell commands, cmdlets, and scripts) within an operating system or application. These commands may include arguments or parameters and are typically executed through interpreters such as `cmd.exe`, `bash`, `zsh`, `PowerShell`, or programmatic execution. Examples:   - Windows Command Prompt     - dir – Lists directory contents.     - net user – Queries or manipulates user accounts.     - tasklist – Lists running processes. - PowerShell     - Get-Process – Retrieves processes running on a system.     - Set-ExecutionPolicy – Changes PowerShell script execution policies.     - Invoke-WebRequest – Downloads remote resources. - Linux Shell     - ls – Lists files in a directory.     - cat /etc/passwd – Reads the user accounts file.     - curl http://malicious-site.com – Retrieves content from a malicious URL. - Container Environments     - docker exec – Executes a command inside a running container.     - kubectl exec – Runs commands in Kubernetes pods. - macOS Terminal     - open – Opens files or URLs.     - dscl . -list /Users – Lists all users on the system.     - osascript -e – Executes AppleScript commands.
 
@@ -49,18 +49,11 @@ flowchart LR
   LS9 --> F_auditd
   LS9 --> F_linux_syslog
   DC --> MORE["... 21 more log sources"]
-  F_palo_alto --> ET_palo_alto[/"mitre_dc0064_command_execution__palo_alto"/]
-  class F_palo_alto live
-  F_powershell_logging --> ET_powershell_logging[/"mitre_dc0064_command_execution__powershell_logging"/]
-  class F_powershell_logging live
   F_auditd --> ET_auditd[/"mitre_dc0064_command_execution__auditd"/]
-  class F_auditd ready
   F_esxi_syslog --> ET_esxi_syslog[/"mitre_dc0064_command_execution__esxi_syslog"/]
-  class F_esxi_syslog ready
   F_netdev_syslog --> ET_netdev_syslog[/"mitre_dc0064_command_execution__netdev_syslog"/]
-  class F_netdev_syslog ready
-  classDef live fill:#d4edda,stroke:#2e7d32,color:#1b1b1b
-  classDef ready fill:#fff3cd,stroke:#b26a00,color:#1b1b1b
+  F_palo_alto --> ET_palo_alto[/"mitre_dc0064_command_execution__palo_alto"/]
+  F_powershell_logging --> ET_powershell_logging[/"mitre_dc0064_command_execution__powershell_logging"/]
 ```
 
 ## Requirements
@@ -73,24 +66,30 @@ Component specific:
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
+| Feed | Schedule | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `palo_alto` | live | sourcetype=`pan:config`, sourcetype=`pan:system` | `(whole feed)` | defaults | Splunk Add-on for Palo Alto Networks (pan:*) |
-| `powershell_logging` | live | source=`XmlWinEventLog:Microsoft-Windows-PowerShell/Operational` | `EventCode IN (4103, 4104)` | defaults | Splunk Add-on for Microsoft Windows |
-| `sysmon` | live | source=`XmlWinEventLog:Microsoft-Windows-Sysmon/Operational` | `EventCode IN (1)` | defaults | Splunk Add-on for Sysmon (needs Splunk_TA_windows for XML parsing) |
-| `trellix_epo` | live | sourcetype=`mcafee:epo:syslog` | `(threat_type="AMSI*" OR threat_name="AMSI*")` | defaults | Splunk Add-on for McAfee ePO Syslog (sourcetype mcafee:epo:syslog, documented by Splunk). If ePO data arrives another way (DB Connect pull, a community Trellix REST add-on such as trellix_epo:threat_events), change the sourcetype here. |
-| `wineventlog` | live | source=`XmlWinEventLog:Security` | `EventCode IN (4688)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true) |
-| `auditd` | ready (tick in stack.yml) | sourcetype=`linux:audit` | `type IN (EXECVE, PROCTITLE, SYSCALL) (syscall IN (execve, execveat) OR SYSCALL IN (execve, execveat))` | defaults | Splunk Add-on for Unix and Linux (linux:audit) or auditd -> auditbeat/syslog |
-| `container_runtime` | ready (tick in stack.yml) | sourcetype=`docker:daemon`, sourcetype=`docker:events` | `(status IN (exec_create, exec_start))` | defaults | docker events scripted input or OpenTelemetry (docker:events, containerd) |
-| `ebpf` | ready (tick in stack.yml) | sourcetype=`falco` | `(whole feed)` | derived | Vendor specific (falco JSON, tetragon) |
-| `edr_telemetry` | ready (tick in stack.yml) | sourcetype=`edr:telemetry` | `(whole feed)` | derived | Vendor specific |
-| `esxi_syslog` | ready (tick in stack.yml) | sourcetype=`vmware:esxlog:shell` | `(whole feed)` | defaults | Splunk Add-on for VMware ESXi Logs (vmware:esxlog:<log>) |
-| `kubernetes_audit` | ready (tick in stack.yml) | sourcetype=`kube:apiserver-audit` | `(objectRef.subresource=exec OR objectRef.subresource=attach)` | defaults | Splunk OpenTelemetry Collector for Kubernetes / Splunk Connect for Kubernetes |
-| `netdev_syslog` | ready (tick in stack.yml) | sourcetype=`cisco:asa`, sourcetype=`cisco:ios`, sourcetype=`syslog` | `(whole feed)` | derived | Cisco Networks Add-on (cisco:ios, cisco:asa), Juniper/Arista TAs, or generic syslog |
-| `vcenter` | ready (tick in stack.yml) | sourcetype=`vmware:vclog:vpxd` | `(whole feed)` | derived | Splunk Add-on for VMware (vmware:vclog:vpxd) |
+| `auditd` | scheduled | sourcetype=`linux:audit` | `type IN (EXECVE, PROCTITLE, SYSCALL) (syscall IN (execve, execveat) OR SYSCALL IN (execve, execveat))` | defaults | Splunk Add-on for Unix and Linux (linux:audit) or auditd -> auditbeat/syslog |
+| `container_runtime` | scheduled | sourcetype=`docker:daemon`, sourcetype=`docker:events` | `(status IN (exec_create, exec_start))` | defaults | docker events scripted input or OpenTelemetry (docker:events, containerd) |
+| `ebpf` | scheduled | sourcetype=`falco` | `(whole feed)` | derived | Vendor specific (falco JSON, tetragon) |
+| `edr_telemetry` | scheduled | sourcetype=`edr:telemetry` | `(whole feed)` | derived | Vendor specific |
+| `esxi_syslog` | scheduled | sourcetype=`vmware:esxlog:shell` | `(whole feed)` | defaults | Splunk Add-on for VMware ESXi Logs (vmware:esxlog:<log>) |
+| `kubernetes_audit` | scheduled | sourcetype=`kube:apiserver-audit` | `(objectRef.subresource=exec OR objectRef.subresource=attach)` | defaults | Splunk OpenTelemetry Collector for Kubernetes / Splunk Connect for Kubernetes |
+| `netdev_syslog` | scheduled | sourcetype=`cisco:asa`, sourcetype=`cisco:ios`, sourcetype=`syslog` | `(whole feed)` | derived | Cisco Networks Add-on (cisco:ios, cisco:asa), Juniper/Arista TAs, or generic syslog |
+| `palo_alto` | scheduled | sourcetype=`pan:config`, sourcetype=`pan:system` | `(whole feed)` | defaults | Splunk Add-on for Palo Alto Networks (pan:*) |
+| `powershell_logging` | scheduled | source=`XmlWinEventLog:Microsoft-Windows-PowerShell/Operational` | `EventCode IN (4103, 4104)` | defaults | Splunk Add-on for Microsoft Windows |
+| `sysmon` | scheduled | source=`XmlWinEventLog:Microsoft-Windows-Sysmon/Operational` | `EventCode IN (1)` | defaults | Splunk Add-on for Sysmon (needs Splunk_TA_windows for XML parsing) |
+| `trellix_epo` | scheduled | sourcetype=`mcafee:epo:syslog` | `(threat_type="AMSI*" OR threat_name="AMSI*")` | defaults | Splunk Add-on for McAfee ePO Syslog (sourcetype mcafee:epo:syslog, documented by Splunk). If ePO data arrives another way (DB Connect pull, a community Trellix REST add-on such as trellix_epo:threat_events), change the sourcetype here. |
+| `vcenter` | scheduled | sourcetype=`vmware:vclog:vpxd` | `(whole feed)` | derived | Splunk Add-on for VMware (vmware:vclog:vpxd) |
+| `wineventlog` | scheduled | source=`XmlWinEventLog:Security` | `EventCode IN (4688)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true) |
 
 Collection prerequisites:
 
+- **auditd**: audit rules for execve, connect, open/openat on sensitive paths, ptrace, module load, mount, setuid; a Neo23x0/auditd baseline or Florian Roth's rule set is a reasonable start.
+- **auditd**: log_format = ENRICHED in auditd.conf so syscall names and uids resolve (otherwise syscall numbers are architecture dependent).
+- **esxi_syslog**: Syslog.global.logHost set on every host; ESXi Shell/SSH audit enabled; consider Syslog.global.auditRecord (ESXi 8).
+- **kubernetes_audit**: Audit policy at Metadata level minimum
+- **kubernetes_audit**: RequestResponse for secrets/pods/exec; ship the audit log file from control-plane nodes.
+- **netdev_syslog**: Enable config-change archive logging and AAA command accounting; forward at informational level.
 - **palo_alto**: Log forwarding profiles attached to every security rule (traffic start+end, threat, url, wildfire, data).
 - **palo_alto**: System and Config logs forwarded from each firewall / Panorama; GlobalProtect logs enabled.
 - **palo_alto**: URL filtering and Threat Prevention licensed for pan:threat subtypes url/vulnerability/virus/spyware.
@@ -106,20 +105,35 @@ Collection prerequisites:
 - **wineventlog**: PowerShell Script Block Logging (4104) and Module Logging (4103) enabled via GPO for the PowerShell/Operational channel.
 - **wineventlog**: Object access events (4656/4663/4657/4660/4670) require SACLs on the files/keys of interest.
 - **wineventlog**: Non-default channels (TaskScheduler, WMI-Activity, CodeIntegrity, Defender, Firewall, WinRM, SMBClient/Server...) must be listed as inputs in Splunk_TA_windows inputs.conf; several are disabled by default in Windows.
-- **auditd**: audit rules for execve, connect, open/openat on sensitive paths, ptrace, module load, mount, setuid; a Neo23x0/auditd baseline or Florian Roth's rule set is a reasonable start.
-- **auditd**: log_format = ENRICHED in auditd.conf so syscall names and uids resolve (otherwise syscall numbers are architecture dependent).
-- **esxi_syslog**: Syslog.global.logHost set on every host; ESXi Shell/SSH audit enabled; consider Syslog.global.auditRecord (ESXi 8).
-- **kubernetes_audit**: Audit policy at Metadata level minimum
-- **kubernetes_audit**: RequestResponse for secrets/pods/exec; ship the audit log file from control-plane nodes.
-- **netdev_syslog**: Enable config-change archive logging and AAA command accounting; forward at informational level.
 
-Review notes: `wineventlog` has 6 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *defaults*; `container_runtime` has 6 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *defaults*; `ebpf` has 2 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *derived*; `edr_telemetry` has 4 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *derived*; `kubernetes_audit` has 4 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *defaults*; `netdev_syslog` has 81 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *derived*; `vcenter` has 3 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *derived*.
+Review notes: `container_runtime` has 6 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *defaults*; `ebpf` has 2 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *derived*; `edr_telemetry` has 4 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *derived*; `kubernetes_audit` has 4 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *defaults*; `netdev_syslog` has 81 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *derived*; `vcenter` has 3 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *derived*; `wineventlog` has 6 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *defaults*.
 
 ## Splunk
 
 Eventtypes (literal constraints, see `dist/splunk/TA-mitre-attack-datacomponents/default/eventtypes.conf`):
 
 ```ini
+[mitre_dc0064_command_execution__auditd]
+search = index=linux sourcetype="linux:audit" type IN (EXECVE, PROCTITLE, SYSCALL) (syscall IN (execve, execveat) OR SYSCALL IN (execve, execveat))
+
+[mitre_dc0064_command_execution__container_runtime]
+search = index=k8s sourcetype IN ("docker:daemon", "docker:events") (status IN (exec_create, exec_start))
+
+[mitre_dc0064_command_execution__ebpf]
+search = index=linux sourcetype=falco
+
+[mitre_dc0064_command_execution__edr_telemetry]
+search = index=edr sourcetype="edr:telemetry"
+
+[mitre_dc0064_command_execution__esxi_syslog]
+search = index=vmware sourcetype="vmware:esxlog:shell"
+
+[mitre_dc0064_command_execution__kubernetes_audit]
+search = index=k8s sourcetype="kube:apiserver-audit" (objectRef.subresource=exec OR objectRef.subresource=attach)
+
+[mitre_dc0064_command_execution__netdev_syslog]
+search = index=netops sourcetype IN ("cisco:asa", "cisco:ios", syslog)
+
 [mitre_dc0064_command_execution__palo_alto]
 search = index=pan_logs sourcetype IN ("pan:config", "pan:system")
 
@@ -132,47 +146,18 @@ search = index=sysmon source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operationa
 [mitre_dc0064_command_execution__trellix_epo]
 search = index=epo sourcetype="mcafee:epo:syslog" (threat_type="AMSI*" OR threat_name="AMSI*")
 
+[mitre_dc0064_command_execution__vcenter]
+search = index=vmware sourcetype="vmware:vclog:vpxd"
+
 [mitre_dc0064_command_execution__wineventlog]
 search = index=wineventlog source="XmlWinEventLog:Security" EventCode IN (4688)
 
-[mitre_dc0064_command_execution__auditd]
-search = index=linux sourcetype="linux:audit" type IN (EXECVE, PROCTITLE, SYSCALL) (syscall IN (execve, execveat) OR SYSCALL IN (execve, execveat))
-disabled = 1
-
-[mitre_dc0064_command_execution__container_runtime]
-search = index=k8s sourcetype IN ("docker:daemon", "docker:events") (status IN (exec_create, exec_start))
-disabled = 1
-
-[mitre_dc0064_command_execution__ebpf]
-search = index=linux sourcetype=falco
-disabled = 1
-
-[mitre_dc0064_command_execution__edr_telemetry]
-search = index=edr sourcetype="edr:telemetry"
-disabled = 1
-
-[mitre_dc0064_command_execution__esxi_syslog]
-search = index=vmware sourcetype="vmware:esxlog:shell"
-disabled = 1
-
-[mitre_dc0064_command_execution__kubernetes_audit]
-search = index=k8s sourcetype="kube:apiserver-audit" (objectRef.subresource=exec OR objectRef.subresource=attach)
-disabled = 1
-
-[mitre_dc0064_command_execution__netdev_syslog]
-search = index=netops sourcetype IN ("cisco:asa", "cisco:ios", syslog)
-disabled = 1
-
-[mitre_dc0064_command_execution__vcenter]
-search = index=vmware sourcetype="vmware:vclog:vpxd"
-disabled = 1
-
 [mitre_dc0064_command_execution]
-search = eventtype=mitre_dc0064_command_execution__palo_alto OR eventtype=mitre_dc0064_command_execution__powershell_logging OR eventtype=mitre_dc0064_command_execution__sysmon OR eventtype=mitre_dc0064_command_execution__trellix_epo OR eventtype=mitre_dc0064_command_execution__wineventlog OR eventtype=mitre_dc0064_command_execution__auditd OR eventtype=mitre_dc0064_command_execution__container_runtime OR eventtype=mitre_dc0064_command_execution__ebpf OR eventtype=mitre_dc0064_command_execution__edr_telemetry OR eventtype=mitre_dc0064_command_execution__esxi_syslog OR eventtype=mitre_dc0064_command_execution__kubernetes_audit OR eventtype=mitre_dc0064_command_execution__netdev_syslog OR eventtype=mitre_dc0064_command_execution__vcenter
+search = eventtype=mitre_dc0064_command_execution__auditd OR eventtype=mitre_dc0064_command_execution__container_runtime OR eventtype=mitre_dc0064_command_execution__ebpf OR eventtype=mitre_dc0064_command_execution__edr_telemetry OR eventtype=mitre_dc0064_command_execution__esxi_syslog OR eventtype=mitre_dc0064_command_execution__kubernetes_audit OR eventtype=mitre_dc0064_command_execution__netdev_syslog OR eventtype=mitre_dc0064_command_execution__palo_alto OR eventtype=mitre_dc0064_command_execution__powershell_logging OR eventtype=mitre_dc0064_command_execution__sysmon OR eventtype=mitre_dc0064_command_execution__trellix_epo OR eventtype=mitre_dc0064_command_execution__vcenter OR eventtype=mitre_dc0064_command_execution__wineventlog
 ```
 
-Macros for analytics: `` `mitre_dc0064` `` (umbrella), `` `mitre_dc0064_palo_alto` ``, `` `mitre_dc0064_powershell_logging` ``, `` `mitre_dc0064_sysmon` ``, `` `mitre_dc0064_trellix_epo` ``, `` `mitre_dc0064_wineventlog` ``, `` `mitre_dc0064_auditd` ``, `` `mitre_dc0064_container_runtime` ``, `` `mitre_dc0064_ebpf` ``, `` `mitre_dc0064_edr_telemetry` ``, `` `mitre_dc0064_esxi_syslog` ``, `` `mitre_dc0064_kubernetes_audit` ``, `` `mitre_dc0064_netdev_syslog` ``, `` `mitre_dc0064_vcenter` ``, `` `mitre_dc0064_filter` `` (site exclusions).
-CIM: `Endpoint.Processes` via `` `mitre_dc0064_dm` `` / `` `mitre_dc0064_dm_where` `` for `tstats`. CIM tags emitted for: `sysmon`, `wineventlog`, `auditd`.
+Macros for analytics: `` `mitre_dc0064` `` (umbrella), `` `mitre_dc0064_auditd` ``, `` `mitre_dc0064_container_runtime` ``, `` `mitre_dc0064_ebpf` ``, `` `mitre_dc0064_edr_telemetry` ``, `` `mitre_dc0064_esxi_syslog` ``, `` `mitre_dc0064_kubernetes_audit` ``, `` `mitre_dc0064_netdev_syslog` ``, `` `mitre_dc0064_palo_alto` ``, `` `mitre_dc0064_powershell_logging` ``, `` `mitre_dc0064_sysmon` ``, `` `mitre_dc0064_trellix_epo` ``, `` `mitre_dc0064_vcenter` ``, `` `mitre_dc0064_wineventlog` ``, `` `mitre_dc0064_filter` `` (site exclusions).
+CIM: `Endpoint.Processes` via `` `mitre_dc0064_dm` `` / `` `mitre_dc0064_dm_where` `` for `tstats`. CIM tags emitted for: `auditd`, `sysmon`, `wineventlog`.
 
 ## Sigma
 

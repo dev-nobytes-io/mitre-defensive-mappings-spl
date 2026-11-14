@@ -39,7 +39,7 @@ attack:
   - field: KeywordPatterns
     description: Regex for suspicious command-line arguments such as 'dpapi', 'credman', 'mimikatz'
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: ttp
   suggested_tuning:
   - element: TargetProcesses

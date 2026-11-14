@@ -50,7 +50,6 @@ derived:
     - list or get requests against pods, deployments, or nodes
   feeds:
   - feed: kubernetes_audit
-    have: false
     in_scope: true
     eventtype: mitre_dc0037_pod_enumeration__kubernetes_audit
     search: index=k8s sourcetype="kube:apiserver-audit" verb IN (get, list, watch) (objectRef.resource=pods)

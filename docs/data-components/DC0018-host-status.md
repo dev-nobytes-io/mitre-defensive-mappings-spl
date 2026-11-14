@@ -2,7 +2,7 @@
 
 [ATT&CK](https://attack.mitre.org/datacomponents/DC0018) · version 2.2 · modified 2026-10-13 · ATT&CK release 20.1
 
-Status: **Live** · umbrella eventtype `mitre_dc0018_host_status`
+Umbrella eventtype `mitre_dc0018_host_status` over 9 feed(s)
 
 > Logging, messaging, and other artifacts that highlight the health and operational state of host-based security sensors, such as Endpoint Detection and Response (EDR) agents, antivirus software, logging services, and system monitoring tools. Monitoring sensor health is essential for detecting misconfigurations, sensor failures, tampering, or deliberate security control evasion by adversaries.  *Data Collection Measures:*  - Windows Event Logs:     - Event ID 1074 (System Shutdown): Detects unexpected system reboots/shutdowns.     - Event ID 6006 (Event Log Stopped): Logs when Windows event logging is stopped.     - Event ID 16 (Sysmon): Detects configuration state changes that may indicate log tampering.     - Event ID 12 (Windows Defender Status Change) – Detects changes in Windows Defender state. - Linux/macOS Monitoring:     - `/var/log/syslog`, `/var/log/auth.log`, `/var/log/kern.log`     - Journald (journalctl) for kernel and system alerts. - Endpoint Detection and Response (EDR) Tools:     - Monitor agent health status, detect sensor tampering, and alert on missing telemetry. - Mobile Threat Intelligence Logs:     - Samsung Knox, SafetyNet, iOS Secure Enclave provide sensor health status for mobile endpoints.
 
@@ -52,22 +52,13 @@ flowchart LR
   DC --> LS9["prometheus:metrics<br/>2 refs"]
   LS9 --> F_kubernetes_audit
   DC --> MORE["... 3 more log sources"]
-  F_palo_alto --> ET_palo_alto[/"mitre_dc0018_host_status__palo_alto"/]
-  class F_palo_alto live
-  F_wineventlog --> ET_wineventlog[/"mitre_dc0018_host_status__wineventlog"/]
-  class F_wineventlog live
   F_auditd --> ET_auditd[/"mitre_dc0018_host_status__auditd"/]
-  class F_auditd ready
   F_esxi_syslog --> ET_esxi_syslog[/"mitre_dc0018_host_status__esxi_syslog"/]
-  class F_esxi_syslog ready
   F_kubernetes_audit --> ET_kubernetes_audit[/"mitre_dc0018_host_status__kubernetes_audit"/]
-  class F_kubernetes_audit ready
   F_linux_syslog --> ET_linux_syslog[/"mitre_dc0018_host_status__linux_syslog"/]
-  class F_linux_syslog ready
+  F_palo_alto --> ET_palo_alto[/"mitre_dc0018_host_status__palo_alto"/]
   F_windows_perfmon --> ET_windows_perfmon[/"mitre_dc0018_host_status__windows_perfmon"/]
-  class F_windows_perfmon ready
-  classDef live fill:#d4edda,stroke:#2e7d32,color:#1b1b1b
-  classDef ready fill:#fff3cd,stroke:#b26a00,color:#1b1b1b
+  F_wineventlog --> ET_wineventlog[/"mitre_dc0018_host_status__wineventlog"/]
 ```
 
 ## Requirements
@@ -79,20 +70,25 @@ Component specific:
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
+| Feed | Schedule | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `palo_alto` | live | sourcetype=`pan:system` | `(whole feed)` | defaults | Splunk Add-on for Palo Alto Networks (pan:*) |
-| `sysmon` | live | source=`XmlWinEventLog:Microsoft-Windows-Sysmon/Operational` | `EventCode IN (4, 16, 255)` | defaults | Splunk Add-on for Sysmon (needs Splunk_TA_windows for XML parsing) |
-| `trellix_epo` | live | sourcetype=`mcafee:epo:syslog` | `(whole feed)` | defaults | Splunk Add-on for McAfee ePO Syslog (sourcetype mcafee:epo:syslog, documented by Splunk). If ePO data arrives another way (DB Connect pull, a community Trellix REST add-on such as trellix_epo:threat_events), change the sourcetype here. |
-| `wineventlog` | live | source=`XmlWinEventLog:Microsoft-Windows-Windows Defender/Operational`, source=`XmlWinEventLog:Security`, source=`XmlWinEventLog:System` | `EventCode IN (104, 1001, 1074, 1100, 1102, 5001, 5004, 5007, 5010, 5012, 6005, 6006, 6008, 7036, 7045)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true) |
-| `auditd` | ready (tick in stack.yml) | sourcetype=`linux:audit` | `type IN (CONFIG_CHANGE, DAEMON_ABORT, DAEMON_END, DAEMON_START, SERVICE_START, SERVICE_STOP)` | defaults | Splunk Add-on for Unix and Linux (linux:audit) or auditd -> auditbeat/syslog |
-| `esxi_syslog` | ready (tick in stack.yml) | sourcetype=`vmware:esxlog:hostd`, sourcetype=`vmware:esxlog:vobd` | `(whole feed)` | defaults | Splunk Add-on for VMware ESXi Logs (vmware:esxlog:<log>) |
-| `kubernetes_audit` | ready (tick in stack.yml) | sourcetype=`kube:objects:events` | `(whole feed)` | defaults | Splunk OpenTelemetry Collector for Kubernetes / Splunk Connect for Kubernetes |
-| `linux_syslog` | ready (tick in stack.yml) | sourcetype=`linux_messages_syslog`, sourcetype=`linux_secure`, sourcetype=`syslog` | `(process=auditd OR process=systemd OR process=kernel OR rsyslogd)` | defaults | Splunk Add-on for Unix and Linux (syslog, linux_secure, linux_messages_syslog) |
-| `windows_perfmon` | ready (tick in stack.yml) | sourcetype=`Perfmon:*` | `(whole feed)` | derived | Splunk_TA_windows perfmon inputs |
+| `auditd` | scheduled | sourcetype=`linux:audit` | `type IN (CONFIG_CHANGE, DAEMON_ABORT, DAEMON_END, DAEMON_START, SERVICE_START, SERVICE_STOP)` | defaults | Splunk Add-on for Unix and Linux (linux:audit) or auditd -> auditbeat/syslog |
+| `esxi_syslog` | scheduled | sourcetype=`vmware:esxlog:hostd`, sourcetype=`vmware:esxlog:vobd` | `(whole feed)` | defaults | Splunk Add-on for VMware ESXi Logs (vmware:esxlog:<log>) |
+| `kubernetes_audit` | scheduled | sourcetype=`kube:objects:events` | `(whole feed)` | defaults | Splunk OpenTelemetry Collector for Kubernetes / Splunk Connect for Kubernetes |
+| `linux_syslog` | scheduled | sourcetype=`linux_messages_syslog`, sourcetype=`linux_secure`, sourcetype=`syslog` | `(process=auditd OR process=systemd OR process=kernel OR rsyslogd)` | defaults | Splunk Add-on for Unix and Linux (syslog, linux_secure, linux_messages_syslog) |
+| `palo_alto` | scheduled | sourcetype=`pan:system` | `(whole feed)` | defaults | Splunk Add-on for Palo Alto Networks (pan:*) |
+| `sysmon` | scheduled | source=`XmlWinEventLog:Microsoft-Windows-Sysmon/Operational` | `EventCode IN (4, 16, 255)` | defaults | Splunk Add-on for Sysmon (needs Splunk_TA_windows for XML parsing) |
+| `trellix_epo` | scheduled | sourcetype=`mcafee:epo:syslog` | `(whole feed)` | defaults | Splunk Add-on for McAfee ePO Syslog (sourcetype mcafee:epo:syslog, documented by Splunk). If ePO data arrives another way (DB Connect pull, a community Trellix REST add-on such as trellix_epo:threat_events), change the sourcetype here. |
+| `windows_perfmon` | scheduled | sourcetype=`Perfmon:*` | `(whole feed)` | derived | Splunk_TA_windows perfmon inputs |
+| `wineventlog` | scheduled | source=`XmlWinEventLog:Microsoft-Windows-Windows Defender/Operational`, source=`XmlWinEventLog:Security`, source=`XmlWinEventLog:System` | `EventCode IN (104, 1001, 1074, 1100, 1102, 5001, 5004, 5007, 5010, 5012, 6005, 6006, 6008, 7036, 7045)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true) |
 
 Collection prerequisites:
 
+- **auditd**: audit rules for execve, connect, open/openat on sensitive paths, ptrace, module load, mount, setuid; a Neo23x0/auditd baseline or Florian Roth's rule set is a reasonable start.
+- **auditd**: log_format = ENRICHED in auditd.conf so syscall names and uids resolve (otherwise syscall numbers are architecture dependent).
+- **esxi_syslog**: Syslog.global.logHost set on every host; ESXi Shell/SSH audit enabled; consider Syslog.global.auditRecord (ESXi 8).
+- **kubernetes_audit**: Audit policy at Metadata level minimum
+- **kubernetes_audit**: RequestResponse for secrets/pods/exec; ship the audit log file from control-plane nodes.
 - **palo_alto**: Log forwarding profiles attached to every security rule (traffic start+end, threat, url, wildfire, data).
 - **palo_alto**: System and Config logs forwarded from each firewall / Panorama; GlobalProtect logs enabled.
 - **palo_alto**: URL filtering and Threat Prevention licensed for pan:threat subtypes url/vulnerability/virus/spyware.
@@ -106,19 +102,26 @@ Collection prerequisites:
 - **wineventlog**: PowerShell Script Block Logging (4104) and Module Logging (4103) enabled via GPO for the PowerShell/Operational channel.
 - **wineventlog**: Object access events (4656/4663/4657/4660/4670) require SACLs on the files/keys of interest.
 - **wineventlog**: Non-default channels (TaskScheduler, WMI-Activity, CodeIntegrity, Defender, Firewall, WinRM, SMBClient/Server...) must be listed as inputs in Splunk_TA_windows inputs.conf; several are disabled by default in Windows.
-- **auditd**: audit rules for execve, connect, open/openat on sensitive paths, ptrace, module load, mount, setuid; a Neo23x0/auditd baseline or Florian Roth's rule set is a reasonable start.
-- **auditd**: log_format = ENRICHED in auditd.conf so syscall names and uids resolve (otherwise syscall numbers are architecture dependent).
-- **esxi_syslog**: Syslog.global.logHost set on every host; ESXi Shell/SSH audit enabled; consider Syslog.global.auditRecord (ESXi 8).
-- **kubernetes_audit**: Audit policy at Metadata level minimum
-- **kubernetes_audit**: RequestResponse for secrets/pods/exec; ship the audit log file from control-plane nodes.
 
-Review notes: `wineventlog` has 2 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *defaults*; `kubernetes_audit` has 4 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *defaults*; `linux_syslog` has 7 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *defaults*; `windows_perfmon` has 8 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *derived*.
+Review notes: `kubernetes_audit` has 4 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *defaults*; `linux_syslog` has 7 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *defaults*; `windows_perfmon` has 8 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *derived*; `wineventlog` has 2 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *defaults*.
 
 ## Splunk
 
 Eventtypes (literal constraints, see `dist/splunk/TA-mitre-attack-datacomponents/default/eventtypes.conf`):
 
 ```ini
+[mitre_dc0018_host_status__auditd]
+search = index=linux sourcetype="linux:audit" type IN (CONFIG_CHANGE, DAEMON_ABORT, DAEMON_END, DAEMON_START, SERVICE_START, SERVICE_STOP)
+
+[mitre_dc0018_host_status__esxi_syslog]
+search = index=vmware sourcetype IN ("vmware:esxlog:hostd", "vmware:esxlog:vobd")
+
+[mitre_dc0018_host_status__kubernetes_audit]
+search = index=k8s sourcetype="kube:objects:events"
+
+[mitre_dc0018_host_status__linux_syslog]
+search = index=linux sourcetype IN (linux_messages_syslog, linux_secure, syslog) (process=auditd OR process=systemd OR process=kernel OR rsyslogd)
+
 [mitre_dc0018_host_status__palo_alto]
 search = index=pan_logs sourcetype="pan:system"
 
@@ -128,34 +131,17 @@ search = index=sysmon source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operationa
 [mitre_dc0018_host_status__trellix_epo]
 search = index=epo sourcetype="mcafee:epo:syslog"
 
+[mitre_dc0018_host_status__windows_perfmon]
+search = index=perfmon sourcetype="Perfmon:*"
+
 [mitre_dc0018_host_status__wineventlog]
 search = index=wineventlog source IN ("XmlWinEventLog:Microsoft-Windows-Windows Defender/Operational", "XmlWinEventLog:Security", "XmlWinEventLog:System") EventCode IN (104, 1001, 1074, 1100, 1102, 5001, 5004, 5007, 5010, 5012, 6005, 6006, 6008, 7036, 7045)
 
-[mitre_dc0018_host_status__auditd]
-search = index=linux sourcetype="linux:audit" type IN (CONFIG_CHANGE, DAEMON_ABORT, DAEMON_END, DAEMON_START, SERVICE_START, SERVICE_STOP)
-disabled = 1
-
-[mitre_dc0018_host_status__esxi_syslog]
-search = index=vmware sourcetype IN ("vmware:esxlog:hostd", "vmware:esxlog:vobd")
-disabled = 1
-
-[mitre_dc0018_host_status__kubernetes_audit]
-search = index=k8s sourcetype="kube:objects:events"
-disabled = 1
-
-[mitre_dc0018_host_status__linux_syslog]
-search = index=linux sourcetype IN (linux_messages_syslog, linux_secure, syslog) (process=auditd OR process=systemd OR process=kernel OR rsyslogd)
-disabled = 1
-
-[mitre_dc0018_host_status__windows_perfmon]
-search = index=perfmon sourcetype="Perfmon:*"
-disabled = 1
-
 [mitre_dc0018_host_status]
-search = eventtype=mitre_dc0018_host_status__palo_alto OR eventtype=mitre_dc0018_host_status__sysmon OR eventtype=mitre_dc0018_host_status__trellix_epo OR eventtype=mitre_dc0018_host_status__wineventlog OR eventtype=mitre_dc0018_host_status__auditd OR eventtype=mitre_dc0018_host_status__esxi_syslog OR eventtype=mitre_dc0018_host_status__kubernetes_audit OR eventtype=mitre_dc0018_host_status__linux_syslog OR eventtype=mitre_dc0018_host_status__windows_perfmon
+search = eventtype=mitre_dc0018_host_status__auditd OR eventtype=mitre_dc0018_host_status__esxi_syslog OR eventtype=mitre_dc0018_host_status__kubernetes_audit OR eventtype=mitre_dc0018_host_status__linux_syslog OR eventtype=mitre_dc0018_host_status__palo_alto OR eventtype=mitre_dc0018_host_status__sysmon OR eventtype=mitre_dc0018_host_status__trellix_epo OR eventtype=mitre_dc0018_host_status__windows_perfmon OR eventtype=mitre_dc0018_host_status__wineventlog
 ```
 
-Macros for analytics: `` `mitre_dc0018` `` (umbrella), `` `mitre_dc0018_palo_alto` ``, `` `mitre_dc0018_sysmon` ``, `` `mitre_dc0018_trellix_epo` ``, `` `mitre_dc0018_wineventlog` ``, `` `mitre_dc0018_auditd` ``, `` `mitre_dc0018_esxi_syslog` ``, `` `mitre_dc0018_kubernetes_audit` ``, `` `mitre_dc0018_linux_syslog` ``, `` `mitre_dc0018_windows_perfmon` ``, `` `mitre_dc0018_filter` `` (site exclusions).
+Macros for analytics: `` `mitre_dc0018` `` (umbrella), `` `mitre_dc0018_auditd` ``, `` `mitre_dc0018_esxi_syslog` ``, `` `mitre_dc0018_kubernetes_audit` ``, `` `mitre_dc0018_linux_syslog` ``, `` `mitre_dc0018_palo_alto` ``, `` `mitre_dc0018_sysmon` ``, `` `mitre_dc0018_trellix_epo` ``, `` `mitre_dc0018_windows_perfmon` ``, `` `mitre_dc0018_wineventlog` ``, `` `mitre_dc0018_filter` `` (site exclusions).
 CIM: `Endpoint.Services` via `` `mitre_dc0018_dm` `` / `` `mitre_dc0018_dm_where` `` for `tstats`. CIM tags emitted for: none (no feed is known CIM-compliant for this model).
 
 ## Sigma

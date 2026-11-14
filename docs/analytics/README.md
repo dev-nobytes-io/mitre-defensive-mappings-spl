@@ -1,6 +1,6 @@
 # Analytics (ATT&CK v20.1)
 
-119 of 1773 ATT&CK analytics are implemented as ES detections and Sigma rules; 511 are coverable by the feeds ticked in `config/stack.yml`. The rest are in the [backlog](backlog.md), ranked by technique prevalence.
+119 of 1773 ATT&CK analytics are implemented as ES detections and Sigma rules; 1075 map entirely to feeds on in-scope platforms. The rest are in the [backlog](backlog.md), ranked by technique prevalence.
 
 ```mermaid
 pie showData

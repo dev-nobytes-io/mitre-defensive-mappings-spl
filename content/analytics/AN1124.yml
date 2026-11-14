@@ -30,7 +30,7 @@ attack:
   - field: QueryRatePerClient
     description: Tunable burst rate per IP per second
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: anomaly
   suggested_tuning:
   - element: DomainReputationFeed

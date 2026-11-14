@@ -44,7 +44,6 @@ derived:
     - compute.disks.insert with sourceSnapshot parameter
   feeds:
   - feed: aws
-    have: false
     in_scope: false
     eventtype: null
     search: null
@@ -54,7 +53,6 @@ derived:
     - AWS:CloudTrail
     cim_tags: false
   - feed: gcp
-    have: false
     in_scope: false
     eventtype: null
     search: null

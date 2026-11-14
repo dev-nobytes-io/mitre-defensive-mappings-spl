@@ -41,7 +41,7 @@ attack:
   - field: TimeWindow
     description: Time delta between credential file access and use in logon attempt
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: ttp
   suggested_tuning:
   - element: FileNamePattern

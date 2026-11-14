@@ -30,7 +30,7 @@ attack:
   - field: RemoteSessionFlag
     description: Creation via Telnet, SSH, or serial console affects detection priority
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: ttp
   suggested_tuning:
   - element: PrivilegeLevel

@@ -138,8 +138,16 @@ derived:
     channels:
     - API requests made with tokens not associated with expected user logins
   feeds:
+  - feed: azure_entra
+    in_scope: true
+    eventtype: mitre_dc0007_web_credential_usage__azure_entra
+    search: index=azure sourcetype="azure:aad:signin"
+    constraint_origin: defaults
+    broad_refs: 4
+    sources:
+    - azure:signinlogs
+    cim_tags: true
   - feed: corelight
-    have: true
     in_scope: true
     eventtype: mitre_dc0007_web_credential_usage__corelight
     search: index=corelight sourcetype IN (corelight_http, corelight_ssl)
@@ -149,7 +157,6 @@ derived:
     - NSM:Connections
     cim_tags: false
   - feed: palo_alto
-    have: true
     in_scope: true
     eventtype: mitre_dc0007_web_credential_usage__palo_alto
     search: index=pan_logs sourcetype IN ("pan:threat", "pan:traffic")
@@ -158,18 +165,7 @@ derived:
     sources:
     - NSM:Connections
     cim_tags: false
-  - feed: azure_entra
-    have: false
-    in_scope: true
-    eventtype: mitre_dc0007_web_credential_usage__azure_entra
-    search: index=azure sourcetype="azure:aad:signin"
-    constraint_origin: defaults
-    broad_refs: 4
-    sources:
-    - azure:signinlogs
-    cim_tags: true
   - feed: aws
-    have: false
     in_scope: false
     eventtype: null
     search: null
@@ -179,7 +175,6 @@ derived:
     - AWS:CloudTrail
     cim_tags: false
   - feed: m365_unified
-    have: false
     in_scope: false
     eventtype: null
     search: null
@@ -190,7 +185,6 @@ derived:
     - m365:unified
     cim_tags: false
   - feed: macos
-    have: false
     in_scope: false
     eventtype: null
     search: null
@@ -200,7 +194,6 @@ derived:
     - macos:unifiedlog
     cim_tags: false
   - feed: saas
-    have: false
     in_scope: false
     eventtype: null
     search: null

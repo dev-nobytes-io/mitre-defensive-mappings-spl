@@ -2,7 +2,7 @@
 
 [ATT&CK](https://attack.mitre.org/datacomponents/DC0029) · version 2.0 · modified 2026-10-13 · ATT&CK release 20.1
 
-Status: **Live** · umbrella eventtype `mitre_dc0029_script_execution`
+Umbrella eventtype `mitre_dc0029_script_execution` over 7 feed(s)
 
 > The execution of a text file that contains code via the interpreter.
 
@@ -55,20 +55,12 @@ flowchart LR
   F_trellix_epo["Trellix ePO events"]
   LS9 --> F_trellix_epo
   DC --> MORE["... 5 more log sources"]
-  F_powershell_logging --> ET_powershell_logging[/"mitre_dc0029_script_execution__powershell_logging"/]
-  class F_powershell_logging live
-  F_trellix_epo --> ET_trellix_epo[/"mitre_dc0029_script_execution__trellix_epo"/]
-  class F_trellix_epo live
-  F_wineventlog --> ET_wineventlog[/"mitre_dc0029_script_execution__wineventlog"/]
-  class F_wineventlog live
   F_edr_telemetry --> ET_edr_telemetry[/"mitre_dc0029_script_execution__edr_telemetry"/]
-  class F_edr_telemetry ready
   F_esxi_syslog --> ET_esxi_syslog[/"mitre_dc0029_script_execution__esxi_syslog"/]
-  class F_esxi_syslog ready
   F_etw --> ET_etw[/"mitre_dc0029_script_execution__etw"/]
-  class F_etw ready
-  classDef live fill:#d4edda,stroke:#2e7d32,color:#1b1b1b
-  classDef ready fill:#fff3cd,stroke:#b26a00,color:#1b1b1b
+  F_powershell_logging --> ET_powershell_logging[/"mitre_dc0029_script_execution__powershell_logging"/]
+  F_trellix_epo --> ET_trellix_epo[/"mitre_dc0029_script_execution__trellix_epo"/]
+  F_wineventlog --> ET_wineventlog[/"mitre_dc0029_script_execution__wineventlog"/]
 ```
 
 ## Requirements
@@ -80,18 +72,21 @@ Component specific:
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
+| Feed | Schedule | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `powershell_logging` | live | source=`XmlWinEventLog:Microsoft-Windows-PowerShell/Operational` | `EventCode IN (4103, 4104)` | defaults | Splunk Add-on for Microsoft Windows |
-| `trellix_epo` | live | sourcetype=`mcafee:epo:syslog` | `(threat_type="AMSI*" OR threat_name="AMSI*")` | derived | Splunk Add-on for McAfee ePO Syslog (sourcetype mcafee:epo:syslog, documented by Splunk). If ePO data arrives another way (DB Connect pull, a community Trellix REST add-on such as trellix_epo:threat_events), change the sourcetype here. |
-| `wineventlog` | live | source=`XmlWinEventLog:Application`, source=`XmlWinEventLog:System` | `EventCode IN (1502, 1503, 4016, 5312)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true) |
-| `auditd` | ready (tick in stack.yml) | sourcetype=`linux:audit` | `type IN (EXECVE, SYSCALL) (syscall IN (execve, execveat) OR SYSCALL IN (execve, execveat)) (exe IN ("/bin/bash", "/bin/sh", "/usr/bin/python*", "/usr/bin/perl", "/bin/dash", "/bin/zsh"))` | defaults | Splunk Add-on for Unix and Linux (linux:audit) or auditd -> auditbeat/syslog |
-| `edr_telemetry` | ready (tick in stack.yml) | sourcetype=`edr:telemetry` | `(whole feed)` | derived | Vendor specific |
-| `esxi_syslog` | ready (tick in stack.yml) | sourcetype=`vmware:esxlog:shell` | `(whole feed)` | defaults | Splunk Add-on for VMware ESXi Logs (vmware:esxlog:<log>) |
-| `etw` | ready (tick in stack.yml) | sourcetype=`etw:json` | `(ProviderName="Microsoft-Antimalware-Scan-Interface")` | derived | Requires a user-mode ETW consumer (SilkETW/Sealighter, Splunk Stream for NDIS, or an EDR that exposes the provider). No standard Splunk TA. |
+| `auditd` | scheduled | sourcetype=`linux:audit` | `type IN (EXECVE, SYSCALL) (syscall IN (execve, execveat) OR SYSCALL IN (execve, execveat)) (exe IN ("/bin/bash", "/bin/sh", "/usr/bin/python*", "/usr/bin/perl", "/bin/dash", "/bin/zsh"))` | defaults | Splunk Add-on for Unix and Linux (linux:audit) or auditd -> auditbeat/syslog |
+| `edr_telemetry` | scheduled | sourcetype=`edr:telemetry` | `(whole feed)` | derived | Vendor specific |
+| `esxi_syslog` | scheduled | sourcetype=`vmware:esxlog:shell` | `(whole feed)` | defaults | Splunk Add-on for VMware ESXi Logs (vmware:esxlog:<log>) |
+| `etw` | scheduled | sourcetype=`etw:json` | `(ProviderName="Microsoft-Antimalware-Scan-Interface")` | derived | Requires a user-mode ETW consumer (SilkETW/Sealighter, Splunk Stream for NDIS, or an EDR that exposes the provider). No standard Splunk TA. |
+| `powershell_logging` | scheduled | source=`XmlWinEventLog:Microsoft-Windows-PowerShell/Operational` | `EventCode IN (4103, 4104)` | defaults | Splunk Add-on for Microsoft Windows |
+| `trellix_epo` | scheduled | sourcetype=`mcafee:epo:syslog` | `(threat_type="AMSI*" OR threat_name="AMSI*")` | derived | Splunk Add-on for McAfee ePO Syslog (sourcetype mcafee:epo:syslog, documented by Splunk). If ePO data arrives another way (DB Connect pull, a community Trellix REST add-on such as trellix_epo:threat_events), change the sourcetype here. |
+| `wineventlog` | scheduled | source=`XmlWinEventLog:Application`, source=`XmlWinEventLog:System` | `EventCode IN (1502, 1503, 4016, 5312)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true) |
 
 Collection prerequisites:
 
+- **auditd**: audit rules for execve, connect, open/openat on sensitive paths, ptrace, module load, mount, setuid; a Neo23x0/auditd baseline or Florian Roth's rule set is a reasonable start.
+- **auditd**: log_format = ENRICHED in auditd.conf so syscall names and uids resolve (otherwise syscall numbers are architecture dependent).
+- **esxi_syslog**: Syslog.global.logHost set on every host; ESXi Shell/SSH audit enabled; consider Syslog.global.auditRecord (ESXi 8).
 - **powershell_logging**: Turn on Script Block Logging and Module Logging GPO; consider Transcription to a protected share.
 - **powershell_logging**: Add Microsoft-Windows-PowerShell/Operational as a WinEventLog input (renderXml=true).
 - **trellix_epo**: ePO configured to forward threat events to Splunk (syslog or DB pull); confirm product_name/threat_type fields populate.
@@ -101,17 +96,26 @@ Collection prerequisites:
 - **wineventlog**: PowerShell Script Block Logging (4104) and Module Logging (4103) enabled via GPO for the PowerShell/Operational channel.
 - **wineventlog**: Object access events (4656/4663/4657/4660/4670) require SACLs on the files/keys of interest.
 - **wineventlog**: Non-default channels (TaskScheduler, WMI-Activity, CodeIntegrity, Defender, Firewall, WinRM, SMBClient/Server...) must be listed as inputs in Splunk_TA_windows inputs.conf; several are disabled by default in Windows.
-- **auditd**: audit rules for execve, connect, open/openat on sensitive paths, ptrace, module load, mount, setuid; a Neo23x0/auditd baseline or Florian Roth's rule set is a reasonable start.
-- **auditd**: log_format = ENRICHED in auditd.conf so syscall names and uids resolve (otherwise syscall numbers are architecture dependent).
-- **esxi_syslog**: Syslog.global.logHost set on every host; ESXi Shell/SSH audit enabled; consider Syslog.global.auditRecord (ESXi 8).
 
-Review notes: `wineventlog` has 2 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *defaults*; `edr_telemetry` has 4 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *derived*.
+Review notes: `edr_telemetry` has 4 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *derived*; `wineventlog` has 2 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *defaults*.
 
 ## Splunk
 
 Eventtypes (literal constraints, see `dist/splunk/TA-mitre-attack-datacomponents/default/eventtypes.conf`):
 
 ```ini
+[mitre_dc0029_script_execution__auditd]
+search = index=linux sourcetype="linux:audit" type IN (EXECVE, SYSCALL) (syscall IN (execve, execveat) OR SYSCALL IN (execve, execveat)) (exe IN ("/bin/bash", "/bin/sh", "/usr/bin/python*", "/usr/bin/perl", "/bin/dash", "/bin/zsh"))
+
+[mitre_dc0029_script_execution__edr_telemetry]
+search = index=edr sourcetype="edr:telemetry"
+
+[mitre_dc0029_script_execution__esxi_syslog]
+search = index=vmware sourcetype="vmware:esxlog:shell"
+
+[mitre_dc0029_script_execution__etw]
+search = index=etw sourcetype="etw:json" (ProviderName="Microsoft-Antimalware-Scan-Interface")
+
 [mitre_dc0029_script_execution__powershell_logging]
 search = index=wineventlog source="XmlWinEventLog:Microsoft-Windows-PowerShell/Operational" EventCode IN (4103, 4104)
 
@@ -121,27 +125,11 @@ search = index=epo sourcetype="mcafee:epo:syslog" (threat_type="AMSI*" OR threat
 [mitre_dc0029_script_execution__wineventlog]
 search = index=wineventlog source IN ("XmlWinEventLog:Application", "XmlWinEventLog:System") EventCode IN (1502, 1503, 4016, 5312)
 
-[mitre_dc0029_script_execution__auditd]
-search = index=linux sourcetype="linux:audit" type IN (EXECVE, SYSCALL) (syscall IN (execve, execveat) OR SYSCALL IN (execve, execveat)) (exe IN ("/bin/bash", "/bin/sh", "/usr/bin/python*", "/usr/bin/perl", "/bin/dash", "/bin/zsh"))
-disabled = 1
-
-[mitre_dc0029_script_execution__edr_telemetry]
-search = index=edr sourcetype="edr:telemetry"
-disabled = 1
-
-[mitre_dc0029_script_execution__esxi_syslog]
-search = index=vmware sourcetype="vmware:esxlog:shell"
-disabled = 1
-
-[mitre_dc0029_script_execution__etw]
-search = index=etw sourcetype="etw:json" (ProviderName="Microsoft-Antimalware-Scan-Interface")
-disabled = 1
-
 [mitre_dc0029_script_execution]
-search = eventtype=mitre_dc0029_script_execution__powershell_logging OR eventtype=mitre_dc0029_script_execution__trellix_epo OR eventtype=mitre_dc0029_script_execution__wineventlog OR eventtype=mitre_dc0029_script_execution__auditd OR eventtype=mitre_dc0029_script_execution__edr_telemetry OR eventtype=mitre_dc0029_script_execution__esxi_syslog OR eventtype=mitre_dc0029_script_execution__etw
+search = eventtype=mitre_dc0029_script_execution__auditd OR eventtype=mitre_dc0029_script_execution__edr_telemetry OR eventtype=mitre_dc0029_script_execution__esxi_syslog OR eventtype=mitre_dc0029_script_execution__etw OR eventtype=mitre_dc0029_script_execution__powershell_logging OR eventtype=mitre_dc0029_script_execution__trellix_epo OR eventtype=mitre_dc0029_script_execution__wineventlog
 ```
 
-Macros for analytics: `` `mitre_dc0029` `` (umbrella), `` `mitre_dc0029_powershell_logging` ``, `` `mitre_dc0029_trellix_epo` ``, `` `mitre_dc0029_wineventlog` ``, `` `mitre_dc0029_auditd` ``, `` `mitre_dc0029_edr_telemetry` ``, `` `mitre_dc0029_esxi_syslog` ``, `` `mitre_dc0029_etw` ``, `` `mitre_dc0029_filter` `` (site exclusions).
+Macros for analytics: `` `mitre_dc0029` `` (umbrella), `` `mitre_dc0029_auditd` ``, `` `mitre_dc0029_edr_telemetry` ``, `` `mitre_dc0029_esxi_syslog` ``, `` `mitre_dc0029_etw` ``, `` `mitre_dc0029_powershell_logging` ``, `` `mitre_dc0029_trellix_epo` ``, `` `mitre_dc0029_wineventlog` ``, `` `mitre_dc0029_filter` `` (site exclusions).
 CIM: `Endpoint.Processes` via `` `mitre_dc0029_dm` `` / `` `mitre_dc0029_dm_where` `` for `tstats`. CIM tags emitted for: none (no feed is known CIM-compliant for this model).
 
 ## Sigma

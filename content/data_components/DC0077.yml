@@ -71,7 +71,6 @@ derived:
     - CRI CreateContainer/StartContainer with privileged=true OR added capabilities OR host* namespaces
   feeds:
   - feed: container_runtime
-    have: false
     in_scope: true
     eventtype: mitre_dc0077_container_start__container_runtime
     search: index=k8s sourcetype IN ("containerd:events", "docker:events") (status=start)
@@ -82,7 +81,6 @@ derived:
     - docker:events
     cim_tags: false
   - feed: kubernetes_audit
-    have: false
     in_scope: true
     eventtype: mitre_dc0077_container_start__kubernetes_audit
     search: index=k8s sourcetype="kube:objects:events" (reason=Started OR reason=Pulled OR reason=Created)

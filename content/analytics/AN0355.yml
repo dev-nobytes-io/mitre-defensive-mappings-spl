@@ -37,7 +37,7 @@ attack:
   - field: TimeWindow
     description: Correlation window between file creation and service/process execution
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: ttp
   suggested_tuning:
   - element: OriginalFilenameMismatch

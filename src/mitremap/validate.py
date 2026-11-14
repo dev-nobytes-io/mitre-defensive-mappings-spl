@@ -192,8 +192,9 @@ def _validate_health(views) -> list[str]:
         if f"MITRE - {sp.id} - {sp.title}" not in stanzas:
             errs.append(f"{sp.id}: stanza missing from savedsearches.conf")
     rows = expected_telemetry(views)
-    for feed, f in config.stack().items():
-        if f.get("have") and not f.get("hunt_only") and not f.get("virtual") and f.get("render") is not False:
-            if not any(r.feed == feed for r in rows):
-                errs.append(f"expected telemetry has no row for ticked feed {feed}")
+    with_eventtypes = {f.feed for v in views for f in v.feeds
+                       if f.in_scope and not f.hunt_only and config.feed(f.feed).get("index") and any("*" not in s for s in f.sourcetypes)}
+    for feed in sorted(with_eventtypes):
+        if not any(r.feed == feed for r in rows):
+            errs.append(f"expected telemetry has no row for feed {feed}, which has eventtypes")
     return errs

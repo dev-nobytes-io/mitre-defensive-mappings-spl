@@ -32,7 +32,7 @@ attack:
   - field: ConfigBaseline
     description: Reference configuration state for detecting unauthorized modifications.
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: ttp
   suggested_tuning:
   - element: ConfigBaseline

@@ -2,7 +2,7 @@
 
 [ATT&CK](https://attack.mitre.org/datacomponents/DC0048) · version 2.0 · modified 2025-10-21 · ATT&CK release 20.1
 
-Status: **Live** · umbrella eventtype `mitre_dc0048_named_pipe_metadata`
+Umbrella eventtype `mitre_dc0048_named_pipe_metadata` over 1 feed(s)
 
 > Contextual data about a named pipe on a system, including pipe name and creating process (ex: Sysmon EIDs 17-18)  *Data Collection Measures:*  - Windows:     - Sysmon Event ID 17: Logs the creation of a named pipe.     - Sysmon Event ID 18: Logs connection attempts to a named pipe.     - Windows Security Event ID 5145: Logs access attempts to named pipes via SMB shares.     - ETW (Event Tracing for Windows): Provides deep telemetry into named pipe interactions. - Linux/macOS:     - AuditD (`mkfifo`, `open`, `read`, `write` syscalls): Tracks FIFO (named pipe) creation and usage.     - Lsof (`lsof -p <PID>` or `lsof | grep PIPE`): Lists active named pipes and associated processes.     - Strace (`strace -e open <process>`): Monitors named pipe interactions. - Endpoint Detection & Response (EDR):     - Capture named pipe events as part of process tracking. - Memory Forensics:     - Volatility Plugin (`pipescan`): Enumerates named pipes in system memory.     - Rekall Framework: Identifies active named pipes and associated processes.
 
@@ -23,9 +23,6 @@ flowchart LR
   F_sysmon["Sysmon"]
   LS0 --> F_sysmon
   F_sysmon --> ET_sysmon[/"mitre_dc0048_named_pipe_metadata__sysmon"/]
-  class F_sysmon live
-  classDef live fill:#d4edda,stroke:#2e7d32,color:#1b1b1b
-  classDef ready fill:#fff3cd,stroke:#b26a00,color:#1b1b1b
 ```
 
 ## Requirements
@@ -36,9 +33,9 @@ Component specific:
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
+| Feed | Schedule | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `sysmon` | live | source=`XmlWinEventLog:Microsoft-Windows-Sysmon/Operational` | `EventCode IN (17, 18)` | defaults | Splunk Add-on for Sysmon (needs Splunk_TA_windows for XML parsing) |
+| `sysmon` | scheduled | source=`XmlWinEventLog:Microsoft-Windows-Sysmon/Operational` | `EventCode IN (17, 18)` | defaults | Splunk Add-on for Sysmon (needs Splunk_TA_windows for XML parsing) |
 
 Collection prerequisites:
 

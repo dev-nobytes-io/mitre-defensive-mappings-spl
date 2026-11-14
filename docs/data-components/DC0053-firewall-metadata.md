@@ -2,7 +2,7 @@
 
 [ATT&CK](https://attack.mitre.org/datacomponents/DC0053) · version 2.0 · modified 2026-10-13 · ATT&CK release 20.1
 
-Status: **Live** · umbrella eventtype `mitre_dc0053_firewall_metadata`
+Umbrella eventtype `mitre_dc0053_firewall_metadata` over 2 feed(s)
 
 > Contextual information about firewalls, including their configurations, policies, status, and other details such as names and associated rules. This metadata provides valuable insights into the operational state and configurations of firewalls, both in cloud control planes and host systems. Examples:   - Firewall Name and Configuration: The name, type, and purpose of a firewall such as "Azure Firewall - Production Environment." - Policy Details: Capturing firewall policy details, such as "Allow inbound TCP 443 to web servers." - Firewall Status: Status indicators like "Active," "Disabled," or "Pending Updates." - Audit Log Metadata: Log entries showing administrative changes, such as "Policy modified by admin@domain.com." - Rules Associated with Firewalls: Rules specifying source/destination IP ranges, protocols, and ports. - Tagging Information: Tags like "Environment: Production" or "Owner: NetworkOps."  This data component can be collected through the following measures:  Cloud Control Plane  - Azure: Use Azure Activity Logs and Network Watcher to collect metadata for Azure Firewall.     - Example: `az network firewall show --name <firewall-name>` - AWS: Use AWS CloudTrail and describe commands: `aws ec2 describe-security-groups` - Google Cloud: Use gcloud commands to extract metadata: `gcloud compute firewall-rules list --format=json`  Host-Based Firewalls  - Windows: Use PowerShell to gather metadata: `Get-NetFirewallRule -PolicyStore PersistentStore` - Linux: Query iptables or nftables rulesets: `iptables -S` - macOS: Use pfctl to extract metadata: `sudo pfctl -sr`  SIEM Integration  - Collect logs from cloud platforms, host systems, and network appliances.  API Monitoring  - Monitor API calls for metadata requests. Example (AWS): `Capture DescribeSecurityGroups or DescribeNetworkAcls` calls via CloudTrail.  Endpoint Detection and Response (EDR)  - Use EDR solutions to monitor firewall management tools for configuration changes or queries.
 
@@ -21,19 +21,16 @@ flowchart LR
   F_wineventlog["Windows Event Logs"]
   LS0 --> F_wineventlog
   F_wineventlog --> ET_wineventlog[/"mitre_dc0053_firewall_metadata__wineventlog"/]
-  class F_wineventlog live
-  classDef live fill:#d4edda,stroke:#2e7d32,color:#1b1b1b
-  classDef ready fill:#fff3cd,stroke:#b26a00,color:#1b1b1b
 ```
 
 ## Requirements
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
+| Feed | Schedule | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `palo_alto` | live | sourcetype=`pan:config`, sourcetype=`pan:system` | `(whole feed)` | defaults | Splunk Add-on for Palo Alto Networks (pan:*) |
-| `wineventlog` | live | source=`XmlWinEventLog:Microsoft-Windows-Windows Firewall With Advanced Security/Firewall`, source=`XmlWinEventLog:Security` | `EventCode IN (2004, 2005, 2006, 4946, 4947, 4948)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true) |
+| `palo_alto` | scheduled | sourcetype=`pan:config`, sourcetype=`pan:system` | `(whole feed)` | defaults | Splunk Add-on for Palo Alto Networks (pan:*) |
+| `wineventlog` | scheduled | source=`XmlWinEventLog:Microsoft-Windows-Windows Firewall With Advanced Security/Firewall`, source=`XmlWinEventLog:Security` | `EventCode IN (2004, 2005, 2006, 4946, 4947, 4948)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true) |
 
 Collection prerequisites:
 

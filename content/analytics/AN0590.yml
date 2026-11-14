@@ -43,7 +43,7 @@ attack:
   - field: LogonType
     description: Distinguish between interactive, service, and network logons.
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: anomaly
   suggested_tuning:
   - element: TimeWindow

@@ -34,7 +34,7 @@ attack:
   - field: ChangeTicketCorrelation
     description: Track change control windows or ITSM integration.
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: ttp
   suggested_tuning:
   - element: PrivilegeLevel

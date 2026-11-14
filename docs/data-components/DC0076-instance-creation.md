@@ -2,7 +2,7 @@
 
 [ATT&CK](https://attack.mitre.org/datacomponents/DC0076) · version 2.0 · modified 2025-11-12 · ATT&CK release 20.1
 
-Status: **Ready** (needs a feed you have not ticked) · umbrella eventtype `mitre_dc0076_instance_creation`
+Umbrella eventtype `mitre_dc0076_instance_creation` over 1 feed(s)
 
 > The initial provisioning and construction of a virtual machine (VM) or compute instance within a cloud infrastructure environment. This activity involves defining and allocating resources such as CPU, memory, storage, and networking to spin up a new compute instance. Examples:  - AWS: creating an EC2 instance using RunInstances API calls. - Azure, creating a VM through the Azure Resource Manager (ARM). - GCP, an `instance.insert` action recorded.
 
@@ -21,18 +21,15 @@ flowchart LR
   F_azure_activity["Azure Activity Log"]
   LS0 --> F_azure_activity
   F_azure_activity --> ET_azure_activity[/"mitre_dc0076_instance_creation__azure_activity"/]
-  class F_azure_activity ready
-  classDef live fill:#d4edda,stroke:#2e7d32,color:#1b1b1b
-  classDef ready fill:#fff3cd,stroke:#b26a00,color:#1b1b1b
 ```
 
 ## Requirements
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
+| Feed | Schedule | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `azure_activity` | ready (tick in stack.yml) | sourcetype=`mscs:azure:audit` | `(whole feed)` | derived | Splunk Add-on for Microsoft Cloud Services (mscs:azure:audit) |
+| `azure_activity` | scheduled | sourcetype=`mscs:azure:audit` | `(whole feed)` | derived | Splunk Add-on for Microsoft Cloud Services (mscs:azure:audit) |
 
 Collection prerequisites:
 
@@ -47,7 +44,6 @@ Eventtypes (literal constraints, see `dist/splunk/TA-mitre-attack-datacomponents
 ```ini
 [mitre_dc0076_instance_creation__azure_activity]
 search = index=azure sourcetype="mscs:azure:audit"
-disabled = 1
 
 [mitre_dc0076_instance_creation]
 search = eventtype=mitre_dc0076_instance_creation__azure_activity

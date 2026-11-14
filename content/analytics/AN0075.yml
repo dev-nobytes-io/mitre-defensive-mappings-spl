@@ -36,7 +36,7 @@ attack:
   - field: OutboundByteRatioThreshold
     description: Flag when outbound > inbound volume by 90%+
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: anomaly
   suggested_tuning:
   - element: ProcessNameExclusions

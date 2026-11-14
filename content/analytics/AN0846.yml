@@ -30,7 +30,7 @@ attack:
   - field: TimeWindow
     description: Tune for bursts of enumeration commands in short succession.
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: hunting
   suggested_tuning:
   - element: CommandLinePattern

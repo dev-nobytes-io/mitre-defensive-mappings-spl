@@ -2,7 +2,7 @@
 
 [ATT&CK](https://attack.mitre.org/datacomponents/DC0095) · version 2.0 · modified 2025-10-21 · ATT&CK release 20.1
 
-Status: **Out of scope** for the current platform set
+**Out of scope** for the current platform set
 
 > An extracted list of available volumes within a cloud environment (ex: AWS describe-volumes)
 
@@ -15,15 +15,13 @@ ATT&CK v20.1 has **0 analytics** across **0 detection strategies** that read thi
 ```mermaid
 flowchart LR
   DC["DC0095 Volume Enumeration"]
-  classDef live fill:#d4edda,stroke:#2e7d32,color:#1b1b1b
-  classDef ready fill:#fff3cd,stroke:#b26a00,color:#1b1b1b
 ```
 
 ## Requirements
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
+| Feed | Schedule | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
 
 ## Splunk

@@ -2,7 +2,7 @@
 
 [ATT&CK](https://attack.mitre.org/datacomponents/DC0098) · version 2.0 · modified 2025-11-12 · ATT&CK release 20.1
 
-Status: **Ready** (needs a feed you have not ticked) · umbrella eventtype `mitre_dc0098_volume_deletion`
+Umbrella eventtype `mitre_dc0098_volume_deletion` over 1 feed(s)
 
 > The removal of a cloud-based or on-premise block storage volume. This action permanently deletes the allocated storage and may result in data loss if not backed up.  *Data Collection Measures:*  - Cloud Logging & APIs     - AWS CloudTrail Logs         - `eventName: DeleteVolume` (tracks volume deletions)     - Azure Monitor Logs         - `operationName: Microsoft.Compute/disks/delete`         - `status: Success | Failure` (flag unauthorized delete attempts)     - Google Cloud Audit Logs         - `protoPayload.methodName: "v1.compute.disks.delete"`         - `authenticationInfo.principalEmail` (identifies the user deleting the volume) - System & Host-Based Logging     - Linux & macOS Logs:         - `/var/log/syslog` or `/var/log/messages` for volume detach/deletion actions     - Windows Event Logs:         - Event ID 98 (Storage Class Memory)         - Event ID 225 (Volume Removal Detected)         - Event ID 12 (Disk Removal Notification)
 
@@ -23,18 +23,15 @@ flowchart LR
   F_esxi_syslog["ESXi host logs via remote syslog"]
   LS0 --> F_esxi_syslog
   F_esxi_syslog --> ET_esxi_syslog[/"mitre_dc0098_volume_deletion__esxi_syslog"/]
-  class F_esxi_syslog ready
-  classDef live fill:#d4edda,stroke:#2e7d32,color:#1b1b1b
-  classDef ready fill:#fff3cd,stroke:#b26a00,color:#1b1b1b
 ```
 
 ## Requirements
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
+| Feed | Schedule | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `esxi_syslog` | ready (tick in stack.yml) | sourcetype=`vmware:esxlog:hostd`, sourcetype=`vmware:esxlog:vmkernel` | `(whole feed)` | defaults | Splunk Add-on for VMware ESXi Logs (vmware:esxlog:<log>) |
+| `esxi_syslog` | scheduled | sourcetype=`vmware:esxlog:hostd`, sourcetype=`vmware:esxlog:vmkernel` | `(whole feed)` | defaults | Splunk Add-on for VMware ESXi Logs (vmware:esxlog:<log>) |
 
 Collection prerequisites:
 
@@ -47,7 +44,6 @@ Eventtypes (literal constraints, see `dist/splunk/TA-mitre-attack-datacomponents
 ```ini
 [mitre_dc0098_volume_deletion__esxi_syslog]
 search = index=vmware sourcetype IN ("vmware:esxlog:hostd", "vmware:esxlog:vmkernel")
-disabled = 1
 
 [mitre_dc0098_volume_deletion]
 search = eventtype=mitre_dc0098_volume_deletion__esxi_syslog

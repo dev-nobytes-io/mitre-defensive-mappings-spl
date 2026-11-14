@@ -134,11 +134,11 @@ class AnalyticsDocsRenderer:
     # ------------------------------------------------------------------ index
     def _index(self, m: AttackModel, avs: list[AnalyticView], impl: list[AnalyticView]) -> Path:
         ct = Counter(v.content_type for v in impl)
-        live = [v for v in avs if v.coverage == "live"]
+        mapped = [v for v in avs if v.coverage == "mapped"]
         tac = Counter(t for v in impl if v.technique for t in v.technique.tactics)
         L = [f"# Analytics (ATT&CK v{m.version})", "",
              f"{len(impl)} of {len(m.analytics)} ATT&CK analytics are implemented as ES detections and Sigma rules; "
-             f"{len(live)} are coverable by the feeds ticked in `config/stack.yml`. The rest are in the [backlog](backlog.md), ranked by technique prevalence.", "",
+             f"{len(mapped)} map entirely to feeds on in-scope platforms. The rest are in the [backlog](backlog.md), ranked by technique prevalence.", "",
              "```mermaid", "pie showData", "    title Implemented analytics by content type",
              f'    "TTP (finding + risk)" : {ct["ttp"]}', f'    "Anomaly (risk only)" : {ct["anomaly"]}', f'    "Hunting (no action)" : {ct["hunting"]}', "```", ""]
         if tac:
@@ -162,27 +162,29 @@ class AnalyticsDocsRenderer:
 
     # ------------------------------------------------------------------ backlog
     def _backlog(self, m: AttackModel, avs: list[AnalyticView]) -> Path:
-        todo = [v for v in avs if not v.implemented]
-        live = sorted([v for v in todo if v.coverage == "live"], key=lambda v: (-v.priority, v.id))
-        ready = Counter()
-        for v in todo:
-            if v.coverage == "ready":
-                for p in v.an.platforms:
-                    ready[p] += 1
+        from .. import config
+        todo = sorted([v for v in avs if not v.implemented and v.coverage == "mapped"], key=lambda v: (-v.priority, v.id))
+        scope = config.platforms()["in_scope"]
+        per_plat: dict[str, list] = {p: [v for v in todo if p in v.an.platforms] for p in scope}
+        top = 75
         L = [f"# Analytic backlog (ATT&CK v{m.version})", "",
-             "Unimplemented analytics whose log sources are all on ticked feeds, ranked by technique prevalence "
-             "(2 × groups + 2 × campaigns + software using the technique). The suggested content type is a heuristic starting point.", "",
-             f"Live and unimplemented: **{len(live)}**. Showing the top 150.", "",
-             "| # | Analytic | Platforms | Technique | Tactics | Score | Suggested type | Data components |", "|---|---|---|---|---|---|---|---|"]
-        for i, v in enumerate(live[:150], 1):
-            te = v.technique
-            dcs = sorted({r.dc_id for r in v.an.log_source_refs if r.dc_id})
-            L.append(f"| {i} | [{v.id}]({v.an.url}) | {', '.join(v.an.platforms)} | {te.id if te else ''} {te.name if te else ''} | {', '.join(te.tactics) if te else ''} | {v.priority} | {v.suggested_content_type} | {', '.join(dcs)} |")
-        L += ["", "## Waiting on a feed", "", "Analytics that become implementable when you tick the feeds in [gaps](../gaps.md):", "",
-              "| Platform | Analytics ready |", "|---|---|"]
-        for p, n in ready.most_common():
-            L.append(f"| {p} | {n} |")
+             "Unimplemented analytics whose log sources all map to feeds on in-scope platforms, per platform, ranked by technique prevalence "
+             "(2 × groups + 2 × campaigns + software using the technique). The suggested content type is a heuristic starting point. "
+             "Whether an analytic is runnable at your site depends on the feeds you collect; see the [log source checklist](../checklist.md).", "",
+             f"Mapped and unimplemented: **{len(todo)}**. Showing the top {top} per platform.", "",
+             "| Platform | Mapped and unimplemented |", "|---|---|"]
+        L += [f"| [{p}](#{p.lower().replace(' ', '-')}) | {len(vs)} |" for p, vs in per_plat.items()]
         L.append("")
+        for p, vs in per_plat.items():
+            L += [f"## {p}", "",
+                  "| # | Analytic | Technique | Tactics | Score | Suggested type | Data components |", "|---|---|---|---|---|---|---|"]
+            for i, v in enumerate(vs[:top], 1):
+                te = v.technique
+                dcs = sorted({r.dc_id for r in v.an.log_source_refs if r.dc_id})
+                L.append(f"| {i} | [{v.id}]({v.an.url}) | {te.id if te else ''} {te.name if te else ''} | {', '.join(te.tactics) if te else ''} | {v.priority} | {v.suggested_content_type} | {', '.join(dcs)} |")
+            if len(vs) > top:
+                L.append(f"| … | {len(vs) - top} more | | | | | |")
+            L.append("")
         p = AN_DOCS / "backlog.md"
         p.write_text("\n".join(L), encoding="utf-8")
         return p

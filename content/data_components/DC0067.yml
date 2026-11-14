@@ -422,8 +422,26 @@ derived:
       Extensible Authentication Protocol (EAP) authentication success for device Media Access Control (MAC)/certificate
       not in approved wireless device inventory
   feeds:
+  - feed: auditd
+    in_scope: true
+    eventtype: mitre_dc0067_logon_session_creation__auditd
+    search: index=linux sourcetype="linux:audit" type IN (USER_AUTH, USER_LOGIN, USER_START)
+    constraint_origin: defaults
+    broad_refs: 0
+    sources:
+    - auditd:SYSCALL
+    cim_tags: false
+  - feed: azure_entra
+    in_scope: true
+    eventtype: mitre_dc0067_logon_session_creation__azure_entra
+    search: index=azure sourcetype="azure:aad:signin"
+    constraint_origin: defaults
+    broad_refs: 18
+    sources:
+    - azure:audit
+    - azure:signinlogs
+    cim_tags: true
   - feed: corelight
-    have: true
     in_scope: true
     eventtype: mitre_dc0067_logon_session_creation__corelight
     search: index=corelight sourcetype IN (corelight_kerberos, corelight_ntlm, corelight_rdp, corelight_ssh)
@@ -432,8 +450,27 @@ derived:
     sources:
     - NSM:Connections
     cim_tags: false
+  - feed: esxi_syslog
+    in_scope: true
+    eventtype: mitre_dc0067_logon_session_creation__esxi_syslog
+    search: index=vmware sourcetype IN ("vmware:esxlog:auth", "vmware:esxlog:hostd")
+    constraint_origin: defaults
+    broad_refs: 0
+    sources:
+    - esxi:auth
+    - esxi:vmkernel
+    cim_tags: false
+  - feed: linux_syslog
+    in_scope: true
+    eventtype: mitre_dc0067_logon_session_creation__linux_syslog
+    search: index=linux sourcetype=linux_secure
+    constraint_origin: defaults
+    broad_refs: 16
+    sources:
+    - linux:auth
+    - linux:syslog
+    cim_tags: true
   - feed: palo_alto
-    have: true
     in_scope: true
     eventtype: mitre_dc0067_logon_session_creation__palo_alto
     search: index=pan_logs sourcetype IN ("pan:globalprotect", "pan:system")
@@ -446,7 +483,6 @@ derived:
     - networkdevice:auth
     cim_tags: true
   - feed: wineventlog
-    have: true
     in_scope: true
     eventtype: mitre_dc0067_logon_session_creation__wineventlog
     search: index=wineventlog source="XmlWinEventLog:Security" EventCode IN (4624, 4625, 4648, 4778)
@@ -455,51 +491,7 @@ derived:
     sources:
     - WinEventLog:Security
     cim_tags: true
-  - feed: auditd
-    have: false
-    in_scope: true
-    eventtype: mitre_dc0067_logon_session_creation__auditd
-    search: index=linux sourcetype="linux:audit" type IN (USER_AUTH, USER_LOGIN, USER_START)
-    constraint_origin: defaults
-    broad_refs: 0
-    sources:
-    - auditd:SYSCALL
-    cim_tags: false
-  - feed: azure_entra
-    have: false
-    in_scope: true
-    eventtype: mitre_dc0067_logon_session_creation__azure_entra
-    search: index=azure sourcetype="azure:aad:signin"
-    constraint_origin: defaults
-    broad_refs: 18
-    sources:
-    - azure:audit
-    - azure:signinlogs
-    cim_tags: true
-  - feed: esxi_syslog
-    have: false
-    in_scope: true
-    eventtype: mitre_dc0067_logon_session_creation__esxi_syslog
-    search: index=vmware sourcetype IN ("vmware:esxlog:auth", "vmware:esxlog:hostd")
-    constraint_origin: defaults
-    broad_refs: 0
-    sources:
-    - esxi:auth
-    - esxi:vmkernel
-    cim_tags: false
-  - feed: linux_syslog
-    have: false
-    in_scope: true
-    eventtype: mitre_dc0067_logon_session_creation__linux_syslog
-    search: index=linux sourcetype=linux_secure
-    constraint_origin: defaults
-    broad_refs: 16
-    sources:
-    - linux:auth
-    - linux:syslog
-    cim_tags: true
   - feed: aws
-    have: false
     in_scope: false
     eventtype: null
     search: null
@@ -509,7 +501,6 @@ derived:
     - AWS:CloudTrail
     cim_tags: false
   - feed: gcp
-    have: false
     in_scope: false
     eventtype: null
     search: null
@@ -519,7 +510,6 @@ derived:
     - gcp:audit
     cim_tags: false
   - feed: m365_unified
-    have: false
     in_scope: false
     eventtype: null
     search: null
@@ -532,7 +522,6 @@ derived:
     - m365:unified
     cim_tags: false
   - feed: macos
-    have: false
     in_scope: false
     eventtype: null
     search: null
@@ -542,7 +531,6 @@ derived:
     - macos:unifiedlog
     cim_tags: false
   - feed: saas
-    have: false
     in_scope: false
     eventtype: null
     search: null

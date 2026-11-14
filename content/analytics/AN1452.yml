@@ -43,7 +43,7 @@ attack:
   - field: UserContext
     description: Scope alerts to unusual user accounts or service accounts.
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: hunting
   suggested_tuning:
   - element: TimeWindow

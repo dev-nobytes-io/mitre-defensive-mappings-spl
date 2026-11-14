@@ -2,7 +2,7 @@
 
 [ATT&CK](https://attack.mitre.org/datacomponents/DC0059) · version 2.1 · modified 2026-10-13 · ATT&CK release 20.1
 
-Status: **Live** · umbrella eventtype `mitre_dc0059_file_metadata`
+Umbrella eventtype `mitre_dc0059_file_metadata` over 10 feed(s)
 
 > contextual information about a file, including attributes such as the file's name, size, type, content (e.g., signatures, headers, media), user/owner, permissions, timestamps, and other related properties. File metadata provides insights into a file's characteristics and can be used to detect malicious activity, unauthorized modifications, or other anomalies. Examples:   - File Ownership and Permissions: Checking the owner and permissions of a critical configuration file like /etc/passwd on Linux or C:\Windows\System32\config\SAM on Windows. - Timestamps: Analyzing the creation, modification, and access timestamps of a file. - File Content and Signatures: Extracting the headers of an executable file to verify its signature or detect packing/obfuscation. - File Attributes: Analyzing attributes like hidden, system, or read-only flags in Windows. - File Hashes: Generating MD5, SHA-1, or SHA-256 hashes of files to compare against threat intelligence feeds. - File Location: Monitoring files located in unusual directories or paths, such as temporary or user folders.
 
@@ -50,20 +50,12 @@ flowchart LR
   F_solidcore["Trellix Application and Change Control"]
   LS9 --> F_solidcore
   DC --> MORE["... 11 more log sources"]
-  F_solidcore --> ET_solidcore[/"mitre_dc0059_file_metadata__solidcore"/]
-  class F_solidcore live
-  F_sysmon --> ET_sysmon[/"mitre_dc0059_file_metadata__sysmon"/]
-  class F_sysmon live
-  F_wineventlog --> ET_wineventlog[/"mitre_dc0059_file_metadata__wineventlog"/]
-  class F_wineventlog live
   F_auditd --> ET_auditd[/"mitre_dc0059_file_metadata__auditd"/]
-  class F_auditd ready
   F_edr_telemetry --> ET_edr_telemetry[/"mitre_dc0059_file_metadata__edr_telemetry"/]
-  class F_edr_telemetry ready
   F_linux_osquery --> ET_linux_osquery[/"mitre_dc0059_file_metadata__linux_osquery"/]
-  class F_linux_osquery ready
-  classDef live fill:#d4edda,stroke:#2e7d32,color:#1b1b1b
-  classDef ready fill:#fff3cd,stroke:#b26a00,color:#1b1b1b
+  F_solidcore --> ET_solidcore[/"mitre_dc0059_file_metadata__solidcore"/]
+  F_sysmon --> ET_sysmon[/"mitre_dc0059_file_metadata__sysmon"/]
+  F_wineventlog --> ET_wineventlog[/"mitre_dc0059_file_metadata__wineventlog"/]
 ```
 
 ## Requirements
@@ -74,21 +66,23 @@ Component specific:
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
+| Feed | Schedule | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `corelight` | live | sourcetype=`corelight_files`, sourcetype=`corelight_pe` | `(whole feed)` | defaults | Corelight App for Splunk (corelight_<log>). For TA_zeek use prefix zeek: and suffix :json. |
-| `palo_alto` | live | sourcetype=`pan:threat` | `(log_subtype=wildfire OR log_subtype=virus)` | defaults | Splunk Add-on for Palo Alto Networks (pan:*) |
-| `solidcore` | live | sourcetype=`mcafee:epo:syslog` | `(threat_name IN (FILE_ATTR_MODIFIED, FILE_SOLIDIFIED, FILE_UNSOLIDIFIED) OR event_description IN (FILE_ATTR_MODIFIED, FILE_SOLIDIFIED, FILE_UNSOLIDIFIED)) (product_name="Solidcore*")` | defaults | Arrives through the ePO TA; Solidcore events carry event names such as FILE_CREATED, FILE_MODIFIED, FILE_DELETED, EXECUTION_DENIED, REG_VALUE_MODIFIED, PROCESS_HIJACK_ATTEMPTED. Verify field names (threat_name / event_description) in your data. |
-| `sysmon` | live | source=`XmlWinEventLog:Microsoft-Windows-Sysmon/Operational` | `EventCode IN (2, 11, 15)` | defaults | Splunk Add-on for Sysmon (needs Splunk_TA_windows for XML parsing) |
-| `trellix_epo` | live | sourcetype=`mcafee:epo:syslog` | `(whole feed)` | derived | Splunk Add-on for McAfee ePO Syslog (sourcetype mcafee:epo:syslog, documented by Splunk). If ePO data arrives another way (DB Connect pull, a community Trellix REST add-on such as trellix_epo:threat_events), change the sourcetype here. |
-| `wineventlog` | live | source=`XmlWinEventLog:Microsoft-Windows-CodeIntegrity/Operational`, source=`XmlWinEventLog:Microsoft-Windows-Windows Defender/Operational`, source=`XmlWinEventLog:Security` | `EventCode IN (1116, 1117, 3033, 4663, 4670)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true) |
-| `auditd` | ready (tick in stack.yml) | sourcetype=`linux:audit` | `type IN (PATH, SYSCALL) (syscall IN (chmod, chown, fchmod, fchmodat, fchown, fchownat, fsetxattr, lchown, lsetxattr, removexattr, setxattr) OR SYSCALL IN (chmod, chown, fchmod, fchmodat, fchown, fchownat, fsetxattr, lchown, lsetxattr, removexattr, setxattr))` | defaults | Splunk Add-on for Unix and Linux (linux:audit) or auditd -> auditbeat/syslog |
-| `ebpf` | ready (tick in stack.yml) | sourcetype=`falco` | `(whole feed)` | derived | Vendor specific (falco JSON, tetragon) |
-| `edr_telemetry` | ready (tick in stack.yml) | sourcetype=`edr:telemetry` | `(whole feed)` | derived | Vendor specific |
-| `linux_osquery` | ready (tick in stack.yml) | sourcetype=`osquery:results` | `(name=file OR name=hash OR name=file_events)` | defaults | osquery TA |
+| `auditd` | scheduled | sourcetype=`linux:audit` | `type IN (PATH, SYSCALL) (syscall IN (chmod, chown, fchmod, fchmodat, fchown, fchownat, fsetxattr, lchown, lsetxattr, removexattr, setxattr) OR SYSCALL IN (chmod, chown, fchmod, fchmodat, fchown, fchownat, fsetxattr, lchown, lsetxattr, removexattr, setxattr))` | defaults | Splunk Add-on for Unix and Linux (linux:audit) or auditd -> auditbeat/syslog |
+| `corelight` | scheduled | sourcetype=`corelight_files`, sourcetype=`corelight_pe` | `(whole feed)` | defaults | Corelight App for Splunk (corelight_<log>). For TA_zeek use prefix zeek: and suffix :json. |
+| `ebpf` | scheduled | sourcetype=`falco` | `(whole feed)` | derived | Vendor specific (falco JSON, tetragon) |
+| `edr_telemetry` | scheduled | sourcetype=`edr:telemetry` | `(whole feed)` | derived | Vendor specific |
+| `linux_osquery` | scheduled | sourcetype=`osquery:results` | `(name=file OR name=hash OR name=file_events)` | defaults | osquery TA |
+| `palo_alto` | scheduled | sourcetype=`pan:threat` | `(log_subtype=wildfire OR log_subtype=virus)` | defaults | Splunk Add-on for Palo Alto Networks (pan:*) |
+| `solidcore` | scheduled | sourcetype=`mcafee:epo:syslog` | `(threat_name IN (FILE_ATTR_MODIFIED, FILE_SOLIDIFIED, FILE_UNSOLIDIFIED) OR event_description IN (FILE_ATTR_MODIFIED, FILE_SOLIDIFIED, FILE_UNSOLIDIFIED)) (product_name="Solidcore*")` | defaults | Arrives through the ePO TA; Solidcore events carry event names such as FILE_CREATED, FILE_MODIFIED, FILE_DELETED, EXECUTION_DENIED, REG_VALUE_MODIFIED, PROCESS_HIJACK_ATTEMPTED. Verify field names (threat_name / event_description) in your data. |
+| `sysmon` | scheduled | source=`XmlWinEventLog:Microsoft-Windows-Sysmon/Operational` | `EventCode IN (2, 11, 15)` | defaults | Splunk Add-on for Sysmon (needs Splunk_TA_windows for XML parsing) |
+| `trellix_epo` | scheduled | sourcetype=`mcafee:epo:syslog` | `(whole feed)` | derived | Splunk Add-on for McAfee ePO Syslog (sourcetype mcafee:epo:syslog, documented by Splunk). If ePO data arrives another way (DB Connect pull, a community Trellix REST add-on such as trellix_epo:threat_events), change the sourcetype here. |
+| `wineventlog` | scheduled | source=`XmlWinEventLog:Microsoft-Windows-CodeIntegrity/Operational`, source=`XmlWinEventLog:Microsoft-Windows-Windows Defender/Operational`, source=`XmlWinEventLog:Security` | `EventCode IN (1116, 1117, 3033, 4663, 4670)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true) |
 
 Collection prerequisites:
 
+- **auditd**: audit rules for execve, connect, open/openat on sensitive paths, ptrace, module load, mount, setuid; a Neo23x0/auditd baseline or Florian Roth's rule set is a reasonable start.
+- **auditd**: log_format = ENRICHED in auditd.conf so syscall names and uids resolve (otherwise syscall numbers are architecture dependent).
 - **corelight**: Sensor placement covering east-west (DC, server VLANs) and north-south; without internal taps the lateral-movement components are blind.
 - **corelight**: Enable the log set above; files/pe/smb_* and ldap/kerberos/ntlm are what distinguish Corelight from flow data.
 - **palo_alto**: Log forwarding profiles attached to every security rule (traffic start+end, threat, url, wildfire, data).
@@ -105,18 +99,28 @@ Collection prerequisites:
 - **wineventlog**: PowerShell Script Block Logging (4104) and Module Logging (4103) enabled via GPO for the PowerShell/Operational channel.
 - **wineventlog**: Object access events (4656/4663/4657/4660/4670) require SACLs on the files/keys of interest.
 - **wineventlog**: Non-default channels (TaskScheduler, WMI-Activity, CodeIntegrity, Defender, Firewall, WinRM, SMBClient/Server...) must be listed as inputs in Splunk_TA_windows inputs.conf; several are disabled by default in Windows.
-- **auditd**: audit rules for execve, connect, open/openat on sensitive paths, ptrace, module load, mount, setuid; a Neo23x0/auditd baseline or Florian Roth's rule set is a reasonable start.
-- **auditd**: log_format = ENRICHED in auditd.conf so syscall names and uids resolve (otherwise syscall numbers are architecture dependent).
 
-Review notes: `corelight` has 2 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *defaults*; `solidcore` has 5 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *defaults*; `trellix_epo` has 2 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *derived*; `wineventlog` has 14 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *defaults*; `ebpf` has 2 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *derived*; `edr_telemetry` has 6 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *derived*; `linux_osquery` has 21 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *defaults*.
+Review notes: `corelight` has 2 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *defaults*; `ebpf` has 2 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *derived*; `edr_telemetry` has 6 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *derived*; `linux_osquery` has 21 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *defaults*; `solidcore` has 5 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *defaults*; `trellix_epo` has 2 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *derived*; `wineventlog` has 14 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *defaults*.
 
 ## Splunk
 
 Eventtypes (literal constraints, see `dist/splunk/TA-mitre-attack-datacomponents/default/eventtypes.conf`):
 
 ```ini
+[mitre_dc0059_file_metadata__auditd]
+search = index=linux sourcetype="linux:audit" type IN (PATH, SYSCALL) (syscall IN (chmod, chown, fchmod, fchmodat, fchown, fchownat, fsetxattr, lchown, lsetxattr, removexattr, setxattr) OR SYSCALL IN (chmod, chown, fchmod, fchmodat, fchown, fchownat, fsetxattr, lchown, lsetxattr, removexattr, setxattr))
+
 [mitre_dc0059_file_metadata__corelight]
 search = index=corelight sourcetype IN (corelight_files, corelight_pe)
+
+[mitre_dc0059_file_metadata__ebpf]
+search = index=linux sourcetype=falco
+
+[mitre_dc0059_file_metadata__edr_telemetry]
+search = index=edr sourcetype="edr:telemetry"
+
+[mitre_dc0059_file_metadata__linux_osquery]
+search = index=osquery sourcetype="osquery:results" (name=file OR name=hash OR name=file_events)
 
 [mitre_dc0059_file_metadata__palo_alto]
 search = index=pan_logs sourcetype="pan:threat" (log_subtype=wildfire OR log_subtype=virus)
@@ -133,27 +137,11 @@ search = index=epo sourcetype="mcafee:epo:syslog"
 [mitre_dc0059_file_metadata__wineventlog]
 search = index=wineventlog source IN ("XmlWinEventLog:Microsoft-Windows-CodeIntegrity/Operational", "XmlWinEventLog:Microsoft-Windows-Windows Defender/Operational", "XmlWinEventLog:Security") EventCode IN (1116, 1117, 3033, 4663, 4670)
 
-[mitre_dc0059_file_metadata__auditd]
-search = index=linux sourcetype="linux:audit" type IN (PATH, SYSCALL) (syscall IN (chmod, chown, fchmod, fchmodat, fchown, fchownat, fsetxattr, lchown, lsetxattr, removexattr, setxattr) OR SYSCALL IN (chmod, chown, fchmod, fchmodat, fchown, fchownat, fsetxattr, lchown, lsetxattr, removexattr, setxattr))
-disabled = 1
-
-[mitre_dc0059_file_metadata__ebpf]
-search = index=linux sourcetype=falco
-disabled = 1
-
-[mitre_dc0059_file_metadata__edr_telemetry]
-search = index=edr sourcetype="edr:telemetry"
-disabled = 1
-
-[mitre_dc0059_file_metadata__linux_osquery]
-search = index=osquery sourcetype="osquery:results" (name=file OR name=hash OR name=file_events)
-disabled = 1
-
 [mitre_dc0059_file_metadata]
-search = eventtype=mitre_dc0059_file_metadata__corelight OR eventtype=mitre_dc0059_file_metadata__palo_alto OR eventtype=mitre_dc0059_file_metadata__solidcore OR eventtype=mitre_dc0059_file_metadata__sysmon OR eventtype=mitre_dc0059_file_metadata__trellix_epo OR eventtype=mitre_dc0059_file_metadata__wineventlog OR eventtype=mitre_dc0059_file_metadata__auditd OR eventtype=mitre_dc0059_file_metadata__ebpf OR eventtype=mitre_dc0059_file_metadata__edr_telemetry OR eventtype=mitre_dc0059_file_metadata__linux_osquery
+search = eventtype=mitre_dc0059_file_metadata__auditd OR eventtype=mitre_dc0059_file_metadata__corelight OR eventtype=mitre_dc0059_file_metadata__ebpf OR eventtype=mitre_dc0059_file_metadata__edr_telemetry OR eventtype=mitre_dc0059_file_metadata__linux_osquery OR eventtype=mitre_dc0059_file_metadata__palo_alto OR eventtype=mitre_dc0059_file_metadata__solidcore OR eventtype=mitre_dc0059_file_metadata__sysmon OR eventtype=mitre_dc0059_file_metadata__trellix_epo OR eventtype=mitre_dc0059_file_metadata__wineventlog
 ```
 
-Macros for analytics: `` `mitre_dc0059` `` (umbrella), `` `mitre_dc0059_corelight` ``, `` `mitre_dc0059_palo_alto` ``, `` `mitre_dc0059_solidcore` ``, `` `mitre_dc0059_sysmon` ``, `` `mitre_dc0059_trellix_epo` ``, `` `mitre_dc0059_wineventlog` ``, `` `mitre_dc0059_auditd` ``, `` `mitre_dc0059_ebpf` ``, `` `mitre_dc0059_edr_telemetry` ``, `` `mitre_dc0059_linux_osquery` ``, `` `mitre_dc0059_filter` `` (site exclusions).
+Macros for analytics: `` `mitre_dc0059` `` (umbrella), `` `mitre_dc0059_auditd` ``, `` `mitre_dc0059_corelight` ``, `` `mitre_dc0059_ebpf` ``, `` `mitre_dc0059_edr_telemetry` ``, `` `mitre_dc0059_linux_osquery` ``, `` `mitre_dc0059_palo_alto` ``, `` `mitre_dc0059_solidcore` ``, `` `mitre_dc0059_sysmon` ``, `` `mitre_dc0059_trellix_epo` ``, `` `mitre_dc0059_wineventlog` ``, `` `mitre_dc0059_filter` `` (site exclusions).
 CIM: `Endpoint.Filesystem` via `` `mitre_dc0059_dm` `` / `` `mitre_dc0059_dm_where` `` for `tstats`. CIM tags emitted for: `sysmon`.
 
 ## Sigma

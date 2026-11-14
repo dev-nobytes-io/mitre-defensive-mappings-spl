@@ -2,7 +2,7 @@
 
 [ATT&CK](https://attack.mitre.org/datacomponents/DC0007) · version 2.0 · modified 2025-11-12 · ATT&CK release 20.1
 
-Status: **Live** · umbrella eventtype `mitre_dc0007_web_credential_usage`
+Umbrella eventtype `mitre_dc0007_web_credential_usage` over 3 feed(s)
 
 > An attempt by a user to gain access to a network or computing resource by providing web credentials (ex: Windows EID 1202)
 
@@ -30,61 +30,55 @@ flowchart LR
   LS2 --> F_corelight
   F_palo_alto["Palo Alto Networks PAN-OS"]
   LS2 --> F_palo_alto
-  F_corelight --> ET_corelight[/"mitre_dc0007_web_credential_usage__corelight"/]
-  class F_corelight live
-  F_palo_alto --> ET_palo_alto[/"mitre_dc0007_web_credential_usage__palo_alto"/]
-  class F_palo_alto live
   F_azure_entra --> ET_azure_entra[/"mitre_dc0007_web_credential_usage__azure_entra"/]
-  class F_azure_entra ready
-  classDef live fill:#d4edda,stroke:#2e7d32,color:#1b1b1b
-  classDef ready fill:#fff3cd,stroke:#b26a00,color:#1b1b1b
+  F_corelight --> ET_corelight[/"mitre_dc0007_web_credential_usage__corelight"/]
+  F_palo_alto --> ET_palo_alto[/"mitre_dc0007_web_credential_usage__palo_alto"/]
 ```
 
 ## Requirements
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
+| Feed | Schedule | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `corelight` | live | sourcetype=`corelight_http`, sourcetype=`corelight_ssl` | `(whole feed)` | defaults | Corelight App for Splunk (corelight_<log>). For TA_zeek use prefix zeek: and suffix :json. |
-| `palo_alto` | live | sourcetype=`pan:threat`, sourcetype=`pan:traffic` | `(whole feed)` | defaults | Splunk Add-on for Palo Alto Networks (pan:*) |
-| `azure_entra` | ready (tick in stack.yml) | sourcetype=`azure:aad:signin` | `(whole feed)` | defaults | Splunk Add-on for Microsoft Azure (azure:aad:signin, azure:aad:audit) or Microsoft Cloud Services add-on via Event Hub |
+| `azure_entra` | scheduled | sourcetype=`azure:aad:signin` | `(whole feed)` | defaults | Splunk Add-on for Microsoft Azure (azure:aad:signin, azure:aad:audit) or Microsoft Cloud Services add-on via Event Hub |
+| `corelight` | scheduled | sourcetype=`corelight_http`, sourcetype=`corelight_ssl` | `(whole feed)` | defaults | Corelight App for Splunk (corelight_<log>). For TA_zeek use prefix zeek: and suffix :json. |
+| `palo_alto` | scheduled | sourcetype=`pan:threat`, sourcetype=`pan:traffic` | `(whole feed)` | defaults | Splunk Add-on for Palo Alto Networks (pan:*) |
 
 Collection prerequisites:
 
+- **azure_entra**: Diagnostic settings on the tenant streaming SignInLogs
+- **azure_entra**: AuditLogs
+- **azure_entra**: NonInteractiveUserSignInLogs
+- **azure_entra**: ServicePrincipalSignInLogs to an Event Hub or direct Graph pull.
 - **corelight**: Sensor placement covering east-west (DC, server VLANs) and north-south; without internal taps the lateral-movement components are blind.
 - **corelight**: Enable the log set above; files/pe/smb_* and ldap/kerberos/ntlm are what distinguish Corelight from flow data.
 - **palo_alto**: Log forwarding profiles attached to every security rule (traffic start+end, threat, url, wildfire, data).
 - **palo_alto**: System and Config logs forwarded from each firewall / Panorama; GlobalProtect logs enabled.
 - **palo_alto**: URL filtering and Threat Prevention licensed for pan:threat subtypes url/vulnerability/virus/spyware.
 - **palo_alto**: Operational (show/debug) commands are not in config or system logs by default. Enable administrator activity audit tracking (Device > Setup > Management > Logging and Reporting, PAN-OS 10.1+) and forward the audit log if you want CLI discovery analytics for the firewall.
-- **azure_entra**: Diagnostic settings on the tenant streaming SignInLogs
-- **azure_entra**: AuditLogs
-- **azure_entra**: NonInteractiveUserSignInLogs
-- **azure_entra**: ServicePrincipalSignInLogs to an Event Hub or direct Graph pull.
 
-Review notes: `corelight` has 2 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *defaults*; `azure_entra` has 4 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *defaults*.
+Review notes: `azure_entra` has 4 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *defaults*; `corelight` has 2 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *defaults*.
 
 ## Splunk
 
 Eventtypes (literal constraints, see `dist/splunk/TA-mitre-attack-datacomponents/default/eventtypes.conf`):
 
 ```ini
+[mitre_dc0007_web_credential_usage__azure_entra]
+search = index=azure sourcetype="azure:aad:signin"
+
 [mitre_dc0007_web_credential_usage__corelight]
 search = index=corelight sourcetype IN (corelight_http, corelight_ssl)
 
 [mitre_dc0007_web_credential_usage__palo_alto]
 search = index=pan_logs sourcetype IN ("pan:threat", "pan:traffic")
 
-[mitre_dc0007_web_credential_usage__azure_entra]
-search = index=azure sourcetype="azure:aad:signin"
-disabled = 1
-
 [mitre_dc0007_web_credential_usage]
-search = eventtype=mitre_dc0007_web_credential_usage__corelight OR eventtype=mitre_dc0007_web_credential_usage__palo_alto OR eventtype=mitre_dc0007_web_credential_usage__azure_entra
+search = eventtype=mitre_dc0007_web_credential_usage__azure_entra OR eventtype=mitre_dc0007_web_credential_usage__corelight OR eventtype=mitre_dc0007_web_credential_usage__palo_alto
 ```
 
-Macros for analytics: `` `mitre_dc0007` `` (umbrella), `` `mitre_dc0007_corelight` ``, `` `mitre_dc0007_palo_alto` ``, `` `mitre_dc0007_azure_entra` ``, `` `mitre_dc0007_filter` `` (site exclusions).
+Macros for analytics: `` `mitre_dc0007` `` (umbrella), `` `mitre_dc0007_azure_entra` ``, `` `mitre_dc0007_corelight` ``, `` `mitre_dc0007_palo_alto` ``, `` `mitre_dc0007_filter` `` (site exclusions).
 CIM: `Authentication.Authentication` via `` `mitre_dc0007_dm` `` / `` `mitre_dc0007_dm_where` `` for `tstats`. CIM tags emitted for: `azure_entra`.
 
 ## Sigma

@@ -68,7 +68,6 @@ derived:
     - XPC messages requesting privileged actions from untrusted or unsigned clients
   feeds:
   - feed: sysmon
-    have: true
     in_scope: true
     eventtype: mitre_dc0048_named_pipe_metadata__sysmon
     search: index=sysmon source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode IN (17, 18)
@@ -78,7 +77,6 @@ derived:
     - WinEventLog:Sysmon
     cim_tags: false
   - feed: macos
-    have: false
     in_scope: false
     eventtype: null
     search: null

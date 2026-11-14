@@ -59,7 +59,6 @@ derived:
     - EventCode=4929
   feeds:
   - feed: wineventlog
-    have: true
     in_scope: true
     eventtype: mitre_dc0068_active_directory_object_deletion__wineventlog
     search: index=wineventlog source="XmlWinEventLog:Security" EventCode IN (4929, 5141)

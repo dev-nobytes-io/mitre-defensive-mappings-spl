@@ -89,7 +89,6 @@ derived:
     - download, authorization_grant
   feeds:
   - feed: aws
-    have: false
     in_scope: false
     eventtype: null
     search: null
@@ -99,7 +98,6 @@ derived:
     - AWS:CloudTrail
     cim_tags: false
   - feed: gcp
-    have: false
     in_scope: false
     eventtype: null
     search: null
@@ -109,7 +107,6 @@ derived:
     - gcp:workspaceaudit
     cim_tags: false
   - feed: m365_unified
-    have: false
     in_scope: false
     eventtype: null
     search: null
@@ -120,7 +117,6 @@ derived:
     - m365:unified
     cim_tags: false
   - feed: saas
-    have: false
     in_scope: false
     eventtype: null
     search: null

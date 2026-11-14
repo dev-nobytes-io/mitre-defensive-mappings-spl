@@ -35,7 +35,7 @@ attack:
   - field: ParentProcessCorrelation
     description: Correlate hidden execution with suspicious parent processes to reduce false positives.
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: ttp
   suggested_tuning:
   - element: HiddenProcessScope

@@ -2,7 +2,7 @@
 
 [ATT&CK](https://attack.mitre.org/datacomponents/DC0021) · version 2.2 · modified 2026-10-13 · ATT&CK release 20.1
 
-Status: **Live** · umbrella eventtype `mitre_dc0021_os_api_execution`
+Umbrella eventtype `mitre_dc0021_os_api_execution` over 5 feed(s)
 
 > Calls made by a process to operating system-provided Application Programming Interfaces (APIs). These calls are essential for interacting with system resources such as memory, files, and hardware, or for performing system-level tasks. Monitoring these calls can provide insight into a process's intent, especially if the process is malicious.
 
@@ -53,36 +53,32 @@ flowchart LR
   DC --> LS9["etw:Microsoft-Windows-Directory-Services-SAM<br/>2 refs"]
   LS9 --> F_etw
   DC --> MORE["... 12 more log sources"]
-  F_sysmon --> ET_sysmon[/"mitre_dc0021_os_api_execution__sysmon"/]
-  class F_sysmon live
   F_auditd --> ET_auditd[/"mitre_dc0021_os_api_execution__auditd"/]
-  class F_auditd ready
   F_edr_telemetry --> ET_edr_telemetry[/"mitre_dc0021_os_api_execution__edr_telemetry"/]
-  class F_edr_telemetry ready
   F_etw --> ET_etw[/"mitre_dc0021_os_api_execution__etw"/]
-  class F_etw ready
-  classDef live fill:#d4edda,stroke:#2e7d32,color:#1b1b1b
-  classDef ready fill:#fff3cd,stroke:#b26a00,color:#1b1b1b
+  F_sysmon --> ET_sysmon[/"mitre_dc0021_os_api_execution__sysmon"/]
 ```
 
 ## Requirements
 
 Component specific:
 
-- Treat the Sysmon-based eventtype as a partial proxy. The etw feed (Kernel-Process, Win32k, RPC, DotNETRuntime) is the honest source and is unticked.
+- Treat the Sysmon-based eventtype as a partial proxy. The etw feed (Kernel-Process, Win32k, RPC, DotNETRuntime) is the honest source.
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
+| Feed | Schedule | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `sysmon` | live | source=`XmlWinEventLog:Microsoft-Windows-Sysmon/Operational` | `EventCode IN (8, 10, 25)` | defaults | Splunk Add-on for Sysmon (needs Splunk_TA_windows for XML parsing) |
-| `wineventlog` | live | source=`XmlWinEventLog:Security` | `EventCode IN (4656, 4663)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true) |
-| `auditd` | ready (tick in stack.yml) | sourcetype=`linux:audit` | `type IN (SYSCALL) (syscall IN (bpf, keyctl, mmap, mprotect, process_vm_writev, ptrace, setns, unshare) OR SYSCALL IN (bpf, keyctl, mmap, mprotect, process_vm_writev, ptrace, setns, unshare))` | defaults | Splunk Add-on for Unix and Linux (linux:audit) or auditd -> auditbeat/syslog |
-| `edr_telemetry` | ready (tick in stack.yml) | sourcetype=`edr:telemetry` | `(whole feed)` | derived | Vendor specific |
-| `etw` | ready (tick in stack.yml) | sourcetype=`etw:json` | `(ProviderName="Microsoft-Windows-Kernel-Process")` | derived | Requires a user-mode ETW consumer (SilkETW/Sealighter, Splunk Stream for NDIS, or an EDR that exposes the provider). No standard Splunk TA. |
+| `auditd` | scheduled | sourcetype=`linux:audit` | `type IN (SYSCALL) (syscall IN (bpf, keyctl, mmap, mprotect, process_vm_writev, ptrace, setns, unshare) OR SYSCALL IN (bpf, keyctl, mmap, mprotect, process_vm_writev, ptrace, setns, unshare))` | defaults | Splunk Add-on for Unix and Linux (linux:audit) or auditd -> auditbeat/syslog |
+| `edr_telemetry` | scheduled | sourcetype=`edr:telemetry` | `(whole feed)` | derived | Vendor specific |
+| `etw` | scheduled | sourcetype=`etw:json` | `(ProviderName="Microsoft-Windows-Kernel-Process")` | derived | Requires a user-mode ETW consumer (SilkETW/Sealighter, Splunk Stream for NDIS, or an EDR that exposes the provider). No standard Splunk TA. |
+| `sysmon` | scheduled | source=`XmlWinEventLog:Microsoft-Windows-Sysmon/Operational` | `EventCode IN (8, 10, 25)` | defaults | Splunk Add-on for Sysmon (needs Splunk_TA_windows for XML parsing) |
+| `wineventlog` | scheduled | source=`XmlWinEventLog:Security` | `EventCode IN (4656, 4663)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true) |
 
 Collection prerequisites:
 
+- **auditd**: audit rules for execve, connect, open/openat on sensitive paths, ptrace, module load, mount, setuid; a Neo23x0/auditd baseline or Florian Roth's rule set is a reasonable start.
+- **auditd**: log_format = ENRICHED in auditd.conf so syscall names and uids resolve (otherwise syscall numbers are architecture dependent).
 - **sysmon**: Sysmon deployed with a maintained modular configuration (e.g. sysmon-modular or SwiftOnSecurity). Event IDs referenced by a data component only exist if the config includes that rule group (ProcessAccess=10, ImageLoad=7, DNS=22, FileDelete=23/26, ClipboardChange=24, ProcessTampering=25, FileBlock=27/28 are off in minimal configs).
 - **sysmon**: Hashes configured (SHA256 at least, IMPHASH useful) for File/Process metadata components.
 - **wineventlog**: Advanced Audit Policy configured (at minimum Process Creation, Logon, Account Management, Object Access, Policy Change, Privilege Use, Detailed Tracking). Without the matching subcategory the EventCodes below never fire.
@@ -90,39 +86,34 @@ Collection prerequisites:
 - **wineventlog**: PowerShell Script Block Logging (4104) and Module Logging (4103) enabled via GPO for the PowerShell/Operational channel.
 - **wineventlog**: Object access events (4656/4663/4657/4660/4670) require SACLs on the files/keys of interest.
 - **wineventlog**: Non-default channels (TaskScheduler, WMI-Activity, CodeIntegrity, Defender, Firewall, WinRM, SMBClient/Server...) must be listed as inputs in Splunk_TA_windows inputs.conf; several are disabled by default in Windows.
-- **auditd**: audit rules for execve, connect, open/openat on sensitive paths, ptrace, module load, mount, setuid; a Neo23x0/auditd baseline or Florian Roth's rule set is a reasonable start.
-- **auditd**: log_format = ENRICHED in auditd.conf so syscall names and uids resolve (otherwise syscall numbers are architecture dependent).
 
-Review notes: `wineventlog` has 4 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *defaults*; `edr_telemetry` has 9 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *derived*; `etw` has 22 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *derived*.
+Review notes: `edr_telemetry` has 9 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *derived*; `etw` has 22 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *derived*; `wineventlog` has 4 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *defaults*.
 
 ## Splunk
 
 Eventtypes (literal constraints, see `dist/splunk/TA-mitre-attack-datacomponents/default/eventtypes.conf`):
 
 ```ini
+[mitre_dc0021_os_api_execution__auditd]
+search = index=linux sourcetype="linux:audit" type IN (SYSCALL) (syscall IN (bpf, keyctl, mmap, mprotect, process_vm_writev, ptrace, setns, unshare) OR SYSCALL IN (bpf, keyctl, mmap, mprotect, process_vm_writev, ptrace, setns, unshare))
+
+[mitre_dc0021_os_api_execution__edr_telemetry]
+search = index=edr sourcetype="edr:telemetry"
+
+[mitre_dc0021_os_api_execution__etw]
+search = index=etw sourcetype="etw:json" (ProviderName="Microsoft-Windows-Kernel-Process")
+
 [mitre_dc0021_os_api_execution__sysmon]
 search = index=sysmon source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode IN (8, 10, 25)
 
 [mitre_dc0021_os_api_execution__wineventlog]
 search = index=wineventlog source="XmlWinEventLog:Security" EventCode IN (4656, 4663)
 
-[mitre_dc0021_os_api_execution__auditd]
-search = index=linux sourcetype="linux:audit" type IN (SYSCALL) (syscall IN (bpf, keyctl, mmap, mprotect, process_vm_writev, ptrace, setns, unshare) OR SYSCALL IN (bpf, keyctl, mmap, mprotect, process_vm_writev, ptrace, setns, unshare))
-disabled = 1
-
-[mitre_dc0021_os_api_execution__edr_telemetry]
-search = index=edr sourcetype="edr:telemetry"
-disabled = 1
-
-[mitre_dc0021_os_api_execution__etw]
-search = index=etw sourcetype="etw:json" (ProviderName="Microsoft-Windows-Kernel-Process")
-disabled = 1
-
 [mitre_dc0021_os_api_execution]
-search = eventtype=mitre_dc0021_os_api_execution__sysmon OR eventtype=mitre_dc0021_os_api_execution__wineventlog OR eventtype=mitre_dc0021_os_api_execution__auditd OR eventtype=mitre_dc0021_os_api_execution__edr_telemetry OR eventtype=mitre_dc0021_os_api_execution__etw
+search = eventtype=mitre_dc0021_os_api_execution__auditd OR eventtype=mitre_dc0021_os_api_execution__edr_telemetry OR eventtype=mitre_dc0021_os_api_execution__etw OR eventtype=mitre_dc0021_os_api_execution__sysmon OR eventtype=mitre_dc0021_os_api_execution__wineventlog
 ```
 
-Macros for analytics: `` `mitre_dc0021` `` (umbrella), `` `mitre_dc0021_sysmon` ``, `` `mitre_dc0021_wineventlog` ``, `` `mitre_dc0021_auditd` ``, `` `mitre_dc0021_edr_telemetry` ``, `` `mitre_dc0021_etw` ``, `` `mitre_dc0021_filter` `` (site exclusions).
+Macros for analytics: `` `mitre_dc0021` `` (umbrella), `` `mitre_dc0021_auditd` ``, `` `mitre_dc0021_edr_telemetry` ``, `` `mitre_dc0021_etw` ``, `` `mitre_dc0021_sysmon` ``, `` `mitre_dc0021_wineventlog` ``, `` `mitre_dc0021_filter` `` (site exclusions).
 CIM: no data model mapping; analytics on this component run as raw eventtype searches.
 
 ## Sigma

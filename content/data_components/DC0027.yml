@@ -71,7 +71,6 @@ derived:
     - Shared link created to external account
   feeds:
   - feed: aws
-    have: false
     in_scope: false
     eventtype: null
     search: null
@@ -81,7 +80,6 @@ derived:
     - AWS:CloudTrail
     cim_tags: false
   - feed: m365_unified
-    have: false
     in_scope: false
     eventtype: null
     search: null
@@ -91,7 +89,6 @@ derived:
     - m365:unified
     cim_tags: false
   - feed: saas
-    have: false
     in_scope: false
     eventtype: null
     search: null

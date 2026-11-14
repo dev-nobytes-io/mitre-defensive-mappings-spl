@@ -61,7 +61,6 @@ derived:
     - Resource creation and update logs
   feeds:
   - feed: container_runtime
-    have: false
     in_scope: true
     eventtype: mitre_dc0028_image_metadata__container_runtime
     search: index=k8s sourcetype="docker:events" (status IN (pull, tag))

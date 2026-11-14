@@ -67,7 +67,6 @@ derived:
     - az monitor diagnostic-settings delete
   feeds:
   - feed: azure_activity
-    have: false
     in_scope: true
     eventtype: mitre_dc0090_cloud_service_disable__azure_activity
     search: index=azure sourcetype="mscs:azure:audit"
@@ -77,7 +76,6 @@ derived:
     - azure:activity
     cim_tags: true
   - feed: aws
-    have: false
     in_scope: false
     eventtype: null
     search: null
@@ -87,7 +85,6 @@ derived:
     - AWS:CloudTrail
     cim_tags: false
   - feed: saas
-    have: false
     in_scope: false
     eventtype: null
     search: null

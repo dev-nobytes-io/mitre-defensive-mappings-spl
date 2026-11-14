@@ -49,7 +49,7 @@ attack:
     description: >-
       Time threshold for correlating mshta.exe execution with subsequent network connections or file creations.
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: anomaly
   suggested_tuning:
   - element: CommandLinePattern

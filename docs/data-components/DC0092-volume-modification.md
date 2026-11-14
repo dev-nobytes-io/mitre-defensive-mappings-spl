@@ -2,7 +2,7 @@
 
 [ATT&CK](https://attack.mitre.org/datacomponents/DC0092) · version 2.0 · modified 2025-10-21 · ATT&CK release 20.1
 
-Status: **Ready** (needs a feed you have not ticked) · umbrella eventtype `mitre_dc0092_volume_modification`
+Umbrella eventtype `mitre_dc0092_volume_modification` over 1 feed(s)
 
 > Changes made to a cloud volume, including its settings and control data (ex: AWS modify-volume)
 
@@ -23,18 +23,15 @@ flowchart LR
   F_kubernetes_audit["Kubernetes API server audit log and cluster events"]
   LS0 --> F_kubernetes_audit
   F_kubernetes_audit --> ET_kubernetes_audit[/"mitre_dc0092_volume_modification__kubernetes_audit"/]
-  class F_kubernetes_audit ready
-  classDef live fill:#d4edda,stroke:#2e7d32,color:#1b1b1b
-  classDef ready fill:#fff3cd,stroke:#b26a00,color:#1b1b1b
 ```
 
 ## Requirements
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
+| Feed | Schedule | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `kubernetes_audit` | ready (tick in stack.yml) | sourcetype=`kube:apiserver-audit` | `verb IN (patch, update) (objectRef.resource IN (persistentvolumes, persistentvolumeclaims))` | defaults | Splunk OpenTelemetry Collector for Kubernetes / Splunk Connect for Kubernetes |
+| `kubernetes_audit` | scheduled | sourcetype=`kube:apiserver-audit` | `verb IN (patch, update) (objectRef.resource IN (persistentvolumes, persistentvolumeclaims))` | defaults | Splunk OpenTelemetry Collector for Kubernetes / Splunk Connect for Kubernetes |
 
 Collection prerequisites:
 
@@ -50,7 +47,6 @@ Eventtypes (literal constraints, see `dist/splunk/TA-mitre-attack-datacomponents
 ```ini
 [mitre_dc0092_volume_modification__kubernetes_audit]
 search = index=k8s sourcetype="kube:apiserver-audit" verb IN (patch, update) (objectRef.resource IN (persistentvolumes, persistentvolumeclaims))
-disabled = 1
 
 [mitre_dc0092_volume_modification]
 search = eventtype=mitre_dc0092_volume_modification__kubernetes_audit

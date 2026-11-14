@@ -91,10 +91,6 @@ class Provider:
     filter: str | None = None           # extra literal SPL constraint
 
     @property
-    def have(self) -> bool:
-        return bool(config.feed(self.feed).get("have"))
-
-    @property
     def virtual(self) -> bool:
         return bool(config.feed(self.feed).get("virtual"))
 

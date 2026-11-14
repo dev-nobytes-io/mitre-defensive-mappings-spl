@@ -45,7 +45,6 @@ derived:
     - StartInstances
   feeds:
   - feed: aws
-    have: false
     in_scope: false
     eventtype: null
     search: null

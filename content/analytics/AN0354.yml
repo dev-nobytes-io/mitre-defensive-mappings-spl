@@ -30,7 +30,7 @@ attack:
   - field: DeviceModel
     description: Variations in syntax or log behavior across device OS
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: ttp
   suggested_tuning:
   - element: CLIUserRole

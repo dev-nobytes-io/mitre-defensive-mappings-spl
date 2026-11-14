@@ -37,7 +37,7 @@ attack:
   - field: TimeWindow
     description: Temporal bounds for correlating sequential connections (e.g., 60 seconds).
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: hunting
   suggested_tuning:
   - element: ScanRateThreshold

@@ -73,8 +73,16 @@ derived:
     channels:
     - Removal of restrictive egress rules from a security group
   feeds:
+  - feed: esxi_syslog
+    in_scope: true
+    eventtype: mitre_dc0043_firewall_disable__esxi_syslog
+    search: index=vmware sourcetype="vmware:esxlog:hostd" (firewall)
+    constraint_origin: defaults
+    broad_refs: 0
+    sources:
+    - esxi:vmkernel
+    cim_tags: false
   - feed: palo_alto
-    have: true
     in_scope: true
     eventtype: mitre_dc0043_firewall_disable__palo_alto
     search: index=pan_logs sourcetype IN ("pan:config", "pan:system")
@@ -84,7 +92,6 @@ derived:
     - (added by dc_defaults/curated)
     cim_tags: true
   - feed: wineventlog
-    have: true
     in_scope: true
     eventtype: mitre_dc0043_firewall_disable__wineventlog
     search: >-
@@ -95,18 +102,7 @@ derived:
     sources:
     - (added by dc_defaults/curated)
     cim_tags: false
-  - feed: esxi_syslog
-    have: false
-    in_scope: true
-    eventtype: mitre_dc0043_firewall_disable__esxi_syslog
-    search: index=vmware sourcetype="vmware:esxlog:hostd" (firewall)
-    constraint_origin: defaults
-    broad_refs: 0
-    sources:
-    - esxi:vmkernel
-    cim_tags: false
   - feed: aws
-    have: false
     in_scope: false
     eventtype: null
     search: null

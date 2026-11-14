@@ -2,7 +2,7 @@
 
 [ATT&CK](https://attack.mitre.org/datacomponents/DC0099) · version 2.1 · modified 2026-05-12 · ATT&CK release 20.1
 
-Status: **Live** · umbrella eventtype `mitre_dc0099_group_enumeration`
+Umbrella eventtype `mitre_dc0099_group_enumeration` over 2 feed(s)
 
 > Extracting group lists from identity systems identifies permissions, roles, or configurations. Adversaries may exploit high-privilege groups or misconfigurations. Examples:  - AWS CLI: `aws iam list-groups` - PowerShell: `Get-ADGroup -Filter *` - (Saas) Google Workspace: Admin SDK Directory API - Azure: `Get-AzureADGroup` - Microsoft 365:  Graph API `GET https://graph.microsoft.com/v1.0/groups`  *Data Collection Measures:*  - Cloud Logging: Enable AWS CloudTrail, Azure Activity Logs, and Google Workspace Admin Logs for group-related actions. - Directory Monitoring: Track logs like AD Event ID 4662 (object operations). - API Monitoring: Log API activity like AWS IAM queries. - SaaS Monitoring: Use platform logs (e.g., Office 365 Unified Audit Logs). - SIEM Integration: Centralize group query tracking.
 
@@ -25,12 +25,8 @@ flowchart LR
   DC --> LS1["azure:audit<br/>1 refs"]
   F_azure_entra["Microsoft Entra ID sign-in and audit logs"]
   LS1 --> F_azure_entra
-  F_wineventlog --> ET_wineventlog[/"mitre_dc0099_group_enumeration__wineventlog"/]
-  class F_wineventlog live
   F_azure_entra --> ET_azure_entra[/"mitre_dc0099_group_enumeration__azure_entra"/]
-  class F_azure_entra ready
-  classDef live fill:#d4edda,stroke:#2e7d32,color:#1b1b1b
-  classDef ready fill:#fff3cd,stroke:#b26a00,color:#1b1b1b
+  F_wineventlog --> ET_wineventlog[/"mitre_dc0099_group_enumeration__wineventlog"/]
 ```
 
 ## Requirements
@@ -41,22 +37,22 @@ Component specific:
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
+| Feed | Schedule | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `wineventlog` | live | source=`XmlWinEventLog:Security` | `EventCode IN (4798, 4799)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true) |
-| `azure_entra` | ready (tick in stack.yml) | sourcetype=`azure:aad:audit` | `(whole feed)` | defaults | Splunk Add-on for Microsoft Azure (azure:aad:signin, azure:aad:audit) or Microsoft Cloud Services add-on via Event Hub |
+| `azure_entra` | scheduled | sourcetype=`azure:aad:audit` | `(whole feed)` | defaults | Splunk Add-on for Microsoft Azure (azure:aad:signin, azure:aad:audit) or Microsoft Cloud Services add-on via Event Hub |
+| `wineventlog` | scheduled | source=`XmlWinEventLog:Security` | `EventCode IN (4798, 4799)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true) |
 
 Collection prerequisites:
 
+- **azure_entra**: Diagnostic settings on the tenant streaming SignInLogs
+- **azure_entra**: AuditLogs
+- **azure_entra**: NonInteractiveUserSignInLogs
+- **azure_entra**: ServicePrincipalSignInLogs to an Event Hub or direct Graph pull.
 - **wineventlog**: Advanced Audit Policy configured (at minimum Process Creation, Logon, Account Management, Object Access, Policy Change, Privilege Use, Detailed Tracking). Without the matching subcategory the EventCodes below never fire.
 - **wineventlog**: Include command line in process creation events enabled for 4688 (Computer Configuration > Administrative Templates > System > Audit Process Creation).
 - **wineventlog**: PowerShell Script Block Logging (4104) and Module Logging (4103) enabled via GPO for the PowerShell/Operational channel.
 - **wineventlog**: Object access events (4656/4663/4657/4660/4670) require SACLs on the files/keys of interest.
 - **wineventlog**: Non-default channels (TaskScheduler, WMI-Activity, CodeIntegrity, Defender, Firewall, WinRM, SMBClient/Server...) must be listed as inputs in Splunk_TA_windows inputs.conf; several are disabled by default in Windows.
-- **azure_entra**: Diagnostic settings on the tenant streaming SignInLogs
-- **azure_entra**: AuditLogs
-- **azure_entra**: NonInteractiveUserSignInLogs
-- **azure_entra**: ServicePrincipalSignInLogs to an Event Hub or direct Graph pull.
 
 Review notes: `azure_entra` has 1 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *defaults*.
 
@@ -65,18 +61,17 @@ Review notes: `azure_entra` has 1 ATT&CK reference(s) with no usable event filte
 Eventtypes (literal constraints, see `dist/splunk/TA-mitre-attack-datacomponents/default/eventtypes.conf`):
 
 ```ini
+[mitre_dc0099_group_enumeration__azure_entra]
+search = index=azure sourcetype="azure:aad:audit"
+
 [mitre_dc0099_group_enumeration__wineventlog]
 search = index=wineventlog source="XmlWinEventLog:Security" EventCode IN (4798, 4799)
 
-[mitre_dc0099_group_enumeration__azure_entra]
-search = index=azure sourcetype="azure:aad:audit"
-disabled = 1
-
 [mitre_dc0099_group_enumeration]
-search = eventtype=mitre_dc0099_group_enumeration__wineventlog OR eventtype=mitre_dc0099_group_enumeration__azure_entra
+search = eventtype=mitre_dc0099_group_enumeration__azure_entra OR eventtype=mitre_dc0099_group_enumeration__wineventlog
 ```
 
-Macros for analytics: `` `mitre_dc0099` `` (umbrella), `` `mitre_dc0099_wineventlog` ``, `` `mitre_dc0099_azure_entra` ``, `` `mitre_dc0099_filter` `` (site exclusions).
+Macros for analytics: `` `mitre_dc0099` `` (umbrella), `` `mitre_dc0099_azure_entra` ``, `` `mitre_dc0099_wineventlog` ``, `` `mitre_dc0099_filter` `` (site exclusions).
 CIM: no data model mapping; analytics on this component run as raw eventtype searches.
 
 ## Sigma

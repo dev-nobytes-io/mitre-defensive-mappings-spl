@@ -56,25 +56,15 @@ HEADER = (
 
 # --------------------------------------------------------------------------- coverage
 @lru_cache(maxsize=None)
-def _ref_status(name: str) -> str:
-    provs = [p for p in resolve(name).providers if not p.virtual]
-    if any(p.have for p in provs):
-        return "live"
-    if any(feed_in_scope(p.feed) for p in provs):
-        return "ready"
-    return "gap"
+def _ref_mapped(name: str) -> bool:
+    return any(feed_in_scope(p.feed) for p in resolve(name).providers if not p.virtual)
 
 
 def coverage(an: Analytic) -> str:
-    """live: every referenced log source has a ticked feed; ready: all in scope; else gap."""
+    """mapped: every referenced log source maps to a feed on an in-scope platform; else gap."""
     if not an.log_source_refs:
         return "no-log-source"
-    sts = {_ref_status(r.name) for r in an.log_source_refs}
-    if sts == {"live"}:
-        return "live"
-    if sts <= {"live", "ready"}:
-        return "ready"
-    return "gap"
+    return "mapped" if all(_ref_mapped(r.name) for r in an.log_source_refs) else "gap"
 
 
 # --------------------------------------------------------------------------- suggestions

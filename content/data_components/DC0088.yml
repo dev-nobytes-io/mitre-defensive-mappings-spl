@@ -275,41 +275,7 @@ derived:
       Industrial Control Systems (ICS)-role account authentication from source geolocation/Autonomous System Number
       (ASN) not in approved remote access origins or outside expected session pattern
   feeds:
-  - feed: corelight
-    have: true
-    in_scope: true
-    eventtype: mitre_dc0088_logon_session_metadata__corelight
-    search: index=corelight sourcetype=corelight_ssh
-    constraint_origin: derived
-    broad_refs: 0
-    sources:
-    - NSM:Connections
-    cim_tags: false
-  - feed: palo_alto
-    have: true
-    in_scope: true
-    eventtype: mitre_dc0088_logon_session_metadata__palo_alto
-    search: index=pan_logs sourcetype="pan:globalprotect"
-    constraint_origin: defaults
-    broad_refs: 0
-    sources:
-    - NSM:Connections
-    - vpn:authlog
-    cim_tags: false
-  - feed: wineventlog
-    have: true
-    in_scope: true
-    eventtype: mitre_dc0088_logon_session_metadata__wineventlog
-    search: >-
-      index=wineventlog source="XmlWinEventLog:Security" EventCode IN (4624, 4634, 4647, 4672, 4778, 4779, 4800,
-      4801, 4802, 4803)
-    constraint_origin: defaults
-    broad_refs: 0
-    sources:
-    - WinEventLog:Security
-    cim_tags: true
   - feed: auditd
-    have: false
     in_scope: true
     eventtype: mitre_dc0088_logon_session_metadata__auditd
     search: index=linux sourcetype="linux:audit" type IN (CRED_ACQ, CRED_DISP, USER_END, USER_LOGIN)
@@ -320,7 +286,6 @@ derived:
     - auditd:USER_LOGIN
     cim_tags: false
   - feed: azure_entra
-    have: false
     in_scope: true
     eventtype: mitre_dc0088_logon_session_metadata__azure_entra
     search: index=azure sourcetype="azure:aad:signin"
@@ -330,8 +295,16 @@ derived:
     - azure:audit
     - azure:signinlogs
     cim_tags: true
+  - feed: corelight
+    in_scope: true
+    eventtype: mitre_dc0088_logon_session_metadata__corelight
+    search: index=corelight sourcetype=corelight_ssh
+    constraint_origin: derived
+    broad_refs: 0
+    sources:
+    - NSM:Connections
+    cim_tags: false
   - feed: esxi_syslog
-    have: false
     in_scope: true
     eventtype: mitre_dc0088_logon_session_metadata__esxi_syslog
     search: index=vmware sourcetype IN ("vmware:esxlog:auth", "vmware:esxlog:hostd")
@@ -342,7 +315,6 @@ derived:
     - esxi:hostd
     cim_tags: false
   - feed: linux_syslog
-    have: false
     in_scope: true
     eventtype: mitre_dc0088_logon_session_metadata__linux_syslog
     search: index=linux sourcetype=linux_secure
@@ -352,8 +324,28 @@ derived:
     - linux:auth
     - linux:syslog
     cim_tags: false
+  - feed: palo_alto
+    in_scope: true
+    eventtype: mitre_dc0088_logon_session_metadata__palo_alto
+    search: index=pan_logs sourcetype="pan:globalprotect"
+    constraint_origin: defaults
+    broad_refs: 0
+    sources:
+    - NSM:Connections
+    - vpn:authlog
+    cim_tags: false
+  - feed: wineventlog
+    in_scope: true
+    eventtype: mitre_dc0088_logon_session_metadata__wineventlog
+    search: >-
+      index=wineventlog source="XmlWinEventLog:Security" EventCode IN (4624, 4634, 4647, 4672, 4778, 4779, 4800,
+      4801, 4802, 4803)
+    constraint_origin: defaults
+    broad_refs: 0
+    sources:
+    - WinEventLog:Security
+    cim_tags: true
   - feed: gcp
-    have: false
     in_scope: false
     eventtype: null
     search: null
@@ -363,7 +355,6 @@ derived:
     - gcp:audit
     cim_tags: false
   - feed: m365_unified
-    have: false
     in_scope: false
     eventtype: null
     search: null
@@ -374,7 +365,6 @@ derived:
     - m365:unified
     cim_tags: false
   - feed: macos
-    have: false
     in_scope: false
     eventtype: null
     search: null
@@ -384,7 +374,6 @@ derived:
     - macos:unifiedlog
     cim_tags: false
   - feed: saas
-    have: false
     in_scope: false
     eventtype: null
     search: null

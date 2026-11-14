@@ -40,7 +40,7 @@ attack:
   - field: ConfigChangeUser
     description: Track if unexpected user or automation changed NAT/forwarding rules.
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: anomaly
   suggested_tuning:
   - element: FlowThreshold

@@ -34,7 +34,7 @@ attack:
   - field: process_baseline_age
     description: Time window to determine process novelty (e.g., 30 days)
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: ttp
   suggested_tuning:
   - element: trusted_directory_list

@@ -2,7 +2,7 @@
 
 [ATT&CK](https://attack.mitre.org/datacomponents/DC0071) · version 2.0 · modified 2025-10-21 · ATT&CK release 20.1
 
-Status: **Live** · umbrella eventtype `mitre_dc0071_active_directory_object_access`
+Umbrella eventtype `mitre_dc0071_active_directory_object_access` over 1 feed(s)
 
 > Object access refers to activities where AD objects (e.g., user accounts, groups, policies) are accessed or queried. Example: Windows Event ID 4661 logs object access attempts. Examples:  - Attribute Access: e.g., `userPassword`, `memberOf`, `securityDescriptor`. - Group Enumeration: Enumerating critical group members (e.g., Domain Admins). - User Attributes: Commonly accessed attributes like `samAccountName`, `lastLogonTimestamp`. - Policy Access: Accessing GPOs to understand security settings.  *Data Collection Measures:*  - Audit Policies:     - Enable "Audit Directory Service Access" under Advanced Audit Policies (Success and Failure).     - Path: `Computer Configuration > Policies > Windows Settings > Security Settings > Advanced Audit Policy Configuration > Audit Policies > Object AccessEnable: Audit Directory Service Access` (Success and Failure).     - Captured Events: IDs 4661, 4662. - Event Forwarding: Use WEF to centralize logs for SIEM analysis. - SIEM Integration: Collect and parse logs (e.g., 4661, 4662) using tools like Splunk or Azure Sentinel. - Log Filtering: - Focus on sensitive objects/attributes like:     - `Domain Admins` group.     - `userPassword`, `ntSecurityDescriptor`. - Enable EDR Monitoring:     - Detect processes accessing sensitive AD objects (e.g., samAccountName, securityDescriptor).     - Log all attempts to enumerate critical groups (e.g., "Domain Admins").
 
@@ -23,9 +23,6 @@ flowchart LR
   F_wineventlog["Windows Event Logs"]
   LS0 --> F_wineventlog
   F_wineventlog --> ET_wineventlog[/"mitre_dc0071_active_directory_object_access__wineventlog"/]
-  class F_wineventlog live
-  classDef live fill:#d4edda,stroke:#2e7d32,color:#1b1b1b
-  classDef ready fill:#fff3cd,stroke:#b26a00,color:#1b1b1b
 ```
 
 ## Requirements
@@ -36,9 +33,9 @@ Component specific:
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
+| Feed | Schedule | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `wineventlog` | live | source=`XmlWinEventLog:Security` | `EventCode IN (4661, 4662)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true) |
+| `wineventlog` | scheduled | source=`XmlWinEventLog:Security` | `EventCode IN (4661, 4662)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true) |
 
 Collection prerequisites:
 

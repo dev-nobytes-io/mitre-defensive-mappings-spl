@@ -41,7 +41,7 @@ attack:
   - field: ConnectionDuration
     description: Threshold for persistent connections over known relay ports (e.g., 9050).
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: ttp
   suggested_tuning:
   - element: DomainCategory
