@@ -2,7 +2,7 @@
 
 [ATT&CK](https://attack.mitre.org/datacomponents/DC0015) · version 2.0 · modified 2025-11-12 · ATT&CK release 20.1
 
-Status: **Ready** (needs a feed you have not ticked) · umbrella eventtype `mitre_dc0015_image_creation`
+Umbrella eventtype `mitre_dc0015_image_creation` over 2 feed(s)
 
 > Initial construction of a virtual machine image within a cloud environment. Virtual machine images are templates containing an operating system and installed applications, which can be deployed to create new virtual machines. Monitoring the creation of these images is important because adversaries may create custom images to include malicious software or misconfigurations for later exploitation. Examples:   - Azure Compute Service Image Creation     - Example: Creating a virtual machine image in Azure using Azure CLI: `az image create --resource-group MyResourceGroup --name MyImage --source MyVM` - AWS EC2 AMI (Amazon Machine Image) Creation     - Example: Creating an AMI from an EC2 instance: `aws ec2 create-image --instance-id i-1234567890abcdef0 --name "MyAMI" --description "An AMI for my app"` - Google Cloud Compute Engine Image Creation     - Example: Creating a custom image using gcloud: `gcloud compute images create my-custom-image --source-disk my-disk --source-disk-zone us-central1-a` - VMware vSphere     - Example: Exporting a VM to create an OVF (Open Virtualization Format) template: This could later be imported into other environments with potential tampering.
 
@@ -30,21 +30,17 @@ flowchart LR
   DC --> LS3["kubernetes:apiserver<br/>1 refs"]
   LS3 --> F_kubernetes_audit
   F_container_runtime --> ET_container_runtime[/"mitre_dc0015_image_creation__container_runtime"/]
-  class F_container_runtime ready
   F_kubernetes_audit --> ET_kubernetes_audit[/"mitre_dc0015_image_creation__kubernetes_audit"/]
-  class F_kubernetes_audit ready
-  classDef live fill:#d4edda,stroke:#2e7d32,color:#1b1b1b
-  classDef ready fill:#fff3cd,stroke:#b26a00,color:#1b1b1b
 ```
 
 ## Requirements
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
+| Feed | Schedule | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `container_runtime` | ready (tick in stack.yml) | sourcetype=`containerd:events`, sourcetype=`docker:daemon` | `(status IN (commit, build, import, pull, tag))` | defaults | docker events scripted input or OpenTelemetry (docker:events, containerd) |
-| `kubernetes_audit` | ready (tick in stack.yml) | sourcetype=`kube:apiserver-audit` | `verb IN (create) (objectRef.resource=pods)` | defaults | Splunk OpenTelemetry Collector for Kubernetes / Splunk Connect for Kubernetes |
+| `container_runtime` | scheduled | sourcetype=`containerd:events`, sourcetype=`docker:daemon` | `(status IN (commit, build, import, pull, tag))` | defaults | docker events scripted input or OpenTelemetry (docker:events, containerd) |
+| `kubernetes_audit` | scheduled | sourcetype=`kube:apiserver-audit` | `verb IN (create) (objectRef.resource=pods)` | defaults | Splunk OpenTelemetry Collector for Kubernetes / Splunk Connect for Kubernetes |
 
 Collection prerequisites:
 
@@ -60,11 +56,9 @@ Eventtypes (literal constraints, see `dist/splunk/TA-mitre-attack-datacomponents
 ```ini
 [mitre_dc0015_image_creation__container_runtime]
 search = index=k8s sourcetype IN ("containerd:events", "docker:daemon") (status IN (commit, build, import, pull, tag))
-disabled = 1
 
 [mitre_dc0015_image_creation__kubernetes_audit]
 search = index=k8s sourcetype="kube:apiserver-audit" verb IN (create) (objectRef.resource=pods)
-disabled = 1
 
 [mitre_dc0015_image_creation]
 search = eventtype=mitre_dc0015_image_creation__container_runtime OR eventtype=mitre_dc0015_image_creation__kubernetes_audit

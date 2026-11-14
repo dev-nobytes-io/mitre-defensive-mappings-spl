@@ -137,20 +137,7 @@ derived:
     channels:
     - mount_events
   feeds:
-  - feed: wineventlog
-    have: true
-    in_scope: true
-    eventtype: mitre_dc0042_drive_creation__wineventlog
-    search: >-
-      index=wineventlog source IN ("XmlWinEventLog:Security", "XmlWinEventLog:System") EventCode IN (1006, 2003,
-      2100, 2101, 2102, 2105, 2106, 6416, 10000, 10001, 20001, 20003)
-    constraint_origin: defaults
-    broad_refs: 0
-    sources:
-    - WinEventLog:System
-    cim_tags: false
   - feed: auditd
-    have: false
     in_scope: true
     eventtype: mitre_dc0042_drive_creation__auditd
     search: index=linux sourcetype="linux:audit" type IN (SYSCALL) (syscall IN (mount) OR SYSCALL IN (mount))
@@ -160,7 +147,6 @@ derived:
     - auditd:SYSCALL
     cim_tags: false
   - feed: linux_syslog
-    have: false
     in_scope: true
     eventtype: mitre_dc0042_drive_creation__linux_syslog
     search: >-
@@ -172,8 +158,18 @@ derived:
     - journald:systemd
     - linux:syslog
     cim_tags: false
+  - feed: wineventlog
+    in_scope: true
+    eventtype: mitre_dc0042_drive_creation__wineventlog
+    search: >-
+      index=wineventlog source IN ("XmlWinEventLog:Security", "XmlWinEventLog:System") EventCode IN (1006, 2003,
+      2100, 2101, 2102, 2105, 2106, 6416, 10000, 10001, 20001, 20003)
+    constraint_origin: defaults
+    broad_refs: 0
+    sources:
+    - WinEventLog:System
+    cim_tags: false
   - feed: macos
-    have: false
     in_scope: false
     eventtype: null
     search: null

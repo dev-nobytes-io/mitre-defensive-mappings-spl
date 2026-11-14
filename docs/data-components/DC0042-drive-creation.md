@@ -2,7 +2,7 @@
 
 [ATT&CK](https://attack.mitre.org/datacomponents/DC0042) · version 2.0 · modified 2026-10-13 · ATT&CK release 20.1
 
-Status: **Live** · umbrella eventtype `mitre_dc0042_drive_creation`
+Umbrella eventtype `mitre_dc0042_drive_creation` over 3 feed(s)
 
 > The activity of assigning a new drive letter or creating a mount point for a data storage device, such as a USB, network share, or external hard drive, enabling access to its content on a host system. Examples:   - USB Drive Insertion: A USB drive is plugged in and automatically assigned the letter `E:\` on a Windows machine. - Network Drive Mapping: A network share `\\server\share` is mapped to the drive `Z:\`. - Virtual Drive Creation: A virtual disk is mounted on `/mnt/virtualdrive` using an ISO image or a virtual hard disk (VHD). - Cloud Storage Mounting: Google Drive is mounted as `G:\` on a Windows machine using a cloud sync tool. - External Storage Integration: An external HDD or SSD is connected and assigned `/mnt/external` on a Linux system..
 
@@ -33,14 +33,9 @@ flowchart LR
   DC --> LS4["linux:osquery<br/>1 refs"]
   F_linux_osquery["osquery on Linux"]
   LS4 --> F_linux_osquery
-  F_wineventlog --> ET_wineventlog[/"mitre_dc0042_drive_creation__wineventlog"/]
-  class F_wineventlog live
   F_auditd --> ET_auditd[/"mitre_dc0042_drive_creation__auditd"/]
-  class F_auditd ready
   F_linux_syslog --> ET_linux_syslog[/"mitre_dc0042_drive_creation__linux_syslog"/]
-  class F_linux_syslog ready
-  classDef live fill:#d4edda,stroke:#2e7d32,color:#1b1b1b
-  classDef ready fill:#fff3cd,stroke:#b26a00,color:#1b1b1b
+  F_wineventlog --> ET_wineventlog[/"mitre_dc0042_drive_creation__wineventlog"/]
 ```
 
 ## Requirements
@@ -51,21 +46,21 @@ Component specific:
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
+| Feed | Schedule | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `wineventlog` | live | source=`XmlWinEventLog:Security`, source=`XmlWinEventLog:System` | `EventCode IN (1006, 2003, 2100, 2101, 2102, 2105, 2106, 6416, 10000, 10001, 20001, 20003)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true) |
-| `auditd` | ready (tick in stack.yml) | sourcetype=`linux:audit` | `type IN (SYSCALL) (syscall IN (mount) OR SYSCALL IN (mount))` | defaults | Splunk Add-on for Unix and Linux (linux:audit) or auditd -> auditbeat/syslog |
-| `linux_syslog` | ready (tick in stack.yml) | sourcetype=`linux_messages_syslog`, sourcetype=`linux_secure`, sourcetype=`syslog` | `(kernel usb OR process=udisksd OR "New USB device")` | defaults | Splunk Add-on for Unix and Linux (syslog, linux_secure, linux_messages_syslog) |
+| `auditd` | scheduled | sourcetype=`linux:audit` | `type IN (SYSCALL) (syscall IN (mount) OR SYSCALL IN (mount))` | defaults | Splunk Add-on for Unix and Linux (linux:audit) or auditd -> auditbeat/syslog |
+| `linux_syslog` | scheduled | sourcetype=`linux_messages_syslog`, sourcetype=`linux_secure`, sourcetype=`syslog` | `(kernel usb OR process=udisksd OR "New USB device")` | defaults | Splunk Add-on for Unix and Linux (syslog, linux_secure, linux_messages_syslog) |
+| `wineventlog` | scheduled | source=`XmlWinEventLog:Security`, source=`XmlWinEventLog:System` | `EventCode IN (1006, 2003, 2100, 2101, 2102, 2105, 2106, 6416, 10000, 10001, 20001, 20003)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true) |
 
 Collection prerequisites:
 
+- **auditd**: audit rules for execve, connect, open/openat on sensitive paths, ptrace, module load, mount, setuid; a Neo23x0/auditd baseline or Florian Roth's rule set is a reasonable start.
+- **auditd**: log_format = ENRICHED in auditd.conf so syscall names and uids resolve (otherwise syscall numbers are architecture dependent).
 - **wineventlog**: Advanced Audit Policy configured (at minimum Process Creation, Logon, Account Management, Object Access, Policy Change, Privilege Use, Detailed Tracking). Without the matching subcategory the EventCodes below never fire.
 - **wineventlog**: Include command line in process creation events enabled for 4688 (Computer Configuration > Administrative Templates > System > Audit Process Creation).
 - **wineventlog**: PowerShell Script Block Logging (4104) and Module Logging (4103) enabled via GPO for the PowerShell/Operational channel.
 - **wineventlog**: Object access events (4656/4663/4657/4660/4670) require SACLs on the files/keys of interest.
 - **wineventlog**: Non-default channels (TaskScheduler, WMI-Activity, CodeIntegrity, Defender, Firewall, WinRM, SMBClient/Server...) must be listed as inputs in Splunk_TA_windows inputs.conf; several are disabled by default in Windows.
-- **auditd**: audit rules for execve, connect, open/openat on sensitive paths, ptrace, module load, mount, setuid; a Neo23x0/auditd baseline or Florian Roth's rule set is a reasonable start.
-- **auditd**: log_format = ENRICHED in auditd.conf so syscall names and uids resolve (otherwise syscall numbers are architecture dependent).
 
 Review notes: `linux_syslog` has 3 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *defaults*.
 
@@ -74,22 +69,20 @@ Review notes: `linux_syslog` has 3 ATT&CK reference(s) with no usable event filt
 Eventtypes (literal constraints, see `dist/splunk/TA-mitre-attack-datacomponents/default/eventtypes.conf`):
 
 ```ini
-[mitre_dc0042_drive_creation__wineventlog]
-search = index=wineventlog source IN ("XmlWinEventLog:Security", "XmlWinEventLog:System") EventCode IN (1006, 2003, 2100, 2101, 2102, 2105, 2106, 6416, 10000, 10001, 20001, 20003)
-
 [mitre_dc0042_drive_creation__auditd]
 search = index=linux sourcetype="linux:audit" type IN (SYSCALL) (syscall IN (mount) OR SYSCALL IN (mount))
-disabled = 1
 
 [mitre_dc0042_drive_creation__linux_syslog]
 search = index=linux sourcetype IN (linux_messages_syslog, linux_secure, syslog) (kernel usb OR process=udisksd OR "New USB device")
-disabled = 1
+
+[mitre_dc0042_drive_creation__wineventlog]
+search = index=wineventlog source IN ("XmlWinEventLog:Security", "XmlWinEventLog:System") EventCode IN (1006, 2003, 2100, 2101, 2102, 2105, 2106, 6416, 10000, 10001, 20001, 20003)
 
 [mitre_dc0042_drive_creation]
-search = eventtype=mitre_dc0042_drive_creation__wineventlog OR eventtype=mitre_dc0042_drive_creation__auditd OR eventtype=mitre_dc0042_drive_creation__linux_syslog
+search = eventtype=mitre_dc0042_drive_creation__auditd OR eventtype=mitre_dc0042_drive_creation__linux_syslog OR eventtype=mitre_dc0042_drive_creation__wineventlog
 ```
 
-Macros for analytics: `` `mitre_dc0042` `` (umbrella), `` `mitre_dc0042_wineventlog` ``, `` `mitre_dc0042_auditd` ``, `` `mitre_dc0042_linux_syslog` ``, `` `mitre_dc0042_filter` `` (site exclusions).
+Macros for analytics: `` `mitre_dc0042` `` (umbrella), `` `mitre_dc0042_auditd` ``, `` `mitre_dc0042_linux_syslog` ``, `` `mitre_dc0042_wineventlog` ``, `` `mitre_dc0042_filter` `` (site exclusions).
 CIM: no data model mapping; analytics on this component run as raw eventtype searches.
 
 ## Sigma

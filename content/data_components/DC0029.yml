@@ -273,44 +273,7 @@ derived:
       sequential Industrial Control Systems (ICS) protocol reads with output to file, by User Identifier (UID) not
       in authorized scripting UIDs
   feeds:
-  - feed: powershell_logging
-    have: true
-    in_scope: true
-    eventtype: mitre_dc0029_script_execution__powershell_logging
-    search: >-
-      index=wineventlog source="XmlWinEventLog:Microsoft-Windows-PowerShell/Operational" EventCode IN (4103, 4104)
-    constraint_origin: defaults
-    broad_refs: 0
-    sources:
-    - EDR:scriptblock
-    - WinEventLog:PowerShell
-    cim_tags: false
-  - feed: trellix_epo
-    have: true
-    in_scope: true
-    eventtype: mitre_dc0029_script_execution__trellix_epo
-    search: index=epo sourcetype="mcafee:epo:syslog" (threat_type="AMSI*" OR threat_name="AMSI*")
-    constraint_origin: derived
-    broad_refs: 0
-    sources:
-    - EDR:AMSI
-    - etw:Microsoft-Antimalware-Scan-Interface
-    cim_tags: false
-  - feed: wineventlog
-    have: true
-    in_scope: true
-    eventtype: mitre_dc0029_script_execution__wineventlog
-    search: >-
-      index=wineventlog source IN ("XmlWinEventLog:Application", "XmlWinEventLog:System") EventCode IN (1502, 1503,
-      4016, 5312)
-    constraint_origin: defaults
-    broad_refs: 2
-    sources:
-    - WinEventLog:Application
-    - WinEventLog:System
-    cim_tags: false
   - feed: auditd
-    have: false
     in_scope: true
     eventtype: mitre_dc0029_script_execution__auditd
     search: >-
@@ -323,7 +286,6 @@ derived:
     - auditd:SYSCALL
     cim_tags: false
   - feed: edr_telemetry
-    have: false
     in_scope: true
     eventtype: mitre_dc0029_script_execution__edr_telemetry
     search: index=edr sourcetype="edr:telemetry"
@@ -334,7 +296,6 @@ derived:
     - EDR:scriptblock
     cim_tags: false
   - feed: esxi_syslog
-    have: false
     in_scope: true
     eventtype: mitre_dc0029_script_execution__esxi_syslog
     search: index=vmware sourcetype="vmware:esxlog:shell"
@@ -345,7 +306,6 @@ derived:
     - esxi:vmkernel
     cim_tags: false
   - feed: etw
-    have: false
     in_scope: true
     eventtype: mitre_dc0029_script_execution__etw
     search: index=etw sourcetype="etw:json" (ProviderName="Microsoft-Antimalware-Scan-Interface")
@@ -354,8 +314,40 @@ derived:
     sources:
     - etw:Microsoft-Antimalware-Scan-Interface
     cim_tags: false
+  - feed: powershell_logging
+    in_scope: true
+    eventtype: mitre_dc0029_script_execution__powershell_logging
+    search: >-
+      index=wineventlog source="XmlWinEventLog:Microsoft-Windows-PowerShell/Operational" EventCode IN (4103, 4104)
+    constraint_origin: defaults
+    broad_refs: 0
+    sources:
+    - EDR:scriptblock
+    - WinEventLog:PowerShell
+    cim_tags: false
+  - feed: trellix_epo
+    in_scope: true
+    eventtype: mitre_dc0029_script_execution__trellix_epo
+    search: index=epo sourcetype="mcafee:epo:syslog" (threat_type="AMSI*" OR threat_name="AMSI*")
+    constraint_origin: derived
+    broad_refs: 0
+    sources:
+    - EDR:AMSI
+    - etw:Microsoft-Antimalware-Scan-Interface
+    cim_tags: false
+  - feed: wineventlog
+    in_scope: true
+    eventtype: mitre_dc0029_script_execution__wineventlog
+    search: >-
+      index=wineventlog source IN ("XmlWinEventLog:Application", "XmlWinEventLog:System") EventCode IN (1502, 1503,
+      4016, 5312)
+    constraint_origin: defaults
+    broad_refs: 2
+    sources:
+    - WinEventLog:Application
+    - WinEventLog:System
+    cim_tags: false
   - feed: m365_unified
-    have: false
     in_scope: false
     eventtype: null
     search: null
@@ -366,7 +358,6 @@ derived:
     - m365:unified
     cim_tags: false
   - feed: macos
-    have: false
     in_scope: false
     eventtype: null
     search: null

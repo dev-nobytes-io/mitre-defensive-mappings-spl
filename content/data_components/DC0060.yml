@@ -180,20 +180,7 @@ derived:
     channels:
     - unit file referencing container binary with persistent flags
   feeds:
-  - feed: wineventlog
-    have: true
-    in_scope: true
-    eventtype: mitre_dc0060_service_creation__wineventlog
-    search: >-
-      index=wineventlog source IN ("XmlWinEventLog:Security", "XmlWinEventLog:System") EventCode IN (4697, 7045)
-    constraint_origin: defaults
-    broad_refs: 0
-    sources:
-    - WinEventLog:Security
-    - WinEventLog:System
-    cim_tags: true
   - feed: auditd
-    have: false
     in_scope: true
     eventtype: mitre_dc0060_service_creation__auditd
     search: >-
@@ -206,7 +193,6 @@ derived:
     - systemd:unit
     cim_tags: false
   - feed: kubernetes_audit
-    have: false
     in_scope: true
     eventtype: mitre_dc0060_service_creation__kubernetes_audit
     search: >-
@@ -218,7 +204,6 @@ derived:
     - kubernetes:audit
     cim_tags: false
   - feed: linux_syslog
-    have: false
     in_scope: true
     eventtype: mitre_dc0060_service_creation__linux_syslog
     search: index=linux sourcetype IN (linux_messages_syslog, linux_secure, syslog) (process=systemd)
@@ -228,8 +213,18 @@ derived:
     - linux:syslog
     - systemd:unit
     cim_tags: false
+  - feed: wineventlog
+    in_scope: true
+    eventtype: mitre_dc0060_service_creation__wineventlog
+    search: >-
+      index=wineventlog source IN ("XmlWinEventLog:Security", "XmlWinEventLog:System") EventCode IN (4697, 7045)
+    constraint_origin: defaults
+    broad_refs: 0
+    sources:
+    - WinEventLog:Security
+    - WinEventLog:System
+    cim_tags: true
   - feed: macos
-    have: false
     in_scope: false
     eventtype: null
     search: null

@@ -2,7 +2,7 @@
 
 [ATT&CK](https://attack.mitre.org/datacomponents/DC0101) · version 2.0 · modified 2025-10-21 · ATT&CK release 20.1
 
-Status: **Live** · umbrella eventtype `mitre_dc0101_domain_registration`
+Umbrella eventtype `mitre_dc0101_domain_registration` over 3 feed(s)
 
 > "Domain Name: Domain Registration" data component captures information about the assignment, ownership, and metadata of domain names. This information is often sourced from registries like WHOIS and includes details such as registrant names, contact information, registration dates, expiration dates, and registrar details. This data is invaluable for tracking domain ownership, detecting malicious domain registrations, and identifying trends in adversary behavior. Examples:   - Registrant Information: WHOIS lookup of example.com  - Registration and Expiration Dates: A domain registered a week before being used in phishing attacks. - Domain Status: Status codes like clientTransferProhibited or serverHold indicate domain restrictions or potential hijacking activity. - Name Server Information: Name servers point to a public DNS provider often associated with malicious campaigns. - Privacy Protection: A domain uses WHOIS privacy protection to hide registrant details.  This data component can be collected through the following measures:  - WHOIS Services: Use tools or services to perform WHOIS lookups: - WHOIS APIs: Automate domain registration lookups with APIs: - Registrar Platforms: Directly query domain registrars (e.g., GoDaddy, Namecheap) for detailed registration data. - Threat Intelligence Platforms: Integrate domain registration data from services like Recorded Future, RiskIQ, or PassiveTotal for enriched analysis.
 
@@ -30,24 +30,19 @@ flowchart LR
   F_esxi_syslog["ESXi host logs via remote syslog"]
   LS1 --> F_esxi_syslog
   F_corelight --> ET_corelight[/"mitre_dc0101_domain_registration__corelight"/]
-  class F_corelight live
   F_sysmon --> ET_sysmon[/"mitre_dc0101_domain_registration__sysmon"/]
-  class F_sysmon live
   F_windows_dns_server --> ET_windows_dns_server[/"mitre_dc0101_domain_registration__windows_dns_server"/]
-  class F_windows_dns_server ready
-  classDef live fill:#d4edda,stroke:#2e7d32,color:#1b1b1b
-  classDef ready fill:#fff3cd,stroke:#b26a00,color:#1b1b1b
 ```
 
 ## Requirements
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
+| Feed | Schedule | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `corelight` | live | sourcetype=`corelight_dns`, sourcetype=`corelight_x509` | `(whole feed)` | defaults | Corelight App for Splunk (corelight_<log>). For TA_zeek use prefix zeek: and suffix :json. |
-| `sysmon` | live | source=`XmlWinEventLog:Microsoft-Windows-Sysmon/Operational` | `EventCode IN (22)` | defaults | Splunk Add-on for Sysmon (needs Splunk_TA_windows for XML parsing) |
-| `windows_dns_server` | ready (tick in stack.yml) | sourcetype=`MSAD:NT6:DNS` | `(whole feed)` | derived | Splunk_TA_windows (MSAD:NT6:DNS) or Microsoft-Windows-DNS-Server/Analytical ETW |
+| `corelight` | scheduled | sourcetype=`corelight_dns`, sourcetype=`corelight_x509` | `(whole feed)` | defaults | Corelight App for Splunk (corelight_<log>). For TA_zeek use prefix zeek: and suffix :json. |
+| `sysmon` | scheduled | source=`XmlWinEventLog:Microsoft-Windows-Sysmon/Operational` | `EventCode IN (22)` | defaults | Splunk Add-on for Sysmon (needs Splunk_TA_windows for XML parsing) |
+| `windows_dns_server` | scheduled | sourcetype=`MSAD:NT6:DNS` | `(whole feed)` | derived | Splunk_TA_windows (MSAD:NT6:DNS) or Microsoft-Windows-DNS-Server/Analytical ETW |
 
 Collection prerequisites:
 
@@ -71,7 +66,6 @@ search = index=sysmon source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operationa
 
 [mitre_dc0101_domain_registration__windows_dns_server]
 search = index=wineventlog sourcetype="MSAD:NT6:DNS"
-disabled = 1
 
 [mitre_dc0101_domain_registration]
 search = eventtype=mitre_dc0101_domain_registration__corelight OR eventtype=mitre_dc0101_domain_registration__sysmon OR eventtype=mitre_dc0101_domain_registration__windows_dns_server

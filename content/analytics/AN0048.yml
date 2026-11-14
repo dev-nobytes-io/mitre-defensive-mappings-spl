@@ -35,7 +35,7 @@ attack:
   - field: ImagePathContains
     description: Regex match on adversary tool or enumeration script used
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: hunting
   suggested_tuning:
   - element: ParentProcess

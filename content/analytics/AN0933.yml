@@ -44,7 +44,7 @@ attack:
   - field: ParentProcessContext
     description: Tune based on common parent-child chains (e.g., powershell → diskshadow)
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: ttp
   suggested_tuning:
   - element: TimeWindow

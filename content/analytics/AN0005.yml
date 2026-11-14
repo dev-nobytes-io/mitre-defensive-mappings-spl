@@ -30,7 +30,7 @@ attack:
   - field: PayloadLengthThreshold
     description: Exfil-style long topic messages vs telemetry-style short messages
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: anomaly
   suggested_tuning:
   - element: BrokerReputationList

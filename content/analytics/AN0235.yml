@@ -52,7 +52,7 @@ attack:
   - field: ParentProcessName
     description: Useful for suppressing known-good access (e.g., backup tools).
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: ttp
   suggested_tuning:
   - element: CommandLinePattern

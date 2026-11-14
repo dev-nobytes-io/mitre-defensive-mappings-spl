@@ -30,7 +30,7 @@ attack:
   - field: OutboundDataRateThreshold
     description: Bytes transferred outside trusted subnets >100MB
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: ttp
   suggested_tuning:
   - element: AppLayerProtocolMatch

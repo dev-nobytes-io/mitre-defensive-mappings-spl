@@ -196,21 +196,7 @@ derived:
       Scheduled task execution creates cache, staged payload, local output, or collected data artifact immediately
       after wake or job trigger
   feeds:
-  - feed: wineventlog
-    have: true
-    in_scope: true
-    eventtype: mitre_dc0001_scheduled_job_creation__wineventlog
-    search: >-
-      index=wineventlog source IN ("XmlWinEventLog:Microsoft-Windows-TaskScheduler/Operational", "XmlWinEventLog:Security")
-      EventCode IN (106, 4698)
-    constraint_origin: defaults
-    broad_refs: 0
-    sources:
-    - WinEventLog:Security
-    - WinEventLog:TaskScheduler
-    cim_tags: false
   - feed: auditd
-    have: false
     in_scope: true
     eventtype: mitre_dc0001_scheduled_job_creation__auditd
     search: >-
@@ -222,7 +208,6 @@ derived:
     - (added by dc_defaults/curated)
     cim_tags: false
   - feed: esxi_syslog
-    have: false
     in_scope: true
     eventtype: mitre_dc0001_scheduled_job_creation__esxi_syslog
     search: index=vmware sourcetype="vmware:esxlog:syslog" (crond)
@@ -234,7 +219,6 @@ derived:
     - esxi:vmkernel
     cim_tags: false
   - feed: kubernetes_audit
-    have: false
     in_scope: true
     eventtype: mitre_dc0001_scheduled_job_creation__kubernetes_audit
     search: index=k8s sourcetype="kube:apiserver-audit" verb IN (create) (objectRef.resource=cronjobs)
@@ -244,7 +228,6 @@ derived:
     - kubernetes:apiserver
     cim_tags: false
   - feed: linux_syslog
-    have: false
     in_scope: true
     eventtype: mitre_dc0001_scheduled_job_creation__linux_syslog
     search: >-
@@ -256,8 +239,19 @@ derived:
     - linux:cron
     - linux:syslog
     cim_tags: false
+  - feed: wineventlog
+    in_scope: true
+    eventtype: mitre_dc0001_scheduled_job_creation__wineventlog
+    search: >-
+      index=wineventlog source IN ("XmlWinEventLog:Microsoft-Windows-TaskScheduler/Operational", "XmlWinEventLog:Security")
+      EventCode IN (106, 4698)
+    constraint_origin: defaults
+    broad_refs: 0
+    sources:
+    - WinEventLog:Security
+    - WinEventLog:TaskScheduler
+    cim_tags: false
   - feed: macos
-    have: false
     in_scope: false
     eventtype: null
     search: null
@@ -269,7 +263,6 @@ derived:
     - macos:unifiedlog
     cim_tags: false
   - feed: mobile
-    have: false
     in_scope: false
     eventtype: null
     search: null

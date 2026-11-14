@@ -37,7 +37,7 @@ attack:
   - field: ProcessCountThreshold
     description: The number of times a process executes before considered anomalous.
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: anomaly
   suggested_tuning:
   - element: TimeWindow

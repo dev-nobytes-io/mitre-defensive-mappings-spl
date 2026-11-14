@@ -36,7 +36,7 @@ attack:
   - field: CommandPatternList
     description: Regex or keyword patterns to match discovery utilities (e.g., `netstat`, `Get-NetTCPConnection`).
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: hunting
   suggested_tuning:
   - element: SuspiciousParentProcesses

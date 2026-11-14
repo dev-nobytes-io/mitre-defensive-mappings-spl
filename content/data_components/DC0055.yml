@@ -480,30 +480,7 @@ derived:
       Sequential file reads across multiple Industrial Control Systems (ICS) data paths by image not in authorized
       ICS applications, exceeding bulk access threshold within a short window
   feeds:
-  - feed: solidcore
-    have: true
-    in_scope: true
-    eventtype: mitre_dc0055_file_access__solidcore
-    search: >-
-      index=epo sourcetype="mcafee:epo:syslog" (threat_name=READ_DENIED OR event_description=READ_DENIED) (product_name="Solidcore*")
-    constraint_origin: defaults
-    broad_refs: 0
-    sources:
-    - (added by dc_defaults/curated)
-    cim_tags: false
-  - feed: wineventlog
-    have: true
-    in_scope: true
-    eventtype: mitre_dc0055_file_access__wineventlog
-    search: index=wineventlog source="XmlWinEventLog:Security" EventCode IN (4656, 4663)
-    constraint_origin: defaults
-    broad_refs: 2
-    sources:
-    - WinEventLog:Microsoft-Windows-Windows Defender/Operational
-    - WinEventLog:Security
-    cim_tags: false
   - feed: auditd
-    have: false
     in_scope: true
     eventtype: mitre_dc0055_file_access__auditd
     search: >-
@@ -519,7 +496,6 @@ derived:
     - ebpf:syscalls
     cim_tags: false
   - feed: ebpf
-    have: false
     in_scope: true
     eventtype: mitre_dc0055_file_access__ebpf
     search: index=linux sourcetype=falco
@@ -529,7 +505,6 @@ derived:
     - ebpf:syscalls
     cim_tags: false
   - feed: esxi_syslog
-    have: false
     in_scope: true
     eventtype: mitre_dc0055_file_access__esxi_syslog
     search: index=vmware sourcetype IN ("vmware:esxlog:hostd", "vmware:esxlog:vmkernel")
@@ -541,7 +516,6 @@ derived:
     - esxi:vmkernel
     cim_tags: false
   - feed: kubernetes_audit
-    have: false
     in_scope: true
     eventtype: mitre_dc0055_file_access__kubernetes_audit
     search: >-
@@ -551,8 +525,27 @@ derived:
     sources:
     - kubernetes:audit
     cim_tags: false
+  - feed: solidcore
+    in_scope: true
+    eventtype: mitre_dc0055_file_access__solidcore
+    search: >-
+      index=epo sourcetype="mcafee:epo:syslog" (threat_name=READ_DENIED OR event_description=READ_DENIED) (product_name="Solidcore*")
+    constraint_origin: defaults
+    broad_refs: 0
+    sources:
+    - (added by dc_defaults/curated)
+    cim_tags: false
+  - feed: wineventlog
+    in_scope: true
+    eventtype: mitre_dc0055_file_access__wineventlog
+    search: index=wineventlog source="XmlWinEventLog:Security" EventCode IN (4656, 4663)
+    constraint_origin: defaults
+    broad_refs: 2
+    sources:
+    - WinEventLog:Microsoft-Windows-Windows Defender/Operational
+    - WinEventLog:Security
+    cim_tags: false
   - feed: aws
-    have: false
     in_scope: false
     eventtype: null
     search: null
@@ -562,7 +555,6 @@ derived:
     - AWS:CloudTrail
     cim_tags: false
   - feed: gcp
-    have: false
     in_scope: false
     eventtype: null
     search: null
@@ -572,7 +564,6 @@ derived:
     - gcp:audit
     cim_tags: false
   - feed: m365_unified
-    have: false
     in_scope: false
     eventtype: null
     search: null
@@ -582,7 +573,6 @@ derived:
     - m365:unified
     cim_tags: false
   - feed: macos
-    have: false
     in_scope: false
     eventtype: null
     search: null
@@ -599,7 +589,6 @@ derived:
     - macos:unifiedlog
     cim_tags: false
   - feed: mobile
-    have: false
     in_scope: false
     eventtype: null
     search: null

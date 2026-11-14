@@ -2,7 +2,7 @@
 
 [ATT&CK](https://attack.mitre.org/datacomponents/DC0104) · version 2.0 · modified 2025-11-12 · ATT&CK release 20.1
 
-Status: **Live** · umbrella eventtype `mitre_dc0104_response_content`
+Umbrella eventtype `mitre_dc0104_response_content` over 2 feed(s)
 
 > Captured network traffic that provides details about responses received during an internet scan. This data includes both protocol header values (e.g., HTTP status codes, IP headers, or DNS response codes) and response body content (e.g., HTML, JSON, or raw data). Examples:  - HTTP Scan: A web server responds to a probe with an HTTP 200 status code and an HTML body indicating the default page is accessible. - DNS Scan: A DNS server replies to a query with a resolved IP address for a domain, along with details like Time-To-Live (TTL) and authoritative information. - TCP Banner Grab: A service listening on a port (e.g., SSH or FTP) responds with a banner containing service name, version, or other metadata.
 
@@ -25,21 +25,17 @@ flowchart LR
   F_palo_alto["Palo Alto Networks PAN-OS"]
   LS0 --> F_palo_alto
   F_corelight --> ET_corelight[/"mitre_dc0104_response_content__corelight"/]
-  class F_corelight live
   F_palo_alto --> ET_palo_alto[/"mitre_dc0104_response_content__palo_alto"/]
-  class F_palo_alto live
-  classDef live fill:#d4edda,stroke:#2e7d32,color:#1b1b1b
-  classDef ready fill:#fff3cd,stroke:#b26a00,color:#1b1b1b
 ```
 
 ## Requirements
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
+| Feed | Schedule | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `corelight` | live | sourcetype=`corelight_dns`, sourcetype=`corelight_http`, sourcetype=`corelight_ssl` | `(whole feed)` | defaults | Corelight App for Splunk (corelight_<log>). For TA_zeek use prefix zeek: and suffix :json. |
-| `palo_alto` | live | sourcetype=`pan:threat` | `(whole feed)` | defaults | Splunk Add-on for Palo Alto Networks (pan:*) |
+| `corelight` | scheduled | sourcetype=`corelight_dns`, sourcetype=`corelight_http`, sourcetype=`corelight_ssl` | `(whole feed)` | defaults | Corelight App for Splunk (corelight_<log>). For TA_zeek use prefix zeek: and suffix :json. |
+| `palo_alto` | scheduled | sourcetype=`pan:threat` | `(whole feed)` | defaults | Splunk Add-on for Palo Alto Networks (pan:*) |
 
 Collection prerequisites:
 

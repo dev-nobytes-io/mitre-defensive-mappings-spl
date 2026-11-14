@@ -38,7 +38,7 @@ attack:
   - field: TimeWindow
     description: Adjust temporal window to match likely fallback C2 retries after primary channel fails.
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: anomaly
   suggested_tuning:
   - element: DestinationPort

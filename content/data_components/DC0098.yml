@@ -66,7 +66,6 @@ derived:
     - DeleteVolume, ModifyVolume
   feeds:
   - feed: esxi_syslog
-    have: false
     in_scope: true
     eventtype: mitre_dc0098_volume_deletion__esxi_syslog
     search: index=vmware sourcetype IN ("vmware:esxlog:hostd", "vmware:esxlog:vmkernel")
@@ -76,7 +75,6 @@ derived:
     - esxi:vmkernel
     cim_tags: false
   - feed: aws
-    have: false
     in_scope: false
     eventtype: null
     search: null

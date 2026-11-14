@@ -2,7 +2,7 @@
 
 [ATT&CK](https://attack.mitre.org/datacomponents/DC0051) · version 2.0 · modified 2026-10-13 · ATT&CK release 20.1
 
-Status: **Live** · umbrella eventtype `mitre_dc0051_firewall_rule_modification`
+Umbrella eventtype `mitre_dc0051_firewall_rule_modification` over 5 feed(s)
 
 > The creation, deletion, or alteration of firewall rules to allow or block specific network traffic. Monitoring changes to these rules is critical for detecting misconfigurations, unauthorized access, or malicious attempts to bypass network protections. Examples:   - Rule Creation: Adding a new rule to allow inbound traffic on port 3389 (RDP). - Rule Deletion: Deleting a rule that blocks inbound traffic from untrusted IP ranges. - Rule Modification: Changing a rule to allow traffic from "any" source IP instead of a specific trusted range. - Audit Log Metadata: Logs indicating "Firewall rule modified by admin@domain.com." - Platform-Specific Scenarios     - Azure: Altering rules in an Azure Network Security Group (NSG).     - AWS: Modifying Security Group rules to allow traffic.     - Windows: Changes tracked in Security Event Logs (EID 4950 or 4951).  This data component can be collected through the following measures:  Cloud Control Plane  - Azure: Collect rule modification logs from Azure Firewall Activity Logs.     - Example Command: `az network firewall policy rule-collection-group rule-collection list --policy-name <policy-name>` - AWS: Use CloudTrail to track `AuthorizeSecurityGroupIngress` or `RevokeSecurityGroupIngress` actions.     Example: `aws ec2 describe-security-groups` - Google Cloud: Use gcloud commands to extract firewall rules: `gcloud compute firewall-rules list --format=json`  Host-Based Firewalls  - Windows:      - Collect events from the Windows Security Event Log (EID 4950: A rule has been modified).     - Use PowerShell to track rule changes: `Get-NetFirewallRule -PolicyStore PersistentStore` - Linux:     - Monitor iptables or nftables rule modifications: `iptables -L -v`     - Use auditd for real-time monitoring: `auditctl -w /etc/iptables.rules -p wa` - macOS: Use pfctl to monitor rule changes: `sudo pfctl -sr`  SIEM Integration  - Collect logs from cloud platforms, host systems, and network appliances for centralized monitoring.  API Monitoring  - Monitor API calls for firewall rule modifications.
 
@@ -42,18 +42,11 @@ flowchart LR
   LS5 --> F_netdev_syslog
   DC --> LS6["WinEventLog:Microsoft-Windows-Windows Firewall With Advanced Security/Firewall<br/>2 refs"]
   LS6 --> F_wineventlog
-  F_palo_alto --> ET_palo_alto[/"mitre_dc0051_firewall_rule_modification__palo_alto"/]
-  class F_palo_alto live
-  F_wineventlog --> ET_wineventlog[/"mitre_dc0051_firewall_rule_modification__wineventlog"/]
-  class F_wineventlog live
   F_esxi_syslog --> ET_esxi_syslog[/"mitre_dc0051_firewall_rule_modification__esxi_syslog"/]
-  class F_esxi_syslog ready
   F_linux_syslog --> ET_linux_syslog[/"mitre_dc0051_firewall_rule_modification__linux_syslog"/]
-  class F_linux_syslog ready
   F_netdev_syslog --> ET_netdev_syslog[/"mitre_dc0051_firewall_rule_modification__netdev_syslog"/]
-  class F_netdev_syslog ready
-  classDef live fill:#d4edda,stroke:#2e7d32,color:#1b1b1b
-  classDef ready fill:#fff3cd,stroke:#b26a00,color:#1b1b1b
+  F_palo_alto --> ET_palo_alto[/"mitre_dc0051_firewall_rule_modification__palo_alto"/]
+  F_wineventlog --> ET_wineventlog[/"mitre_dc0051_firewall_rule_modification__wineventlog"/]
 ```
 
 ## Requirements
@@ -64,16 +57,18 @@ Component specific:
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
+| Feed | Schedule | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `palo_alto` | live | sourcetype=`pan:config` | `(whole feed)` | defaults | Splunk Add-on for Palo Alto Networks (pan:*) |
-| `wineventlog` | live | source=`XmlWinEventLog:Microsoft-Windows-Windows Firewall With Advanced Security/Firewall`, source=`XmlWinEventLog:Security` | `EventCode IN (2004, 2005, 2006, 2033, 4946, 4947, 4948, 4950)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true) |
-| `esxi_syslog` | ready (tick in stack.yml) | sourcetype=`vmware:esxlog:hostd` | `(firewall)` | defaults | Splunk Add-on for VMware ESXi Logs (vmware:esxlog:<log>) |
-| `linux_syslog` | ready (tick in stack.yml) | sourcetype=`linux_messages_syslog`, sourcetype=`linux_secure`, sourcetype=`syslog` | `(iptables OR nftables OR ufw OR firewalld)` | defaults | Splunk Add-on for Unix and Linux (syslog, linux_secure, linux_messages_syslog) |
-| `netdev_syslog` | ready (tick in stack.yml) | sourcetype=`cisco:asa`, sourcetype=`cisco:ios`, sourcetype=`syslog` | `(whole feed)` | derived | Cisco Networks Add-on (cisco:ios, cisco:asa), Juniper/Arista TAs, or generic syslog |
+| `esxi_syslog` | scheduled | sourcetype=`vmware:esxlog:hostd` | `(firewall)` | defaults | Splunk Add-on for VMware ESXi Logs (vmware:esxlog:<log>) |
+| `linux_syslog` | scheduled | sourcetype=`linux_messages_syslog`, sourcetype=`linux_secure`, sourcetype=`syslog` | `(iptables OR nftables OR ufw OR firewalld)` | defaults | Splunk Add-on for Unix and Linux (syslog, linux_secure, linux_messages_syslog) |
+| `netdev_syslog` | scheduled | sourcetype=`cisco:asa`, sourcetype=`cisco:ios`, sourcetype=`syslog` | `(whole feed)` | derived | Cisco Networks Add-on (cisco:ios, cisco:asa), Juniper/Arista TAs, or generic syslog |
+| `palo_alto` | scheduled | sourcetype=`pan:config` | `(whole feed)` | defaults | Splunk Add-on for Palo Alto Networks (pan:*) |
+| `wineventlog` | scheduled | source=`XmlWinEventLog:Microsoft-Windows-Windows Firewall With Advanced Security/Firewall`, source=`XmlWinEventLog:Security` | `EventCode IN (2004, 2005, 2006, 2033, 4946, 4947, 4948, 4950)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true) |
 
 Collection prerequisites:
 
+- **esxi_syslog**: Syslog.global.logHost set on every host; ESXi Shell/SSH audit enabled; consider Syslog.global.auditRecord (ESXi 8).
+- **netdev_syslog**: Enable config-change archive logging and AAA command accounting; forward at informational level.
 - **palo_alto**: Log forwarding profiles attached to every security rule (traffic start+end, threat, url, wildfire, data).
 - **palo_alto**: System and Config logs forwarded from each firewall / Panorama; GlobalProtect logs enabled.
 - **palo_alto**: URL filtering and Threat Prevention licensed for pan:threat subtypes url/vulnerability/virus/spyware.
@@ -83,39 +78,34 @@ Collection prerequisites:
 - **wineventlog**: PowerShell Script Block Logging (4104) and Module Logging (4103) enabled via GPO for the PowerShell/Operational channel.
 - **wineventlog**: Object access events (4656/4663/4657/4660/4670) require SACLs on the files/keys of interest.
 - **wineventlog**: Non-default channels (TaskScheduler, WMI-Activity, CodeIntegrity, Defender, Firewall, WinRM, SMBClient/Server...) must be listed as inputs in Splunk_TA_windows inputs.conf; several are disabled by default in Windows.
-- **esxi_syslog**: Syslog.global.logHost set on every host; ESXi Shell/SSH audit enabled; consider Syslog.global.auditRecord (ESXi 8).
-- **netdev_syslog**: Enable config-change archive logging and AAA command accounting; forward at informational level.
 
-Review notes: `wineventlog` has 6 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *defaults*; `linux_syslog` has 2 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *defaults*; `netdev_syslog` has 8 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *derived*.
+Review notes: `linux_syslog` has 2 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *defaults*; `netdev_syslog` has 8 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *derived*; `wineventlog` has 6 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *defaults*.
 
 ## Splunk
 
 Eventtypes (literal constraints, see `dist/splunk/TA-mitre-attack-datacomponents/default/eventtypes.conf`):
 
 ```ini
+[mitre_dc0051_firewall_rule_modification__esxi_syslog]
+search = index=vmware sourcetype="vmware:esxlog:hostd" (firewall)
+
+[mitre_dc0051_firewall_rule_modification__linux_syslog]
+search = index=linux sourcetype IN (linux_messages_syslog, linux_secure, syslog) (iptables OR nftables OR ufw OR firewalld)
+
+[mitre_dc0051_firewall_rule_modification__netdev_syslog]
+search = index=netops sourcetype IN ("cisco:asa", "cisco:ios", syslog)
+
 [mitre_dc0051_firewall_rule_modification__palo_alto]
 search = index=pan_logs sourcetype="pan:config"
 
 [mitre_dc0051_firewall_rule_modification__wineventlog]
 search = index=wineventlog source IN ("XmlWinEventLog:Microsoft-Windows-Windows Firewall With Advanced Security/Firewall", "XmlWinEventLog:Security") EventCode IN (2004, 2005, 2006, 2033, 4946, 4947, 4948, 4950)
 
-[mitre_dc0051_firewall_rule_modification__esxi_syslog]
-search = index=vmware sourcetype="vmware:esxlog:hostd" (firewall)
-disabled = 1
-
-[mitre_dc0051_firewall_rule_modification__linux_syslog]
-search = index=linux sourcetype IN (linux_messages_syslog, linux_secure, syslog) (iptables OR nftables OR ufw OR firewalld)
-disabled = 1
-
-[mitre_dc0051_firewall_rule_modification__netdev_syslog]
-search = index=netops sourcetype IN ("cisco:asa", "cisco:ios", syslog)
-disabled = 1
-
 [mitre_dc0051_firewall_rule_modification]
-search = eventtype=mitre_dc0051_firewall_rule_modification__palo_alto OR eventtype=mitre_dc0051_firewall_rule_modification__wineventlog OR eventtype=mitre_dc0051_firewall_rule_modification__esxi_syslog OR eventtype=mitre_dc0051_firewall_rule_modification__linux_syslog OR eventtype=mitre_dc0051_firewall_rule_modification__netdev_syslog
+search = eventtype=mitre_dc0051_firewall_rule_modification__esxi_syslog OR eventtype=mitre_dc0051_firewall_rule_modification__linux_syslog OR eventtype=mitre_dc0051_firewall_rule_modification__netdev_syslog OR eventtype=mitre_dc0051_firewall_rule_modification__palo_alto OR eventtype=mitre_dc0051_firewall_rule_modification__wineventlog
 ```
 
-Macros for analytics: `` `mitre_dc0051` `` (umbrella), `` `mitre_dc0051_palo_alto` ``, `` `mitre_dc0051_wineventlog` ``, `` `mitre_dc0051_esxi_syslog` ``, `` `mitre_dc0051_linux_syslog` ``, `` `mitre_dc0051_netdev_syslog` ``, `` `mitre_dc0051_filter` `` (site exclusions).
+Macros for analytics: `` `mitre_dc0051` `` (umbrella), `` `mitre_dc0051_esxi_syslog` ``, `` `mitre_dc0051_linux_syslog` ``, `` `mitre_dc0051_netdev_syslog` ``, `` `mitre_dc0051_palo_alto` ``, `` `mitre_dc0051_wineventlog` ``, `` `mitre_dc0051_filter` `` (site exclusions).
 CIM: `Change.Network_Changes` via `` `mitre_dc0051_dm` `` / `` `mitre_dc0051_dm_where` `` for `tstats`. CIM tags emitted for: `palo_alto`.
 
 ## Sigma

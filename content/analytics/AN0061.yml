@@ -46,7 +46,7 @@ attack:
   - field: ParentProcess
     description: Upstream process lineage leading to service stop
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: ttp
   suggested_tuning:
   - element: TimeWindow

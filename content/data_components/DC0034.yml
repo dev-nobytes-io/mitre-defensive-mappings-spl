@@ -336,8 +336,48 @@ derived:
       EventCode=1 where image filename matches Industrial Control Systems (ICS) vendor process names but hash not
       in vendor hash baseline or current directory outside vendor install paths
   feeds:
+  - feed: auditd
+    in_scope: true
+    eventtype: mitre_dc0034_process_metadata__auditd
+    search: >-
+      index=linux sourcetype="linux:audit" type IN (PROCTITLE, SYSCALL) (syscall IN (execve, prctl, setgid, setuid)
+      OR SYSCALL IN (execve, prctl, setgid, setuid))
+    constraint_origin: defaults
+    broad_refs: 0
+    sources:
+    - auditd:SYSCALL
+    cim_tags: false
+  - feed: edr_telemetry
+    in_scope: true
+    eventtype: mitre_dc0034_process_metadata__edr_telemetry
+    search: index=edr sourcetype="edr:telemetry"
+    constraint_origin: derived
+    broad_refs: 4
+    sources:
+    - EDR:Telemetry
+    - EDR:hunting
+    cim_tags: false
+  - feed: etw
+    in_scope: true
+    eventtype: mitre_dc0034_process_metadata__etw
+    search: index=etw sourcetype="etw:json" (ProviderName="Microsoft-Windows-Kernel-Process")
+    constraint_origin: derived
+    broad_refs: 1
+    sources:
+    - etw:Microsoft-Windows-ClickOnce
+    - etw:Microsoft-Windows-Kernel-Process
+    cim_tags: false
+  - feed: linux_osquery
+    in_scope: true
+    eventtype: mitre_dc0034_process_metadata__linux_osquery
+    search: >-
+      index=osquery sourcetype="osquery:results" (name=processes OR name=process_open_sockets OR name=process_memory_map)
+    constraint_origin: defaults
+    broad_refs: 9
+    sources:
+    - linux:osquery
+    cim_tags: false
   - feed: powershell_logging
-    have: true
     in_scope: true
     eventtype: mitre_dc0034_process_metadata__powershell_logging
     search: >-
@@ -348,7 +388,6 @@ derived:
     - WinEventLog:PowerShell
     cim_tags: false
   - feed: sysmon
-    have: true
     in_scope: true
     eventtype: mitre_dc0034_process_metadata__sysmon
     search: index=sysmon source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode IN (1, 5)
@@ -359,7 +398,6 @@ derived:
     - etw:Microsoft-Windows-Kernel-Process
     cim_tags: true
   - feed: wineventlog
-    have: true
     in_scope: true
     eventtype: mitre_dc0034_process_metadata__wineventlog
     search: >-
@@ -375,53 +413,7 @@ derived:
     - WinEventLog:Microsoft-Windows-SmartAppControl/Operational
     - WinEventLog:Microsoft-Windows-Windows Camera Frame Server/Operational
     cim_tags: false
-  - feed: auditd
-    have: false
-    in_scope: true
-    eventtype: mitre_dc0034_process_metadata__auditd
-    search: >-
-      index=linux sourcetype="linux:audit" type IN (PROCTITLE, SYSCALL) (syscall IN (execve, prctl, setgid, setuid)
-      OR SYSCALL IN (execve, prctl, setgid, setuid))
-    constraint_origin: defaults
-    broad_refs: 0
-    sources:
-    - auditd:SYSCALL
-    cim_tags: false
-  - feed: edr_telemetry
-    have: false
-    in_scope: true
-    eventtype: mitre_dc0034_process_metadata__edr_telemetry
-    search: index=edr sourcetype="edr:telemetry"
-    constraint_origin: derived
-    broad_refs: 4
-    sources:
-    - EDR:Telemetry
-    - EDR:hunting
-    cim_tags: false
-  - feed: etw
-    have: false
-    in_scope: true
-    eventtype: mitre_dc0034_process_metadata__etw
-    search: index=etw sourcetype="etw:json" (ProviderName="Microsoft-Windows-Kernel-Process")
-    constraint_origin: derived
-    broad_refs: 1
-    sources:
-    - etw:Microsoft-Windows-ClickOnce
-    - etw:Microsoft-Windows-Kernel-Process
-    cim_tags: false
-  - feed: linux_osquery
-    have: false
-    in_scope: true
-    eventtype: mitre_dc0034_process_metadata__linux_osquery
-    search: >-
-      index=osquery sourcetype="osquery:results" (name=processes OR name=process_open_sockets OR name=process_memory_map)
-    constraint_origin: defaults
-    broad_refs: 9
-    sources:
-    - linux:osquery
-    cim_tags: false
   - feed: aws
-    have: false
     in_scope: false
     eventtype: null
     search: null
@@ -431,7 +423,6 @@ derived:
     - AWS:CloudTrail
     cim_tags: false
   - feed: macos
-    have: false
     in_scope: false
     eventtype: null
     search: null
@@ -443,7 +434,6 @@ derived:
     - macos:unifiedlog
     cim_tags: false
   - feed: mobile
-    have: false
     in_scope: false
     eventtype: null
     search: null

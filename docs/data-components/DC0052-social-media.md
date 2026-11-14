@@ -2,7 +2,7 @@
 
 [ATT&CK](https://attack.mitre.org/datacomponents/DC0052) · version 2.0 · modified 2025-10-21 · ATT&CK release 20.1
 
-Status: **Out of scope** for the current platform set
+**Out of scope** for the current platform set
 
 > Established, compromised, or otherwise acquired by adversaries to conduct reconnaissance, influence operations, social engineering, or other cyber threats.  *Data Collection Measures:*  - API Monitoring	     - Social media APIs (e.g., Twitter API, Facebook Graph API) can extract behavioral patterns of accounts. - Web Scraping     - Extracts public profile data, friend lists, or interactions to identify impersonation attempts. - Threat Intelligence Feeds	     - External feeds track malicious personas linked to disinformation campaigns or phishing. - OSINT Tools     - Maltego, SpiderFoot, and OpenCTI can map social media persona relationships. - Endpoint Detection	     - EDR logs user behavior and alerts on suspicious social media interactions. - SIEM Logging     - Detects access to known phishing pages or social media abuse via proxy logs. - Dark Web Monitoring	     - Identifies compromised social media credentials being sold.
 
@@ -17,15 +17,13 @@ Analytic references by platform: PRE 4
 ```mermaid
 flowchart LR
   DC["DC0052 Social Media"]
-  classDef live fill:#d4edda,stroke:#2e7d32,color:#1b1b1b
-  classDef ready fill:#fff3cd,stroke:#b26a00,color:#1b1b1b
 ```
 
 ## Requirements
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
+| Feed | Schedule | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
 
 ## Splunk

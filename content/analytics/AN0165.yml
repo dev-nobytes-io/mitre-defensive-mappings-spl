@@ -40,7 +40,7 @@ attack:
   - field: FilePathRegex
     description: Focus on uncommon file drop paths (e.g., C:\Users\Public\)
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: anomaly
   suggested_tuning:
   - element: ParentProcessName

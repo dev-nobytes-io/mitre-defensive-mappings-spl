@@ -2,7 +2,7 @@
 
 [ATT&CK](https://attack.mitre.org/datacomponents/DC0072) · version 2.0 · modified 2025-11-12 · ATT&CK release 20.1
 
-Status: **Ready** (needs a feed you have not ticked) · umbrella eventtype `mitre_dc0072_container_creation`
+Umbrella eventtype `mitre_dc0072_container_creation` over 2 feed(s)
 
 > "Container Creation" data component captures details about the initial construction of a container in a containerized environment. This includes events where a new container is instantiated, such as through Docker, Kubernetes, or other container orchestration platforms. Monitoring these events helps detect unauthorized or potentially malicious container creation. Examples:  - Docker Example: `docker create my-container`, `docker run --name=my-container nginx:latest` - Kubernetes Example: `kubectl run my-pod --image=nginx`, `kubectl create deployment my-deployment --image=nginx` - Cloud Container Services Example     - AWS ECS: Task or service creation (`RunTask` or `CreateService`).     - Azure Container Instances: Deployment of a container group.     - Google Kubernetes Engine (GKE): Creation of new pods via GCP APIs.
 
@@ -39,11 +39,7 @@ flowchart LR
   DC --> LS6["containerd:events<br/>2 refs"]
   LS6 --> F_container_runtime
   F_container_runtime --> ET_container_runtime[/"mitre_dc0072_container_creation__container_runtime"/]
-  class F_container_runtime ready
   F_kubernetes_audit --> ET_kubernetes_audit[/"mitre_dc0072_container_creation__kubernetes_audit"/]
-  class F_kubernetes_audit ready
-  classDef live fill:#d4edda,stroke:#2e7d32,color:#1b1b1b
-  classDef ready fill:#fff3cd,stroke:#b26a00,color:#1b1b1b
 ```
 
 ## Requirements
@@ -54,10 +50,10 @@ Component specific:
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
+| Feed | Schedule | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `container_runtime` | ready (tick in stack.yml) | sourcetype=`containerd:events`, sourcetype=`docker:daemon`, sourcetype=`docker:events` | `(status=create)` | defaults | docker events scripted input or OpenTelemetry (docker:events, containerd) |
-| `kubernetes_audit` | ready (tick in stack.yml) | sourcetype=`kube:apiserver-audit`, sourcetype=`kube:objects:events` | `verb IN (create) (objectRef.resource=pods)` | defaults | Splunk OpenTelemetry Collector for Kubernetes / Splunk Connect for Kubernetes |
+| `container_runtime` | scheduled | sourcetype=`containerd:events`, sourcetype=`docker:daemon`, sourcetype=`docker:events` | `(status=create)` | defaults | docker events scripted input or OpenTelemetry (docker:events, containerd) |
+| `kubernetes_audit` | scheduled | sourcetype=`kube:apiserver-audit`, sourcetype=`kube:objects:events` | `verb IN (create) (objectRef.resource=pods)` | defaults | Splunk OpenTelemetry Collector for Kubernetes / Splunk Connect for Kubernetes |
 
 Collection prerequisites:
 
@@ -73,11 +69,9 @@ Eventtypes (literal constraints, see `dist/splunk/TA-mitre-attack-datacomponents
 ```ini
 [mitre_dc0072_container_creation__container_runtime]
 search = index=k8s sourcetype IN ("containerd:events", "docker:daemon", "docker:events") (status=create)
-disabled = 1
 
 [mitre_dc0072_container_creation__kubernetes_audit]
 search = index=k8s sourcetype IN ("kube:apiserver-audit", "kube:objects:events") verb IN (create) (objectRef.resource=pods)
-disabled = 1
 
 [mitre_dc0072_container_creation]
 search = eventtype=mitre_dc0072_container_creation__container_runtime OR eventtype=mitre_dc0072_container_creation__kubernetes_audit

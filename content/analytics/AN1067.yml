@@ -30,7 +30,7 @@ attack:
   - field: ProtocolScope
     description: Refine by enabling inspection of specific exfil vectors (e.g., FTP, HTTP POST)
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: ttp
   suggested_tuning:
   - element: EntropyThreshold

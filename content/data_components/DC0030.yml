@@ -34,7 +34,6 @@ derived:
   log_sources: []
   feeds:
   - feed: kubernetes_audit
-    have: false
     in_scope: true
     eventtype: mitre_dc0030_pod_modification__kubernetes_audit
     search: >-

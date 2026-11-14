@@ -49,7 +49,7 @@ attack:
   - field: MemoryWriteSizeThreshold
     description: Minimum byte size to flag suspicious memory overwrite in hollowed process
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: anomaly
   suggested_tuning:
   - element: HollowedImageNamePattern

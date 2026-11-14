@@ -28,7 +28,7 @@ attack:
   - field: FailedAttemptThreshold
     description: How many failures in short succession should trigger alerting
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: ttp
   suggested_tuning:
   - element: InterfaceType

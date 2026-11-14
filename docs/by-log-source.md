@@ -1,25 +1,83 @@
 # Content by log source (ATT&CK v20.1)
 
-For each feed in `config/stack.yml`: the data components it provides, and the implemented analytics and strategy sequences that read it. Tick the feeds you have in `config/stack.yml` and rebuild; this page and the table in the README follow.
+For each feed in `config/stack.yml`: the data components it provides, and the implemented analytics and strategy sequences that read it. Check off the feeds you collect below, then follow each one to what it supports.
 
 An analytic lists every feed its search reads. Searches over a CIM data model (most Windows process analytics) work with either Sysmon or Security 4688; raw searches that join two feeds need both.
 
-| Category | Feeds |
-|---|---|
-| Windows endpoint | [☑ `wineventlog`](#wineventlog), [☑ `sysmon`](#sysmon), [☑ `powershell_logging`](#powershell_logging), [☐ `windows_firewall_log`](#windows_firewall_log), [☐ `windows_perfmon`](#windows_perfmon), [☐ `windows_dns_server`](#windows_dns_server), [☐ `windows_dhcp`](#windows_dhcp), [☐ `iis`](#iis), [☐ `etw`](#etw), [☐ `windows_osquery`](#windows_osquery), [☐ `autoruns`](#autoruns) |
-| Endpoint security | [☑ `trellix_epo`](#trellix_epo), [☑ `solidcore`](#solidcore), [☐ `edr_telemetry`](#edr_telemetry) |
-| Network | [☑ `corelight`](#corelight), [☑ `palo_alto`](#palo_alto), [☑ `wireshark`](#wireshark), [☐ `netdev_syslog`](#netdev_syslog), [☐ `snmp`](#snmp), [☐ `netflow`](#netflow) |
-| Linux | [☐ `auditd`](#auditd), [☐ `linux_syslog`](#linux_syslog), [☐ `linux_osquery`](#linux_osquery), [☐ `sysmon_linux`](#sysmon_linux), [☐ `iptables`](#iptables), [☐ `ebpf`](#ebpf) |
-| Azure and identity | [☐ `azure_entra`](#azure_entra), [☐ `azure_activity`](#azure_activity), [☐ `azure_resource`](#azure_resource), [☐ `m365_defender`](#m365_defender) |
-| Containers | [☐ `kubernetes_audit`](#kubernetes_audit), [☐ `container_runtime`](#container_runtime) |
-| VMware ESXi | [☐ `esxi_syslog`](#esxi_syslog), [☐ `vcenter`](#vcenter) |
-| Not yet in scope | [☐ `macos`](#macos), [☐ `m365_unified`](#m365_unified), [☐ `aws`](#aws), [☐ `gcp`](#gcp), [☐ `okta`](#okta), [☐ `saas`](#saas), [☐ `mobile`](#mobile), [☐ `ot`](#ot), [☐ `threat_intel`](#threat_intel) |
+GitHub shows checkboxes in repository files read-only; to tick them, copy the list into an issue or pull request in your own fork, or open the file in an editor that supports task lists.
+
+**Windows endpoint**
+
+- [ ] [`wineventlog`](#wineventlog) Windows Event Logs
+- [ ] [`sysmon`](#sysmon) Sysmon (Microsoft-Windows-Sysmon/Operational)
+- [ ] [`powershell_logging`](#powershell_logging) PowerShell Operational channel (4103/4104) - part of Windows Event Logs, listed separately because it needs its own GPO and input
+- [ ] [`windows_firewall_log`](#windows_firewall_log) Windows Firewall text log (pfirewall.log)
+- [ ] [`windows_perfmon`](#windows_perfmon) Windows Performance counters
+- [ ] [`windows_dns_server`](#windows_dns_server) Windows DNS Server analytical / debug log
+- [ ] [`windows_dhcp`](#windows_dhcp) Windows DHCP server log
+- [ ] [`iis`](#iis) IIS access and configuration logs
+- [ ] [`etw`](#etw) ETW providers not surfaced by Sysmon (Kernel-Process, Win32k, WinINet, RPC, DotNETRuntime, AMSI, Token...)
+- [ ] [`windows_osquery`](#windows_osquery) osquery on Windows
+- [ ] [`autoruns`](#autoruns) Sysinternals Autoruns scans
+
+**Endpoint security**
+
+- [ ] [`trellix_epo`](#trellix_epo) Trellix ePO events (ENS threat/AMSI/adaptive threat protection, ePO audit)
+- [ ] [`solidcore`](#solidcore) Trellix Application and Change Control (Solidcore) via ePO
+- [ ] [`edr_telemetry`](#edr_telemetry) EDR raw telemetry (memory, hunting, script block, syscall) - e.g. Trellix EDR, Defender for Endpoint advanced hunting
+
+**Network**
+
+- [ ] [`corelight`](#corelight) Corelight / Zeek network logs
+- [ ] [`palo_alto`](#palo_alto) Palo Alto Networks PAN-OS (traffic, threat, URL, system, config, GlobalProtect)
+- [ ] [`wireshark`](#wireshark) Wireshark / tshark packet captures (ad hoc)
+- [ ] [`netdev_syslog`](#netdev_syslog) Router / switch / non-PAN firewall syslog, config change and AAA logs
+- [ ] [`snmp`](#snmp) SNMP traps / polling
+- [ ] [`netflow`](#netflow) NetFlow / IPFIX (non-Zeek flow)
+
+**Linux**
+
+- [ ] [`auditd`](#auditd) Linux auditd (SYSCALL/EXECVE/PATH/CONFIG_CHANGE/USER_LOGIN...)
+- [ ] [`linux_syslog`](#linux_syslog) Linux syslog / journald (messages, secure/auth, cron, kernel, daemon)
+- [ ] [`linux_osquery`](#linux_osquery) osquery on Linux
+- [ ] [`sysmon_linux`](#sysmon_linux) Sysmon for Linux
+- [ ] [`iptables`](#iptables) iptables / nftables LOG target via kernel syslog
+- [ ] [`ebpf`](#ebpf) eBPF runtime security (Falco, Tetragon, Tracee)
+
+**Azure and identity**
+
+- [ ] [`azure_entra`](#azure_entra) Microsoft Entra ID sign-in and audit logs
+- [ ] [`azure_activity`](#azure_activity) Azure Activity Log (subscription control plane) and Azure Policy
+- [ ] [`azure_resource`](#azure_resource) Azure resource diagnostic logs (NSG flow, VM guest, Key Vault, Storage)
+- [ ] [`m365_defender`](#m365_defender) Microsoft Defender XDR / Defender for Identity alerts and Graph API logs
+
+**Containers**
+
+- [ ] [`kubernetes_audit`](#kubernetes_audit) Kubernetes API server audit log and cluster events
+- [ ] [`container_runtime`](#container_runtime) Docker / containerd daemon and runtime events
+
+**VMware ESXi**
+
+- [ ] [`esxi_syslog`](#esxi_syslog) ESXi host logs via remote syslog (hostd, vmkernel, shell, vobd, vpxa, auth, esxupdate)
+- [ ] [`vcenter`](#vcenter) vCenter vpxd logs and events
+
+**Not yet in scope**
+
+- [ ] [`macos`](#macos) macOS unified log / Endpoint Security / osquery / FSEvents
+- [ ] [`m365_unified`](#m365_unified) Microsoft 365 unified audit log (Exchange, SharePoint, Teams, Purview)
+- [ ] [`aws`](#aws) AWS CloudTrail / VPC Flow / CloudWatch / Bedrock
+- [ ] [`gcp`](#gcp) Google Cloud audit / VPC flow / Workspace admin
+- [ ] [`okta`](#okta) Okta System Log
+- [ ] [`saas`](#saas) SaaS application audit logs (GitHub, Slack, Salesforce, Zoom, Box, Confluence, Google Workspace...)
+- [ ] [`mobile`](#mobile) Mobile EDR / MDM telemetry
+- [ ] [`ot`](#ot) OT / ICS application and protocol logs
+- [ ] [`threat_intel`](#threat_intel) External reconnaissance sources (internet scan data, domain registration, malware repositories, persona monitoring)
 
 ## Windows endpoint
 
 ### wineventlog
 
-☑ ticked · Windows Event Logs · index `wineventlog`
+Windows Event Logs · index `wineventlog`
 
 **Data components (55):** [DC0001 Scheduled Job Creation](data-components/DC0001-scheduled-job-creation.md), [DC0002 User Account Authentication](data-components/DC0002-user-account-authentication.md), [DC0003 Malware Metadata](data-components/DC0003-malware-metadata.md), [DC0004 Firmware Modification](data-components/DC0004-firmware-modification.md), [DC0005 Scheduled Job Metadata](data-components/DC0005-scheduled-job-metadata.md), [DC0006 Web Credential Creation](data-components/DC0006-web-credential-creation.md), [DC0008 WMI Creation](data-components/DC0008-wmi-creation.md), [DC0009 User Account Deletion](data-components/DC0009-user-account-deletion.md), [DC0010 User Account Modification](data-components/DC0010-user-account-modification.md), [DC0012 Scheduled Job Modification](data-components/DC0012-scheduled-job-modification.md), [DC0013 User Account Metadata](data-components/DC0013-user-account-metadata.md), [DC0014 User Account Creation](data-components/DC0014-user-account-creation.md), [DC0016 Module Load](data-components/DC0016-module-load.md), [DC0018 Host Status](data-components/DC0018-host-status.md), [DC0021 OS API Execution](data-components/DC0021-os-api-execution.md), [DC0029 Script Execution](data-components/DC0029-script-execution.md), [DC0032 Process Creation](data-components/DC0032-process-creation.md), [DC0034 Process Metadata](data-components/DC0034-process-metadata.md), [DC0035 Process Access](data-components/DC0035-process-access.md), [DC0038 Application Log Content](data-components/DC0038-application-log-content.md), [DC0039 File Creation](data-components/DC0039-file-creation.md), [DC0040 File Deletion](data-components/DC0040-file-deletion.md), [DC0041 Service Metadata](data-components/DC0041-service-metadata.md), [DC0042 Drive Creation](data-components/DC0042-drive-creation.md), [DC0043 Firewall Disable](data-components/DC0043-firewall-disable.md), [DC0044 Firewall Enumeration](data-components/DC0044-firewall-enumeration.md), [DC0045 Windows Registry Key Deletion](data-components/DC0045-windows-registry-key-deletion.md), [DC0046 Drive Modification](data-components/DC0046-drive-modification.md), [DC0050 Windows Registry Key Access](data-components/DC0050-windows-registry-key-access.md), [DC0051 Firewall Rule Modification](data-components/DC0051-firewall-rule-modification.md), [DC0053 Firewall Metadata](data-components/DC0053-firewall-metadata.md), [DC0055 File Access](data-components/DC0055-file-access.md), [DC0056 Windows Registry Key Creation](data-components/DC0056-windows-registry-key-creation.md), [DC0059 File Metadata](data-components/DC0059-file-metadata.md), [DC0060 Service Creation](data-components/DC0060-service-creation.md), [DC0061 File Modification](data-components/DC0061-file-modification.md), [DC0063 Windows Registry Key Modification](data-components/DC0063-windows-registry-key-modification.md), [DC0064 Command Execution](data-components/DC0064-command-execution.md), [DC0065 Service Modification](data-components/DC0065-service-modification.md), [DC0066 Active Directory Object Modification](data-components/DC0066-active-directory-object-modification.md), [DC0067 Logon Session Creation](data-components/DC0067-logon-session-creation.md), [DC0068 Active Directory Object Deletion](data-components/DC0068-active-directory-object-deletion.md), [DC0071 Active Directory Object Access](data-components/DC0071-active-directory-object-access.md), [DC0078 Network Traffic Flow](data-components/DC0078-network-traffic-flow.md), [DC0079 Driver Load](data-components/DC0079-driver-load.md), [DC0082 Network Connection Creation](data-components/DC0082-network-connection-creation.md), [DC0084 Active Directory Credential Request](data-components/DC0084-active-directory-credential-request.md), [DC0085 Network Traffic Content](data-components/DC0085-network-traffic-content.md), [DC0087 Active Directory Object Creation](data-components/DC0087-active-directory-object-creation.md), [DC0088 Logon Session Metadata](data-components/DC0088-logon-session-metadata.md), [DC0094 Group Modification](data-components/DC0094-group-modification.md), [DC0097 Volume Creation](data-components/DC0097-volume-creation.md), [DC0099 Group Enumeration](data-components/DC0099-group-enumeration.md), [DC0102 Network Share Access](data-components/DC0102-network-share-access.md), [DC0105 Group Metadata](data-components/DC0105-group-metadata.md).
 
@@ -81,7 +139,7 @@ An analytic lists every feed its search reads. Searches over a CIM data model (m
 
 ### sysmon
 
-☑ ticked · Sysmon (Microsoft-Windows-Sysmon/Operational) · index `sysmon`
+Sysmon (Microsoft-Windows-Sysmon/Operational) · index `sysmon`
 
 **Data components (26):** [DC0008 WMI Creation](data-components/DC0008-wmi-creation.md), [DC0016 Module Load](data-components/DC0016-module-load.md), [DC0018 Host Status](data-components/DC0018-host-status.md), [DC0020 Process Modification](data-components/DC0020-process-modification.md), [DC0021 OS API Execution](data-components/DC0021-os-api-execution.md), [DC0032 Process Creation](data-components/DC0032-process-creation.md), [DC0033 Process Termination](data-components/DC0033-process-termination.md), [DC0034 Process Metadata](data-components/DC0034-process-metadata.md), [DC0035 Process Access](data-components/DC0035-process-access.md), [DC0039 File Creation](data-components/DC0039-file-creation.md), [DC0040 File Deletion](data-components/DC0040-file-deletion.md), [DC0041 Service Metadata](data-components/DC0041-service-metadata.md), [DC0045 Windows Registry Key Deletion](data-components/DC0045-windows-registry-key-deletion.md), [DC0046 Drive Modification](data-components/DC0046-drive-modification.md), [DC0048 Named Pipe Metadata](data-components/DC0048-named-pipe-metadata.md), [DC0054 Drive Access](data-components/DC0054-drive-access.md), [DC0056 Windows Registry Key Creation](data-components/DC0056-windows-registry-key-creation.md), [DC0059 File Metadata](data-components/DC0059-file-metadata.md), [DC0061 File Modification](data-components/DC0061-file-modification.md), [DC0063 Windows Registry Key Modification](data-components/DC0063-windows-registry-key-modification.md), [DC0064 Command Execution](data-components/DC0064-command-execution.md), [DC0078 Network Traffic Flow](data-components/DC0078-network-traffic-flow.md), [DC0079 Driver Load](data-components/DC0079-driver-load.md), [DC0082 Network Connection Creation](data-components/DC0082-network-connection-creation.md), [DC0085 Network Traffic Content](data-components/DC0085-network-traffic-content.md), [DC0101 Domain Registration](data-components/DC0101-domain-registration.md).
 
@@ -180,7 +238,7 @@ An analytic lists every feed its search reads. Searches over a CIM data model (m
 
 ### powershell_logging
 
-☑ ticked · PowerShell Operational channel (4103/4104) - part of Windows Event Logs, listed separately because it needs its own GPO and input · index `wineventlog`
+PowerShell Operational channel (4103/4104) - part of Windows Event Logs, listed separately because it needs its own GPO and input · index `wineventlog`
 
 **Data components (3):** [DC0029 Script Execution](data-components/DC0029-script-execution.md), [DC0034 Process Metadata](data-components/DC0034-process-metadata.md), [DC0064 Command Execution](data-components/DC0064-command-execution.md).
 
@@ -195,49 +253,49 @@ An analytic lists every feed its search reads. Searches over a CIM data model (m
 
 ### windows_firewall_log
 
-☐ not ticked · Windows Firewall text log (pfirewall.log) · index `wineventlog`
+Windows Firewall text log (pfirewall.log) · index `wineventlog`
 
 **Data components (1):** [DC0078 Network Traffic Flow](data-components/DC0078-network-traffic-flow.md).
 
 ### windows_perfmon
 
-☐ not ticked · Windows Performance counters · index `perfmon`
+Windows Performance counters · index `perfmon`
 
 **Data components (1):** [DC0018 Host Status](data-components/DC0018-host-status.md).
 
 ### windows_dns_server
 
-☐ not ticked · Windows DNS Server analytical / debug log · index `wineventlog`
+Windows DNS Server analytical / debug log · index `wineventlog`
 
 **Data components (2):** [DC0085 Network Traffic Content](data-components/DC0085-network-traffic-content.md), [DC0101 Domain Registration](data-components/DC0101-domain-registration.md).
 
 ### windows_dhcp
 
-☐ not ticked · Windows DHCP server log · index `wineventlog`
+Windows DHCP server log · index `wineventlog`
 
 Nothing rendered for this feed yet.
 
 ### iis
 
-☐ not ticked · IIS access and configuration logs · index `web`
+IIS access and configuration logs · index `web`
 
 **Data components (2):** [DC0038 Application Log Content](data-components/DC0038-application-log-content.md), [DC0085 Network Traffic Content](data-components/DC0085-network-traffic-content.md).
 
 ### etw
 
-☐ not ticked · ETW providers not surfaced by Sysmon (Kernel-Process, Win32k, WinINet, RPC, DotNETRuntime, AMSI, Token...) · index `etw`
+ETW providers not surfaced by Sysmon (Kernel-Process, Win32k, WinINet, RPC, DotNETRuntime, AMSI, Token...) · index `etw`
 
 **Data components (6):** [DC0016 Module Load](data-components/DC0016-module-load.md), [DC0020 Process Modification](data-components/DC0020-process-modification.md), [DC0021 OS API Execution](data-components/DC0021-os-api-execution.md), [DC0029 Script Execution](data-components/DC0029-script-execution.md), [DC0032 Process Creation](data-components/DC0032-process-creation.md), [DC0034 Process Metadata](data-components/DC0034-process-metadata.md).
 
 ### windows_osquery
 
-☐ not ticked · osquery on Windows · index `osquery`
+osquery on Windows · index `osquery`
 
 **Data components (2):** [DC0004 Firmware Modification](data-components/DC0004-firmware-modification.md), [DC0013 User Account Metadata](data-components/DC0013-user-account-metadata.md).
 
 ### autoruns
 
-☐ not ticked · Sysinternals Autoruns scans · index `wineventlog`
+Sysinternals Autoruns scans · index `wineventlog`
 
 **Data components (1):** [DC0050 Windows Registry Key Access](data-components/DC0050-windows-registry-key-access.md).
 
@@ -245,19 +303,19 @@ Nothing rendered for this feed yet.
 
 ### trellix_epo
 
-☑ ticked · Trellix ePO events (ENS threat/AMSI/adaptive threat protection, ePO audit) · index `epo`
+Trellix ePO events (ENS threat/AMSI/adaptive threat protection, ePO audit) · index `epo`
 
 **Data components (7):** [DC0003 Malware Metadata](data-components/DC0003-malware-metadata.md), [DC0011 Malware Content](data-components/DC0011-malware-content.md), [DC0018 Host Status](data-components/DC0018-host-status.md), [DC0029 Script Execution](data-components/DC0029-script-execution.md), [DC0038 Application Log Content](data-components/DC0038-application-log-content.md), [DC0059 File Metadata](data-components/DC0059-file-metadata.md), [DC0064 Command Execution](data-components/DC0064-command-execution.md).
 
 ### solidcore
 
-☑ ticked · Trellix Application and Change Control (Solidcore) via ePO · index `epo`
+Trellix Application and Change Control (Solidcore) via ePO · index `epo`
 
 **Data components (10):** [DC0016 Module Load](data-components/DC0016-module-load.md), [DC0032 Process Creation](data-components/DC0032-process-creation.md), [DC0039 File Creation](data-components/DC0039-file-creation.md), [DC0040 File Deletion](data-components/DC0040-file-deletion.md), [DC0045 Windows Registry Key Deletion](data-components/DC0045-windows-registry-key-deletion.md), [DC0055 File Access](data-components/DC0055-file-access.md), [DC0056 Windows Registry Key Creation](data-components/DC0056-windows-registry-key-creation.md), [DC0059 File Metadata](data-components/DC0059-file-metadata.md), [DC0061 File Modification](data-components/DC0061-file-modification.md), [DC0063 Windows Registry Key Modification](data-components/DC0063-windows-registry-key-modification.md).
 
 ### edr_telemetry
 
-☐ not ticked · EDR raw telemetry (memory, hunting, script block, syscall) - e.g. Trellix EDR, Defender for Endpoint advanced hunting · index `edr`
+EDR raw telemetry (memory, hunting, script block, syscall) - e.g. Trellix EDR, Defender for Endpoint advanced hunting · index `edr`
 
 **Data components (8):** [DC0021 OS API Execution](data-components/DC0021-os-api-execution.md), [DC0029 Script Execution](data-components/DC0029-script-execution.md), [DC0034 Process Metadata](data-components/DC0034-process-metadata.md), [DC0035 Process Access](data-components/DC0035-process-access.md), [DC0059 File Metadata](data-components/DC0059-file-metadata.md), [DC0064 Command Execution](data-components/DC0064-command-execution.md), [DC0078 Network Traffic Flow](data-components/DC0078-network-traffic-flow.md), [DC0085 Network Traffic Content](data-components/DC0085-network-traffic-content.md).
 
@@ -265,7 +323,7 @@ Nothing rendered for this feed yet.
 
 ### corelight
 
-☑ ticked · Corelight / Zeek network logs · index `corelight`
+Corelight / Zeek network logs · index `corelight`
 
 **Data components (15):** [DC0002 User Account Authentication](data-components/DC0002-user-account-authentication.md), [DC0007 Web Credential Usage](data-components/DC0007-web-credential-usage.md), [DC0011 Malware Content](data-components/DC0011-malware-content.md), [DC0038 Application Log Content](data-components/DC0038-application-log-content.md), [DC0059 File Metadata](data-components/DC0059-file-metadata.md), [DC0067 Logon Session Creation](data-components/DC0067-logon-session-creation.md), [DC0078 Network Traffic Flow](data-components/DC0078-network-traffic-flow.md), [DC0082 Network Connection Creation](data-components/DC0082-network-connection-creation.md), [DC0084 Active Directory Credential Request](data-components/DC0084-active-directory-credential-request.md), [DC0085 Network Traffic Content](data-components/DC0085-network-traffic-content.md), [DC0088 Logon Session Metadata](data-components/DC0088-logon-session-metadata.md), [DC0101 Domain Registration](data-components/DC0101-domain-registration.md), [DC0102 Network Share Access](data-components/DC0102-network-share-access.md), [DC0104 Response Content](data-components/DC0104-response-content.md), [DC0106 Response Metadata](data-components/DC0106-response-metadata.md).
 
@@ -287,7 +345,7 @@ Nothing rendered for this feed yet.
 
 ### palo_alto
 
-☑ ticked · Palo Alto Networks PAN-OS (traffic, threat, URL, system, config, GlobalProtect) · index `pan_logs`
+Palo Alto Networks PAN-OS (traffic, threat, URL, system, config, GlobalProtect) · index `pan_logs`
 
 **Data components (24):** [DC0002 User Account Authentication](data-components/DC0002-user-account-authentication.md), [DC0003 Malware Metadata](data-components/DC0003-malware-metadata.md), [DC0004 Firmware Modification](data-components/DC0004-firmware-modification.md), [DC0007 Web Credential Usage](data-components/DC0007-web-credential-usage.md), [DC0011 Malware Content](data-components/DC0011-malware-content.md), [DC0014 User Account Creation](data-components/DC0014-user-account-creation.md), [DC0018 Host Status](data-components/DC0018-host-status.md), [DC0038 Application Log Content](data-components/DC0038-application-log-content.md), [DC0041 Service Metadata](data-components/DC0041-service-metadata.md), [DC0043 Firewall Disable](data-components/DC0043-firewall-disable.md), [DC0044 Firewall Enumeration](data-components/DC0044-firewall-enumeration.md), [DC0051 Firewall Rule Modification](data-components/DC0051-firewall-rule-modification.md), [DC0053 Firewall Metadata](data-components/DC0053-firewall-metadata.md), [DC0059 File Metadata](data-components/DC0059-file-metadata.md), [DC0061 File Modification](data-components/DC0061-file-modification.md), [DC0064 Command Execution](data-components/DC0064-command-execution.md), [DC0067 Logon Session Creation](data-components/DC0067-logon-session-creation.md), [DC0078 Network Traffic Flow](data-components/DC0078-network-traffic-flow.md), [DC0082 Network Connection Creation](data-components/DC0082-network-connection-creation.md), [DC0085 Network Traffic Content](data-components/DC0085-network-traffic-content.md), [DC0088 Logon Session Metadata](data-components/DC0088-logon-session-metadata.md), [DC0102 Network Share Access](data-components/DC0102-network-share-access.md), [DC0104 Response Content](data-components/DC0104-response-content.md), [DC0106 Response Metadata](data-components/DC0106-response-metadata.md).
 
@@ -312,25 +370,25 @@ Nothing rendered for this feed yet.
 
 ### wireshark
 
-☑ ticked · Wireshark / tshark packet captures (ad hoc) · index `pcap`
+Wireshark / tshark packet captures (ad hoc) · index `pcap`
 
 **Data components (2):** [DC0078 Network Traffic Flow](data-components/DC0078-network-traffic-flow.md), [DC0085 Network Traffic Content](data-components/DC0085-network-traffic-content.md).
 
 ### netdev_syslog
 
-☐ not ticked · Router / switch / non-PAN firewall syslog, config change and AAA logs · index `netops`
+Router / switch / non-PAN firewall syslog, config change and AAA logs · index `netops`
 
 **Data components (6):** [DC0004 Firmware Modification](data-components/DC0004-firmware-modification.md), [DC0051 Firewall Rule Modification](data-components/DC0051-firewall-rule-modification.md), [DC0061 File Modification](data-components/DC0061-file-modification.md), [DC0064 Command Execution](data-components/DC0064-command-execution.md), [DC0078 Network Traffic Flow](data-components/DC0078-network-traffic-flow.md), [DC0082 Network Connection Creation](data-components/DC0082-network-connection-creation.md).
 
 ### snmp
 
-☐ not ticked · SNMP traps / polling · index `netops`
+SNMP traps / polling · index `netops`
 
 **Data components (1):** [DC0004 Firmware Modification](data-components/DC0004-firmware-modification.md).
 
 ### netflow
 
-☐ not ticked · NetFlow / IPFIX (non-Zeek flow) · index `netflow`
+NetFlow / IPFIX (non-Zeek flow) · index `netflow`
 
 **Data components (2):** [DC0078 Network Traffic Flow](data-components/DC0078-network-traffic-flow.md), [DC0082 Network Connection Creation](data-components/DC0082-network-connection-creation.md).
 
@@ -338,37 +396,37 @@ Nothing rendered for this feed yet.
 
 ### auditd
 
-☐ not ticked · Linux auditd (SYSCALL/EXECVE/PATH/CONFIG_CHANGE/USER_LOGIN...) · index `linux`
+Linux auditd (SYSCALL/EXECVE/PATH/CONFIG_CHANGE/USER_LOGIN...) · index `linux`
 
 **Data components (33):** [DC0001 Scheduled Job Creation](data-components/DC0001-scheduled-job-creation.md), [DC0002 User Account Authentication](data-components/DC0002-user-account-authentication.md), [DC0004 Firmware Modification](data-components/DC0004-firmware-modification.md), [DC0010 User Account Modification](data-components/DC0010-user-account-modification.md), [DC0012 Scheduled Job Modification](data-components/DC0012-scheduled-job-modification.md), [DC0013 User Account Metadata](data-components/DC0013-user-account-metadata.md), [DC0014 User Account Creation](data-components/DC0014-user-account-creation.md), [DC0016 Module Load](data-components/DC0016-module-load.md), [DC0018 Host Status](data-components/DC0018-host-status.md), [DC0020 Process Modification](data-components/DC0020-process-modification.md), [DC0021 OS API Execution](data-components/DC0021-os-api-execution.md), [DC0029 Script Execution](data-components/DC0029-script-execution.md), [DC0031 Kernel Module Load](data-components/DC0031-kernel-module-load.md), [DC0032 Process Creation](data-components/DC0032-process-creation.md), [DC0033 Process Termination](data-components/DC0033-process-termination.md), [DC0034 Process Metadata](data-components/DC0034-process-metadata.md), [DC0035 Process Access](data-components/DC0035-process-access.md), [DC0039 File Creation](data-components/DC0039-file-creation.md), [DC0040 File Deletion](data-components/DC0040-file-deletion.md), [DC0041 Service Metadata](data-components/DC0041-service-metadata.md), [DC0042 Drive Creation](data-components/DC0042-drive-creation.md), [DC0054 Drive Access](data-components/DC0054-drive-access.md), [DC0055 File Access](data-components/DC0055-file-access.md), [DC0059 File Metadata](data-components/DC0059-file-metadata.md), [DC0060 Service Creation](data-components/DC0060-service-creation.md), [DC0061 File Modification](data-components/DC0061-file-modification.md), [DC0064 Command Execution](data-components/DC0064-command-execution.md), [DC0067 Logon Session Creation](data-components/DC0067-logon-session-creation.md), [DC0078 Network Traffic Flow](data-components/DC0078-network-traffic-flow.md), [DC0079 Driver Load](data-components/DC0079-driver-load.md), [DC0082 Network Connection Creation](data-components/DC0082-network-connection-creation.md), [DC0085 Network Traffic Content](data-components/DC0085-network-traffic-content.md), [DC0088 Logon Session Metadata](data-components/DC0088-logon-session-metadata.md).
 
 ### linux_syslog
 
-☐ not ticked · Linux syslog / journald (messages, secure/auth, cron, kernel, daemon) · index `linux`
+Linux syslog / journald (messages, secure/auth, cron, kernel, daemon) · index `linux`
 
 **Data components (16):** [DC0001 Scheduled Job Creation](data-components/DC0001-scheduled-job-creation.md), [DC0002 User Account Authentication](data-components/DC0002-user-account-authentication.md), [DC0005 Scheduled Job Metadata](data-components/DC0005-scheduled-job-metadata.md), [DC0010 User Account Modification](data-components/DC0010-user-account-modification.md), [DC0014 User Account Creation](data-components/DC0014-user-account-creation.md), [DC0018 Host Status](data-components/DC0018-host-status.md), [DC0031 Kernel Module Load](data-components/DC0031-kernel-module-load.md), [DC0038 Application Log Content](data-components/DC0038-application-log-content.md), [DC0042 Drive Creation](data-components/DC0042-drive-creation.md), [DC0051 Firewall Rule Modification](data-components/DC0051-firewall-rule-modification.md), [DC0060 Service Creation](data-components/DC0060-service-creation.md), [DC0061 File Modification](data-components/DC0061-file-modification.md), [DC0067 Logon Session Creation](data-components/DC0067-logon-session-creation.md), [DC0079 Driver Load](data-components/DC0079-driver-load.md), [DC0085 Network Traffic Content](data-components/DC0085-network-traffic-content.md), [DC0088 Logon Session Metadata](data-components/DC0088-logon-session-metadata.md).
 
 ### linux_osquery
 
-☐ not ticked · osquery on Linux · index `osquery`
+osquery on Linux · index `osquery`
 
 **Data components (7):** [DC0004 Firmware Modification](data-components/DC0004-firmware-modification.md), [DC0013 User Account Metadata](data-components/DC0013-user-account-metadata.md), [DC0032 Process Creation](data-components/DC0032-process-creation.md), [DC0034 Process Metadata](data-components/DC0034-process-metadata.md), [DC0041 Service Metadata](data-components/DC0041-service-metadata.md), [DC0059 File Metadata](data-components/DC0059-file-metadata.md), [DC0082 Network Connection Creation](data-components/DC0082-network-connection-creation.md).
 
 ### sysmon_linux
 
-☐ not ticked · Sysmon for Linux · index `linux`
+Sysmon for Linux · index `linux`
 
 **Data components (5):** [DC0016 Module Load](data-components/DC0016-module-load.md), [DC0032 Process Creation](data-components/DC0032-process-creation.md), [DC0039 File Creation](data-components/DC0039-file-creation.md), [DC0040 File Deletion](data-components/DC0040-file-deletion.md), [DC0082 Network Connection Creation](data-components/DC0082-network-connection-creation.md).
 
 ### iptables
 
-☐ not ticked · iptables / nftables LOG target via kernel syslog · index `linux`
+iptables / nftables LOG target via kernel syslog · index `linux`
 
 **Data components (1):** [DC0078 Network Traffic Flow](data-components/DC0078-network-traffic-flow.md).
 
 ### ebpf
 
-☐ not ticked · eBPF runtime security (Falco, Tetragon, Tracee) · index `linux`
+eBPF runtime security (Falco, Tetragon, Tracee) · index `linux`
 
 **Data components (8):** [DC0020 Process Modification](data-components/DC0020-process-modification.md), [DC0032 Process Creation](data-components/DC0032-process-creation.md), [DC0055 File Access](data-components/DC0055-file-access.md), [DC0059 File Metadata](data-components/DC0059-file-metadata.md), [DC0061 File Modification](data-components/DC0061-file-modification.md), [DC0064 Command Execution](data-components/DC0064-command-execution.md), [DC0082 Network Connection Creation](data-components/DC0082-network-connection-creation.md), [DC0085 Network Traffic Content](data-components/DC0085-network-traffic-content.md).
 
@@ -376,25 +434,25 @@ Nothing rendered for this feed yet.
 
 ### azure_entra
 
-☐ not ticked · Microsoft Entra ID sign-in and audit logs · index `azure`
+Microsoft Entra ID sign-in and audit logs · index `azure`
 
 **Data components (14):** [DC0002 User Account Authentication](data-components/DC0002-user-account-authentication.md), [DC0006 Web Credential Creation](data-components/DC0006-web-credential-creation.md), [DC0007 Web Credential Usage](data-components/DC0007-web-credential-usage.md), [DC0010 User Account Modification](data-components/DC0010-user-account-modification.md), [DC0013 User Account Metadata](data-components/DC0013-user-account-metadata.md), [DC0014 User Account Creation](data-components/DC0014-user-account-creation.md), [DC0038 Application Log Content](data-components/DC0038-application-log-content.md), [DC0066 Active Directory Object Modification](data-components/DC0066-active-directory-object-modification.md), [DC0067 Logon Session Creation](data-components/DC0067-logon-session-creation.md), [DC0069 Cloud Service Modification](data-components/DC0069-cloud-service-modification.md), [DC0083 Cloud Service Enumeration](data-components/DC0083-cloud-service-enumeration.md), [DC0087 Active Directory Object Creation](data-components/DC0087-active-directory-object-creation.md), [DC0088 Logon Session Metadata](data-components/DC0088-logon-session-metadata.md), [DC0099 Group Enumeration](data-components/DC0099-group-enumeration.md).
 
 ### azure_activity
 
-☐ not ticked · Azure Activity Log (subscription control plane) and Azure Policy · index `azure`
+Azure Activity Log (subscription control plane) and Azure Policy · index `azure`
 
 **Data components (13):** [DC0010 User Account Modification](data-components/DC0010-user-account-modification.md), [DC0013 User Account Metadata](data-components/DC0013-user-account-metadata.md), [DC0017 Cloud Storage Enumeration](data-components/DC0017-cloud-storage-enumeration.md), [DC0038 Application Log Content](data-components/DC0038-application-log-content.md), [DC0049 Snapshot Deletion](data-components/DC0049-snapshot-deletion.md), [DC0057 Snapshot Creation](data-components/DC0057-snapshot-creation.md), [DC0069 Cloud Service Modification](data-components/DC0069-cloud-service-modification.md), [DC0073 Instance Modification](data-components/DC0073-instance-modification.md), [DC0075 Instance Enumeration](data-components/DC0075-instance-enumeration.md), [DC0076 Instance Creation](data-components/DC0076-instance-creation.md), [DC0081 Instance Deletion](data-components/DC0081-instance-deletion.md), [DC0083 Cloud Service Enumeration](data-components/DC0083-cloud-service-enumeration.md), [DC0090 Cloud Service Disable](data-components/DC0090-cloud-service-disable.md).
 
 ### azure_resource
 
-☐ not ticked · Azure resource diagnostic logs (NSG flow, VM guest, Key Vault, Storage) · index `azure`
+Azure resource diagnostic logs (NSG flow, VM guest, Key Vault, Storage) · index `azure`
 
 **Data components (1):** [DC0085 Network Traffic Content](data-components/DC0085-network-traffic-content.md).
 
 ### m365_defender
 
-☐ not ticked · Microsoft Defender XDR / Defender for Identity alerts and Graph API logs · index `azure`
+Microsoft Defender XDR / Defender for Identity alerts and Graph API logs · index `azure`
 
 Nothing rendered for this feed yet.
 
@@ -402,13 +460,13 @@ Nothing rendered for this feed yet.
 
 ### kubernetes_audit
 
-☐ not ticked · Kubernetes API server audit log and cluster events · index `k8s`
+Kubernetes API server audit log and cluster events · index `k8s`
 
 **Data components (18):** [DC0001 Scheduled Job Creation](data-components/DC0001-scheduled-job-creation.md), [DC0002 User Account Authentication](data-components/DC0002-user-account-authentication.md), [DC0010 User Account Modification](data-components/DC0010-user-account-modification.md), [DC0015 Image Creation](data-components/DC0015-image-creation.md), [DC0018 Host Status](data-components/DC0018-host-status.md), [DC0019 Pod Creation](data-components/DC0019-pod-creation.md), [DC0030 Pod Modification](data-components/DC0030-pod-modification.md), [DC0032 Process Creation](data-components/DC0032-process-creation.md), [DC0037 Pod Enumeration](data-components/DC0037-pod-enumeration.md), [DC0038 Application Log Content](data-components/DC0038-application-log-content.md), [DC0055 File Access](data-components/DC0055-file-access.md), [DC0060 Service Creation](data-components/DC0060-service-creation.md), [DC0064 Command Execution](data-components/DC0064-command-execution.md), [DC0072 Container Creation](data-components/DC0072-container-creation.md), [DC0077 Container Start](data-components/DC0077-container-start.md), [DC0085 Network Traffic Content](data-components/DC0085-network-traffic-content.md), [DC0092 Volume Modification](data-components/DC0092-volume-modification.md), [DC0097 Volume Creation](data-components/DC0097-volume-creation.md).
 
 ### container_runtime
 
-☐ not ticked · Docker / containerd daemon and runtime events · index `k8s`
+Docker / containerd daemon and runtime events · index `k8s`
 
 **Data components (10):** [DC0015 Image Creation](data-components/DC0015-image-creation.md), [DC0028 Image Metadata](data-components/DC0028-image-metadata.md), [DC0032 Process Creation](data-components/DC0032-process-creation.md), [DC0033 Process Termination](data-components/DC0033-process-termination.md), [DC0036 Image Modification](data-components/DC0036-image-modification.md), [DC0038 Application Log Content](data-components/DC0038-application-log-content.md), [DC0064 Command Execution](data-components/DC0064-command-execution.md), [DC0072 Container Creation](data-components/DC0072-container-creation.md), [DC0077 Container Start](data-components/DC0077-container-start.md), [DC0091 Container Enumeration](data-components/DC0091-container-enumeration.md).
 
@@ -416,13 +474,13 @@ Nothing rendered for this feed yet.
 
 ### esxi_syslog
 
-☐ not ticked · ESXi host logs via remote syslog (hostd, vmkernel, shell, vobd, vpxa, auth, esxupdate) · index `vmware`
+ESXi host logs via remote syslog (hostd, vmkernel, shell, vobd, vpxa, auth, esxupdate) · index `vmware`
 
 **Data components (27):** [DC0001 Scheduled Job Creation](data-components/DC0001-scheduled-job-creation.md), [DC0002 User Account Authentication](data-components/DC0002-user-account-authentication.md), [DC0005 Scheduled Job Metadata](data-components/DC0005-scheduled-job-metadata.md), [DC0009 User Account Deletion](data-components/DC0009-user-account-deletion.md), [DC0018 Host Status](data-components/DC0018-host-status.md), [DC0029 Script Execution](data-components/DC0029-script-execution.md), [DC0031 Kernel Module Load](data-components/DC0031-kernel-module-load.md), [DC0032 Process Creation](data-components/DC0032-process-creation.md), [DC0033 Process Termination](data-components/DC0033-process-termination.md), [DC0038 Application Log Content](data-components/DC0038-application-log-content.md), [DC0039 File Creation](data-components/DC0039-file-creation.md), [DC0040 File Deletion](data-components/DC0040-file-deletion.md), [DC0041 Service Metadata](data-components/DC0041-service-metadata.md), [DC0043 Firewall Disable](data-components/DC0043-firewall-disable.md), [DC0049 Snapshot Deletion](data-components/DC0049-snapshot-deletion.md), [DC0051 Firewall Rule Modification](data-components/DC0051-firewall-rule-modification.md), [DC0055 File Access](data-components/DC0055-file-access.md), [DC0057 Snapshot Creation](data-components/DC0057-snapshot-creation.md), [DC0061 File Modification](data-components/DC0061-file-modification.md), [DC0064 Command Execution](data-components/DC0064-command-execution.md), [DC0065 Service Modification](data-components/DC0065-service-modification.md), [DC0067 Logon Session Creation](data-components/DC0067-logon-session-creation.md), [DC0078 Network Traffic Flow](data-components/DC0078-network-traffic-flow.md), [DC0082 Network Connection Creation](data-components/DC0082-network-connection-creation.md), [DC0088 Logon Session Metadata](data-components/DC0088-logon-session-metadata.md), [DC0097 Volume Creation](data-components/DC0097-volume-creation.md), [DC0098 Volume Deletion](data-components/DC0098-volume-deletion.md).
 
 ### vcenter
 
-☐ not ticked · vCenter vpxd logs and events · index `vmware`
+vCenter vpxd logs and events · index `vmware`
 
 **Data components (3):** [DC0038 Application Log Content](data-components/DC0038-application-log-content.md), [DC0064 Command Execution](data-components/DC0064-command-execution.md), [DC0078 Network Traffic Flow](data-components/DC0078-network-traffic-flow.md).
 
@@ -430,54 +488,54 @@ Nothing rendered for this feed yet.
 
 ### macos
 
-☐ not ticked · macOS unified log / Endpoint Security / osquery / FSEvents · index `macos` · not rendered in this release
+macOS unified log / Endpoint Security / osquery / FSEvents · index `macos` · not rendered in this release
 
 Nothing rendered for this feed yet (platform not in scope).
 
 ### m365_unified
 
-☐ not ticked · Microsoft 365 unified audit log (Exchange, SharePoint, Teams, Purview) · index `o365` · not rendered in this release
+Microsoft 365 unified audit log (Exchange, SharePoint, Teams, Purview) · index `o365` · not rendered in this release
 
 Nothing rendered for this feed yet (platform not in scope).
 
 ### aws
 
-☐ not ticked · AWS CloudTrail / VPC Flow / CloudWatch / Bedrock · index `aws` · not rendered in this release
+AWS CloudTrail / VPC Flow / CloudWatch / Bedrock · index `aws` · not rendered in this release
 
 Nothing rendered for this feed yet (platform not in scope).
 
 ### gcp
 
-☐ not ticked · Google Cloud audit / VPC flow / Workspace admin · index `gcp` · not rendered in this release
+Google Cloud audit / VPC flow / Workspace admin · index `gcp` · not rendered in this release
 
 Nothing rendered for this feed yet (platform not in scope).
 
 ### okta
 
-☐ not ticked · Okta System Log · index `okta` · not rendered in this release
+Okta System Log · index `okta` · not rendered in this release
 
 Nothing rendered for this feed yet (platform not in scope).
 
 ### saas
 
-☐ not ticked · SaaS application audit logs (GitHub, Slack, Salesforce, Zoom, Box, Confluence, Google Workspace...) · index `saas` · not rendered in this release
+SaaS application audit logs (GitHub, Slack, Salesforce, Zoom, Box, Confluence, Google Workspace...) · index `saas` · not rendered in this release
 
 Nothing rendered for this feed yet (platform not in scope).
 
 ### mobile
 
-☐ not ticked · Mobile EDR / MDM telemetry · index `mobile` · not rendered in this release
+Mobile EDR / MDM telemetry · index `mobile` · not rendered in this release
 
 Nothing rendered for this feed yet (platform not in scope).
 
 ### ot
 
-☐ not ticked · OT / ICS application and protocol logs · index `ot` · not rendered in this release
+OT / ICS application and protocol logs · index `ot` · not rendered in this release
 
 Nothing rendered for this feed yet (platform not in scope).
 
 ### threat_intel
 
-☐ not ticked · External reconnaissance sources (internet scan data, domain registration, malware repositories, persona monitoring) · index `threatintel` · not rendered in this release
+External reconnaissance sources (internet scan data, domain registration, malware repositories, persona monitoring) · index `threatintel` · not rendered in this release
 
 Nothing rendered for this feed yet (platform not in scope).

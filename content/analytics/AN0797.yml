@@ -53,7 +53,7 @@ attack:
   - field: EgressAllowlist
     description: Known update/CDN domains and proxy egress CIDRs for suppression.
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: anomaly
   suggested_tuning:
   - element: TimeWindow

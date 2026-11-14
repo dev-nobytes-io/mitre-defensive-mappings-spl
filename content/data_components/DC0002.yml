@@ -486,8 +486,26 @@ derived:
       TACACS+/RADIUS authentication success for Industrial Control Systems (ICS) network admin account from source
       not in approved Network Management System (NMS) Classless Inter-Domain Routing (CIDR) subnet
   feeds:
+  - feed: auditd
+    in_scope: true
+    eventtype: mitre_dc0002_user_account_authentication__auditd
+    search: index=linux sourcetype="linux:audit" type IN (CRED_ACQ, USER_ACCT, USER_AUTH, USER_LOGIN)
+    constraint_origin: defaults
+    broad_refs: 0
+    sources:
+    - auditd:SYSCALL
+    - auditd:USER_LOGIN
+    cim_tags: false
+  - feed: azure_entra
+    in_scope: true
+    eventtype: mitre_dc0002_user_account_authentication__azure_entra
+    search: index=azure sourcetype="azure:aad:signin"
+    constraint_origin: defaults
+    broad_refs: 36
+    sources:
+    - azure:signinlogs
+    cim_tags: true
   - feed: corelight
-    have: true
     in_scope: true
     eventtype: mitre_dc0002_user_account_authentication__corelight
     search: >-
@@ -498,8 +516,37 @@ derived:
     - NSM:Connections
     - NSM:Flow
     cim_tags: false
+  - feed: esxi_syslog
+    in_scope: true
+    eventtype: mitre_dc0002_user_account_authentication__esxi_syslog
+    search: index=vmware sourcetype="vmware:esxlog:auth"
+    constraint_origin: defaults
+    broad_refs: 0
+    sources:
+    - esxi:auth
+    - esxi:vpxa
+    cim_tags: false
+  - feed: kubernetes_audit
+    in_scope: true
+    eventtype: mitre_dc0002_user_account_authentication__kubernetes_audit
+    search: index=k8s sourcetype="kube:apiserver-audit" (responseStatus.code=401 OR responseStatus.code=403)
+    constraint_origin: defaults
+    broad_refs: 4
+    sources:
+    - kubernetes:apiserver
+    - kubernetes:audit
+    cim_tags: false
+  - feed: linux_syslog
+    in_scope: true
+    eventtype: mitre_dc0002_user_account_authentication__linux_syslog
+    search: index=linux sourcetype=linux_secure
+    constraint_origin: defaults
+    broad_refs: 13
+    sources:
+    - linux:auth
+    - linux:syslog
+    cim_tags: true
   - feed: palo_alto
-    have: true
     in_scope: true
     eventtype: mitre_dc0002_user_account_authentication__palo_alto
     search: index=pan_logs sourcetype IN ("pan:globalprotect", "pan:system")
@@ -513,7 +560,6 @@ derived:
     - networkdevice:syslog
     cim_tags: true
   - feed: wineventlog
-    have: true
     in_scope: true
     eventtype: mitre_dc0002_user_account_authentication__wineventlog
     search: >-
@@ -524,62 +570,7 @@ derived:
     sources:
     - WinEventLog:Security
     cim_tags: true
-  - feed: auditd
-    have: false
-    in_scope: true
-    eventtype: mitre_dc0002_user_account_authentication__auditd
-    search: index=linux sourcetype="linux:audit" type IN (CRED_ACQ, USER_ACCT, USER_AUTH, USER_LOGIN)
-    constraint_origin: defaults
-    broad_refs: 0
-    sources:
-    - auditd:SYSCALL
-    - auditd:USER_LOGIN
-    cim_tags: false
-  - feed: azure_entra
-    have: false
-    in_scope: true
-    eventtype: mitre_dc0002_user_account_authentication__azure_entra
-    search: index=azure sourcetype="azure:aad:signin"
-    constraint_origin: defaults
-    broad_refs: 36
-    sources:
-    - azure:signinlogs
-    cim_tags: true
-  - feed: esxi_syslog
-    have: false
-    in_scope: true
-    eventtype: mitre_dc0002_user_account_authentication__esxi_syslog
-    search: index=vmware sourcetype="vmware:esxlog:auth"
-    constraint_origin: defaults
-    broad_refs: 0
-    sources:
-    - esxi:auth
-    - esxi:vpxa
-    cim_tags: false
-  - feed: kubernetes_audit
-    have: false
-    in_scope: true
-    eventtype: mitre_dc0002_user_account_authentication__kubernetes_audit
-    search: index=k8s sourcetype="kube:apiserver-audit" (responseStatus.code=401 OR responseStatus.code=403)
-    constraint_origin: defaults
-    broad_refs: 4
-    sources:
-    - kubernetes:apiserver
-    - kubernetes:audit
-    cim_tags: false
-  - feed: linux_syslog
-    have: false
-    in_scope: true
-    eventtype: mitre_dc0002_user_account_authentication__linux_syslog
-    search: index=linux sourcetype=linux_secure
-    constraint_origin: defaults
-    broad_refs: 13
-    sources:
-    - linux:auth
-    - linux:syslog
-    cim_tags: true
   - feed: aws
-    have: false
     in_scope: false
     eventtype: null
     search: null
@@ -589,7 +580,6 @@ derived:
     - AWS:CloudTrail
     cim_tags: false
   - feed: gcp
-    have: false
     in_scope: false
     eventtype: null
     search: null
@@ -600,7 +590,6 @@ derived:
     - gcp:workspaceaudit
     cim_tags: false
   - feed: m365_unified
-    have: false
     in_scope: false
     eventtype: null
     search: null
@@ -614,7 +603,6 @@ derived:
     - m365:unified
     cim_tags: false
   - feed: macos
-    have: false
     in_scope: false
     eventtype: null
     search: null
@@ -624,7 +612,6 @@ derived:
     - macos:unifiedlog
     cim_tags: false
   - feed: saas
-    have: false
     in_scope: false
     eventtype: null
     search: null

@@ -43,7 +43,7 @@ attack:
   - field: GeoIPMismatch
     description: Trigger on location anomalies based on prior user behavior or policy.
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: anomaly
   suggested_tuning:
   - element: LogonType

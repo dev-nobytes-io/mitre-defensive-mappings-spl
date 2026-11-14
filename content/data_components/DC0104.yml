@@ -52,7 +52,6 @@ derived:
     - Suspicious changes in TLS certificate responses or redirected domains
   feeds:
   - feed: corelight
-    have: true
     in_scope: true
     eventtype: mitre_dc0104_response_content__corelight
     search: index=corelight sourcetype IN (corelight_dns, corelight_http, corelight_ssl)
@@ -62,7 +61,6 @@ derived:
     - NSM:Flow
     cim_tags: false
   - feed: palo_alto
-    have: true
     in_scope: true
     eventtype: mitre_dc0104_response_content__palo_alto
     search: index=pan_logs sourcetype="pan:threat"
@@ -72,7 +70,6 @@ derived:
     - NSM:Flow
     cim_tags: false
   - feed: threat_intel
-    have: false
     in_scope: false
     eventtype: null
     search: null

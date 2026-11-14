@@ -34,7 +34,7 @@ attack:
   - field: ADSMonitoring
     description: Enable detection of alternate data streams depending on organizational usage.
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: ttp
   suggested_tuning:
   - element: MonitoredExtensions

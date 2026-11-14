@@ -36,7 +36,7 @@ attack:
   - field: TimeWindow
     description: Defines burst activity over short periods (e.g., >50 directory queries in 30s)
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: hunting
   suggested_tuning:
   - element: CommandLineRegex

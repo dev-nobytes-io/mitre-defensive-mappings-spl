@@ -42,7 +42,7 @@ attack:
   - field: CommandLine
     description: Flag common ransomware tools or functions (vssadmin delete shadows /all /quiet).
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: anomaly
   suggested_tuning:
   - element: FileExtension

@@ -96,18 +96,7 @@ derived:
     channels:
     - GET /orgs/:org/teams, GET /teams/:team/members
   feeds:
-  - feed: wineventlog
-    have: true
-    in_scope: true
-    eventtype: mitre_dc0099_group_enumeration__wineventlog
-    search: index=wineventlog source="XmlWinEventLog:Security" EventCode IN (4798, 4799)
-    constraint_origin: defaults
-    broad_refs: 0
-    sources:
-    - WinEventLog:Security
-    cim_tags: false
   - feed: azure_entra
-    have: false
     in_scope: true
     eventtype: mitre_dc0099_group_enumeration__azure_entra
     search: index=azure sourcetype="azure:aad:audit"
@@ -116,8 +105,16 @@ derived:
     sources:
     - azure:audit
     cim_tags: false
+  - feed: wineventlog
+    in_scope: true
+    eventtype: mitre_dc0099_group_enumeration__wineventlog
+    search: index=wineventlog source="XmlWinEventLog:Security" EventCode IN (4798, 4799)
+    constraint_origin: defaults
+    broad_refs: 0
+    sources:
+    - WinEventLog:Security
+    cim_tags: false
   - feed: aws
-    have: false
     in_scope: false
     eventtype: null
     search: null
@@ -127,7 +124,6 @@ derived:
     - AWS:CloudTrail
     cim_tags: false
   - feed: gcp
-    have: false
     in_scope: false
     eventtype: null
     search: null
@@ -137,7 +133,6 @@ derived:
     - gcp:audit
     cim_tags: false
   - feed: saas
-    have: false
     in_scope: false
     eventtype: null
     search: null

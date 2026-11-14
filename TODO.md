@@ -7,9 +7,9 @@ The single place to pick this project up again. Read **Where things stand**, run
 | Layer | State | Where |
 |---|---|---|
 | ATT&CK data | Enterprise v20.1 pinned (slim extract, sha256 in manifest); 20.0 to 20.1 changelog generated | `attack/`, `docs/changelog/` |
-| Feed checklist | 44 feeds; 8 ticked (Windows Event Logs, PowerShell, Sysmon, Corelight, Palo Alto, Trellix ePO, Solidcore, Wireshark hunt-only) | `config/stack.yml`, `docs/checklist.md` |
+| Feed catalogue | 44 feeds with index, sourcetypes and add-on; no per-site flags. Readers tick an unchecked list | `config/stack.yml`, `docs/checklist.md` |
 | Data components | All 106 mapped; 372 eventtypes, tags, macros, metadata and tuning lookups | `content/data_components/`, `dist/splunk/TA-mitre-attack-datacomponents/` |
-| Analytics | 119 of 1773 implemented (33 TTP, 73 anomaly, 13 hunting, 1 baseline): 96 Windows, 23 Network Devices. Still coverable by ticked feeds: 330 Windows, 54 Network Devices | `content/analytics/`, `docs/analytics/backlog.md` |
+| Analytics | 119 of 1773 implemented (33 TTP, 73 anomaly, 13 hunting, 1 baseline): 96 Windows, 23 Network Devices. Mapped and not yet implemented: 362 Windows, 63 Network Devices | `content/analytics/`, `docs/analytics/backlog.md` |
 | Detection strategies | 8 sequences, 4 strategy risk rules, 3 cross-strategy correlations; 97 strategies delegated | `content/detection_strategies/`, `content/correlations/` |
 | Log-source index | README table and `docs/by-log-source.md`: per feed, the data components, analytics and sequences it supports | `src/mitremap/render/docs_logsources.py` |
 | Telemetry health | HEALTH0001 expected telemetry missing or silent, HEALTH0002 host stopped reporting | `src/mitremap/health.py`, `docs/health.md` |
@@ -56,12 +56,12 @@ Work on a branch, open a draft PR, keep `make build` idempotent and the tests gr
 
 ### P1: operational safety net
 
-- [x] **Telemetry health detection.** (HEALTH0001, `mitre_expected_telemetry` lookup, `docs/health.md`) A generated lookup of every (index, sourcetype or source) that a live eventtype depends on, and a detection that reports which are never seen in 7 days (configuration gap: the eventtype gives false coverage) and which went silent in the last N hours (outage). Thresholds in macros.
+- [x] **Telemetry health detection.** (HEALTH0001, `mitre_expected_telemetry` lookup, `docs/health.md`) A generated lookup of every (index, sourcetype or source) that an eventtype depends on, and a detection that reports which are never seen in 7 days (configuration gap: the eventtype gives false coverage) and which went silent in the last N hours (outage). Thresholds in macros.
 - [x] **Per-host feed dropout.** (HEALTH0002; uses the indexed `host`, so Windows Event Forwarding needs host set from `Computer`) Hosts that sent Sysmon (or Security) in the previous 7 days but nothing in the last 4 hours; the usual sign of a stopped or tampered agent. Raise Host Status risk so it feeds the correlations.
 - [x] **Asset and identity starter.** ASSET0001 writes `mitre_asset_ip_map` (`nt_host`, `dns`, `ip`, `mac`) from Sysmon connections and Corelight DHCP; registration steps are in `docs/splunk-implementation.md`.
 - [ ] **Automated asset-resolution check.** A health search listing risk objects from network analytics (IP risk objects) that ES did not resolve to an asset, so a broken asset merge is visible. Needs the ES asset fields on risk events (`risk_object_*` enrichment), so build it on a real ES instance.
 
-### P2: content growth (Windows and network, feeds already ticked)
+### P2: content growth (Windows and network)
 
 - [x] **Analytics, Windows batch 3** (16): AN1611, AN0406, AN1275, AN0797, AN0590, AN1235, AN0178, AN1254, AN0643, AN1229, AN0531, AN0478, AN1428, AN0536, AN1100, AN1353.
 - [x] **Analytics, network batch 1** (18): firewall as a device AN1525, AN1340, AN1287, AN1240, AN0354, AN0410, AN0855, AN1542, AN0276; network sensors AN1024, AN0926, AN0382, AN1173, AN0427, AN1500, AN0404, AN0005, AN1067.
@@ -72,6 +72,7 @@ Work on a branch, open a draft PR, keep `make build` idempotent and the tests gr
 - [x] **Analytics, batch 2** (16 done: AN1040, AN0392, AN0237, AN1070, AN1031, AN0980, AN1064, AN0724, AN0577, AN0903, AN0589, AN0324, AN0516, AN1325, AN0846, AN1095).
 - [ ] **Analytics needing care:** AN1465 native API, AN0400/AN1496 crypto library loads, AN0066 packing, AN0243 keylogging. These depend on Sysmon ImageLoad (EventCode 7) volume; decide the Sysmon config scope first.
 - [ ] **Network-device CLI analytics** (AN1457, AN1044, AN0099, AN0563, AN0257, AN1073, AN1587, AN0434): need PAN-OS administrator activity audit logs. Confirm that the log exists and its sourcetype, then implement as hunting.
+- [x] **No site inventory in the repository.** `have` flags removed from `config/stack.yml`; every in-scope feed renders; coverage is mapped/gap; README, `docs/checklist.md` and `docs/by-log-source.md` carry unchecked lists for readers; HEALTH0001 is scoped by the reader-set `mitre_health_feeds` macro.
 - [x] **Palo Alto field names verified** against the add-on source (Palo Alto-maintained Splunk_TA_paloalto 6.2.0 transforms) and Splunk's current add-on docs: config logs `cmd`, `path`, `admin`, `client`, `result`; system logs `log_subtype`, `event_id` (alias `signature`), `description`; traffic `app`, `bytes_out`, `bytes_in`, `dest_port`, `http_category`; threat `raw_category`, `url`. Splunk's add-on 1.0.0 removed `before_change_detail`/`after_change_detail`, so firewall-rule analytics see which rule changed, not its content. `pan:globalprotect` and `pan:decryption` exist in Splunk's current add-on.
 - [x] **Sequences batch 2:** DET0364 remote WMI creation then execution on the target (cross-host join), DET0140 run from a staging path then deleted.
 - [ ] **More sequences:** DET0530 (5145 ADMIN$ write, then service or process on the target; needs Detailed File Share auditing), DET0215 ransom notes plus mass rename, DET0087 encoded file chain beyond AN0237, DET0378 obfuscated file then execution.
@@ -83,7 +84,7 @@ Work on a branch, open a draft PR, keep `make build` idempotent and the tests gr
 - [ ] Run AppInspect on both apps in CI and fix findings.
 - [ ] After a 7-day tuning run in production, promote analytics from `implemented` to `reviewed`.
 
-### P4: more platforms (tick the feed first, then implement)
+### P4: more platforms
 
 - [ ] Linux (auditd, syslog): 357 analytics ready; the auditd rule set is the prerequisite.
 - [ ] ESXi (remote syslog): 107 ready.
@@ -107,7 +108,7 @@ Work on a branch, open a draft PR, keep `make build` idempotent and the tests gr
 * A strategy's analytics are per-platform variants in ATT&CK v18+, so strategies are delegated, sequences or risk rules (see `docs/strategies/README.md`).
 * Risk rules recover analytic ids from the rule name (`source`), not from custom annotation field paths.
 * Everything ships disabled.
-* The feed checklist is the user's to tick; nothing is labelled unavailable by the author.
+* The repository never records which feeds a site has: no `have` flags, no ticked boxes, no status columns (enforced by `test_no_site_inventory_published`). Checklists ship unchecked for readers.
 * Windows and Network Devices are worked first; other platforms wait (see **Focus**).
 
 ## Known limitations

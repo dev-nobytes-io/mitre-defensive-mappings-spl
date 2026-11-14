@@ -1050,56 +1050,7 @@ derived:
       file download from domain not matching verified vendor Transport Layer Security (TLS) certificate/domain history,
       immediately preceding the anomalous process spawn
   feeds:
-  - feed: corelight
-    have: true
-    in_scope: true
-    eventtype: mitre_dc0038_application_log_content__corelight
-    search: index=corelight sourcetype IN (corelight_http, corelight_notice, corelight_smtp, corelight_ssh)
-    constraint_origin: defaults
-    broad_refs: 0
-    sources:
-    - NSM:Connections
-    - WebProxy:AccessLogs
-    cim_tags: false
-  - feed: palo_alto
-    have: true
-    in_scope: true
-    eventtype: mitre_dc0038_application_log_content__palo_alto
-    search: index=pan_logs sourcetype IN ("pan:globalprotect", "pan:system", "pan:threat")
-    constraint_origin: defaults
-    broad_refs: 0
-    sources:
-    - NSM:Connections
-    - WebProxy:AccessLogs
-    - networkdevice:syslog
-    - vpn:applog
-    cim_tags: false
-  - feed: trellix_epo
-    have: true
-    in_scope: true
-    eventtype: mitre_dc0038_application_log_content__trellix_epo
-    search: index=epo sourcetype="mcafee:epo:syslog"
-    constraint_origin: defaults
-    broad_refs: 3
-    sources:
-    - EDR:detection
-    cim_tags: false
-  - feed: wineventlog
-    have: true
-    in_scope: true
-    eventtype: mitre_dc0038_application_log_content__wineventlog
-    search: >-
-      index=wineventlog source IN ("XmlWinEventLog:Application", "XmlWinEventLog:Security", "XmlWinEventLog:System")
-      EventCode IN (104, 1000, 1020, 1063, 1102, 1341, 1342, 6416)
-    constraint_origin: defaults
-    broad_refs: 0
-    sources:
-    - WinEventLog:Application
-    - WinEventLog:Security
-    - WinEventLog:System
-    cim_tags: false
   - feed: azure_activity
-    have: false
     in_scope: true
     eventtype: mitre_dc0038_application_log_content__azure_activity
     search: index=azure sourcetype="mscs:azure:audit"
@@ -1109,7 +1060,6 @@ derived:
     - azure:activity
     cim_tags: false
   - feed: azure_entra
-    have: false
     in_scope: true
     eventtype: mitre_dc0038_application_log_content__azure_entra
     search: index=azure sourcetype IN ("azure:aad:audit", "azure:aad:signin")
@@ -1120,7 +1070,6 @@ derived:
     - azure:signinlogs
     cim_tags: false
   - feed: container_runtime
-    have: false
     in_scope: true
     eventtype: mitre_dc0038_application_log_content__container_runtime
     search: index=k8s sourcetype IN ("docker:daemon", "docker:events")
@@ -1130,8 +1079,17 @@ derived:
     - docker:daemon
     - docker:events
     cim_tags: false
+  - feed: corelight
+    in_scope: true
+    eventtype: mitre_dc0038_application_log_content__corelight
+    search: index=corelight sourcetype IN (corelight_http, corelight_notice, corelight_smtp, corelight_ssh)
+    constraint_origin: defaults
+    broad_refs: 0
+    sources:
+    - NSM:Connections
+    - WebProxy:AccessLogs
+    cim_tags: false
   - feed: esxi_syslog
-    have: false
     in_scope: true
     eventtype: mitre_dc0038_application_log_content__esxi_syslog
     search: >-
@@ -1144,7 +1102,6 @@ derived:
     - esxi:vmkernel
     cim_tags: false
   - feed: iis
-    have: false
     in_scope: true
     eventtype: mitre_dc0038_application_log_content__iis
     search: index=web sourcetype="ms:iis:auto"
@@ -1155,7 +1112,6 @@ derived:
     - webserver:applog
     cim_tags: false
   - feed: kubernetes_audit
-    have: false
     in_scope: true
     eventtype: mitre_dc0038_application_log_content__kubernetes_audit
     search: index=k8s sourcetype IN ("kube:apiserver-audit", "kube:container:*", "kube:container:ingress-nginx")
@@ -1167,7 +1123,6 @@ derived:
     - kubernetes:apiserver
     cim_tags: false
   - feed: linux_syslog
-    have: false
     in_scope: true
     eventtype: mitre_dc0038_application_log_content__linux_syslog
     search: index=linux sourcetype IN (access_combined, linux_messages_syslog, linux_secure)
@@ -1181,8 +1136,28 @@ derived:
     - linux:syslog
     - webserver:applog
     cim_tags: false
+  - feed: palo_alto
+    in_scope: true
+    eventtype: mitre_dc0038_application_log_content__palo_alto
+    search: index=pan_logs sourcetype IN ("pan:globalprotect", "pan:system", "pan:threat")
+    constraint_origin: defaults
+    broad_refs: 0
+    sources:
+    - NSM:Connections
+    - WebProxy:AccessLogs
+    - networkdevice:syslog
+    - vpn:applog
+    cim_tags: false
+  - feed: trellix_epo
+    in_scope: true
+    eventtype: mitre_dc0038_application_log_content__trellix_epo
+    search: index=epo sourcetype="mcafee:epo:syslog"
+    constraint_origin: defaults
+    broad_refs: 3
+    sources:
+    - EDR:detection
+    cim_tags: false
   - feed: vcenter
-    have: false
     in_scope: true
     eventtype: mitre_dc0038_application_log_content__vcenter
     search: index=vmware sourcetype="vmware:vclog:vpxd"
@@ -1191,8 +1166,20 @@ derived:
     sources:
     - esxi:vpxd
     cim_tags: false
+  - feed: wineventlog
+    in_scope: true
+    eventtype: mitre_dc0038_application_log_content__wineventlog
+    search: >-
+      index=wineventlog source IN ("XmlWinEventLog:Application", "XmlWinEventLog:Security", "XmlWinEventLog:System")
+      EventCode IN (104, 1000, 1020, 1063, 1102, 1341, 1342, 6416)
+    constraint_origin: defaults
+    broad_refs: 0
+    sources:
+    - WinEventLog:Application
+    - WinEventLog:Security
+    - WinEventLog:System
+    cim_tags: false
   - feed: aws
-    have: false
     in_scope: false
     eventtype: null
     search: null
@@ -1204,7 +1191,6 @@ derived:
     - AWS:bedrock
     cim_tags: false
   - feed: gcp
-    have: false
     in_scope: false
     eventtype: null
     search: null
@@ -1214,7 +1200,6 @@ derived:
     - gcp:workspaceaudit
     cim_tags: false
   - feed: m365_unified
-    have: false
     in_scope: false
     eventtype: null
     search: null
@@ -1230,7 +1215,6 @@ derived:
     - m365:unified
     cim_tags: false
   - feed: macos
-    have: false
     in_scope: false
     eventtype: null
     search: null
@@ -1241,7 +1225,6 @@ derived:
     - macos:unifiedlog
     cim_tags: false
   - feed: mobile
-    have: false
     in_scope: false
     eventtype: null
     search: null
@@ -1252,7 +1235,6 @@ derived:
     - iOS:unifiedlog
     cim_tags: false
   - feed: ot
-    have: false
     in_scope: false
     eventtype: null
     search: null
@@ -1269,7 +1251,6 @@ derived:
     - vendorapp:ApplicationLog
     cim_tags: false
   - feed: saas
-    have: false
     in_scope: false
     eventtype: null
     search: null

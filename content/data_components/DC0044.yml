@@ -31,7 +31,6 @@ derived:
   log_sources: []
   feeds:
   - feed: palo_alto
-    have: true
     in_scope: true
     eventtype: mitre_dc0044_firewall_enumeration__palo_alto
     search: index=pan_logs sourcetype IN ("pan:config", "pan:system")
@@ -41,7 +40,6 @@ derived:
     - (added by dc_defaults/curated)
     cim_tags: false
   - feed: wineventlog
-    have: true
     in_scope: true
     eventtype: mitre_dc0044_firewall_enumeration__wineventlog
     search: index=wineventlog source="XmlWinEventLog:Security" EventCode IN (4688)

@@ -446,40 +446,7 @@ derived:
     channels:
     - None
   feeds:
-  - feed: solidcore
-    have: true
-    in_scope: true
-    eventtype: mitre_dc0039_file_creation__solidcore
-    search: >-
-      index=epo sourcetype="mcafee:epo:syslog" (threat_name IN (FILE_CREATED, FILE_RENAMED) OR event_description
-      IN (FILE_CREATED, FILE_RENAMED)) (product_name="Solidcore*")
-    constraint_origin: defaults
-    broad_refs: 0
-    sources:
-    - (added by dc_defaults/curated)
-    cim_tags: false
-  - feed: sysmon
-    have: true
-    in_scope: true
-    eventtype: mitre_dc0039_file_creation__sysmon
-    search: index=sysmon source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode IN (11, 15)
-    constraint_origin: defaults
-    broad_refs: 0
-    sources:
-    - WinEventLog:Sysmon
-    cim_tags: true
-  - feed: wineventlog
-    have: true
-    in_scope: true
-    eventtype: mitre_dc0039_file_creation__wineventlog
-    search: index=wineventlog source="XmlWinEventLog:Security" EventCode IN (4656, 4663)
-    constraint_origin: defaults
-    broad_refs: 2
-    sources:
-    - WinEventLog:Microsoft-Windows-Shell-Core
-    cim_tags: false
   - feed: auditd
-    have: false
     in_scope: true
     eventtype: mitre_dc0039_file_creation__auditd
     search: >-
@@ -494,7 +461,6 @@ derived:
     - auditd:SYSCALL
     cim_tags: false
   - feed: esxi_syslog
-    have: false
     in_scope: true
     eventtype: mitre_dc0039_file_creation__esxi_syslog
     search: index=vmware sourcetype IN ("vmware:esxlog:hostd", "vmware:esxlog:vmkernel")
@@ -503,8 +469,27 @@ derived:
     sources:
     - esxi:vmkernel
     cim_tags: false
+  - feed: solidcore
+    in_scope: true
+    eventtype: mitre_dc0039_file_creation__solidcore
+    search: >-
+      index=epo sourcetype="mcafee:epo:syslog" (threat_name IN (FILE_CREATED, FILE_RENAMED) OR event_description
+      IN (FILE_CREATED, FILE_RENAMED)) (product_name="Solidcore*")
+    constraint_origin: defaults
+    broad_refs: 0
+    sources:
+    - (added by dc_defaults/curated)
+    cim_tags: false
+  - feed: sysmon
+    in_scope: true
+    eventtype: mitre_dc0039_file_creation__sysmon
+    search: index=sysmon source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode IN (11, 15)
+    constraint_origin: defaults
+    broad_refs: 0
+    sources:
+    - WinEventLog:Sysmon
+    cim_tags: true
   - feed: sysmon_linux
-    have: false
     in_scope: true
     eventtype: mitre_dc0039_file_creation__sysmon_linux
     search: index=linux sourcetype="sysmon:linux" EventCode IN (11)
@@ -513,8 +498,16 @@ derived:
     sources:
     - linux:Sysmon
     cim_tags: false
+  - feed: wineventlog
+    in_scope: true
+    eventtype: mitre_dc0039_file_creation__wineventlog
+    search: index=wineventlog source="XmlWinEventLog:Security" EventCode IN (4656, 4663)
+    constraint_origin: defaults
+    broad_refs: 2
+    sources:
+    - WinEventLog:Microsoft-Windows-Shell-Core
+    cim_tags: false
   - feed: aws
-    have: false
     in_scope: false
     eventtype: null
     search: null
@@ -524,7 +517,6 @@ derived:
     - AWS:CloudTrail
     cim_tags: false
   - feed: gcp
-    have: false
     in_scope: false
     eventtype: null
     search: null
@@ -534,7 +526,6 @@ derived:
     - gcp:workspaceaudit
     cim_tags: false
   - feed: macos
-    have: false
     in_scope: false
     eventtype: null
     search: null
@@ -550,7 +541,6 @@ derived:
     - macos:unifiedlog
     cim_tags: false
   - feed: mobile
-    have: false
     in_scope: false
     eventtype: null
     search: null

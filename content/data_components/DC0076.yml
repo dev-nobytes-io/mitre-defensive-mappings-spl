@@ -62,7 +62,6 @@ derived:
     - RunInstances,CreateImage
   feeds:
   - feed: azure_activity
-    have: false
     in_scope: true
     eventtype: mitre_dc0076_instance_creation__azure_activity
     search: index=azure sourcetype="mscs:azure:audit"
@@ -72,7 +71,6 @@ derived:
     - azure:activity
     cim_tags: false
   - feed: aws
-    have: false
     in_scope: false
     eventtype: null
     search: null
@@ -82,7 +80,6 @@ derived:
     - AWS:CloudTrail
     cim_tags: false
   - feed: gcp
-    have: false
     in_scope: false
     eventtype: null
     search: null

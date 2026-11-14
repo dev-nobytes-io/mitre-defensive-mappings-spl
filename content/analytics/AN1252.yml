@@ -50,7 +50,7 @@ attack:
     description: >-
       Adjustable threshold for length of script blocks logged by Event ID 4104 (useful for filtering noise).
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: anomaly
   suggested_tuning:
   - element: CommandLinePattern

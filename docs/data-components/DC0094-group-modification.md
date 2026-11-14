@@ -2,7 +2,7 @@
 
 [ATT&CK](https://attack.mitre.org/datacomponents/DC0094) · version 2.0 · modified 2025-10-21 · ATT&CK release 20.1
 
-Status: **Live** · umbrella eventtype `mitre_dc0094_group_modification`
+Umbrella eventtype `mitre_dc0094_group_modification` over 1 feed(s)
 
 > Changes made to a group, such as membership, name, or permissions (ex: Windows EID 4728 or 4732, AWS IAM UpdateGroup). Examples:   - Active Directory:     - Event ID 4728: Member added to a global group.     - Event ID 4732: Member added to a local group. - Azure AD: `Set-AzureADGroup -ObjectId <GroupId> -DisplayName "New Name"` - AWS IAM: `aws iam update-group --group-name <GroupName> --new-path "/admin/"` - Google Workspace: Modify permissions via Admin SDK API: `PATCH https://admin.googleapis.com/admin/directory/v1/groups/<groupKey>` - Office 365: Modify groups via Graph API: `PATCH https://graph.microsoft.com/v1.0/groups/<groupId>`  *Data Collection Measures:*  - Directory Logging:     - Windows: Log EIDs 4728 (add), 4729 (remove).     - Azure AD: Enable "Audit logs."     - Google Workspace: Enable Admin Activity logs.     - Office 365: Use Unified Audit Logs. - Cloud Monitoring:     - AWS: Log `UpdateGroup`, `AttachGroupPolicy`, `RemoveUserFromGroup`.     - Azure: Track modifications via Audit logs. - API Monitoring: Log Google Admin SDK and Microsoft Graph API calls. - SIEM Integration: Centralize and monitor group modification logs.
 
@@ -19,17 +19,15 @@ Analytic references by platform: Office Suite 1
 ```mermaid
 flowchart LR
   DC["DC0094 Group Modification"]
-  classDef live fill:#d4edda,stroke:#2e7d32,color:#1b1b1b
-  classDef ready fill:#fff3cd,stroke:#b26a00,color:#1b1b1b
 ```
 
 ## Requirements
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
+| Feed | Schedule | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `wineventlog` | live | source=`XmlWinEventLog:Security` | `EventCode IN (4728, 4729, 4732, 4733, 4735, 4737, 4755, 4756, 4757)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true) |
+| `wineventlog` | scheduled | source=`XmlWinEventLog:Security` | `EventCode IN (4728, 4729, 4732, 4733, 4735, 4737, 4755, 4756, 4757)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true) |
 
 Collection prerequisites:
 

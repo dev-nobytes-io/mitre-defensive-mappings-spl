@@ -35,7 +35,7 @@ attack:
     description: >-
       Used to scope monitoring to suspicious parent/child process trees like PowerShell or WMI spawning file reads.
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: ttp
   suggested_tuning:
   - element: TargetFilePathRegex

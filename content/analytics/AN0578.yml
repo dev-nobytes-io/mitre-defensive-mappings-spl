@@ -45,7 +45,7 @@ attack:
   - field: UserContext
     description: Flags admin-level users executing cmd outside expected baselines.
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: anomaly
   suggested_tuning:
   - element: ParentProcessName

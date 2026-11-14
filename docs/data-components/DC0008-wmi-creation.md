@@ -2,7 +2,7 @@
 
 [ATT&CK](https://attack.mitre.org/datacomponents/DC0008) · version 2.0 · modified 2025-11-12 · ATT&CK release 20.1
 
-Status: **Live** · umbrella eventtype `mitre_dc0008_wmi_creation`
+Umbrella eventtype `mitre_dc0008_wmi_creation` over 2 feed(s)
 
 > Initial construction of a WMI object, such as a filter, consumer, subscription, binding, or providers.
 
@@ -25,9 +25,6 @@ flowchart LR
   DC --> LS1["WinEventLog:Application<br/>2 refs"]
   LS1 --> F_wineventlog
   F_wineventlog --> ET_wineventlog[/"mitre_dc0008_wmi_creation__wineventlog"/]
-  class F_wineventlog live
-  classDef live fill:#d4edda,stroke:#2e7d32,color:#1b1b1b
-  classDef ready fill:#fff3cd,stroke:#b26a00,color:#1b1b1b
 ```
 
 ## Requirements
@@ -38,10 +35,10 @@ Component specific:
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
+| Feed | Schedule | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `sysmon` | live | source=`XmlWinEventLog:Microsoft-Windows-Sysmon/Operational` | `EventCode IN (19, 20, 21)` | defaults | Splunk Add-on for Sysmon (needs Splunk_TA_windows for XML parsing) |
-| `wineventlog` | live | source=`XmlWinEventLog:Microsoft-Windows-WMI-Activity/Operational` | `EventCode IN (5857, 5858, 5859, 5860, 5861)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true) |
+| `sysmon` | scheduled | source=`XmlWinEventLog:Microsoft-Windows-Sysmon/Operational` | `EventCode IN (19, 20, 21)` | defaults | Splunk Add-on for Sysmon (needs Splunk_TA_windows for XML parsing) |
+| `wineventlog` | scheduled | source=`XmlWinEventLog:Microsoft-Windows-WMI-Activity/Operational` | `EventCode IN (5857, 5858, 5859, 5860, 5861)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true) |
 
 Collection prerequisites:
 

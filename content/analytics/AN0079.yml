@@ -30,7 +30,7 @@ attack:
   - field: TLSFingerprintMismatch
     description: JA3 hash deviation from known clients
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: ttp
   suggested_tuning:
   - element: HeaderEncodingPattern

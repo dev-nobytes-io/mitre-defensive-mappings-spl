@@ -42,7 +42,7 @@ attack:
   - field: UserContext
     description: Limit to non-admin or interactive sessions if desired
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: ttp
   suggested_tuning:
   - element: TimeWindow

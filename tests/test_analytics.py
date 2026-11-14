@@ -28,10 +28,10 @@ def test_macros_used_counts_arguments():
 
 def test_coverage_and_suggestions(model):
     views = all_views(model)
-    assert {v.coverage for v in views} <= {"live", "ready", "gap", "no-log-source"}
+    assert {v.coverage for v in views} <= {"mapped", "gap", "no-log-source"}
     assert all(v.suggested_content_type in CONTENT_TYPES for v in views)
     an = model.analytics["AN1030"]
-    assert coverage(an) == "live"
+    assert coverage(an) == "mapped"
     assert {t["element"] for t in suggest_tuning(an)} == {me["field"] for me in an.mutable_elements}
     assert suggest_content_type(an, model.technique_for_analytic(an)) in CONTENT_TYPES
 

@@ -143,9 +143,6 @@ class SplunkRenderer:
                 if f.hunt_only:
                     lines.append("disabled = 1")
                     lines.append("# hunt-only feed: enable when a capture is loaded")
-                elif not f.have:
-                    lines.append("disabled = 1")
-                    lines.append(f"# feed '{f.feed}' is not ticked in config/stack.yml; enable when it is forwarded")
                 lines.append("")
             lines.append(f"[{v.eventtype}]")
             lines.append("search = " + " OR ".join(f"eventtype={f.eventtype}" for f in in_scope))
@@ -253,21 +250,21 @@ class SplunkRenderer:
         p = lookups / "mitre_attack_data_components.csv"
         with p.open("w", newline="", encoding="utf-8") as fh:
             w = csv.writer(fh)
-            w.writerow(["dc_id", "dc_name", "eventtype", "in_scope", "live_feeds", "ready_feeds", "cim_datamodel", "analytics", "detection_strategies", "techniques", "attack_version", "url"])
+            w.writerow(["dc_id", "dc_name", "eventtype", "in_scope", "feeds", "cim_datamodel", "analytics", "detection_strategies", "techniques", "attack_version", "url"])
             for v in views:
                 w.writerow([v.dc.id, v.dc.name, v.eventtype if v.in_scope else "", int(v.in_scope),
-                            "|".join(f.feed for f in v.live_feeds), "|".join(f.feed for f in v.ready_feeds),
+                            "|".join(f.feed for f in v.mapped_feeds),
                             f"{v.cim['datamodel']}.{v.cim.get('dataset','')}" if v.cim else "", v.analytics, len(v.detection_strategies), len(v.techniques), m.version, v.dc.url])
         out.append(p)
         p = lookups / "mitre_attack_log_sources.csv"
         with p.open("w", newline="", encoding="utf-8") as fh:
             w = csv.writer(fh)
-            w.writerow(["dc_id", "dc_name", "log_source", "refs", "feed", "have", "in_scope", "eventtype", "sourcetypes", "constraint_origin"])
+            w.writerow(["dc_id", "dc_name", "log_source", "refs", "feed", "in_scope", "eventtype", "sourcetypes", "constraint_origin"])
             for v in views:
                 for f in v.feeds:
                     for src in f.sources:
                         sv = next((s for s in v.sources if s.canonical == src), None)
-                        w.writerow([v.dc.id, v.dc.name, src, sv.refs if sv else "", f.feed, int(f.have), int(f.in_scope), f.eventtype if f.in_scope else "", "|".join(f.sourcetypes), f.origin])
+                        w.writerow([v.dc.id, v.dc.name, src, sv.refs if sv else "", f.feed, int(f.in_scope), f.eventtype if f.in_scope else "", "|".join(f.sourcetypes), f.origin])
         out.append(p)
         p = lookups / "mitre_attack_analytics.csv"
         with p.open("w", newline="", encoding="utf-8") as fh:
@@ -301,10 +298,10 @@ class SplunkRenderer:
         p = lookups / "mitre_attack_feeds.csv"
         with p.open("w", newline="", encoding="utf-8") as fh:
             w = csv.writer(fh)
-            w.writerow(["feed", "label", "have", "render", "platforms", "index", "constraint_field", "sourcetypes", "ta"])
+            w.writerow(["feed", "label", "render", "platforms", "index", "constraint_field", "sourcetypes", "ta"])
             for name, f in config.stack().items():
                 sts = f.get("sourcetypes") or ([f["sourcetype"]] if f.get("sourcetype") else []) or ([f["sourcetype_template"]] if f.get("sourcetype_template") else [])
-                w.writerow([name, f["label"], int(bool(f.get("have"))), int(f.get("render", True) is not False), "|".join(f.get("platforms", [])), f.get("index", ""), f.get("constraint_field", "sourcetype"), "|".join(sts), f.get("ta", "")])
+                w.writerow([name, f["label"], int(f.get("render", True) is not False), "|".join(f.get("platforms", [])), f.get("index", ""), f.get("constraint_field", "sourcetype"), "|".join(sts), f.get("ta", "")])
         out.append(p)
         return out
 
@@ -313,9 +310,9 @@ class SplunkRenderer:
         p = lookups / "mitre_expected_telemetry.csv"
         with p.open("w", newline="", encoding="utf-8") as fh:
             w = csv.writer(fh)
-            w.writerow(["feed", "have", "index", "field", "value", "data_components", "eventtypes"])
+            w.writerow(["feed", "index", "field", "value", "data_components", "eventtypes"])
             for r in expected_telemetry(views):
-                w.writerow([r.feed, int(r.have), r.index, r.field, r.value, "|".join(r.data_components), r.eventtypes])
+                w.writerow([r.feed, r.index, r.field, r.value, "|".join(r.data_components), r.eventtypes])
         return p
 
     def _tuning_lookups(self, lookups: Path) -> list[Path]:
@@ -334,8 +331,7 @@ class SplunkRenderer:
         return out
 
     def _readme(self, path: Path, m: AttackModel, views: list[DCView]) -> Path:
-        live = sum(1 for v in views if v.live_feeds)
-        ready = sum(1 for v in views if v.in_scope and not v.live_feeds)
+        mapped = sum(1 for v in views if v.in_scope)
         text = f"""# {APP}
 
 ATT&CK v{m.version} Enterprise data components rendered as Splunk knowledge objects.
@@ -348,18 +344,18 @@ ATT&CK v{m.version} Enterprise data components rendered as Splunk knowledge obje
 | Lookups | `lookups/mitre_attack_*.csv` | ATT&CK metadata (components, log sources, analytics, detection strategies, techniques, feeds). |
 | Tuning lookups | `lookups/mitre_allowlist_*.csv`, `mitre_asset_roles.csv`, ... | Seed rows only. Analytics reference these by name; edit them in place (they are never overwritten by a rebuild). |
 
-Components with at least one live feed: {live}. In scope but waiting on a feed you have not ticked: {ready}. Total: {len(views)}.
+Components with at least one feed on an in-scope platform: {mapped} of {len(views)}.
 
 ## Install
 
-1. Edit `config/stack.yml` in the repo: tick `have: true` on the feeds you forward, set `index` and `sourcetypes` to match your environment, rebuild (`make build`).
-   Or install as is and override stanzas in `local/eventtypes.conf`.
+1. Edit `config/stack.yml` in the repo: set `index` and `sourcetypes` to match your environment, rebuild (`make build`).
+   Or install as is and override stanzas in `local/eventtypes.conf`. Eventtypes for feeds you do not collect match nothing; disable them in `local/` if you prefer.
 2. Copy this directory to `$SPLUNK_HOME/etc/apps/` on search heads (and on ES search heads for the analytics phase). Restart or debug/refresh.
-3. Check: `| eventcount summarize=false index=* | search index IN (sysmon, wineventlog, corelight, pan_logs, epo)` then `eventtype=mitre_dc0032_process_creation | stats count by eventtype`.
+3. Check: `| inputlookup mitre_attack_feeds.csv | where render=1 | table feed index sourcetypes` against `| eventcount summarize=false index=*`, then `eventtype=mitre_dc0032_process_creation | stats count by eventtype`.
+4. Scope the telemetry health search to the feeds you collect: set the `mitre_health_feeds` macro (for example `feed IN (sysmon, wineventlog)`).
 
 ## Notes
 
-* Eventtypes for feeds not ticked are shipped `disabled = 1`; enable when the feed arrives.
 * Windows event log, Sysmon and PowerShell eventtypes match on `source=XmlWinEventLog:<channel>`, which is correct for Splunk_TA_windows 5.0+ (sourcetype `XmlWinEventLog`) and for older versions alike.
 * `wireshark` eventtypes are hunt-only and disabled.
 * Eventtypes are not usable with `tstats`. For high-volume components use the `mitre_dcXXXX_dm` / `_dm_where` macros against accelerated CIM data models.

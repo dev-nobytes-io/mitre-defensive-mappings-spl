@@ -62,7 +62,7 @@ Nothing here has run in Splunk. Before enabling content: fix Windows source matc
 
 ## Phase 4: more platforms (later)
 
-Tick the feed in `config/stack.yml`, then implement from the backlog: Linux (357 analytics ready), ESXi (107), containers (35), Entra ID (21). Out-of-scope platforms (macOS, M365, AWS, GCP, SaaS) need `config/platforms.yml` and the `render` flags changed first.
+Implement from the per-platform backlog: Linux (358 analytics mapped), ESXi (107), containers (35), Entra ID (21). Out-of-scope platforms (macOS, M365, AWS, GCP, SaaS) need `config/platforms.yml` and the `render` flags changed first.
 
 ## Phase 5: more query languages (later)
 

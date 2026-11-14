@@ -69,18 +69,7 @@ derived:
     channels:
     - Enumerate Winlogon subkeys for unknown or unsigned binaries
   feeds:
-  - feed: wineventlog
-    have: true
-    in_scope: true
-    eventtype: mitre_dc0050_windows_registry_key_access__wineventlog
-    search: index=wineventlog source="XmlWinEventLog:Security" EventCode IN (4656, 4663)
-    constraint_origin: defaults
-    broad_refs: 0
-    sources:
-    - WinEventLog:Security
-    cim_tags: false
   - feed: autoruns
-    have: false
     in_scope: true
     eventtype: mitre_dc0050_windows_registry_key_access__autoruns
     search: index=wineventlog sourcetype=autoruns
@@ -88,6 +77,15 @@ derived:
     broad_refs: 2
     sources:
     - Autoruns:RegistryScan
+    cim_tags: false
+  - feed: wineventlog
+    in_scope: true
+    eventtype: mitre_dc0050_windows_registry_key_access__wineventlog
+    search: index=wineventlog source="XmlWinEventLog:Security" EventCode IN (4656, 4663)
+    constraint_origin: defaults
+    broad_refs: 0
+    sources:
+    - WinEventLog:Security
     cim_tags: false
 curated:
   justification: >-

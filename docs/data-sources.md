@@ -1,10 +1,10 @@
-# Data sources: your stack against ATT&CK's log sources
+# Data sources: feeds against ATT&CK's log sources
 
-ATT&CK v20.1 names ~400 log sources. `config/log_sources.yml` collapses typos and case variants (123 aliases), maps 145 names explicitly and the rest via 24 prefix rules, onto the 44 feeds in `config/stack.yml`. This page explains the choices for the feeds named in the brief and the assumptions behind sourcetypes.
+ATT&CK v20.1 names ~400 log sources. `config/log_sources.yml` collapses typos and case variants (123 aliases), maps 145 names explicitly and the rest via 24 prefix rules, onto the 44 feeds in `config/stack.yml`. This page explains the choices for the feeds this release writes analytics for, and the assumptions behind sourcetypes.
 
 ```mermaid
 flowchart LR
-  subgraph have [Ticked feeds]
+  subgraph content [Feeds with analytics]
     WIN[Windows Event Logs<br/>Splunk_TA_windows XmlWinEventLog]
     PS[PowerShell Operational]
     SYS[Sysmon<br/>TA-microsoft-sysmon]
@@ -35,7 +35,7 @@ flowchart LR
 
 Matched on `source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational"` (sourcetype `XmlWinEventLog` on current add-ons), index `sysmon`. The Sysmon add-on needs Splunk_TA_windows installed for XML parsing. The highest-yield feed in ATT&CK v20 (861 analytic references). Event IDs used per component: 1 Process Creation/Command Execution, 3 Network Connection, 5 Process Termination, 6 Driver Load, 7 Module Load, 8/10/25 Process Access/Modification/OS API, 9 Drive Access, 11/15/2 File Creation/Metadata, 12/13/14 Registry, 17/18 Named Pipe, 19/20/21 WMI, 22 DNS (Network Traffic Content), 23/26 File Deletion, 4/16 Host Status. Your Sysmon config must include the matching rule groups.
 
-Sysmon also stands in for some ETW providers ATT&CK names directly: `etw:Microsoft-Windows-Kernel-Process` (EID 1/5/8/10/25) and `etw:Microsoft-Windows-Kernel-ImageLoad` (EID 7). Providers like Win32k, WinINet, RPC, DotNETRuntime, Token have no Sysmon equivalent; they sit in the unticked `etw` feed.
+Sysmon also stands in for some ETW providers ATT&CK names directly: `etw:Microsoft-Windows-Kernel-Process` (EID 1/5/8/10/25) and `etw:Microsoft-Windows-Kernel-ImageLoad` (EID 7). Providers like Win32k, WinINet, RPC, DotNETRuntime, Token have no Sysmon equivalent; they sit in the `etw` feed.
 
 ## Corelight (`corelight`)
 
@@ -46,7 +46,7 @@ Sourcetypes `corelight_<log>` from the Corelight App for Splunk. For TA_zeek set
 Sourcetypes `pan:traffic`, `pan:threat` (url, wildfire, virus, spyware, vulnerability subtypes), `pan:system`, `pan:config`, `pan:userid`, `pan:globalprotect`, `pan:decryption` from the Splunk Add-on for Palo Alto Networks. PAN-OS covers two ATT&CK roles:
 
 1. **Network sensor**: `NSM:Firewall`, `NSM:Flow`, `NSM:Content` (threat), `WebProxy:AccessLogs` (url), `IDS:*`, `perimeter:firewall` → Network Traffic Flow/Content, Network Connection Creation, Firewall Rule Modification/Disable/Metadata.
-2. **Network device**: `networkdevice:syslog|config|cli|audit|auth`, `vpn:authlog` → the Network Devices platform's Command Execution, File Modification (config), Logon Session Creation, User Account Authentication (GlobalProtect), Firmware Modification (system log). Only for the firewall itself; routers and switches remain in the unticked `netdev_syslog` feed.
+2. **Network device**: `networkdevice:syslog|config|cli|audit|auth`, `vpn:authlog` → the Network Devices platform's Command Execution, File Modification (config), Logon Session Creation, User Account Authentication (GlobalProtect), Firmware Modification (system log). Only for the firewall itself; routers and switches are the `netdev_syslog` feed.
 
 Log forwarding profiles must be attached to every security rule, and system/config logs forwarded from each device or Panorama.
 
@@ -61,9 +61,9 @@ ATT&CK has no Trellix-specific log source names, so these feeds are mapped as *a
 
 Packet captures are hunt material, not a scheduled feed. Mapped only to Network Traffic Content; eventtypes are generated `disabled = 1` with sourcetype `wireshark:json` (tshark `-T ek`). For continuous capture use Splunk Stream or Corelight.
 
-## Feeds you have not ticked
+## Other in-scope feeds
 
-Linux (`auditd`, `linux_syslog`, `linux_osquery`, `sysmon_linux`, `iptables`, `ebpf`), Azure (`azure_entra`, `azure_activity`, `azure_resource`, `m365_defender`), containers (`kubernetes_audit`, `container_runtime`), ESXi (`esxi_syslog`, `vcenter`) and network devices (`netdev_syslog`, `snmp`, `netflow`) are fully mapped with sourcetypes from the standard Splunk add-ons, so ticking them is a config change plus a rebuild. Counts of what each unlocks are in [gaps.md](gaps.md). macOS, M365, AWS, GCP, Okta, SaaS, mobile, OT and PRE intelligence sources are listed in the checklist with `render: false`; they can be brought into scope by editing `config/platforms.yml` and removing the flag.
+Linux (`auditd`, `linux_syslog`, `linux_osquery`, `sysmon_linux`, `iptables`, `ebpf`), Azure (`azure_entra`, `azure_activity`, `azure_resource`, `m365_defender`), containers (`kubernetes_audit`, `container_runtime`), ESXi (`esxi_syslog`, `vcenter`) and network devices (`netdev_syslog`, `snmp`, `netflow`) are fully mapped with sourcetypes from the standard Splunk add-ons and render eventtypes now; analytics for them follow the Windows and network work. What each one gives is in the [checklist](checklist.md). macOS, M365, AWS, GCP, Okta, SaaS, mobile, OT and PRE intelligence sources are listed in the checklist with `render: false`; they can be brought into scope by editing `config/platforms.yml` and removing the flag.
 
 ## Generic names
 

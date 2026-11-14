@@ -48,7 +48,7 @@ attack:
   - field: UserContext
     description: Filter for specific user SIDs or exclude known admin/script accounts.
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: anomaly
   suggested_tuning:
   - element: ImagePath

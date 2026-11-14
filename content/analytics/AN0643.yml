@@ -37,7 +37,7 @@ attack:
   - field: CertificateAgeThreshold
     description: Baseline normal age of certificates; flag very recent or expired certificates
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: anomaly
   suggested_tuning:
   - element: AllowedCertificateAuthorities

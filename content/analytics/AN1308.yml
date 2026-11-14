@@ -48,7 +48,7 @@ attack:
   - field: ExternalIPRange
     description: Scope of external IP ranges considered anomalous for rundll32 network connections.
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: ttp
   suggested_tuning:
   - element: TimeWindow

@@ -65,7 +65,6 @@ derived:
     - Unusual kinit or klist activity
   feeds:
   - feed: corelight
-    have: true
     in_scope: true
     eventtype: mitre_dc0084_active_directory_credential_request__corelight
     search: index=corelight sourcetype=corelight_kerberos
@@ -75,7 +74,6 @@ derived:
     - (added by dc_defaults/curated)
     cim_tags: false
   - feed: wineventlog
-    have: true
     in_scope: true
     eventtype: mitre_dc0084_active_directory_credential_request__wineventlog
     search: index=wineventlog source="XmlWinEventLog:Security" EventCode IN (4768, 4769, 4770, 4771, 4773)

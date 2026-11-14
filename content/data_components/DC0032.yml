@@ -590,44 +590,7 @@ derived:
     channels:
     - System crash or unexpected halt occurring within wiper crash window of the bulk deletion event
   feeds:
-  - feed: solidcore
-    have: true
-    in_scope: true
-    eventtype: mitre_dc0032_process_creation__solidcore
-    search: >-
-      index=epo sourcetype="mcafee:epo:syslog" (threat_name=EXECUTION_DENIED OR event_description=EXECUTION_DENIED)
-      (product_name="Solidcore*")
-    constraint_origin: defaults
-    broad_refs: 0
-    sources:
-    - (added by dc_defaults/curated)
-    cim_tags: false
-  - feed: sysmon
-    have: true
-    in_scope: true
-    eventtype: mitre_dc0032_process_creation__sysmon
-    search: index=sysmon source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode IN (1)
-    constraint_origin: defaults
-    broad_refs: 0
-    sources:
-    - WinEventLog:Sysmon
-    - etw:Microsoft-Windows-Kernel-Process
-    cim_tags: true
-  - feed: wineventlog
-    have: true
-    in_scope: true
-    eventtype: mitre_dc0032_process_creation__wineventlog
-    search: index=wineventlog source="XmlWinEventLog:Security" EventCode IN (4688)
-    constraint_origin: defaults
-    broad_refs: 2
-    sources:
-    - WinEventLog:AppLocker
-    - WinEventLog:Microsoft-Windows-DotNETRuntime
-    - WinEventLog:Security
-    - WinEventLog:System
-    cim_tags: true
   - feed: auditd
-    have: false
     in_scope: true
     eventtype: mitre_dc0032_process_creation__auditd
     search: >-
@@ -641,7 +604,6 @@ derived:
     - ebpf:syscalls
     cim_tags: true
   - feed: container_runtime
-    have: false
     in_scope: true
     eventtype: mitre_dc0032_process_creation__container_runtime
     search: >-
@@ -655,7 +617,6 @@ derived:
     - docker:events
     cim_tags: false
   - feed: ebpf
-    have: false
     in_scope: true
     eventtype: mitre_dc0032_process_creation__ebpf
     search: index=linux sourcetype=falco
@@ -665,7 +626,6 @@ derived:
     - ebpf:syscalls
     cim_tags: false
   - feed: esxi_syslog
-    have: false
     in_scope: true
     eventtype: mitre_dc0032_process_creation__esxi_syslog
     search: index=vmware sourcetype="vmware:esxlog:shell"
@@ -679,7 +639,6 @@ derived:
     - esxi:vobd
     cim_tags: false
   - feed: etw
-    have: false
     in_scope: true
     eventtype: mitre_dc0032_process_creation__etw
     search: index=etw sourcetype="etw:json" (ProviderName="Microsoft-Windows-Kernel-Process")
@@ -689,7 +648,6 @@ derived:
     - etw:Microsoft-Windows-Kernel-Process
     cim_tags: false
   - feed: kubernetes_audit
-    have: false
     in_scope: true
     eventtype: mitre_dc0032_process_creation__kubernetes_audit
     search: >-
@@ -700,7 +658,6 @@ derived:
     - kubernetes:apiserver
     cim_tags: false
   - feed: linux_osquery
-    have: false
     in_scope: true
     eventtype: mitre_dc0032_process_creation__linux_osquery
     search: index=osquery sourcetype="osquery:results" (name=process_events OR name=processes)
@@ -709,8 +666,28 @@ derived:
     sources:
     - linux:osquery
     cim_tags: false
+  - feed: solidcore
+    in_scope: true
+    eventtype: mitre_dc0032_process_creation__solidcore
+    search: >-
+      index=epo sourcetype="mcafee:epo:syslog" (threat_name=EXECUTION_DENIED OR event_description=EXECUTION_DENIED)
+      (product_name="Solidcore*")
+    constraint_origin: defaults
+    broad_refs: 0
+    sources:
+    - (added by dc_defaults/curated)
+    cim_tags: false
+  - feed: sysmon
+    in_scope: true
+    eventtype: mitre_dc0032_process_creation__sysmon
+    search: index=sysmon source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode IN (1)
+    constraint_origin: defaults
+    broad_refs: 0
+    sources:
+    - WinEventLog:Sysmon
+    - etw:Microsoft-Windows-Kernel-Process
+    cim_tags: true
   - feed: sysmon_linux
-    have: false
     in_scope: true
     eventtype: mitre_dc0032_process_creation__sysmon_linux
     search: index=linux sourcetype="sysmon:linux" EventCode IN (1)
@@ -719,8 +696,19 @@ derived:
     sources:
     - linux:Sysmon
     cim_tags: true
+  - feed: wineventlog
+    in_scope: true
+    eventtype: mitre_dc0032_process_creation__wineventlog
+    search: index=wineventlog source="XmlWinEventLog:Security" EventCode IN (4688)
+    constraint_origin: defaults
+    broad_refs: 2
+    sources:
+    - WinEventLog:AppLocker
+    - WinEventLog:Microsoft-Windows-DotNETRuntime
+    - WinEventLog:Security
+    - WinEventLog:System
+    cim_tags: true
   - feed: macos
-    have: false
     in_scope: false
     eventtype: null
     search: null
@@ -734,7 +722,6 @@ derived:
     - macos:unifiedlog
     cim_tags: false
   - feed: mobile
-    have: false
     in_scope: false
     eventtype: null
     search: null
@@ -751,7 +738,7 @@ derived:
 curated:
   justification: >-
     The backbone of endpoint detection: 860 of 1773 analytics read it, and almost every execution, persistence,
-    discovery and defense-evasion strategy starts from a process tree. On your stack Sysmon EID 1 is the primary
+    discovery and defense-evasion strategy starts from a process tree. Where deployed, Sysmon EID 1 is the primary
     feed (image, hashes, parent, command line, user), 4688 is the fallback where Sysmon is absent, and Solidcore
     EXECUTION_DENIED gives a high-signal second opinion on blocked binaries.
   requirements:
@@ -762,7 +749,7 @@ curated:
     4688 is useless without the 'Include command line in process creation events' GPO; also enable Audit Process
     Creation (Detailed Tracking).
   - >-
-    For Linux parity tick auditd with an execve rule (-a always,exit -F arch=b64 -S execve,execveat) and log_format=ENRICHED.
+    For Linux parity collect auditd with an execve rule (-a always,exit -F arch=b64 -S execve,execveat) and log_format=ENRICHED.
   - >-
     ESXi: shell.log is the only process-level record on the hypervisor; forward it and enable ESXi Shell auditing.
   overrides:

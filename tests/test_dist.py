@@ -87,3 +87,22 @@ def test_log_source_index(model):
             assert f"docs/by-log-source.md#{name})" in block, name
     for target in re.findall(r"\]\(((?:analytics|data-components|strategies)/[^)#]+)\)", page):
         assert (DOCS_DIR / target).exists(), target
+
+
+def test_no_site_inventory_published():
+    """The repo describes feeds, never which ones a site has: no have flags, no ticked boxes, no status columns."""
+    from mitremap import ROOT, config
+    assert not any("have" in f for f in config.stack().values()), "config/stack.yml must not carry have flags"
+    generated = [ROOT / "README.md", DOCS_DIR / "checklist.md", DOCS_DIR / "by-log-source.md", DOCS_DIR / "coverage.md",
+                 DOCS_DIR / "gaps.md", DOCS_DIR / "health.md", *sorted((DOCS_DIR / "data-components").glob("*.md"))]
+    for p in generated:
+        text = p.read_text()
+        for marker in ("- [x]", "- [X]", "☑", "☐", "not ticked", "ticked in", "Have |", "feed you have not"):
+            assert marker not in text, f"{p.name}: {marker!r}"
+    checklist = (DOCS_DIR / "checklist.md").read_text()
+    for name, f in config.stack().items():
+        if not f.get("virtual"):
+            assert f"- [ ] **{f['label']}** (`{name}`)" in checklist, name
+    for csv_name in ("mitre_attack_feeds.csv", "mitre_attack_log_sources.csv", "mitre_expected_telemetry.csv"):
+        header = (APP / "lookups" / csv_name).read_text().splitlines()[0].split(",")
+        assert "have" not in header, csv_name

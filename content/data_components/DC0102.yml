@@ -116,7 +116,6 @@ derived:
       from single session
   feeds:
   - feed: corelight
-    have: true
     in_scope: true
     eventtype: mitre_dc0102_network_share_access__corelight
     search: index=corelight sourcetype IN (corelight_smb_files, corelight_smb_mapping)
@@ -127,7 +126,6 @@ derived:
     - fileserver:audit
     cim_tags: false
   - feed: palo_alto
-    have: true
     in_scope: true
     eventtype: mitre_dc0102_network_share_access__palo_alto
     search: index=pan_logs sourcetype="pan:traffic" (app=ms-ds-smb OR app=ms-ds-smbv3 OR app=ms-ds-smbv2)
@@ -137,7 +135,6 @@ derived:
     - NSM:Flow
     cim_tags: false
   - feed: wineventlog
-    have: true
     in_scope: true
     eventtype: mitre_dc0102_network_share_access__wineventlog
     search: >-
@@ -152,7 +149,6 @@ derived:
     - fileserver:audit
     cim_tags: false
   - feed: m365_unified
-    have: false
     in_scope: false
     eventtype: null
     search: null

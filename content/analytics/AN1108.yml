@@ -42,7 +42,7 @@ attack:
   - field: ParentProcess
     description: Different server binaries (e.g., php-cgi.exe, apache.exe) that may launch scripts
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: ttp
   suggested_tuning:
   - element: WebRootPath

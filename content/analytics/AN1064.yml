@@ -40,7 +40,7 @@ attack:
   - field: SuspiciousParentProcessList
     description: Customize based on environment to include LOLBins or admin tools misused for obfuscation
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: anomaly
   suggested_tuning:
   - element: PayloadEntropyThreshold

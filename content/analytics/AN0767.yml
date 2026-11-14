@@ -44,7 +44,7 @@ attack:
   - field: TimeWindow
     description: Deobfuscation typically follows staging/download within a short timeframe
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: ttp
   suggested_tuning:
   - element: ToolName

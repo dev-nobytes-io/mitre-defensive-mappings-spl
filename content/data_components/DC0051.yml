@@ -146,8 +146,36 @@ derived:
     channels:
     - new rule allowing inbound or outbound connections for remote desktop software
   feeds:
+  - feed: esxi_syslog
+    in_scope: true
+    eventtype: mitre_dc0051_firewall_rule_modification__esxi_syslog
+    search: index=vmware sourcetype="vmware:esxlog:hostd" (firewall)
+    constraint_origin: defaults
+    broad_refs: 0
+    sources:
+    - esxi:hostd
+    cim_tags: false
+  - feed: linux_syslog
+    in_scope: true
+    eventtype: mitre_dc0051_firewall_rule_modification__linux_syslog
+    search: >-
+      index=linux sourcetype IN (linux_messages_syslog, linux_secure, syslog) (iptables OR nftables OR ufw OR firewalld)
+    constraint_origin: defaults
+    broad_refs: 2
+    sources:
+    - linux:syslog
+    cim_tags: false
+  - feed: netdev_syslog
+    in_scope: true
+    eventtype: mitre_dc0051_firewall_rule_modification__netdev_syslog
+    search: index=netops sourcetype IN ("cisco:asa", "cisco:ios", syslog)
+    constraint_origin: derived
+    broad_refs: 8
+    sources:
+    - networkdevice:Firewall
+    - networkdevice:cli
+    cim_tags: false
   - feed: palo_alto
-    have: true
     in_scope: true
     eventtype: mitre_dc0051_firewall_rule_modification__palo_alto
     search: index=pan_logs sourcetype="pan:config"
@@ -159,7 +187,6 @@ derived:
     - networkdevice:cli
     cim_tags: true
   - feed: wineventlog
-    have: true
     in_scope: true
     eventtype: mitre_dc0051_firewall_rule_modification__wineventlog
     search: >-
@@ -171,40 +198,7 @@ derived:
     - WinEventLog:Microsoft-Windows-Windows Firewall With Advanced Security/Firewall
     - WinEventLog:Security
     cim_tags: false
-  - feed: esxi_syslog
-    have: false
-    in_scope: true
-    eventtype: mitre_dc0051_firewall_rule_modification__esxi_syslog
-    search: index=vmware sourcetype="vmware:esxlog:hostd" (firewall)
-    constraint_origin: defaults
-    broad_refs: 0
-    sources:
-    - esxi:hostd
-    cim_tags: false
-  - feed: linux_syslog
-    have: false
-    in_scope: true
-    eventtype: mitre_dc0051_firewall_rule_modification__linux_syslog
-    search: >-
-      index=linux sourcetype IN (linux_messages_syslog, linux_secure, syslog) (iptables OR nftables OR ufw OR firewalld)
-    constraint_origin: defaults
-    broad_refs: 2
-    sources:
-    - linux:syslog
-    cim_tags: false
-  - feed: netdev_syslog
-    have: false
-    in_scope: true
-    eventtype: mitre_dc0051_firewall_rule_modification__netdev_syslog
-    search: index=netops sourcetype IN ("cisco:asa", "cisco:ios", syslog)
-    constraint_origin: derived
-    broad_refs: 8
-    sources:
-    - networkdevice:Firewall
-    - networkdevice:cli
-    cim_tags: false
   - feed: aws
-    have: false
     in_scope: false
     eventtype: null
     search: null

@@ -56,7 +56,6 @@ derived:
     - Extension disabled, unloaded, failed to start
   feeds:
   - feed: macos
-    have: false
     in_scope: false
     eventtype: null
     search: null

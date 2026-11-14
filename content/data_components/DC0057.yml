@@ -56,7 +56,6 @@ derived:
     - MICROSOFT.COMPUTE/SNAPSHOTS/WRITE
   feeds:
   - feed: azure_activity
-    have: false
     in_scope: true
     eventtype: mitre_dc0057_snapshot_creation__azure_activity
     search: index=azure sourcetype="mscs:azure:audit" (operationName="Microsoft.Compute/snapshots/write")
@@ -66,7 +65,6 @@ derived:
     - azure:activity
     cim_tags: false
   - feed: esxi_syslog
-    have: false
     in_scope: true
     eventtype: mitre_dc0057_snapshot_creation__esxi_syslog
     search: index=vmware sourcetype IN ("vmware:esxlog:hostd", "vmware:esxlog:vmkernel") (snapshot)
@@ -76,7 +74,6 @@ derived:
     - esxi:vmkernel
     cim_tags: false
   - feed: aws
-    have: false
     in_scope: false
     eventtype: null
     search: null

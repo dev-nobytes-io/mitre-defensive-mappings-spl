@@ -47,7 +47,7 @@ attack:
   - field: UserContext
     description: Tune based on expected privileged user/service account behavior.
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: ttp
   suggested_tuning:
   - element: TargetFilePath

@@ -45,7 +45,7 @@ attack:
   - field: InjectedProcessList
     description: Known high-value targets often abused for injection (e.g., lsass.exe, explorer.exe)
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: anomaly
   suggested_tuning:
   - element: AccessMask

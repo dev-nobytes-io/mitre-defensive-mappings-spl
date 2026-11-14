@@ -2,7 +2,7 @@
 
 [ATT&CK](https://attack.mitre.org/datacomponents/DC0057) · version 2.0 · modified 2025-11-12 · ATT&CK release 20.1
 
-Status: **Ready** (needs a feed you have not ticked) · umbrella eventtype `mitre_dc0057_snapshot_creation`
+Umbrella eventtype `mitre_dc0057_snapshot_creation` over 2 feed(s)
 
 > The process of taking a point-in-time copy of a cloud storage volume (files, settings, configurations, etc.), virtual machine (VM), or database that can be created and deployed in cloud environments.
 
@@ -26,21 +26,17 @@ flowchart LR
   F_azure_activity["Azure Activity Log"]
   LS1 --> F_azure_activity
   F_azure_activity --> ET_azure_activity[/"mitre_dc0057_snapshot_creation__azure_activity"/]
-  class F_azure_activity ready
   F_esxi_syslog --> ET_esxi_syslog[/"mitre_dc0057_snapshot_creation__esxi_syslog"/]
-  class F_esxi_syslog ready
-  classDef live fill:#d4edda,stroke:#2e7d32,color:#1b1b1b
-  classDef ready fill:#fff3cd,stroke:#b26a00,color:#1b1b1b
 ```
 
 ## Requirements
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
+| Feed | Schedule | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `azure_activity` | ready (tick in stack.yml) | sourcetype=`mscs:azure:audit` | `(operationName="Microsoft.Compute/snapshots/write")` | defaults | Splunk Add-on for Microsoft Cloud Services (mscs:azure:audit) |
-| `esxi_syslog` | ready (tick in stack.yml) | sourcetype=`vmware:esxlog:hostd`, sourcetype=`vmware:esxlog:vmkernel` | `(snapshot)` | defaults | Splunk Add-on for VMware ESXi Logs (vmware:esxlog:<log>) |
+| `azure_activity` | scheduled | sourcetype=`mscs:azure:audit` | `(operationName="Microsoft.Compute/snapshots/write")` | defaults | Splunk Add-on for Microsoft Cloud Services (mscs:azure:audit) |
+| `esxi_syslog` | scheduled | sourcetype=`vmware:esxlog:hostd`, sourcetype=`vmware:esxlog:vmkernel` | `(snapshot)` | defaults | Splunk Add-on for VMware ESXi Logs (vmware:esxlog:<log>) |
 
 Collection prerequisites:
 
@@ -56,11 +52,9 @@ Eventtypes (literal constraints, see `dist/splunk/TA-mitre-attack-datacomponents
 ```ini
 [mitre_dc0057_snapshot_creation__azure_activity]
 search = index=azure sourcetype="mscs:azure:audit" (operationName="Microsoft.Compute/snapshots/write")
-disabled = 1
 
 [mitre_dc0057_snapshot_creation__esxi_syslog]
 search = index=vmware sourcetype IN ("vmware:esxlog:hostd", "vmware:esxlog:vmkernel") (snapshot)
-disabled = 1
 
 [mitre_dc0057_snapshot_creation]
 search = eventtype=mitre_dc0057_snapshot_creation__azure_activity OR eventtype=mitre_dc0057_snapshot_creation__esxi_syslog

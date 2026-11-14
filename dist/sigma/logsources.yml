@@ -3,12 +3,6 @@ DC0001:
   name: Scheduled Job Creation
   umbrella_eventtype: mitre_dc0001_scheduled_job_creation
   logsources:
-  - feed: wineventlog
-    eventtype: mitre_dc0001_scheduled_job_creation__wineventlog
-    product: windows
-    services:
-    - security
-    - taskscheduler
   - feed: auditd
     eventtype: mitre_dc0001_scheduled_job_creation__auditd
     product: linux
@@ -35,23 +29,16 @@ DC0001:
     - cron
     - osquery
     - syslog
+  - feed: wineventlog
+    eventtype: mitre_dc0001_scheduled_job_creation__wineventlog
+    product: windows
+    services:
+    - security
+    - taskscheduler
 DC0002:
   name: User Account Authentication
   umbrella_eventtype: mitre_dc0002_user_account_authentication
   logsources:
-  - feed: corelight
-    eventtype: mitre_dc0002_user_account_authentication__corelight
-    product: zeek
-    services:
-    - conn
-  - feed: palo_alto
-    eventtype: mitre_dc0002_user_account_authentication__palo_alto
-    product: paloalto
-  - feed: wineventlog
-    eventtype: mitre_dc0002_user_account_authentication__wineventlog
-    product: windows
-    services:
-    - security
   - feed: auditd
     eventtype: mitre_dc0002_user_account_authentication__auditd
     product: linux
@@ -64,6 +51,11 @@ DC0002:
     product: azure
     services:
     - signinlogs
+  - feed: corelight
+    eventtype: mitre_dc0002_user_account_authentication__corelight
+    product: zeek
+    services:
+    - conn
   - feed: esxi_syslog
     eventtype: mitre_dc0002_user_account_authentication__esxi_syslog
     product: vmware
@@ -83,6 +75,14 @@ DC0002:
     - auditd
     - auth
     - syslog
+  - feed: palo_alto
+    eventtype: mitre_dc0002_user_account_authentication__palo_alto
+    product: paloalto
+  - feed: wineventlog
+    eventtype: mitre_dc0002_user_account_authentication__wineventlog
+    product: windows
+    services:
+    - security
 DC0003:
   name: Malware Metadata
   umbrella_eventtype: mitre_dc0003_malware_metadata
@@ -104,18 +104,6 @@ DC0004:
   name: Firmware Modification
   umbrella_eventtype: mitre_dc0004_firmware_modification
   logsources:
-  - feed: palo_alto
-    eventtype: mitre_dc0004_firmware_modification__palo_alto
-    product: paloalto
-    services:
-    - config
-  - feed: wineventlog
-    eventtype: mitre_dc0004_firmware_modification__wineventlog
-    product: windows
-    services:
-    - etw
-    - microsoft-windows-kernel-boot
-    - osquery
   - feed: auditd
     eventtype: mitre_dc0004_firmware_modification__auditd
     product: linux
@@ -133,6 +121,11 @@ DC0004:
     product: cisco
     services:
     - syslog
+  - feed: palo_alto
+    eventtype: mitre_dc0004_firmware_modification__palo_alto
+    product: paloalto
+    services:
+    - config
   - feed: snmp
     eventtype: mitre_dc0004_firmware_modification__snmp
     product: cisco
@@ -145,16 +138,17 @@ DC0004:
     - etw
     - microsoft-windows-kernel-boot
     - osquery
+  - feed: wineventlog
+    eventtype: mitre_dc0004_firmware_modification__wineventlog
+    product: windows
+    services:
+    - etw
+    - microsoft-windows-kernel-boot
+    - osquery
 DC0005:
   name: Scheduled Job Metadata
   umbrella_eventtype: mitre_dc0005_scheduled_job_metadata
   logsources:
-  - feed: wineventlog
-    eventtype: mitre_dc0005_scheduled_job_metadata__wineventlog
-    product: windows
-    services:
-    - system
-    - taskscheduler
   - feed: esxi_syslog
     eventtype: mitre_dc0005_scheduled_job_metadata__esxi_syslog
     product: vmware
@@ -165,24 +159,35 @@ DC0005:
     product: linux
     services:
     - cron
+  - feed: wineventlog
+    eventtype: mitre_dc0005_scheduled_job_metadata__wineventlog
+    product: windows
+    services:
+    - system
+    - taskscheduler
 DC0006:
   name: Web Credential Creation
   umbrella_eventtype: mitre_dc0006_web_credential_creation
   logsources:
-  - feed: wineventlog
-    eventtype: mitre_dc0006_web_credential_creation__wineventlog
-    product: windows
-    services:
-    - adfs
   - feed: azure_entra
     eventtype: mitre_dc0006_web_credential_creation__azure_entra
     product: azure
     services:
     - signinlogs
+  - feed: wineventlog
+    eventtype: mitre_dc0006_web_credential_creation__wineventlog
+    product: windows
+    services:
+    - adfs
 DC0007:
   name: Web Credential Usage
   umbrella_eventtype: mitre_dc0007_web_credential_usage
   logsources:
+  - feed: azure_entra
+    eventtype: mitre_dc0007_web_credential_usage__azure_entra
+    product: azure
+    services:
+    - signinlogs
   - feed: corelight
     eventtype: mitre_dc0007_web_credential_usage__corelight
     product: zeek
@@ -191,11 +196,6 @@ DC0007:
   - feed: palo_alto
     eventtype: mitre_dc0007_web_credential_usage__palo_alto
     product: paloalto
-  - feed: azure_entra
-    eventtype: mitre_dc0007_web_credential_usage__azure_entra
-    product: azure
-    services:
-    - signinlogs
 DC0008:
   name: WMI Creation
   umbrella_eventtype: mitre_dc0008_wmi_creation
@@ -220,25 +220,20 @@ DC0009:
   name: User Account Deletion
   umbrella_eventtype: mitre_dc0009_user_account_deletion
   logsources:
-  - feed: wineventlog
-    eventtype: mitre_dc0009_user_account_deletion__wineventlog
-    product: windows
-    services:
-    - security
   - feed: esxi_syslog
     eventtype: mitre_dc0009_user_account_deletion__esxi_syslog
     product: vmware
     services:
     - hostd
+  - feed: wineventlog
+    eventtype: mitre_dc0009_user_account_deletion__wineventlog
+    product: windows
+    services:
+    - security
 DC0010:
   name: User Account Modification
   umbrella_eventtype: mitre_dc0010_user_account_modification
   logsources:
-  - feed: wineventlog
-    eventtype: mitre_dc0010_user_account_modification__wineventlog
-    product: windows
-    services:
-    - security
   - feed: auditd
     eventtype: mitre_dc0010_user_account_modification__auditd
     product: linux
@@ -270,6 +265,11 @@ DC0010:
     services:
     - auditd
     - syslog
+  - feed: wineventlog
+    eventtype: mitre_dc0010_user_account_modification__wineventlog
+    product: windows
+    services:
+    - security
 DC0011:
   name: Malware Content
   umbrella_eventtype: mitre_dc0011_malware_content
@@ -287,27 +287,21 @@ DC0012:
   name: Scheduled Job Modification
   umbrella_eventtype: mitre_dc0012_scheduled_job_modification
   logsources:
+  - feed: auditd
+    eventtype: mitre_dc0012_scheduled_job_modification__auditd
+    product: linux
+    services:
+    - auditd
   - feed: wineventlog
     eventtype: mitre_dc0012_scheduled_job_modification__wineventlog
     product: windows
     services:
     - security
     - taskscheduler
-  - feed: auditd
-    eventtype: mitre_dc0012_scheduled_job_modification__auditd
-    product: linux
-    services:
-    - auditd
 DC0013:
   name: User Account Metadata
   umbrella_eventtype: mitre_dc0013_user_account_metadata
   logsources:
-  - feed: wineventlog
-    eventtype: mitre_dc0013_user_account_metadata__wineventlog
-    product: windows
-    services:
-    - osquery
-    - security
   - feed: auditd
     eventtype: mitre_dc0013_user_account_metadata__auditd
     product: linux
@@ -338,18 +332,16 @@ DC0013:
     services:
     - osquery
     - security
+  - feed: wineventlog
+    eventtype: mitre_dc0013_user_account_metadata__wineventlog
+    product: windows
+    services:
+    - osquery
+    - security
 DC0014:
   name: User Account Creation
   umbrella_eventtype: mitre_dc0014_user_account_creation
   logsources:
-  - feed: palo_alto
-    eventtype: mitre_dc0014_user_account_creation__palo_alto
-    product: paloalto
-  - feed: wineventlog
-    eventtype: mitre_dc0014_user_account_creation__wineventlog
-    product: windows
-    services:
-    - security
   - feed: auditd
     eventtype: mitre_dc0014_user_account_creation__auditd
     product: linux
@@ -365,6 +357,14 @@ DC0014:
     product: linux
     services:
     - auditd
+  - feed: palo_alto
+    eventtype: mitre_dc0014_user_account_creation__palo_alto
+    product: paloalto
+  - feed: wineventlog
+    eventtype: mitre_dc0014_user_account_creation__wineventlog
+    product: windows
+    services:
+    - security
 DC0015:
   name: Image Creation
   umbrella_eventtype: mitre_dc0015_image_creation
@@ -383,6 +383,23 @@ DC0016:
   name: Module Load
   umbrella_eventtype: mitre_dc0016_module_load
   logsources:
+  - feed: auditd
+    eventtype: mitre_dc0016_module_load__auditd
+    product: linux
+    services:
+    - auditd
+    - osquery
+    - syslog
+    - sysmon
+  - feed: etw
+    eventtype: mitre_dc0016_module_load__etw
+    product: windows
+    categories:
+    - image_load
+    services:
+    - application
+    - security
+    - sysmon
   - feed: solidcore
     eventtype: mitre_dc0016_module_load__solidcore
     product: windows
@@ -401,6 +418,14 @@ DC0016:
     - application
     - security
     - sysmon
+  - feed: sysmon_linux
+    eventtype: mitre_dc0016_module_load__sysmon_linux
+    product: linux
+    services:
+    - auditd
+    - osquery
+    - syslog
+    - sysmon
   - feed: wineventlog
     eventtype: mitre_dc0016_module_load__wineventlog
     product: windows
@@ -409,31 +434,6 @@ DC0016:
     services:
     - application
     - security
-    - sysmon
-  - feed: auditd
-    eventtype: mitre_dc0016_module_load__auditd
-    product: linux
-    services:
-    - auditd
-    - osquery
-    - syslog
-    - sysmon
-  - feed: etw
-    eventtype: mitre_dc0016_module_load__etw
-    product: windows
-    categories:
-    - image_load
-    services:
-    - application
-    - security
-    - sysmon
-  - feed: sysmon_linux
-    eventtype: mitre_dc0016_module_load__sysmon_linux
-    product: linux
-    services:
-    - auditd
-    - osquery
-    - syslog
     - sysmon
 DC0017:
   name: Cloud Storage Enumeration
@@ -448,42 +448,6 @@ DC0018:
   name: Host Status
   umbrella_eventtype: mitre_dc0018_host_status
   logsources:
-  - feed: palo_alto
-    eventtype: mitre_dc0018_host_status__palo_alto
-    product: paloalto
-  - feed: sysmon
-    eventtype: mitre_dc0018_host_status__sysmon
-    product: windows
-    categories:
-    - sysmon_status
-    services:
-    - microsoft-windows-tcpip
-    - perfmon
-    - security
-    - sysmon
-    - system
-  - feed: trellix_epo
-    eventtype: mitre_dc0018_host_status__trellix_epo
-    product: windows
-    categories:
-    - sysmon_status
-    services:
-    - microsoft-windows-tcpip
-    - perfmon
-    - security
-    - sysmon
-    - system
-  - feed: wineventlog
-    eventtype: mitre_dc0018_host_status__wineventlog
-    product: windows
-    categories:
-    - sysmon_status
-    services:
-    - microsoft-windows-tcpip
-    - perfmon
-    - security
-    - sysmon
-    - system
   - feed: auditd
     eventtype: mitre_dc0018_host_status__auditd
     product: linux
@@ -509,8 +473,44 @@ DC0018:
     - auditd
     - osquery
     - syslog
+  - feed: palo_alto
+    eventtype: mitre_dc0018_host_status__palo_alto
+    product: paloalto
+  - feed: sysmon
+    eventtype: mitre_dc0018_host_status__sysmon
+    product: windows
+    categories:
+    - sysmon_status
+    services:
+    - microsoft-windows-tcpip
+    - perfmon
+    - security
+    - sysmon
+    - system
+  - feed: trellix_epo
+    eventtype: mitre_dc0018_host_status__trellix_epo
+    product: windows
+    categories:
+    - sysmon_status
+    services:
+    - microsoft-windows-tcpip
+    - perfmon
+    - security
+    - sysmon
+    - system
   - feed: windows_perfmon
     eventtype: mitre_dc0018_host_status__windows_perfmon
+    product: windows
+    categories:
+    - sysmon_status
+    services:
+    - microsoft-windows-tcpip
+    - perfmon
+    - security
+    - sysmon
+    - system
+  - feed: wineventlog
+    eventtype: mitre_dc0018_host_status__wineventlog
     product: windows
     categories:
     - sysmon_status
@@ -533,14 +533,6 @@ DC0020:
   name: Process Modification
   umbrella_eventtype: mitre_dc0020_process_modification
   logsources:
-  - feed: sysmon
-    eventtype: mitre_dc0020_process_modification__sysmon
-    product: windows
-    categories:
-    - process_tampering
-    services:
-    - etw
-    - sysmon
   - feed: auditd
     eventtype: mitre_dc0020_process_modification__auditd
     product: linux
@@ -561,32 +553,18 @@ DC0020:
     services:
     - etw
     - sysmon
+  - feed: sysmon
+    eventtype: mitre_dc0020_process_modification__sysmon
+    product: windows
+    categories:
+    - process_tampering
+    services:
+    - etw
+    - sysmon
 DC0021:
   name: OS API Execution
   umbrella_eventtype: mitre_dc0021_os_api_execution
   logsources:
-  - feed: sysmon
-    eventtype: mitre_dc0021_os_api_execution__sysmon
-    product: windows
-    categories:
-    - clipboard_capture
-    services:
-    - application
-    - edr
-    - etw
-    - microsoft-windows-com-operational
-    - security
-  - feed: wineventlog
-    eventtype: mitre_dc0021_os_api_execution__wineventlog
-    product: windows
-    categories:
-    - clipboard_capture
-    services:
-    - application
-    - edr
-    - etw
-    - microsoft-windows-com-operational
-    - security
   - feed: auditd
     eventtype: mitre_dc0021_os_api_execution__auditd
     product: linux
@@ -615,6 +593,28 @@ DC0021:
     - etw
     - microsoft-windows-com-operational
     - security
+  - feed: sysmon
+    eventtype: mitre_dc0021_os_api_execution__sysmon
+    product: windows
+    categories:
+    - clipboard_capture
+    services:
+    - application
+    - edr
+    - etw
+    - microsoft-windows-com-operational
+    - security
+  - feed: wineventlog
+    eventtype: mitre_dc0021_os_api_execution__wineventlog
+    product: windows
+    categories:
+    - clipboard_capture
+    services:
+    - application
+    - edr
+    - etw
+    - microsoft-windows-com-operational
+    - security
 DC0028:
   name: Image Metadata
   umbrella_eventtype: mitre_dc0028_image_metadata
@@ -628,39 +628,6 @@ DC0029:
   name: Script Execution
   umbrella_eventtype: mitre_dc0029_script_execution
   logsources:
-  - feed: powershell_logging
-    eventtype: mitre_dc0029_script_execution__powershell_logging
-    product: windows
-    categories:
-    - ps_script
-    - ps_module
-    services:
-    - amsi
-    - application
-    - powershell
-    - system
-  - feed: trellix_epo
-    eventtype: mitre_dc0029_script_execution__trellix_epo
-    product: windows
-    categories:
-    - ps_script
-    - ps_module
-    services:
-    - amsi
-    - application
-    - powershell
-    - system
-  - feed: wineventlog
-    eventtype: mitre_dc0029_script_execution__wineventlog
-    product: windows
-    categories:
-    - ps_script
-    - ps_module
-    services:
-    - amsi
-    - application
-    - powershell
-    - system
   - feed: auditd
     eventtype: mitre_dc0029_script_execution__auditd
     product: linux
@@ -686,6 +653,39 @@ DC0029:
     - vmkernel
   - feed: etw
     eventtype: mitre_dc0029_script_execution__etw
+    product: windows
+    categories:
+    - ps_script
+    - ps_module
+    services:
+    - amsi
+    - application
+    - powershell
+    - system
+  - feed: powershell_logging
+    eventtype: mitre_dc0029_script_execution__powershell_logging
+    product: windows
+    categories:
+    - ps_script
+    - ps_module
+    services:
+    - amsi
+    - application
+    - powershell
+    - system
+  - feed: trellix_epo
+    eventtype: mitre_dc0029_script_execution__trellix_epo
+    product: windows
+    categories:
+    - ps_script
+    - ps_module
+    services:
+    - amsi
+    - application
+    - powershell
+    - system
+  - feed: wineventlog
+    eventtype: mitre_dc0029_script_execution__wineventlog
     product: windows
     categories:
     - ps_script
@@ -721,42 +721,6 @@ DC0032:
   name: Process Creation
   umbrella_eventtype: mitre_dc0032_process_creation
   logsources:
-  - feed: solidcore
-    eventtype: mitre_dc0032_process_creation__solidcore
-    product: windows
-    categories:
-    - process_creation
-    services:
-    - applocker
-    - etw
-    - microsoft-windows-dotnetruntime
-    - security
-    - sysmon
-    - system
-  - feed: sysmon
-    eventtype: mitre_dc0032_process_creation__sysmon
-    product: windows
-    categories:
-    - process_creation
-    services:
-    - applocker
-    - etw
-    - microsoft-windows-dotnetruntime
-    - security
-    - sysmon
-    - system
-  - feed: wineventlog
-    eventtype: mitre_dc0032_process_creation__wineventlog
-    product: windows
-    categories:
-    - process_creation
-    services:
-    - applocker
-    - etw
-    - microsoft-windows-dotnetruntime
-    - security
-    - sysmon
-    - system
   - feed: auditd
     eventtype: mitre_dc0032_process_creation__auditd
     product: linux
@@ -819,6 +783,30 @@ DC0032:
     - osquery
     - syslog
     - sysmon
+  - feed: solidcore
+    eventtype: mitre_dc0032_process_creation__solidcore
+    product: windows
+    categories:
+    - process_creation
+    services:
+    - applocker
+    - etw
+    - microsoft-windows-dotnetruntime
+    - security
+    - sysmon
+    - system
+  - feed: sysmon
+    eventtype: mitre_dc0032_process_creation__sysmon
+    product: windows
+    categories:
+    - process_creation
+    services:
+    - applocker
+    - etw
+    - microsoft-windows-dotnetruntime
+    - security
+    - sysmon
+    - system
   - feed: sysmon_linux
     eventtype: mitre_dc0032_process_creation__sysmon_linux
     product: linux
@@ -829,17 +817,22 @@ DC0032:
     - osquery
     - syslog
     - sysmon
+  - feed: wineventlog
+    eventtype: mitre_dc0032_process_creation__wineventlog
+    product: windows
+    categories:
+    - process_creation
+    services:
+    - applocker
+    - etw
+    - microsoft-windows-dotnetruntime
+    - security
+    - sysmon
+    - system
 DC0033:
   name: Process Termination
   umbrella_eventtype: mitre_dc0033_process_termination
   logsources:
-  - feed: sysmon
-    eventtype: mitre_dc0033_process_termination__sysmon
-    product: windows
-    categories:
-    - process_termination
-    services:
-    - sysmon
   - feed: auditd
     eventtype: mitre_dc0033_process_termination__auditd
     product: linux
@@ -857,52 +850,17 @@ DC0033:
     product: vmware
     services:
     - hostd
+  - feed: sysmon
+    eventtype: mitre_dc0033_process_termination__sysmon
+    product: windows
+    categories:
+    - process_termination
+    services:
+    - sysmon
 DC0034:
   name: Process Metadata
   umbrella_eventtype: mitre_dc0034_process_metadata
   logsources:
-  - feed: powershell_logging
-    eventtype: mitre_dc0034_process_metadata__powershell_logging
-    product: windows
-    services:
-    - applocker
-    - codeintegrity-operational
-    - edr
-    - etw
-    - microsoft-windows-deviceguard-operational
-    - microsoft-windows-security-mitigations-kernelmode
-    - microsoft-windows-smartappcontrol-operational
-    - microsoft-windows-windows-camera-frame-server-operational
-    - powershell
-    - sysmon
-  - feed: sysmon
-    eventtype: mitre_dc0034_process_metadata__sysmon
-    product: windows
-    services:
-    - applocker
-    - codeintegrity-operational
-    - edr
-    - etw
-    - microsoft-windows-deviceguard-operational
-    - microsoft-windows-security-mitigations-kernelmode
-    - microsoft-windows-smartappcontrol-operational
-    - microsoft-windows-windows-camera-frame-server-operational
-    - powershell
-    - sysmon
-  - feed: wineventlog
-    eventtype: mitre_dc0034_process_metadata__wineventlog
-    product: windows
-    services:
-    - applocker
-    - codeintegrity-operational
-    - edr
-    - etw
-    - microsoft-windows-deviceguard-operational
-    - microsoft-windows-security-mitigations-kernelmode
-    - microsoft-windows-smartappcontrol-operational
-    - microsoft-windows-windows-camera-frame-server-operational
-    - powershell
-    - sysmon
   - feed: auditd
     eventtype: mitre_dc0034_process_metadata__auditd
     product: linux
@@ -945,10 +903,69 @@ DC0034:
     - auditd
     - osquery
     - syslog
+  - feed: powershell_logging
+    eventtype: mitre_dc0034_process_metadata__powershell_logging
+    product: windows
+    services:
+    - applocker
+    - codeintegrity-operational
+    - edr
+    - etw
+    - microsoft-windows-deviceguard-operational
+    - microsoft-windows-security-mitigations-kernelmode
+    - microsoft-windows-smartappcontrol-operational
+    - microsoft-windows-windows-camera-frame-server-operational
+    - powershell
+    - sysmon
+  - feed: sysmon
+    eventtype: mitre_dc0034_process_metadata__sysmon
+    product: windows
+    services:
+    - applocker
+    - codeintegrity-operational
+    - edr
+    - etw
+    - microsoft-windows-deviceguard-operational
+    - microsoft-windows-security-mitigations-kernelmode
+    - microsoft-windows-smartappcontrol-operational
+    - microsoft-windows-windows-camera-frame-server-operational
+    - powershell
+    - sysmon
+  - feed: wineventlog
+    eventtype: mitre_dc0034_process_metadata__wineventlog
+    product: windows
+    services:
+    - applocker
+    - codeintegrity-operational
+    - edr
+    - etw
+    - microsoft-windows-deviceguard-operational
+    - microsoft-windows-security-mitigations-kernelmode
+    - microsoft-windows-smartappcontrol-operational
+    - microsoft-windows-windows-camera-frame-server-operational
+    - powershell
+    - sysmon
 DC0035:
   name: Process Access
   umbrella_eventtype: mitre_dc0035_process_access
   logsources:
+  - feed: auditd
+    eventtype: mitre_dc0035_process_access__auditd
+    product: linux
+    services:
+    - auditd
+    - osquery
+    - syslog
+  - feed: edr_telemetry
+    eventtype: mitre_dc0035_process_access__edr_telemetry
+    product: windows
+    categories:
+    - process_access
+    - create_remote_thread
+    services:
+    - edr
+    - security
+    - sysmon
   - feed: sysmon
     eventtype: mitre_dc0035_process_access__sysmon
     product: windows
@@ -961,23 +978,6 @@ DC0035:
     - sysmon
   - feed: wineventlog
     eventtype: mitre_dc0035_process_access__wineventlog
-    product: windows
-    categories:
-    - process_access
-    - create_remote_thread
-    services:
-    - edr
-    - security
-    - sysmon
-  - feed: auditd
-    eventtype: mitre_dc0035_process_access__auditd
-    product: linux
-    services:
-    - auditd
-    - osquery
-    - syslog
-  - feed: edr_telemetry
-    eventtype: mitre_dc0035_process_access__edr_telemetry
     product: windows
     categories:
     - process_access
@@ -1008,39 +1008,6 @@ DC0038:
   name: Application Log Content
   umbrella_eventtype: mitre_dc0038_application_log_content
   logsources:
-  - feed: corelight
-    eventtype: mitre_dc0038_application_log_content__corelight
-    product: zeek
-    services:
-    - conn
-  - feed: palo_alto
-    eventtype: mitre_dc0038_application_log_content__palo_alto
-    product: paloalto
-    services:
-    - globalprotect
-    - threat
-  - feed: trellix_epo
-    eventtype: mitre_dc0038_application_log_content__trellix_epo
-    product: windows
-    categories:
-    - webserver
-    services:
-    - application
-    - edr
-    - iis
-    - security
-    - system
-  - feed: wineventlog
-    eventtype: mitre_dc0038_application_log_content__wineventlog
-    product: windows
-    categories:
-    - webserver
-    services:
-    - application
-    - edr
-    - iis
-    - security
-    - system
   - feed: azure_activity
     eventtype: mitre_dc0038_application_log_content__azure_activity
     product: azure
@@ -1061,6 +1028,11 @@ DC0038:
     services:
     - daemon
     - events
+  - feed: corelight
+    eventtype: mitre_dc0038_application_log_content__corelight
+    product: zeek
+    services:
+    - conn
   - feed: esxi_syslog
     eventtype: mitre_dc0038_application_log_content__esxi_syslog
     product: vmware
@@ -1094,6 +1066,23 @@ DC0038:
     - auth
     - syslog
     - systemd
+  - feed: palo_alto
+    eventtype: mitre_dc0038_application_log_content__palo_alto
+    product: paloalto
+    services:
+    - globalprotect
+    - threat
+  - feed: trellix_epo
+    eventtype: mitre_dc0038_application_log_content__trellix_epo
+    product: windows
+    categories:
+    - webserver
+    services:
+    - application
+    - edr
+    - iis
+    - security
+    - system
   - feed: vcenter
     eventtype: mitre_dc0038_application_log_content__vcenter
     product: vmware
@@ -1102,10 +1091,35 @@ DC0038:
     - hostd
     - vmkernel
     - vpxd
+  - feed: wineventlog
+    eventtype: mitre_dc0038_application_log_content__wineventlog
+    product: windows
+    categories:
+    - webserver
+    services:
+    - application
+    - edr
+    - iis
+    - security
+    - system
 DC0039:
   name: File Creation
   umbrella_eventtype: mitre_dc0039_file_creation
   logsources:
+  - feed: auditd
+    eventtype: mitre_dc0039_file_creation__auditd
+    product: linux
+    categories:
+    - file_event
+    services:
+    - auditd
+    - osquery
+    - sysmon
+  - feed: esxi_syslog
+    eventtype: mitre_dc0039_file_creation__esxi_syslog
+    product: vmware
+    services:
+    - vmkernel
   - feed: solidcore
     eventtype: mitre_dc0039_file_creation__solidcore
     product: windows
@@ -1124,29 +1138,6 @@ DC0039:
     services:
     - microsoft-windows-shell-core
     - sysmon
-  - feed: wineventlog
-    eventtype: mitre_dc0039_file_creation__wineventlog
-    product: windows
-    categories:
-    - file_event
-    - create_stream_hash
-    services:
-    - microsoft-windows-shell-core
-    - sysmon
-  - feed: auditd
-    eventtype: mitre_dc0039_file_creation__auditd
-    product: linux
-    categories:
-    - file_event
-    services:
-    - auditd
-    - osquery
-    - sysmon
-  - feed: esxi_syslog
-    eventtype: mitre_dc0039_file_creation__esxi_syslog
-    product: vmware
-    services:
-    - vmkernel
   - feed: sysmon_linux
     eventtype: mitre_dc0039_file_creation__sysmon_linux
     product: linux
@@ -1156,10 +1147,33 @@ DC0039:
     - auditd
     - osquery
     - sysmon
+  - feed: wineventlog
+    eventtype: mitre_dc0039_file_creation__wineventlog
+    product: windows
+    categories:
+    - file_event
+    - create_stream_hash
+    services:
+    - microsoft-windows-shell-core
+    - sysmon
 DC0040:
   name: File Deletion
   umbrella_eventtype: mitre_dc0040_file_deletion
   logsources:
+  - feed: auditd
+    eventtype: mitre_dc0040_file_deletion__auditd
+    product: linux
+    categories:
+    - file_delete
+    services:
+    - auditd
+    - sysmon
+  - feed: esxi_syslog
+    eventtype: mitre_dc0040_file_deletion__esxi_syslog
+    product: vmware
+    services:
+    - hostd
+    - shell
   - feed: solidcore
     eventtype: mitre_dc0040_file_deletion__solidcore
     product: windows
@@ -1178,6 +1192,14 @@ DC0040:
     - microsoft-windows-backup
     - sysmon
     - system
+  - feed: sysmon_linux
+    eventtype: mitre_dc0040_file_deletion__sysmon_linux
+    product: linux
+    categories:
+    - file_delete
+    services:
+    - auditd
+    - sysmon
   - feed: wineventlog
     eventtype: mitre_dc0040_file_deletion__wineventlog
     product: windows
@@ -1187,51 +1209,10 @@ DC0040:
     - microsoft-windows-backup
     - sysmon
     - system
-  - feed: auditd
-    eventtype: mitre_dc0040_file_deletion__auditd
-    product: linux
-    categories:
-    - file_delete
-    services:
-    - auditd
-    - sysmon
-  - feed: esxi_syslog
-    eventtype: mitre_dc0040_file_deletion__esxi_syslog
-    product: vmware
-    services:
-    - hostd
-    - shell
-  - feed: sysmon_linux
-    eventtype: mitre_dc0040_file_deletion__sysmon_linux
-    product: linux
-    categories:
-    - file_delete
-    services:
-    - auditd
-    - sysmon
 DC0041:
   name: Service Metadata
   umbrella_eventtype: mitre_dc0041_service_metadata
   logsources:
-  - feed: palo_alto
-    eventtype: mitre_dc0041_service_metadata__palo_alto
-    product: paloalto
-    services:
-    - config
-  - feed: sysmon
-    eventtype: mitre_dc0041_service_metadata__sysmon
-    product: windows
-    services:
-    - sysmon
-    - system
-    - winrm
-  - feed: wineventlog
-    eventtype: mitre_dc0041_service_metadata__wineventlog
-    product: windows
-    services:
-    - sysmon
-    - system
-    - winrm
   - feed: auditd
     eventtype: mitre_dc0041_service_metadata__auditd
     product: linux
@@ -1251,15 +1232,29 @@ DC0041:
     - auditd
     - osquery
     - syslog
+  - feed: palo_alto
+    eventtype: mitre_dc0041_service_metadata__palo_alto
+    product: paloalto
+    services:
+    - config
+  - feed: sysmon
+    eventtype: mitre_dc0041_service_metadata__sysmon
+    product: windows
+    services:
+    - sysmon
+    - system
+    - winrm
+  - feed: wineventlog
+    eventtype: mitre_dc0041_service_metadata__wineventlog
+    product: windows
+    services:
+    - sysmon
+    - system
+    - winrm
 DC0042:
   name: Drive Creation
   umbrella_eventtype: mitre_dc0042_drive_creation
   logsources:
-  - feed: wineventlog
-    eventtype: mitre_dc0042_drive_creation__wineventlog
-    product: windows
-    services:
-    - system
   - feed: auditd
     eventtype: mitre_dc0042_drive_creation__auditd
     product: linux
@@ -1276,21 +1271,26 @@ DC0042:
     - osquery
     - syslog
     - systemd
+  - feed: wineventlog
+    eventtype: mitre_dc0042_drive_creation__wineventlog
+    product: windows
+    services:
+    - system
 DC0043:
   name: Firewall Disable
   umbrella_eventtype: mitre_dc0043_firewall_disable
   logsources:
+  - feed: esxi_syslog
+    eventtype: mitre_dc0043_firewall_disable__esxi_syslog
+    product: vmware
+    services:
+    - vmkernel
   - feed: palo_alto
     eventtype: mitre_dc0043_firewall_disable__palo_alto
     product: paloalto
   - feed: wineventlog
     eventtype: mitre_dc0043_firewall_disable__wineventlog
     product: windows
-  - feed: esxi_syslog
-    eventtype: mitre_dc0043_firewall_disable__esxi_syslog
-    product: vmware
-    services:
-    - vmkernel
 DC0044:
   name: Firewall Enumeration
   umbrella_eventtype: mitre_dc0044_firewall_enumeration
@@ -1366,15 +1366,15 @@ DC0050:
   name: Windows Registry Key Access
   umbrella_eventtype: mitre_dc0050_windows_registry_key_access
   logsources:
-  - feed: wineventlog
-    eventtype: mitre_dc0050_windows_registry_key_access__wineventlog
+  - feed: autoruns
+    eventtype: mitre_dc0050_windows_registry_key_access__autoruns
     product: windows
     services:
     - autoruns
     - edr
     - security
-  - feed: autoruns
-    eventtype: mitre_dc0050_windows_registry_key_access__autoruns
+  - feed: wineventlog
+    eventtype: mitre_dc0050_windows_registry_key_access__wineventlog
     product: windows
     services:
     - autoruns
@@ -1384,18 +1384,6 @@ DC0051:
   name: Firewall Rule Modification
   umbrella_eventtype: mitre_dc0051_firewall_rule_modification
   logsources:
-  - feed: palo_alto
-    eventtype: mitre_dc0051_firewall_rule_modification__palo_alto
-    product: paloalto
-    services:
-    - config
-    - traffic
-  - feed: wineventlog
-    eventtype: mitre_dc0051_firewall_rule_modification__wineventlog
-    product: windows
-    services:
-    - firewall-as
-    - security
   - feed: esxi_syslog
     eventtype: mitre_dc0051_firewall_rule_modification__esxi_syslog
     product: vmware
@@ -1411,6 +1399,18 @@ DC0051:
     product: cisco
     services:
     - aaa
+  - feed: palo_alto
+    eventtype: mitre_dc0051_firewall_rule_modification__palo_alto
+    product: paloalto
+    services:
+    - config
+    - traffic
+  - feed: wineventlog
+    eventtype: mitre_dc0051_firewall_rule_modification__wineventlog
+    product: windows
+    services:
+    - firewall-as
+    - security
 DC0053:
   name: Firewall Metadata
   umbrella_eventtype: mitre_dc0053_firewall_metadata
@@ -1427,13 +1427,6 @@ DC0054:
   name: Drive Access
   umbrella_eventtype: mitre_dc0054_drive_access
   logsources:
-  - feed: sysmon
-    eventtype: mitre_dc0054_drive_access__sysmon
-    product: windows
-    categories:
-    - raw_access_thread
-    services:
-    - sysmon
   - feed: auditd
     eventtype: mitre_dc0054_drive_access__auditd
     product: linux
@@ -1441,28 +1434,17 @@ DC0054:
     - auditd
     - osquery
     - syslog
+  - feed: sysmon
+    eventtype: mitre_dc0054_drive_access__sysmon
+    product: windows
+    categories:
+    - raw_access_thread
+    services:
+    - sysmon
 DC0055:
   name: File Access
   umbrella_eventtype: mitre_dc0055_file_access
   logsources:
-  - feed: solidcore
-    eventtype: mitre_dc0055_file_access__solidcore
-    product: windows
-    categories:
-    - file_access
-    services:
-    - security
-    - sysmon
-    - windefend
-  - feed: wineventlog
-    eventtype: mitre_dc0055_file_access__wineventlog
-    product: windows
-    categories:
-    - file_access
-    services:
-    - security
-    - sysmon
-    - windefend
   - feed: auditd
     eventtype: mitre_dc0055_file_access__auditd
     product: linux
@@ -1493,6 +1475,24 @@ DC0055:
     product: kubernetes
     services:
     - audit
+  - feed: solidcore
+    eventtype: mitre_dc0055_file_access__solidcore
+    product: windows
+    categories:
+    - file_access
+    services:
+    - security
+    - sysmon
+    - windefend
+  - feed: wineventlog
+    eventtype: mitre_dc0055_file_access__wineventlog
+    product: windows
+    categories:
+    - file_access
+    services:
+    - security
+    - sysmon
+    - windefend
 DC0056:
   name: Windows Registry Key Creation
   umbrella_eventtype: mitre_dc0056_windows_registry_key_creation
@@ -1539,11 +1539,42 @@ DC0059:
   name: File Metadata
   umbrella_eventtype: mitre_dc0059_file_metadata
   logsources:
+  - feed: auditd
+    eventtype: mitre_dc0059_file_metadata__auditd
+    product: linux
+    services:
+    - auditd
+    - osquery
+    - syslog
   - feed: corelight
     eventtype: mitre_dc0059_file_metadata__corelight
     product: zeek
     services:
     - conn
+  - feed: ebpf
+    eventtype: mitre_dc0059_file_metadata__ebpf
+    product: linux
+    services:
+    - auditd
+    - osquery
+    - syslog
+  - feed: edr_telemetry
+    eventtype: mitre_dc0059_file_metadata__edr_telemetry
+    product: windows
+    services:
+    - codeintegrity-operational
+    - edr
+    - security
+    - setup
+    - sysmon
+    - windefend
+  - feed: linux_osquery
+    eventtype: mitre_dc0059_file_metadata__linux_osquery
+    product: linux
+    services:
+    - auditd
+    - osquery
+    - syslog
   - feed: palo_alto
     eventtype: mitre_dc0059_file_metadata__palo_alto
     product: paloalto
@@ -1587,47 +1618,10 @@ DC0059:
     - setup
     - sysmon
     - windefend
-  - feed: auditd
-    eventtype: mitre_dc0059_file_metadata__auditd
-    product: linux
-    services:
-    - auditd
-    - osquery
-    - syslog
-  - feed: ebpf
-    eventtype: mitre_dc0059_file_metadata__ebpf
-    product: linux
-    services:
-    - auditd
-    - osquery
-    - syslog
-  - feed: edr_telemetry
-    eventtype: mitre_dc0059_file_metadata__edr_telemetry
-    product: windows
-    services:
-    - codeintegrity-operational
-    - edr
-    - security
-    - setup
-    - sysmon
-    - windefend
-  - feed: linux_osquery
-    eventtype: mitre_dc0059_file_metadata__linux_osquery
-    product: linux
-    services:
-    - auditd
-    - osquery
-    - syslog
 DC0060:
   name: Service Creation
   umbrella_eventtype: mitre_dc0060_service_creation
   logsources:
-  - feed: wineventlog
-    eventtype: mitre_dc0060_service_creation__wineventlog
-    product: windows
-    services:
-    - security
-    - system
   - feed: auditd
     eventtype: mitre_dc0060_service_creation__auditd
     product: linux
@@ -1649,10 +1643,59 @@ DC0060:
     - osquery
     - syslog
     - systemd
+  - feed: wineventlog
+    eventtype: mitre_dc0060_service_creation__wineventlog
+    product: windows
+    services:
+    - security
+    - system
 DC0061:
   name: File Modification
   umbrella_eventtype: mitre_dc0061_file_modification
   logsources:
+  - feed: auditd
+    eventtype: mitre_dc0061_file_modification__auditd
+    product: linux
+    categories:
+    - file_event
+    services:
+    - auditd
+    - osquery
+    - sysdig
+    - syslog
+  - feed: ebpf
+    eventtype: mitre_dc0061_file_modification__ebpf
+    product: linux
+    categories:
+    - file_event
+    services:
+    - auditd
+    - osquery
+    - sysdig
+    - syslog
+  - feed: esxi_syslog
+    eventtype: mitre_dc0061_file_modification__esxi_syslog
+    product: vmware
+    services:
+    - hostd
+    - shell
+    - syslog
+    - vmkernel
+  - feed: linux_syslog
+    eventtype: mitre_dc0061_file_modification__linux_syslog
+    product: linux
+    categories:
+    - file_event
+    services:
+    - auditd
+    - osquery
+    - sysdig
+    - syslog
+  - feed: netdev_syslog
+    eventtype: mitre_dc0061_file_modification__netdev_syslog
+    product: cisco
+    services:
+    - syslog
   - feed: palo_alto
     eventtype: mitre_dc0061_file_modification__palo_alto
     product: paloalto
@@ -1697,49 +1740,6 @@ DC0061:
     - security
     - sysmon
     - system
-  - feed: auditd
-    eventtype: mitre_dc0061_file_modification__auditd
-    product: linux
-    categories:
-    - file_event
-    services:
-    - auditd
-    - osquery
-    - sysdig
-    - syslog
-  - feed: ebpf
-    eventtype: mitre_dc0061_file_modification__ebpf
-    product: linux
-    categories:
-    - file_event
-    services:
-    - auditd
-    - osquery
-    - sysdig
-    - syslog
-  - feed: esxi_syslog
-    eventtype: mitre_dc0061_file_modification__esxi_syslog
-    product: vmware
-    services:
-    - hostd
-    - shell
-    - syslog
-    - vmkernel
-  - feed: linux_syslog
-    eventtype: mitre_dc0061_file_modification__linux_syslog
-    product: linux
-    categories:
-    - file_event
-    services:
-    - auditd
-    - osquery
-    - sysdig
-    - syslog
-  - feed: netdev_syslog
-    eventtype: mitre_dc0061_file_modification__netdev_syslog
-    product: cisco
-    services:
-    - syslog
 DC0063:
   name: Windows Registry Key Modification
   umbrella_eventtype: mitre_dc0063_windows_registry_key_modification
@@ -1775,47 +1775,6 @@ DC0064:
   name: Command Execution
   umbrella_eventtype: mitre_dc0064_command_execution
   logsources:
-  - feed: palo_alto
-    eventtype: mitre_dc0064_command_execution__palo_alto
-    product: paloalto
-    services:
-    - config
-  - feed: powershell_logging
-    eventtype: mitre_dc0064_command_execution__powershell_logging
-    product: windows
-    services:
-    - amsi
-    - oalerts
-    - outlook
-    - powershell
-    - security
-  - feed: sysmon
-    eventtype: mitre_dc0064_command_execution__sysmon
-    product: windows
-    services:
-    - amsi
-    - oalerts
-    - outlook
-    - powershell
-    - security
-  - feed: trellix_epo
-    eventtype: mitre_dc0064_command_execution__trellix_epo
-    product: windows
-    services:
-    - amsi
-    - oalerts
-    - outlook
-    - powershell
-    - security
-  - feed: wineventlog
-    eventtype: mitre_dc0064_command_execution__wineventlog
-    product: windows
-    services:
-    - amsi
-    - oalerts
-    - outlook
-    - powershell
-    - security
   - feed: auditd
     eventtype: mitre_dc0064_command_execution__auditd
     product: linux
@@ -1866,6 +1825,38 @@ DC0064:
     services:
     - aaa
     - syslog
+  - feed: palo_alto
+    eventtype: mitre_dc0064_command_execution__palo_alto
+    product: paloalto
+    services:
+    - config
+  - feed: powershell_logging
+    eventtype: mitre_dc0064_command_execution__powershell_logging
+    product: windows
+    services:
+    - amsi
+    - oalerts
+    - outlook
+    - powershell
+    - security
+  - feed: sysmon
+    eventtype: mitre_dc0064_command_execution__sysmon
+    product: windows
+    services:
+    - amsi
+    - oalerts
+    - outlook
+    - powershell
+    - security
+  - feed: trellix_epo
+    eventtype: mitre_dc0064_command_execution__trellix_epo
+    product: windows
+    services:
+    - amsi
+    - oalerts
+    - outlook
+    - powershell
+    - security
   - feed: vcenter
     eventtype: mitre_dc0064_command_execution__vcenter
     product: vmware
@@ -1876,55 +1867,49 @@ DC0064:
     - vmkernel
     - vobd
     - vpxd
+  - feed: wineventlog
+    eventtype: mitre_dc0064_command_execution__wineventlog
+    product: windows
+    services:
+    - amsi
+    - oalerts
+    - outlook
+    - powershell
+    - security
 DC0065:
   name: Service Modification
   umbrella_eventtype: mitre_dc0065_service_modification
   logsources:
+  - feed: esxi_syslog
+    eventtype: mitre_dc0065_service_modification__esxi_syslog
+    product: vmware
+    services:
+    - hostd
   - feed: wineventlog
     eventtype: mitre_dc0065_service_modification__wineventlog
     product: windows
     services:
     - iis-configuration
     - system
-  - feed: esxi_syslog
-    eventtype: mitre_dc0065_service_modification__esxi_syslog
-    product: vmware
-    services:
-    - hostd
 DC0066:
   name: Active Directory Object Modification
   umbrella_eventtype: mitre_dc0066_active_directory_object_modification
   logsources:
-  - feed: wineventlog
-    eventtype: mitre_dc0066_active_directory_object_modification__wineventlog
-    product: windows
-    services:
-    - security
   - feed: azure_entra
     eventtype: mitre_dc0066_active_directory_object_modification__azure_entra
     product: azure
     services:
     - activitylogs
     - signinlogs
+  - feed: wineventlog
+    eventtype: mitre_dc0066_active_directory_object_modification__wineventlog
+    product: windows
+    services:
+    - security
 DC0067:
   name: Logon Session Creation
   umbrella_eventtype: mitre_dc0067_logon_session_creation
   logsources:
-  - feed: corelight
-    eventtype: mitre_dc0067_logon_session_creation__corelight
-    product: zeek
-    services:
-    - conn
-  - feed: palo_alto
-    eventtype: mitre_dc0067_logon_session_creation__palo_alto
-    product: paloalto
-    services:
-    - config
-  - feed: wineventlog
-    eventtype: mitre_dc0067_logon_session_creation__wineventlog
-    product: windows
-    services:
-    - security
   - feed: auditd
     eventtype: mitre_dc0067_logon_session_creation__auditd
     product: linux
@@ -1938,6 +1923,11 @@ DC0067:
     services:
     - auditlogs
     - signinlogs
+  - feed: corelight
+    eventtype: mitre_dc0067_logon_session_creation__corelight
+    product: zeek
+    services:
+    - conn
   - feed: esxi_syslog
     eventtype: mitre_dc0067_logon_session_creation__esxi_syslog
     product: vmware
@@ -1951,6 +1941,16 @@ DC0067:
     - auditd
     - auth
     - syslog
+  - feed: palo_alto
+    eventtype: mitre_dc0067_logon_session_creation__palo_alto
+    product: paloalto
+    services:
+    - config
+  - feed: wineventlog
+    eventtype: mitre_dc0067_logon_session_creation__wineventlog
+    product: windows
+    services:
+    - security
 DC0068:
   name: Active Directory Object Deletion
   umbrella_eventtype: mitre_dc0068_active_directory_object_deletion
@@ -2046,42 +2046,6 @@ DC0078:
   name: Network Traffic Flow
   umbrella_eventtype: mitre_dc0078_network_traffic_flow
   logsources:
-  - feed: corelight
-    eventtype: mitre_dc0078_network_traffic_flow__corelight
-    product: zeek
-    services:
-    - conn
-    - http
-  - feed: palo_alto
-    eventtype: mitre_dc0078_network_traffic_flow__palo_alto
-    product: paloalto
-    categories:
-    - firewall
-    services:
-    - threat
-    - traffic
-  - feed: sysmon
-    eventtype: mitre_dc0078_network_traffic_flow__sysmon
-    product: windows
-    services:
-    - dhcp
-    - edr
-    - firewall-as
-    - security
-  - feed: wineventlog
-    eventtype: mitre_dc0078_network_traffic_flow__wineventlog
-    product: windows
-    services:
-    - dhcp
-    - edr
-    - firewall-as
-    - security
-  - feed: wireshark
-    eventtype: mitre_dc0078_network_traffic_flow__wireshark
-    product: zeek
-    services:
-    - conn
-    - http
   - feed: auditd
     eventtype: mitre_dc0078_network_traffic_flow__auditd
     product: linux
@@ -2089,6 +2053,12 @@ DC0078:
     - auditd
     - osquery
     - syslog
+  - feed: corelight
+    eventtype: mitre_dc0078_network_traffic_flow__corelight
+    product: zeek
+    services:
+    - conn
+    - http
   - feed: edr_telemetry
     eventtype: mitre_dc0078_network_traffic_flow__edr_telemetry
     product: windows
@@ -2125,6 +2095,22 @@ DC0078:
     product: netflow
     services:
     - flow
+  - feed: palo_alto
+    eventtype: mitre_dc0078_network_traffic_flow__palo_alto
+    product: paloalto
+    categories:
+    - firewall
+    services:
+    - threat
+    - traffic
+  - feed: sysmon
+    eventtype: mitre_dc0078_network_traffic_flow__sysmon
+    product: windows
+    services:
+    - dhcp
+    - edr
+    - firewall-as
+    - security
   - feed: vcenter
     eventtype: mitre_dc0078_network_traffic_flow__vcenter
     product: vmware
@@ -2144,10 +2130,34 @@ DC0078:
     - edr
     - firewall-as
     - security
+  - feed: wineventlog
+    eventtype: mitre_dc0078_network_traffic_flow__wineventlog
+    product: windows
+    services:
+    - dhcp
+    - edr
+    - firewall-as
+    - security
+  - feed: wireshark
+    eventtype: mitre_dc0078_network_traffic_flow__wireshark
+    product: zeek
+    services:
+    - conn
+    - http
 DC0079:
   name: Driver Load
   umbrella_eventtype: mitre_dc0079_driver_load
   logsources:
+  - feed: auditd
+    eventtype: mitre_dc0079_driver_load__auditd
+    product: linux
+    services:
+    - syslog
+  - feed: linux_syslog
+    eventtype: mitre_dc0079_driver_load__linux_syslog
+    product: linux
+    services:
+    - syslog
   - feed: sysmon
     eventtype: mitre_dc0079_driver_load__sysmon
     product: windows
@@ -2162,16 +2172,6 @@ DC0079:
     - driver_load
     services:
     - sysmon
-  - feed: auditd
-    eventtype: mitre_dc0079_driver_load__auditd
-    product: linux
-    services:
-    - syslog
-  - feed: linux_syslog
-    eventtype: mitre_dc0079_driver_load__linux_syslog
-    product: linux
-    services:
-    - syslog
 DC0081:
   name: Instance Deletion
   umbrella_eventtype: mitre_dc0081_instance_deletion
@@ -2185,40 +2185,6 @@ DC0082:
   name: Network Connection Creation
   umbrella_eventtype: mitre_dc0082_network_connection_creation
   logsources:
-  - feed: corelight
-    eventtype: mitre_dc0082_network_connection_creation__corelight
-    product: zeek
-    services:
-    - conn
-  - feed: palo_alto
-    eventtype: mitre_dc0082_network_connection_creation__palo_alto
-    product: paloalto
-    categories:
-    - firewall
-    services:
-    - traffic
-  - feed: sysmon
-    eventtype: mitre_dc0082_network_connection_creation__sysmon
-    product: windows
-    categories:
-    - network_connection
-    services:
-    - microsoft-windows-bits-client-operational
-    - microsoft-windows-wlan-autoconfig
-    - security
-    - sysmon
-    - system
-  - feed: wineventlog
-    eventtype: mitre_dc0082_network_connection_creation__wineventlog
-    product: windows
-    categories:
-    - network_connection
-    services:
-    - microsoft-windows-bits-client-operational
-    - microsoft-windows-wlan-autoconfig
-    - security
-    - sysmon
-    - system
   - feed: auditd
     eventtype: mitre_dc0082_network_connection_creation__auditd
     product: linux
@@ -2229,6 +2195,11 @@ DC0082:
     - osquery
     - syslog
     - sysmon
+  - feed: corelight
+    eventtype: mitre_dc0082_network_connection_creation__corelight
+    product: zeek
+    services:
+    - conn
   - feed: ebpf
     eventtype: mitre_dc0082_network_connection_creation__ebpf
     product: linux
@@ -2264,6 +2235,24 @@ DC0082:
   - feed: netflow
     eventtype: mitre_dc0082_network_connection_creation__netflow
     product: netflow
+  - feed: palo_alto
+    eventtype: mitre_dc0082_network_connection_creation__palo_alto
+    product: paloalto
+    categories:
+    - firewall
+    services:
+    - traffic
+  - feed: sysmon
+    eventtype: mitre_dc0082_network_connection_creation__sysmon
+    product: windows
+    categories:
+    - network_connection
+    services:
+    - microsoft-windows-bits-client-operational
+    - microsoft-windows-wlan-autoconfig
+    - security
+    - sysmon
+    - system
   - feed: sysmon_linux
     eventtype: mitre_dc0082_network_connection_creation__sysmon_linux
     product: linux
@@ -2274,6 +2263,17 @@ DC0082:
     - osquery
     - syslog
     - sysmon
+  - feed: wineventlog
+    eventtype: mitre_dc0082_network_connection_creation__wineventlog
+    product: windows
+    categories:
+    - network_connection
+    services:
+    - microsoft-windows-bits-client-operational
+    - microsoft-windows-wlan-autoconfig
+    - security
+    - sysmon
+    - system
 DC0083:
   name: Cloud Service Enumeration
   umbrella_eventtype: mitre_dc0083_cloud_service_enumeration
@@ -2306,51 +2306,6 @@ DC0085:
   name: Network Traffic Content
   umbrella_eventtype: mitre_dc0085_network_traffic_content
   logsources:
-  - feed: corelight
-    eventtype: mitre_dc0085_network_traffic_content__corelight
-    product: zeek
-    services:
-    - conn
-    - http
-  - feed: palo_alto
-    eventtype: mitre_dc0085_network_traffic_content__palo_alto
-    product: paloalto
-    categories:
-    - proxy
-    services:
-    - config
-    - threat
-    - traffic
-  - feed: sysmon
-    eventtype: mitre_dc0085_network_traffic_content__sysmon
-    product: windows
-    categories:
-    - dns_query
-    services:
-    - edr
-    - etw
-    - iis
-    - sysmon
-    - system
-    - windefend
-  - feed: wineventlog
-    eventtype: mitre_dc0085_network_traffic_content__wineventlog
-    product: windows
-    categories:
-    - dns_query
-    services:
-    - edr
-    - etw
-    - iis
-    - sysmon
-    - system
-    - windefend
-  - feed: wireshark
-    eventtype: mitre_dc0085_network_traffic_content__wireshark
-    product: zeek
-    services:
-    - conn
-    - http
   - feed: auditd
     eventtype: mitre_dc0085_network_traffic_content__auditd
     product: linux
@@ -2363,6 +2318,12 @@ DC0085:
     services:
     - activitylogs
     - nsgflow
+  - feed: corelight
+    eventtype: mitre_dc0085_network_traffic_content__corelight
+    product: zeek
+    services:
+    - conn
+    - http
   - feed: ebpf
     eventtype: mitre_dc0085_network_traffic_content__ebpf
     product: linux
@@ -2404,6 +2365,27 @@ DC0085:
     services:
     - auditd
     - syslog
+  - feed: palo_alto
+    eventtype: mitre_dc0085_network_traffic_content__palo_alto
+    product: paloalto
+    categories:
+    - proxy
+    services:
+    - config
+    - threat
+    - traffic
+  - feed: sysmon
+    eventtype: mitre_dc0085_network_traffic_content__sysmon
+    product: windows
+    categories:
+    - dns_query
+    services:
+    - edr
+    - etw
+    - iis
+    - sysmon
+    - system
+    - windefend
   - feed: windows_dns_server
     eventtype: mitre_dc0085_network_traffic_content__windows_dns_server
     product: windows
@@ -2416,39 +2398,42 @@ DC0085:
     - sysmon
     - system
     - windefend
+  - feed: wineventlog
+    eventtype: mitre_dc0085_network_traffic_content__wineventlog
+    product: windows
+    categories:
+    - dns_query
+    services:
+    - edr
+    - etw
+    - iis
+    - sysmon
+    - system
+    - windefend
+  - feed: wireshark
+    eventtype: mitre_dc0085_network_traffic_content__wireshark
+    product: zeek
+    services:
+    - conn
+    - http
 DC0087:
   name: Active Directory Object Creation
   umbrella_eventtype: mitre_dc0087_active_directory_object_creation
   logsources:
-  - feed: wineventlog
-    eventtype: mitre_dc0087_active_directory_object_creation__wineventlog
-    product: windows
-    services:
-    - security
   - feed: azure_entra
     eventtype: mitre_dc0087_active_directory_object_creation__azure_entra
     product: azure
     services:
     - auditlogs
+  - feed: wineventlog
+    eventtype: mitre_dc0087_active_directory_object_creation__wineventlog
+    product: windows
+    services:
+    - security
 DC0088:
   name: Logon Session Metadata
   umbrella_eventtype: mitre_dc0088_logon_session_metadata
   logsources:
-  - feed: corelight
-    eventtype: mitre_dc0088_logon_session_metadata__corelight
-    product: zeek
-    services:
-    - conn
-  - feed: palo_alto
-    eventtype: mitre_dc0088_logon_session_metadata__palo_alto
-    product: paloalto
-    services:
-    - globalprotect
-  - feed: wineventlog
-    eventtype: mitre_dc0088_logon_session_metadata__wineventlog
-    product: windows
-    services:
-    - security
   - feed: auditd
     eventtype: mitre_dc0088_logon_session_metadata__auditd
     product: linux
@@ -2462,6 +2447,11 @@ DC0088:
     services:
     - auditlogs
     - signinlogs
+  - feed: corelight
+    eventtype: mitre_dc0088_logon_session_metadata__corelight
+    product: zeek
+    services:
+    - conn
   - feed: esxi_syslog
     eventtype: mitre_dc0088_logon_session_metadata__esxi_syslog
     product: vmware
@@ -2475,6 +2465,16 @@ DC0088:
     - auditd
     - auth
     - syslog
+  - feed: palo_alto
+    eventtype: mitre_dc0088_logon_session_metadata__palo_alto
+    product: paloalto
+    services:
+    - globalprotect
+  - feed: wineventlog
+    eventtype: mitre_dc0088_logon_session_metadata__wineventlog
+    product: windows
+    services:
+    - security
 DC0090:
   name: Cloud Service Disable
   umbrella_eventtype: mitre_dc0090_cloud_service_disable
@@ -2513,17 +2513,17 @@ DC0097:
   name: Volume Creation
   umbrella_eventtype: mitre_dc0097_volume_creation
   logsources:
-  - feed: wineventlog
-    eventtype: mitre_dc0097_volume_creation__wineventlog
-    product: windows
-    services:
-    - microsoft-windows-vss
   - feed: esxi_syslog
     eventtype: mitre_dc0097_volume_creation__esxi_syslog
     product: vmware
   - feed: kubernetes_audit
     eventtype: mitre_dc0097_volume_creation__kubernetes_audit
     product: kubernetes
+  - feed: wineventlog
+    eventtype: mitre_dc0097_volume_creation__wineventlog
+    product: windows
+    services:
+    - microsoft-windows-vss
 DC0098:
   name: Volume Deletion
   umbrella_eventtype: mitre_dc0098_volume_deletion
@@ -2537,16 +2537,16 @@ DC0099:
   name: Group Enumeration
   umbrella_eventtype: mitre_dc0099_group_enumeration
   logsources:
-  - feed: wineventlog
-    eventtype: mitre_dc0099_group_enumeration__wineventlog
-    product: windows
-    services:
-    - security
   - feed: azure_entra
     eventtype: mitre_dc0099_group_enumeration__azure_entra
     product: azure
     services:
     - auditlogs
+  - feed: wineventlog
+    eventtype: mitre_dc0099_group_enumeration__wineventlog
+    product: windows
+    services:
+    - security
 DC0101:
   name: Domain Registration
   umbrella_eventtype: mitre_dc0101_domain_registration

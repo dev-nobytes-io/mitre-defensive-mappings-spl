@@ -50,7 +50,7 @@ attack:
   - field: API_Name
     description: Flag uncommon or low-prevalence API calls like DSEnumerateDomainTrusts for inspection.
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: hunting
   suggested_tuning:
   - element: ParentImage

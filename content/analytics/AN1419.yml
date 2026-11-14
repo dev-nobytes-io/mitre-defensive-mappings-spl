@@ -40,7 +40,7 @@ attack:
   - field: ParentProcessPath
     description: Parent-child relationships vary by exploitation vector (e.g., LOLBin vs. dropper).
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: anomaly
   suggested_tuning:
   - element: DriverNamePattern

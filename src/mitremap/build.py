@@ -52,7 +52,6 @@ class SourceView:
 class FeedView:
     """One feed's contribution to a data component -> one per-feed eventtype."""
     feed: str
-    have: bool
     in_scope: bool
     hunt_only: bool
     sources: list[str]                       # canonical names
@@ -84,12 +83,8 @@ class DCView:
     in_scope: bool
 
     @property
-    def live_feeds(self) -> list[FeedView]:
-        return [f for f in self.feeds if f.in_scope and f.have]
-
-    @property
-    def ready_feeds(self) -> list[FeedView]:
-        return [f for f in self.feeds if f.in_scope and not f.have]
+    def mapped_feeds(self) -> list[FeedView]:
+        return [f for f in self.feeds if f.in_scope]
 
 
 def _constraint_parts(fv: FeedView) -> list[str]:
@@ -222,14 +217,14 @@ def build_dc_view(m: AttackModel, dc: DataComponent, curated_overrides: dict | N
             sourcetypes, codes, syscalls, rts, verbs, filters = (sorted(fd["sourcetypes"]), sorted(fd["codes"]), sorted(fd["syscalls"]), sorted(fd["rts"]), sorted(fd["verbs"]), sorted(fd["filters"]))
         unfiltered = not (codes or syscalls or rts or verbs or filters)
         feed_views.append(FeedView(
-            feed=name, have=bool(f.get("have")), in_scope=feed_in_scope(name), hunt_only=bool(f.get("hunt_only")),
+            feed=name, in_scope=feed_in_scope(name), hunt_only=bool(f.get("hunt_only")),
             sources=sorted(set(fd["sources"])), sourcetypes=sorted(sourcetypes),
             event_codes=sorted(codes), syscalls=sorted(syscalls), record_types=sorted(rts),
             verbs=sorted(verbs), filters=sorted(filters), unfiltered=unfiltered, broad_refs=fd["broad"], origin=origin,
             eventtype=f"{base}__{name}",
             cim_compliant=bool(cim_spec and cim_spec.get("datamodel") and name in (cim_spec.get("compliant_feeds") or [])),
         ))
-    feed_views.sort(key=lambda fv: (not fv.in_scope, not fv.have, fv.feed))
+    feed_views.sort(key=lambda fv: (not fv.in_scope, fv.feed))
 
     # ---- dependents
     dets, techs, tactics = set(), set(), Counter()

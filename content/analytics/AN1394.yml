@@ -32,7 +32,7 @@ attack:
   - field: TimeWindow
     description: Window between command execution and follow-up child or file write behavior
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: anomaly
   suggested_tuning:
   - element: CommandLineEntropyThreshold

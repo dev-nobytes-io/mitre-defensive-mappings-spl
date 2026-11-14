@@ -24,7 +24,7 @@ def test_lookup_matches_generator(model):
     with (TA / "lookups" / "mitre_expected_telemetry.csv").open() as fh:
         rows = list(csv.DictReader(fh))
     assert len(rows) == len(expected_telemetry(build_all(model)))
-    assert {"feed", "have", "index", "field", "value", "data_components", "eventtypes"} <= set(rows[0])
+    assert {"feed", "index", "field", "value", "data_components", "eventtypes"} == set(rows[0])
 
 
 def test_scopes():

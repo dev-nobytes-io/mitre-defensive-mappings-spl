@@ -47,7 +47,7 @@ attack:
   - field: RemoteExecutionHosts
     description: Approved remote hosts that may trigger service execution (e.g., via PsExec)
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: ttp
   suggested_tuning:
   - element: ServiceBinaryAllowlist

@@ -348,8 +348,48 @@ derived:
     channels:
     - DeviceInformation / SecurityInfo / ProfileList / restrictions and compliance queries
   feeds:
+  - feed: auditd
+    in_scope: true
+    eventtype: mitre_dc0018_host_status__auditd
+    search: >-
+      index=linux sourcetype="linux:audit" type IN (CONFIG_CHANGE, DAEMON_ABORT, DAEMON_END, DAEMON_START, SERVICE_START,
+      SERVICE_STOP)
+    constraint_origin: defaults
+    broad_refs: 0
+    sources:
+    - auditd:SYSCALL
+    cim_tags: false
+  - feed: esxi_syslog
+    in_scope: true
+    eventtype: mitre_dc0018_host_status__esxi_syslog
+    search: index=vmware sourcetype IN ("vmware:esxlog:hostd", "vmware:esxlog:vobd")
+    constraint_origin: defaults
+    broad_refs: 0
+    sources:
+    - esxi:hostd
+    cim_tags: false
+  - feed: kubernetes_audit
+    in_scope: true
+    eventtype: mitre_dc0018_host_status__kubernetes_audit
+    search: index=k8s sourcetype="kube:objects:events"
+    constraint_origin: defaults
+    broad_refs: 4
+    sources:
+    - kubernetes:events
+    - prometheus:metrics
+    cim_tags: false
+  - feed: linux_syslog
+    in_scope: true
+    eventtype: mitre_dc0018_host_status__linux_syslog
+    search: >-
+      index=linux sourcetype IN (linux_messages_syslog, linux_secure, syslog) (process=auditd OR process=systemd
+      OR process=kernel OR rsyslogd)
+    constraint_origin: defaults
+    broad_refs: 7
+    sources:
+    - linux:syslog
+    cim_tags: false
   - feed: palo_alto
-    have: true
     in_scope: true
     eventtype: mitre_dc0018_host_status__palo_alto
     search: index=pan_logs sourcetype="pan:system"
@@ -360,7 +400,6 @@ derived:
     - networkdevice:syslog
     cim_tags: false
   - feed: sysmon
-    have: true
     in_scope: true
     eventtype: mitre_dc0018_host_status__sysmon
     search: index=sysmon source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode IN (4, 16, 255)
@@ -370,7 +409,6 @@ derived:
     - WinEventLog:Sysmon
     cim_tags: false
   - feed: trellix_epo
-    have: true
     in_scope: true
     eventtype: mitre_dc0018_host_status__trellix_epo
     search: index=epo sourcetype="mcafee:epo:syslog"
@@ -379,8 +417,16 @@ derived:
     sources:
     - (added by dc_defaults/curated)
     cim_tags: false
+  - feed: windows_perfmon
+    in_scope: true
+    eventtype: mitre_dc0018_host_status__windows_perfmon
+    search: index=perfmon sourcetype="Perfmon:*"
+    constraint_origin: derived
+    broad_refs: 8
+    sources:
+    - Windows:perfmon
+    cim_tags: false
   - feed: wineventlog
-    have: true
     in_scope: true
     eventtype: mitre_dc0018_host_status__wineventlog
     search: >-
@@ -394,63 +440,7 @@ derived:
     - WinEventLog:Security
     - WinEventLog:System
     cim_tags: false
-  - feed: auditd
-    have: false
-    in_scope: true
-    eventtype: mitre_dc0018_host_status__auditd
-    search: >-
-      index=linux sourcetype="linux:audit" type IN (CONFIG_CHANGE, DAEMON_ABORT, DAEMON_END, DAEMON_START, SERVICE_START,
-      SERVICE_STOP)
-    constraint_origin: defaults
-    broad_refs: 0
-    sources:
-    - auditd:SYSCALL
-    cim_tags: false
-  - feed: esxi_syslog
-    have: false
-    in_scope: true
-    eventtype: mitre_dc0018_host_status__esxi_syslog
-    search: index=vmware sourcetype IN ("vmware:esxlog:hostd", "vmware:esxlog:vobd")
-    constraint_origin: defaults
-    broad_refs: 0
-    sources:
-    - esxi:hostd
-    cim_tags: false
-  - feed: kubernetes_audit
-    have: false
-    in_scope: true
-    eventtype: mitre_dc0018_host_status__kubernetes_audit
-    search: index=k8s sourcetype="kube:objects:events"
-    constraint_origin: defaults
-    broad_refs: 4
-    sources:
-    - kubernetes:events
-    - prometheus:metrics
-    cim_tags: false
-  - feed: linux_syslog
-    have: false
-    in_scope: true
-    eventtype: mitre_dc0018_host_status__linux_syslog
-    search: >-
-      index=linux sourcetype IN (linux_messages_syslog, linux_secure, syslog) (process=auditd OR process=systemd
-      OR process=kernel OR rsyslogd)
-    constraint_origin: defaults
-    broad_refs: 7
-    sources:
-    - linux:syslog
-    cim_tags: false
-  - feed: windows_perfmon
-    have: false
-    in_scope: true
-    eventtype: mitre_dc0018_host_status__windows_perfmon
-    search: index=perfmon sourcetype="Perfmon:*"
-    constraint_origin: derived
-    broad_refs: 8
-    sources:
-    - Windows:perfmon
-    cim_tags: false
   - feed: aws
-    have: false
     in_scope: false
     eventtype: null
     search: null
@@ -460,7 +450,6 @@ derived:
     - AWS:CloudWatch
     cim_tags: false
   - feed: macos
-    have: false
     in_scope: false
     eventtype: null
     search: null
@@ -472,7 +461,6 @@ derived:
     - macos:unifiedlog
     cim_tags: false
   - feed: mobile
-    have: false
     in_scope: false
     eventtype: null
     search: null

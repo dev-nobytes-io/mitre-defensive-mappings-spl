@@ -2,7 +2,7 @@
 
 [ATT&CK](https://attack.mitre.org/datacomponents/DC0088) · version 2.0 · modified 2026-10-13 · ATT&CK release 20.1
 
-Status: **Live** · umbrella eventtype `mitre_dc0088_logon_session_metadata`
+Umbrella eventtype `mitre_dc0088_logon_session_metadata` over 7 feed(s)
 
 > Contextual data about a logon session, such as username, logon type, access tokens (security context, user SIDs, logon identifiers, and logon SID), and any activity associated within it
 
@@ -49,42 +49,40 @@ flowchart LR
   DC --> LS9["esxi:auth<br/>2 refs"]
   LS9 --> F_esxi_syslog
   DC --> MORE["... 2 more log sources"]
-  F_corelight --> ET_corelight[/"mitre_dc0088_logon_session_metadata__corelight"/]
-  class F_corelight live
-  F_palo_alto --> ET_palo_alto[/"mitre_dc0088_logon_session_metadata__palo_alto"/]
-  class F_palo_alto live
-  F_wineventlog --> ET_wineventlog[/"mitre_dc0088_logon_session_metadata__wineventlog"/]
-  class F_wineventlog live
   F_auditd --> ET_auditd[/"mitre_dc0088_logon_session_metadata__auditd"/]
-  class F_auditd ready
   F_azure_entra --> ET_azure_entra[/"mitre_dc0088_logon_session_metadata__azure_entra"/]
-  class F_azure_entra ready
+  F_corelight --> ET_corelight[/"mitre_dc0088_logon_session_metadata__corelight"/]
   F_esxi_syslog --> ET_esxi_syslog[/"mitre_dc0088_logon_session_metadata__esxi_syslog"/]
-  class F_esxi_syslog ready
   F_linux_syslog --> ET_linux_syslog[/"mitre_dc0088_logon_session_metadata__linux_syslog"/]
-  class F_linux_syslog ready
-  classDef live fill:#d4edda,stroke:#2e7d32,color:#1b1b1b
-  classDef ready fill:#fff3cd,stroke:#b26a00,color:#1b1b1b
+  F_palo_alto --> ET_palo_alto[/"mitre_dc0088_logon_session_metadata__palo_alto"/]
+  F_wineventlog --> ET_wineventlog[/"mitre_dc0088_logon_session_metadata__wineventlog"/]
 ```
 
 ## Requirements
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
+| Feed | Schedule | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `corelight` | live | sourcetype=`corelight_ssh` | `(whole feed)` | derived | Corelight App for Splunk (corelight_<log>). For TA_zeek use prefix zeek: and suffix :json. |
-| `palo_alto` | live | sourcetype=`pan:globalprotect` | `(whole feed)` | defaults | Splunk Add-on for Palo Alto Networks (pan:*) |
-| `wineventlog` | live | source=`XmlWinEventLog:Security` | `EventCode IN (4624, 4634, 4647, 4672, 4778, 4779, 4800, 4801, 4802, 4803)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true) |
-| `auditd` | ready (tick in stack.yml) | sourcetype=`linux:audit` | `type IN (CRED_ACQ, CRED_DISP, USER_END, USER_LOGIN)` | defaults | Splunk Add-on for Unix and Linux (linux:audit) or auditd -> auditbeat/syslog |
-| `azure_entra` | ready (tick in stack.yml) | sourcetype=`azure:aad:signin` | `(whole feed)` | defaults | Splunk Add-on for Microsoft Azure (azure:aad:signin, azure:aad:audit) or Microsoft Cloud Services add-on via Event Hub |
-| `esxi_syslog` | ready (tick in stack.yml) | sourcetype=`vmware:esxlog:auth`, sourcetype=`vmware:esxlog:hostd` | `(whole feed)` | defaults | Splunk Add-on for VMware ESXi Logs (vmware:esxlog:<log>) |
-| `linux_syslog` | ready (tick in stack.yml) | sourcetype=`linux_secure` | `(whole feed)` | defaults | Splunk Add-on for Unix and Linux (syslog, linux_secure, linux_messages_syslog) |
+| `auditd` | scheduled | sourcetype=`linux:audit` | `type IN (CRED_ACQ, CRED_DISP, USER_END, USER_LOGIN)` | defaults | Splunk Add-on for Unix and Linux (linux:audit) or auditd -> auditbeat/syslog |
+| `azure_entra` | scheduled | sourcetype=`azure:aad:signin` | `(whole feed)` | defaults | Splunk Add-on for Microsoft Azure (azure:aad:signin, azure:aad:audit) or Microsoft Cloud Services add-on via Event Hub |
+| `corelight` | scheduled | sourcetype=`corelight_ssh` | `(whole feed)` | derived | Corelight App for Splunk (corelight_<log>). For TA_zeek use prefix zeek: and suffix :json. |
+| `esxi_syslog` | scheduled | sourcetype=`vmware:esxlog:auth`, sourcetype=`vmware:esxlog:hostd` | `(whole feed)` | defaults | Splunk Add-on for VMware ESXi Logs (vmware:esxlog:<log>) |
+| `linux_syslog` | scheduled | sourcetype=`linux_secure` | `(whole feed)` | defaults | Splunk Add-on for Unix and Linux (syslog, linux_secure, linux_messages_syslog) |
+| `palo_alto` | scheduled | sourcetype=`pan:globalprotect` | `(whole feed)` | defaults | Splunk Add-on for Palo Alto Networks (pan:*) |
+| `wineventlog` | scheduled | source=`XmlWinEventLog:Security` | `EventCode IN (4624, 4634, 4647, 4672, 4778, 4779, 4800, 4801, 4802, 4803)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true) |
 
 Collection prerequisites:
 
+- **auditd**: audit rules for execve, connect, open/openat on sensitive paths, ptrace, module load, mount, setuid; a Neo23x0/auditd baseline or Florian Roth's rule set is a reasonable start.
+- **auditd**: log_format = ENRICHED in auditd.conf so syscall names and uids resolve (otherwise syscall numbers are architecture dependent).
+- **azure_entra**: Diagnostic settings on the tenant streaming SignInLogs
+- **azure_entra**: AuditLogs
+- **azure_entra**: NonInteractiveUserSignInLogs
+- **azure_entra**: ServicePrincipalSignInLogs to an Event Hub or direct Graph pull.
 - **corelight**: Sensor placement covering east-west (DC, server VLANs) and north-south; without internal taps the lateral-movement components are blind.
 - **corelight**: Enable the log set above; files/pe/smb_* and ldap/kerberos/ntlm are what distinguish Corelight from flow data.
+- **esxi_syslog**: Syslog.global.logHost set on every host; ESXi Shell/SSH audit enabled; consider Syslog.global.auditRecord (ESXi 8).
 - **palo_alto**: Log forwarding profiles attached to every security rule (traffic start+end, threat, url, wildfire, data).
 - **palo_alto**: System and Config logs forwarded from each firewall / Panorama; GlobalProtect logs enabled.
 - **palo_alto**: URL filtering and Threat Prevention licensed for pan:threat subtypes url/vulnerability/virus/spyware.
@@ -94,13 +92,6 @@ Collection prerequisites:
 - **wineventlog**: PowerShell Script Block Logging (4104) and Module Logging (4103) enabled via GPO for the PowerShell/Operational channel.
 - **wineventlog**: Object access events (4656/4663/4657/4660/4670) require SACLs on the files/keys of interest.
 - **wineventlog**: Non-default channels (TaskScheduler, WMI-Activity, CodeIntegrity, Defender, Firewall, WinRM, SMBClient/Server...) must be listed as inputs in Splunk_TA_windows inputs.conf; several are disabled by default in Windows.
-- **auditd**: audit rules for execve, connect, open/openat on sensitive paths, ptrace, module load, mount, setuid; a Neo23x0/auditd baseline or Florian Roth's rule set is a reasonable start.
-- **auditd**: log_format = ENRICHED in auditd.conf so syscall names and uids resolve (otherwise syscall numbers are architecture dependent).
-- **azure_entra**: Diagnostic settings on the tenant streaming SignInLogs
-- **azure_entra**: AuditLogs
-- **azure_entra**: NonInteractiveUserSignInLogs
-- **azure_entra**: ServicePrincipalSignInLogs to an Event Hub or direct Graph pull.
-- **esxi_syslog**: Syslog.global.logHost set on every host; ESXi Shell/SSH audit enabled; consider Syslog.global.auditRecord (ESXi 8).
 
 Review notes: `azure_entra` has 4 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *defaults*; `linux_syslog` has 6 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *defaults*.
 
@@ -109,8 +100,20 @@ Review notes: `azure_entra` has 4 ATT&CK reference(s) with no usable event filte
 Eventtypes (literal constraints, see `dist/splunk/TA-mitre-attack-datacomponents/default/eventtypes.conf`):
 
 ```ini
+[mitre_dc0088_logon_session_metadata__auditd]
+search = index=linux sourcetype="linux:audit" type IN (CRED_ACQ, CRED_DISP, USER_END, USER_LOGIN)
+
+[mitre_dc0088_logon_session_metadata__azure_entra]
+search = index=azure sourcetype="azure:aad:signin"
+
 [mitre_dc0088_logon_session_metadata__corelight]
 search = index=corelight sourcetype=corelight_ssh
+
+[mitre_dc0088_logon_session_metadata__esxi_syslog]
+search = index=vmware sourcetype IN ("vmware:esxlog:auth", "vmware:esxlog:hostd")
+
+[mitre_dc0088_logon_session_metadata__linux_syslog]
+search = index=linux sourcetype=linux_secure
 
 [mitre_dc0088_logon_session_metadata__palo_alto]
 search = index=pan_logs sourcetype="pan:globalprotect"
@@ -118,28 +121,12 @@ search = index=pan_logs sourcetype="pan:globalprotect"
 [mitre_dc0088_logon_session_metadata__wineventlog]
 search = index=wineventlog source="XmlWinEventLog:Security" EventCode IN (4624, 4634, 4647, 4672, 4778, 4779, 4800, 4801, 4802, 4803)
 
-[mitre_dc0088_logon_session_metadata__auditd]
-search = index=linux sourcetype="linux:audit" type IN (CRED_ACQ, CRED_DISP, USER_END, USER_LOGIN)
-disabled = 1
-
-[mitre_dc0088_logon_session_metadata__azure_entra]
-search = index=azure sourcetype="azure:aad:signin"
-disabled = 1
-
-[mitre_dc0088_logon_session_metadata__esxi_syslog]
-search = index=vmware sourcetype IN ("vmware:esxlog:auth", "vmware:esxlog:hostd")
-disabled = 1
-
-[mitre_dc0088_logon_session_metadata__linux_syslog]
-search = index=linux sourcetype=linux_secure
-disabled = 1
-
 [mitre_dc0088_logon_session_metadata]
-search = eventtype=mitre_dc0088_logon_session_metadata__corelight OR eventtype=mitre_dc0088_logon_session_metadata__palo_alto OR eventtype=mitre_dc0088_logon_session_metadata__wineventlog OR eventtype=mitre_dc0088_logon_session_metadata__auditd OR eventtype=mitre_dc0088_logon_session_metadata__azure_entra OR eventtype=mitre_dc0088_logon_session_metadata__esxi_syslog OR eventtype=mitre_dc0088_logon_session_metadata__linux_syslog
+search = eventtype=mitre_dc0088_logon_session_metadata__auditd OR eventtype=mitre_dc0088_logon_session_metadata__azure_entra OR eventtype=mitre_dc0088_logon_session_metadata__corelight OR eventtype=mitre_dc0088_logon_session_metadata__esxi_syslog OR eventtype=mitre_dc0088_logon_session_metadata__linux_syslog OR eventtype=mitre_dc0088_logon_session_metadata__palo_alto OR eventtype=mitre_dc0088_logon_session_metadata__wineventlog
 ```
 
-Macros for analytics: `` `mitre_dc0088` `` (umbrella), `` `mitre_dc0088_corelight` ``, `` `mitre_dc0088_palo_alto` ``, `` `mitre_dc0088_wineventlog` ``, `` `mitre_dc0088_auditd` ``, `` `mitre_dc0088_azure_entra` ``, `` `mitre_dc0088_esxi_syslog` ``, `` `mitre_dc0088_linux_syslog` ``, `` `mitre_dc0088_filter` `` (site exclusions).
-CIM: `Authentication.Authentication` via `` `mitre_dc0088_dm` `` / `` `mitre_dc0088_dm_where` `` for `tstats`. CIM tags emitted for: `wineventlog`, `azure_entra`.
+Macros for analytics: `` `mitre_dc0088` `` (umbrella), `` `mitre_dc0088_auditd` ``, `` `mitre_dc0088_azure_entra` ``, `` `mitre_dc0088_corelight` ``, `` `mitre_dc0088_esxi_syslog` ``, `` `mitre_dc0088_linux_syslog` ``, `` `mitre_dc0088_palo_alto` ``, `` `mitre_dc0088_wineventlog` ``, `` `mitre_dc0088_filter` `` (site exclusions).
+CIM: `Authentication.Authentication` via `` `mitre_dc0088_dm` `` / `` `mitre_dc0088_dm_where` `` for `tstats`. CIM tags emitted for: `azure_entra`, `wineventlog`.
 
 ## Sigma
 

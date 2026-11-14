@@ -61,7 +61,6 @@ derived:
     - Altered response metadata or blocked content based on user-agent or geolocation
   feeds:
   - feed: corelight
-    have: true
     in_scope: true
     eventtype: mitre_dc0106_response_metadata__corelight
     search: index=corelight sourcetype IN (corelight_dns, corelight_http, corelight_ssl, corelight_x509)
@@ -71,7 +70,6 @@ derived:
     - NSM:Flow
     cim_tags: false
   - feed: palo_alto
-    have: true
     in_scope: true
     eventtype: mitre_dc0106_response_metadata__palo_alto
     search: index=pan_logs sourcetype IN ("pan:threat", "pan:traffic")
@@ -81,7 +79,6 @@ derived:
     - NSM:Flow
     cim_tags: false
   - feed: threat_intel
-    have: false
     in_scope: false
     eventtype: null
     search: null

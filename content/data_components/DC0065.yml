@@ -74,8 +74,16 @@ derived:
     channels:
     - None
   feeds:
+  - feed: esxi_syslog
+    in_scope: true
+    eventtype: mitre_dc0065_service_modification__esxi_syslog
+    search: index=vmware sourcetype="vmware:esxlog:hostd"
+    constraint_origin: defaults
+    broad_refs: 0
+    sources:
+    - esxi:hostd
+    cim_tags: false
   - feed: wineventlog
-    have: true
     in_scope: true
     eventtype: mitre_dc0065_service_modification__wineventlog
     search: >-
@@ -87,16 +95,6 @@ derived:
     - WinEventLog:Microsoft-IIS-Configuration
     - WinEventLog:System
     cim_tags: true
-  - feed: esxi_syslog
-    have: false
-    in_scope: true
-    eventtype: mitre_dc0065_service_modification__esxi_syslog
-    search: index=vmware sourcetype="vmware:esxlog:hostd"
-    constraint_origin: defaults
-    broad_refs: 0
-    sources:
-    - esxi:hostd
-    cim_tags: false
 curated:
   justification: >-
     Changing a service's binary path, start type or account (7040, 4657 on the Services key) to hijack or disable

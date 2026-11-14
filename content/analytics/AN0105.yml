@@ -39,7 +39,7 @@ attack:
   - field: TimeWindow
     description: Correlation window between file read and process memory/API access
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: ttp
   suggested_tuning:
   - element: MonitoredPaths

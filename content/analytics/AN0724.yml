@@ -40,7 +40,7 @@ attack:
   - field: TimeWindow
     description: How long to correlate file reads followed by compression.
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: ttp
   suggested_tuning:
   - element: StagingDirList

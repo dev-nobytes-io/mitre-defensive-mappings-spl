@@ -2,7 +2,7 @@
 
 [ATT&CK](https://attack.mitre.org/datacomponents/DC0102) · version 2.0 · modified 2026-10-13 · ATT&CK release 20.1
 
-Status: **Live** · umbrella eventtype `mitre_dc0102_network_share_access`
+Umbrella eventtype `mitre_dc0102_network_share_access` over 3 feed(s)
 
 > Opening a network share, which makes the contents available to the requestor (ex: Windows EID 5140 or 5145)
 
@@ -35,13 +35,8 @@ flowchart LR
   LS4 --> F_wineventlog
   LS4 --> F_corelight
   F_corelight --> ET_corelight[/"mitre_dc0102_network_share_access__corelight"/]
-  class F_corelight live
   F_palo_alto --> ET_palo_alto[/"mitre_dc0102_network_share_access__palo_alto"/]
-  class F_palo_alto live
   F_wineventlog --> ET_wineventlog[/"mitre_dc0102_network_share_access__wineventlog"/]
-  class F_wineventlog live
-  classDef live fill:#d4edda,stroke:#2e7d32,color:#1b1b1b
-  classDef ready fill:#fff3cd,stroke:#b26a00,color:#1b1b1b
 ```
 
 ## Requirements
@@ -52,11 +47,11 @@ Component specific:
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
+| Feed | Schedule | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `corelight` | live | sourcetype=`corelight_smb_files`, sourcetype=`corelight_smb_mapping` | `(whole feed)` | defaults | Corelight App for Splunk (corelight_<log>). For TA_zeek use prefix zeek: and suffix :json. |
-| `palo_alto` | live | sourcetype=`pan:traffic` | `(app=ms-ds-smb OR app=ms-ds-smbv3 OR app=ms-ds-smbv2)` | defaults | Splunk Add-on for Palo Alto Networks (pan:*) |
-| `wineventlog` | live | source=`XmlWinEventLog:Microsoft-Windows-SMBClient/Security`, source=`XmlWinEventLog:Microsoft-Windows-SMBServer/Security`, source=`XmlWinEventLog:Security` | `EventCode IN (5140, 5142, 5144, 5145, 31001)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true) |
+| `corelight` | scheduled | sourcetype=`corelight_smb_files`, sourcetype=`corelight_smb_mapping` | `(whole feed)` | defaults | Corelight App for Splunk (corelight_<log>). For TA_zeek use prefix zeek: and suffix :json. |
+| `palo_alto` | scheduled | sourcetype=`pan:traffic` | `(app=ms-ds-smb OR app=ms-ds-smbv3 OR app=ms-ds-smbv2)` | defaults | Splunk Add-on for Palo Alto Networks (pan:*) |
+| `wineventlog` | scheduled | source=`XmlWinEventLog:Microsoft-Windows-SMBClient/Security`, source=`XmlWinEventLog:Microsoft-Windows-SMBServer/Security`, source=`XmlWinEventLog:Security` | `EventCode IN (5140, 5142, 5144, 5145, 31001)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true) |
 
 Collection prerequisites:
 

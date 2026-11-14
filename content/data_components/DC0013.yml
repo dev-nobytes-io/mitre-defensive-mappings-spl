@@ -237,18 +237,7 @@ derived:
     channels:
     - Suspicious Enumeration of Cloud Directory
   feeds:
-  - feed: wineventlog
-    have: true
-    in_scope: true
-    eventtype: mitre_dc0013_user_account_metadata__wineventlog
-    search: index=wineventlog source="XmlWinEventLog:Security" EventCode IN (4672, 4673, 4674, 4720, 4738)
-    constraint_origin: defaults
-    broad_refs: 0
-    sources:
-    - WinEventLog:Security
-    cim_tags: true
   - feed: auditd
-    have: false
     in_scope: true
     eventtype: mitre_dc0013_user_account_metadata__auditd
     search: >-
@@ -260,7 +249,6 @@ derived:
     - auditd:SYSCALL
     cim_tags: false
   - feed: azure_activity
-    have: false
     in_scope: true
     eventtype: mitre_dc0013_user_account_metadata__azure_activity
     search: index=azure sourcetype="mscs:azure:audit"
@@ -270,7 +258,6 @@ derived:
     - azure:activity
     cim_tags: false
   - feed: azure_entra
-    have: false
     in_scope: true
     eventtype: mitre_dc0013_user_account_metadata__azure_entra
     search: index=azure sourcetype="azure:aad:audit"
@@ -280,7 +267,6 @@ derived:
     - azure:audit
     cim_tags: false
   - feed: linux_osquery
-    have: false
     in_scope: true
     eventtype: mitre_dc0013_user_account_metadata__linux_osquery
     search: >-
@@ -291,7 +277,6 @@ derived:
     - linux:osquery
     cim_tags: false
   - feed: windows_osquery
-    have: false
     in_scope: true
     eventtype: mitre_dc0013_user_account_metadata__windows_osquery
     search: index=osquery sourcetype="osquery:results" (name=users OR name=groups OR name=logged_in_users)
@@ -300,8 +285,16 @@ derived:
     sources:
     - windows:osquery
     cim_tags: false
+  - feed: wineventlog
+    in_scope: true
+    eventtype: mitre_dc0013_user_account_metadata__wineventlog
+    search: index=wineventlog source="XmlWinEventLog:Security" EventCode IN (4672, 4673, 4674, 4720, 4738)
+    constraint_origin: defaults
+    broad_refs: 0
+    sources:
+    - WinEventLog:Security
+    cim_tags: true
   - feed: aws
-    have: false
     in_scope: false
     eventtype: null
     search: null
@@ -311,7 +304,6 @@ derived:
     - AWS:CloudTrail
     cim_tags: false
   - feed: gcp
-    have: false
     in_scope: false
     eventtype: null
     search: null
@@ -323,7 +315,6 @@ derived:
     - gcp:workspaceaudit
     cim_tags: false
   - feed: m365_unified
-    have: false
     in_scope: false
     eventtype: null
     search: null
@@ -333,7 +324,6 @@ derived:
     - m365:unified
     cim_tags: false
   - feed: macos
-    have: false
     in_scope: false
     eventtype: null
     search: null
@@ -344,7 +334,6 @@ derived:
     - macos:unifiedlog
     cim_tags: false
   - feed: saas
-    have: false
     in_scope: false
     eventtype: null
     search: null

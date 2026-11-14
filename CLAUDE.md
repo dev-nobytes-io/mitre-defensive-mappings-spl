@@ -22,6 +22,10 @@ make diff FROM=20.0 TO=20.1                   # ATT&CK changelog
 * `README.md` is hand-written except the block between `<!-- BEGIN mitremap:log-sources -->` and `<!-- END mitremap:log-sources -->`, which the build regenerates; `docs/by-log-source.md` is generated.
 * `make build` must be idempotent: run it twice and `git status` must show no change (CI checks this).
 
+## Privacy rule
+
+The repository describes feeds; it never records which feeds any site (including the maintainer's) has. No `have` flags, ticked boxes or status columns in config, docs or lookups; checklists ship unchecked. `test_no_site_inventory_published` enforces it.
+
 ## Rules the validator enforces
 
 See "Conventions that the validator enforces" in TODO.md. In short: SPL goes through `mitre_dc*` macros and ends with its own filter macro, has no literal `index=`, references only existing macros and lookups; risk fields and message tokens appear in the search; the content type decides the ES action; every analytic has Sigma or a stated reason.

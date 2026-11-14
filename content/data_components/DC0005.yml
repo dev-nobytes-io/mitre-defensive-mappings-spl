@@ -106,8 +106,26 @@ derived:
     channels:
     - None
   feeds:
+  - feed: esxi_syslog
+    in_scope: true
+    eventtype: mitre_dc0005_scheduled_job_metadata__esxi_syslog
+    search: index=vmware sourcetype="vmware:esxlog:syslog"
+    constraint_origin: derived
+    broad_refs: 0
+    sources:
+    - esxi:syslog
+    cim_tags: false
+  - feed: linux_syslog
+    in_scope: true
+    eventtype: mitre_dc0005_scheduled_job_metadata__linux_syslog
+    search: >-
+      index=linux sourcetype IN (linux_messages_syslog, linux_secure, syslog) (process=CRON OR process=cron OR process=crond)
+    constraint_origin: defaults
+    broad_refs: 0
+    sources:
+    - linux:cron
+    cim_tags: false
   - feed: wineventlog
-    have: true
     in_scope: true
     eventtype: mitre_dc0005_scheduled_job_metadata__wineventlog
     search: >-
@@ -119,29 +137,7 @@ derived:
     - WinEventLog:System
     - WinEventLog:TaskScheduler
     cim_tags: false
-  - feed: esxi_syslog
-    have: false
-    in_scope: true
-    eventtype: mitre_dc0005_scheduled_job_metadata__esxi_syslog
-    search: index=vmware sourcetype="vmware:esxlog:syslog"
-    constraint_origin: derived
-    broad_refs: 0
-    sources:
-    - esxi:syslog
-    cim_tags: false
-  - feed: linux_syslog
-    have: false
-    in_scope: true
-    eventtype: mitre_dc0005_scheduled_job_metadata__linux_syslog
-    search: >-
-      index=linux sourcetype IN (linux_messages_syslog, linux_secure, syslog) (process=CRON OR process=cron OR process=crond)
-    constraint_origin: defaults
-    broad_refs: 0
-    sources:
-    - linux:cron
-    cim_tags: false
   - feed: macos
-    have: false
     in_scope: false
     eventtype: null
     search: null

@@ -716,65 +716,7 @@ derived:
     - >-
       bulk export query returning above bulk query threshold records from account not in approved historian clients
   feeds:
-  - feed: palo_alto
-    have: true
-    in_scope: true
-    eventtype: mitre_dc0064_command_execution__palo_alto
-    search: index=pan_logs sourcetype IN ("pan:config", "pan:system")
-    constraint_origin: defaults
-    broad_refs: 0
-    sources:
-    - networkdevice:Firewall
-    - networkdevice:cli
-    - networkdevice:config
-    - networkdevice:syslog
-    cim_tags: false
-  - feed: powershell_logging
-    have: true
-    in_scope: true
-    eventtype: mitre_dc0064_command_execution__powershell_logging
-    search: >-
-      index=wineventlog source="XmlWinEventLog:Microsoft-Windows-PowerShell/Operational" EventCode IN (4103, 4104)
-    constraint_origin: defaults
-    broad_refs: 0
-    sources:
-    - WinEventLog:PowerShell
-    cim_tags: false
-  - feed: sysmon
-    have: true
-    in_scope: true
-    eventtype: mitre_dc0064_command_execution__sysmon
-    search: index=sysmon source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode IN (1)
-    constraint_origin: defaults
-    broad_refs: 0
-    sources:
-    - EDR:cli
-    cim_tags: true
-  - feed: trellix_epo
-    have: true
-    in_scope: true
-    eventtype: mitre_dc0064_command_execution__trellix_epo
-    search: index=epo sourcetype="mcafee:epo:syslog" (threat_type="AMSI*" OR threat_name="AMSI*")
-    constraint_origin: defaults
-    broad_refs: 0
-    sources:
-    - EDR:AMSI
-    cim_tags: false
-  - feed: wineventlog
-    have: true
-    in_scope: true
-    eventtype: mitre_dc0064_command_execution__wineventlog
-    search: index=wineventlog source="XmlWinEventLog:Security" EventCode IN (4688)
-    constraint_origin: defaults
-    broad_refs: 6
-    sources:
-    - WinEventLog:Microsoft-Office-Alerts
-    - WinEventLog:Microsoft-Office/OutlookAddinMonitor
-    - WinEventLog:Security
-    - gpo:deployment
-    cim_tags: true
   - feed: auditd
-    have: false
     in_scope: true
     eventtype: mitre_dc0064_command_execution__auditd
     search: >-
@@ -791,7 +733,6 @@ derived:
     - linux:cli
     cim_tags: true
   - feed: container_runtime
-    have: false
     in_scope: true
     eventtype: mitre_dc0064_command_execution__container_runtime
     search: index=k8s sourcetype IN ("docker:daemon", "docker:events") (status IN (exec_create, exec_start))
@@ -802,7 +743,6 @@ derived:
     - docker:events
     cim_tags: false
   - feed: ebpf
-    have: false
     in_scope: true
     eventtype: mitre_dc0064_command_execution__ebpf
     search: index=linux sourcetype=falco
@@ -812,7 +752,6 @@ derived:
     - ebpf:syscalls
     cim_tags: false
   - feed: edr_telemetry
-    have: false
     in_scope: true
     eventtype: mitre_dc0064_command_execution__edr_telemetry
     search: index=edr sourcetype="edr:telemetry"
@@ -823,7 +762,6 @@ derived:
     - EDR:cli
     cim_tags: false
   - feed: esxi_syslog
-    have: false
     in_scope: true
     eventtype: mitre_dc0064_command_execution__esxi_syslog
     search: index=vmware sourcetype="vmware:esxlog:shell"
@@ -837,7 +775,6 @@ derived:
     - esxi:vobd
     cim_tags: false
   - feed: kubernetes_audit
-    have: false
     in_scope: true
     eventtype: mitre_dc0064_command_execution__kubernetes_audit
     search: >-
@@ -848,7 +785,6 @@ derived:
     - kubernetes:audit
     cim_tags: false
   - feed: netdev_syslog
-    have: false
     in_scope: true
     eventtype: mitre_dc0064_command_execution__netdev_syslog
     search: index=netops sourcetype IN ("cisco:asa", "cisco:ios", syslog)
@@ -860,8 +796,47 @@ derived:
     - networkdevice:config
     - networkdevice:syslog
     cim_tags: false
+  - feed: palo_alto
+    in_scope: true
+    eventtype: mitre_dc0064_command_execution__palo_alto
+    search: index=pan_logs sourcetype IN ("pan:config", "pan:system")
+    constraint_origin: defaults
+    broad_refs: 0
+    sources:
+    - networkdevice:Firewall
+    - networkdevice:cli
+    - networkdevice:config
+    - networkdevice:syslog
+    cim_tags: false
+  - feed: powershell_logging
+    in_scope: true
+    eventtype: mitre_dc0064_command_execution__powershell_logging
+    search: >-
+      index=wineventlog source="XmlWinEventLog:Microsoft-Windows-PowerShell/Operational" EventCode IN (4103, 4104)
+    constraint_origin: defaults
+    broad_refs: 0
+    sources:
+    - WinEventLog:PowerShell
+    cim_tags: false
+  - feed: sysmon
+    in_scope: true
+    eventtype: mitre_dc0064_command_execution__sysmon
+    search: index=sysmon source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode IN (1)
+    constraint_origin: defaults
+    broad_refs: 0
+    sources:
+    - EDR:cli
+    cim_tags: true
+  - feed: trellix_epo
+    in_scope: true
+    eventtype: mitre_dc0064_command_execution__trellix_epo
+    search: index=epo sourcetype="mcafee:epo:syslog" (threat_type="AMSI*" OR threat_name="AMSI*")
+    constraint_origin: defaults
+    broad_refs: 0
+    sources:
+    - EDR:AMSI
+    cim_tags: false
   - feed: vcenter
-    have: false
     in_scope: true
     eventtype: mitre_dc0064_command_execution__vcenter
     search: index=vmware sourcetype="vmware:vclog:vpxd"
@@ -870,8 +845,19 @@ derived:
     sources:
     - esxi:vpxd
     cim_tags: false
+  - feed: wineventlog
+    in_scope: true
+    eventtype: mitre_dc0064_command_execution__wineventlog
+    search: index=wineventlog source="XmlWinEventLog:Security" EventCode IN (4688)
+    constraint_origin: defaults
+    broad_refs: 6
+    sources:
+    - WinEventLog:Microsoft-Office-Alerts
+    - WinEventLog:Microsoft-Office/OutlookAddinMonitor
+    - WinEventLog:Security
+    - gpo:deployment
+    cim_tags: true
   - feed: aws
-    have: false
     in_scope: false
     eventtype: null
     search: null
@@ -881,7 +867,6 @@ derived:
     - AWS:CloudTrail
     cim_tags: false
   - feed: gcp
-    have: false
     in_scope: false
     eventtype: null
     search: null
@@ -891,7 +876,6 @@ derived:
     - gcp:audit
     cim_tags: false
   - feed: m365_unified
-    have: false
     in_scope: false
     eventtype: null
     search: null
@@ -904,7 +888,6 @@ derived:
     - m365:unified
     cim_tags: false
   - feed: macos
-    have: false
     in_scope: false
     eventtype: null
     search: null
@@ -917,7 +900,6 @@ derived:
     - macos:unifiedlog
     cim_tags: false
   - feed: mobile
-    have: false
     in_scope: false
     eventtype: null
     search: null
@@ -929,7 +911,6 @@ derived:
     - mobile:DynamicAnalysis
     cim_tags: false
   - feed: ot
-    have: false
     in_scope: false
     eventtype: null
     search: null
@@ -939,7 +920,6 @@ derived:
     - historian:applog
     cim_tags: false
   - feed: saas
-    have: false
     in_scope: false
     eventtype: null
     search: null

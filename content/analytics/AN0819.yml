@@ -48,7 +48,7 @@ attack:
   - field: SignerAllowList
     description: Trusted code signers/publishers to suppress benign admin tools.
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: anomaly
   suggested_tuning:
   - element: TimeWindow

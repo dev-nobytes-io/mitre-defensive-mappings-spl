@@ -10,18 +10,18 @@ ATT&CK v20.1 Enterprise data components rendered as Splunk knowledge objects.
 | Lookups | `lookups/mitre_attack_*.csv` | ATT&CK metadata (components, log sources, analytics, detection strategies, techniques, feeds). |
 | Tuning lookups | `lookups/mitre_allowlist_*.csv`, `mitre_asset_roles.csv`, ... | Seed rows only. Analytics reference these by name; edit them in place (they are never overwritten by a rebuild). |
 
-Components with at least one live feed: 64. In scope but waiting on a feed you have not ticked: 22. Total: 106.
+Components with at least one feed on an in-scope platform: 86 of 106.
 
 ## Install
 
-1. Edit `config/stack.yml` in the repo: tick `have: true` on the feeds you forward, set `index` and `sourcetypes` to match your environment, rebuild (`make build`).
-   Or install as is and override stanzas in `local/eventtypes.conf`.
+1. Edit `config/stack.yml` in the repo: set `index` and `sourcetypes` to match your environment, rebuild (`make build`).
+   Or install as is and override stanzas in `local/eventtypes.conf`. Eventtypes for feeds you do not collect match nothing; disable them in `local/` if you prefer.
 2. Copy this directory to `$SPLUNK_HOME/etc/apps/` on search heads (and on ES search heads for the analytics phase). Restart or debug/refresh.
-3. Check: `| eventcount summarize=false index=* | search index IN (sysmon, wineventlog, corelight, pan_logs, epo)` then `eventtype=mitre_dc0032_process_creation | stats count by eventtype`.
+3. Check: `| inputlookup mitre_attack_feeds.csv | where render=1 | table feed index sourcetypes` against `| eventcount summarize=false index=*`, then `eventtype=mitre_dc0032_process_creation | stats count by eventtype`.
+4. Scope the telemetry health search to the feeds you collect: set the `mitre_health_feeds` macro (for example `feed IN (sysmon, wineventlog)`).
 
 ## Notes
 
-* Eventtypes for feeds not ticked are shipped `disabled = 1`; enable when the feed arrives.
 * Windows event log, Sysmon and PowerShell eventtypes match on `source=XmlWinEventLog:<channel>`, which is correct for Splunk_TA_windows 5.0+ (sourcetype `XmlWinEventLog`) and for older versions alike.
 * `wireshark` eventtypes are hunt-only and disabled.
 * Eventtypes are not usable with `tstats`. For high-volume components use the `mitre_dcXXXX_dm` / `_dm_where` macros against accelerated CIM data models.

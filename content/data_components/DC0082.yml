@@ -459,8 +459,19 @@ derived:
     channels:
     - NEFilterFlow / per-app VPN / secure-web-gateway flow metadata
   feeds:
+  - feed: auditd
+    in_scope: true
+    eventtype: mitre_dc0082_network_connection_creation__auditd
+    search: >-
+      index=linux sourcetype="linux:audit" type IN (SYSCALL) (syscall IN (accept, accept4, bind, connect, listen,
+      socket) OR SYSCALL IN (accept, accept4, bind, connect, listen, socket))
+    constraint_origin: defaults
+    broad_refs: 0
+    sources:
+    - auditd:SYSCALL
+    - ebpf:syscalls
+    cim_tags: false
   - feed: corelight
-    have: true
     in_scope: true
     eventtype: mitre_dc0082_network_connection_creation__corelight
     search: index=corelight sourcetype=corelight_conn
@@ -473,8 +484,55 @@ derived:
     - Network Traffic
     - container:cni
     cim_tags: true
+  - feed: ebpf
+    in_scope: true
+    eventtype: mitre_dc0082_network_connection_creation__ebpf
+    search: index=linux sourcetype=falco
+    constraint_origin: derived
+    broad_refs: 2
+    sources:
+    - ebpf:syscalls
+    cim_tags: false
+  - feed: esxi_syslog
+    in_scope: true
+    eventtype: mitre_dc0082_network_connection_creation__esxi_syslog
+    search: index=vmware sourcetype IN ("vmware:esxlog:hostd", "vmware:esxlog:vmkernel")
+    constraint_origin: defaults
+    broad_refs: 0
+    sources:
+    - esxi:esxupdate
+    - esxi:hostd
+    - esxi:vmkernel
+    cim_tags: false
+  - feed: linux_osquery
+    in_scope: true
+    eventtype: mitre_dc0082_network_connection_creation__linux_osquery
+    search: >-
+      index=osquery sourcetype="osquery:results" (name=process_open_sockets OR name=socket_events OR name=listening_ports)
+    constraint_origin: defaults
+    broad_refs: 6
+    sources:
+    - linux:osquery
+    cim_tags: false
+  - feed: netdev_syslog
+    in_scope: true
+    eventtype: mitre_dc0082_network_connection_creation__netdev_syslog
+    search: index=netops sourcetype IN ("cisco:asa", "cisco:ios", syslog)
+    constraint_origin: derived
+    broad_refs: 3
+    sources:
+    - networkdevice:syslog
+    cim_tags: false
+  - feed: netflow
+    in_scope: true
+    eventtype: mitre_dc0082_network_connection_creation__netflow
+    search: index=netflow sourcetype="stream:netflow"
+    constraint_origin: derived
+    broad_refs: 2
+    sources:
+    - container:cni
+    cim_tags: false
   - feed: palo_alto
-    have: true
     in_scope: true
     eventtype: mitre_dc0082_network_connection_creation__palo_alto
     search: index=pan_logs sourcetype="pan:traffic"
@@ -488,7 +546,6 @@ derived:
     - networkdevice:syslog
     cim_tags: true
   - feed: sysmon
-    have: true
     in_scope: true
     eventtype: mitre_dc0082_network_connection_creation__sysmon
     search: index=sysmon source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode IN (3)
@@ -497,8 +554,16 @@ derived:
     sources:
     - WinEventLog:Sysmon
     cim_tags: true
+  - feed: sysmon_linux
+    in_scope: true
+    eventtype: mitre_dc0082_network_connection_creation__sysmon_linux
+    search: index=linux sourcetype="sysmon:linux" EventCode IN (3)
+    constraint_origin: defaults
+    broad_refs: 0
+    sources:
+    - linux:Sysmon
+    cim_tags: false
   - feed: wineventlog
-    have: true
     in_scope: true
     eventtype: mitre_dc0082_network_connection_creation__wineventlog
     search: >-
@@ -512,84 +577,7 @@ derived:
     - WinEventLog:Security
     - WinEventLog:System
     cim_tags: false
-  - feed: auditd
-    have: false
-    in_scope: true
-    eventtype: mitre_dc0082_network_connection_creation__auditd
-    search: >-
-      index=linux sourcetype="linux:audit" type IN (SYSCALL) (syscall IN (accept, accept4, bind, connect, listen,
-      socket) OR SYSCALL IN (accept, accept4, bind, connect, listen, socket))
-    constraint_origin: defaults
-    broad_refs: 0
-    sources:
-    - auditd:SYSCALL
-    - ebpf:syscalls
-    cim_tags: false
-  - feed: ebpf
-    have: false
-    in_scope: true
-    eventtype: mitre_dc0082_network_connection_creation__ebpf
-    search: index=linux sourcetype=falco
-    constraint_origin: derived
-    broad_refs: 2
-    sources:
-    - ebpf:syscalls
-    cim_tags: false
-  - feed: esxi_syslog
-    have: false
-    in_scope: true
-    eventtype: mitre_dc0082_network_connection_creation__esxi_syslog
-    search: index=vmware sourcetype IN ("vmware:esxlog:hostd", "vmware:esxlog:vmkernel")
-    constraint_origin: defaults
-    broad_refs: 0
-    sources:
-    - esxi:esxupdate
-    - esxi:hostd
-    - esxi:vmkernel
-    cim_tags: false
-  - feed: linux_osquery
-    have: false
-    in_scope: true
-    eventtype: mitre_dc0082_network_connection_creation__linux_osquery
-    search: >-
-      index=osquery sourcetype="osquery:results" (name=process_open_sockets OR name=socket_events OR name=listening_ports)
-    constraint_origin: defaults
-    broad_refs: 6
-    sources:
-    - linux:osquery
-    cim_tags: false
-  - feed: netdev_syslog
-    have: false
-    in_scope: true
-    eventtype: mitre_dc0082_network_connection_creation__netdev_syslog
-    search: index=netops sourcetype IN ("cisco:asa", "cisco:ios", syslog)
-    constraint_origin: derived
-    broad_refs: 3
-    sources:
-    - networkdevice:syslog
-    cim_tags: false
-  - feed: netflow
-    have: false
-    in_scope: true
-    eventtype: mitre_dc0082_network_connection_creation__netflow
-    search: index=netflow sourcetype="stream:netflow"
-    constraint_origin: derived
-    broad_refs: 2
-    sources:
-    - container:cni
-    cim_tags: false
-  - feed: sysmon_linux
-    have: false
-    in_scope: true
-    eventtype: mitre_dc0082_network_connection_creation__sysmon_linux
-    search: index=linux sourcetype="sysmon:linux" EventCode IN (3)
-    constraint_origin: defaults
-    broad_refs: 0
-    sources:
-    - linux:Sysmon
-    cim_tags: false
   - feed: aws
-    have: false
     in_scope: false
     eventtype: null
     search: null
@@ -599,7 +587,6 @@ derived:
     - AWS:VPCFlowLogs
     cim_tags: false
   - feed: macos
-    have: false
     in_scope: false
     eventtype: null
     search: null
@@ -611,7 +598,6 @@ derived:
     - macos:unifiedlog
     cim_tags: false
   - feed: mobile
-    have: false
     in_scope: false
     eventtype: null
     search: null

@@ -42,7 +42,7 @@ attack:
   - field: FileSizeThresholdMB
     description: Minimum archive size threshold to filter out benign small compressions.
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: anomaly
   suggested_tuning:
   - element: SuspiciousExtensions

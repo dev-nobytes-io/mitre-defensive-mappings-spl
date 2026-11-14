@@ -2,7 +2,7 @@
 
 [ATT&CK](https://attack.mitre.org/datacomponents/DC0091) · version 2.0 · modified 2025-11-12 · ATT&CK release 20.1
 
-Status: **Ready** (needs a feed you have not ticked) · umbrella eventtype `mitre_dc0091_container_enumeration`
+Umbrella eventtype `mitre_dc0091_container_enumeration` over 1 feed(s)
 
 > "Container Enumeration" data component captures events and actions related to listing and identifying active or available containers within a containerized environment. This includes information about running, stopped, or configured containers, such as their names, IDs, statuses, or associated images. Monitoring this activity is crucial for detecting unauthorized discovery or reconnaissance efforts. Examples:   - Docker Example: `docker ps`, `docker ps -a` - Kubernetes Example: `kubectl get pods`, `kubectl get deployments` - Cloud Container Services Example     - AWS ECS: API Call: ListTasks or ListContainers     - Azure Kubernetes Service: API Call: List pod or container instances.     - Google Kubernetes Engine (GKE): API Call: Retrieve deployments and their associated containers.
 
@@ -25,18 +25,15 @@ flowchart LR
   DC --> LS1["containerd:events<br/>2 refs"]
   LS1 --> F_container_runtime
   F_container_runtime --> ET_container_runtime[/"mitre_dc0091_container_enumeration__container_runtime"/]
-  class F_container_runtime ready
-  classDef live fill:#d4edda,stroke:#2e7d32,color:#1b1b1b
-  classDef ready fill:#fff3cd,stroke:#b26a00,color:#1b1b1b
 ```
 
 ## Requirements
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
+| Feed | Schedule | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `container_runtime` | ready (tick in stack.yml) | sourcetype=`containerd:events`, sourcetype=`docker:daemon` | `(status=list OR method=GET uri="/containers/json*")` | defaults | docker events scripted input or OpenTelemetry (docker:events, containerd) |
+| `container_runtime` | scheduled | sourcetype=`containerd:events`, sourcetype=`docker:daemon` | `(status=list OR method=GET uri="/containers/json*")` | defaults | docker events scripted input or OpenTelemetry (docker:events, containerd) |
 
 Review notes: `container_runtime` has 4 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *defaults*.
 
@@ -47,7 +44,6 @@ Eventtypes (literal constraints, see `dist/splunk/TA-mitre-attack-datacomponents
 ```ini
 [mitre_dc0091_container_enumeration__container_runtime]
 search = index=k8s sourcetype IN ("containerd:events", "docker:daemon") (status=list OR method=GET uri="/containers/json*")
-disabled = 1
 
 [mitre_dc0091_container_enumeration]
 search = eventtype=mitre_dc0091_container_enumeration__container_runtime

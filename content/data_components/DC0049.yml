@@ -55,7 +55,6 @@ derived:
     - snapshot.removeall or snapshot file deletion
   feeds:
   - feed: azure_activity
-    have: false
     in_scope: true
     eventtype: mitre_dc0049_snapshot_deletion__azure_activity
     search: index=azure sourcetype="mscs:azure:audit" (operationName="Microsoft.Compute/snapshots/delete")
@@ -65,7 +64,6 @@ derived:
     - (added by dc_defaults/curated)
     cim_tags: false
   - feed: esxi_syslog
-    have: false
     in_scope: true
     eventtype: mitre_dc0049_snapshot_deletion__esxi_syslog
     search: index=vmware sourcetype="vmware:esxlog:hostd" (snapshot)
@@ -75,7 +73,6 @@ derived:
     - esxi:hostd
     cim_tags: false
   - feed: aws
-    have: false
     in_scope: false
     eventtype: null
     search: null

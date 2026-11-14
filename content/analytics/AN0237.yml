@@ -40,7 +40,7 @@ attack:
   - field: TimeWindow
     description: The duration between file decode and execution may differ across implementations.
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: ttp
   suggested_tuning:
   - element: Image

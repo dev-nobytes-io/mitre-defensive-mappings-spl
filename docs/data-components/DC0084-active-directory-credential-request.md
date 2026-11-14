@@ -2,7 +2,7 @@
 
 [ATT&CK](https://attack.mitre.org/datacomponents/DC0084) · version 2.0 · modified 2025-11-12 · ATT&CK release 20.1
 
-Status: **Live** · umbrella eventtype `mitre_dc0084_active_directory_credential_request`
+Umbrella eventtype `mitre_dc0084_active_directory_credential_request` over 2 feed(s)
 
 > Requests for authentication credentials via Kerberos or other methods like NTLM and LDAP queries. Examples:  - Kerberos TGT and Service Tickets (Event IDs 4768, 4769) - NTLM Authentication Events - LDAP Bind Requests.
 
@@ -26,9 +26,6 @@ flowchart LR
   F_linux_syslog["Linux syslog / journald"]
   LS1 --> F_linux_syslog
   F_wineventlog --> ET_wineventlog[/"mitre_dc0084_active_directory_credential_request__wineventlog"/]
-  class F_wineventlog live
-  classDef live fill:#d4edda,stroke:#2e7d32,color:#1b1b1b
-  classDef ready fill:#fff3cd,stroke:#b26a00,color:#1b1b1b
 ```
 
 ## Requirements
@@ -39,10 +36,10 @@ Component specific:
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
+| Feed | Schedule | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `corelight` | live | sourcetype=`corelight_kerberos` | `(whole feed)` | defaults | Corelight App for Splunk (corelight_<log>). For TA_zeek use prefix zeek: and suffix :json. |
-| `wineventlog` | live | source=`XmlWinEventLog:Security` | `EventCode IN (4768, 4769, 4770, 4771, 4773)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true) |
+| `corelight` | scheduled | sourcetype=`corelight_kerberos` | `(whole feed)` | defaults | Corelight App for Splunk (corelight_<log>). For TA_zeek use prefix zeek: and suffix :json. |
+| `wineventlog` | scheduled | source=`XmlWinEventLog:Security` | `EventCode IN (4768, 4769, 4770, 4771, 4773)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true) |
 
 Collection prerequisites:
 

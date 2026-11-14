@@ -42,7 +42,7 @@ attack:
   - field: FileSizeThresholdMB
     description: Minimum file size for flagging archive creation to reduce noise from benign small compressions.
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: ttp
   suggested_tuning:
   - element: ArchiveExtensions

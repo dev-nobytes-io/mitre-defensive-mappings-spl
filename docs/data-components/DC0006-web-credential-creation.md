@@ -2,7 +2,7 @@
 
 [ATT&CK](https://attack.mitre.org/datacomponents/DC0006) · version 2.0 · modified 2025-11-12 · ATT&CK release 20.1
 
-Status: **Live** · umbrella eventtype `mitre_dc0006_web_credential_creation`
+Umbrella eventtype `mitre_dc0006_web_credential_creation` over 2 feed(s)
 
 > Initial construction of new web credential material (ex: Windows EID 1200 or 4769)
 
@@ -25,54 +25,49 @@ flowchart LR
   DC --> LS1["azure:signinlogs<br/>2 refs"]
   F_azure_entra["Microsoft Entra ID sign-in and audit logs"]
   LS1 --> F_azure_entra
-  F_wineventlog --> ET_wineventlog[/"mitre_dc0006_web_credential_creation__wineventlog"/]
-  class F_wineventlog live
   F_azure_entra --> ET_azure_entra[/"mitre_dc0006_web_credential_creation__azure_entra"/]
-  class F_azure_entra ready
-  classDef live fill:#d4edda,stroke:#2e7d32,color:#1b1b1b
-  classDef ready fill:#fff3cd,stroke:#b26a00,color:#1b1b1b
+  F_wineventlog --> ET_wineventlog[/"mitre_dc0006_web_credential_creation__wineventlog"/]
 ```
 
 ## Requirements
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
+| Feed | Schedule | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `wineventlog` | live | source=`XmlWinEventLog:AD FS/Admin`, source=`XmlWinEventLog:Security` | `EventCode IN (1200, 1202, 4662, 4769)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true) |
-| `azure_entra` | ready (tick in stack.yml) | sourcetype=`azure:aad:audit`, sourcetype=`azure:aad:signin` | `(whole feed)` | defaults | Splunk Add-on for Microsoft Azure (azure:aad:signin, azure:aad:audit) or Microsoft Cloud Services add-on via Event Hub |
+| `azure_entra` | scheduled | sourcetype=`azure:aad:audit`, sourcetype=`azure:aad:signin` | `(whole feed)` | defaults | Splunk Add-on for Microsoft Azure (azure:aad:signin, azure:aad:audit) or Microsoft Cloud Services add-on via Event Hub |
+| `wineventlog` | scheduled | source=`XmlWinEventLog:AD FS/Admin`, source=`XmlWinEventLog:Security` | `EventCode IN (1200, 1202, 4662, 4769)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true) |
 
 Collection prerequisites:
 
+- **azure_entra**: Diagnostic settings on the tenant streaming SignInLogs
+- **azure_entra**: AuditLogs
+- **azure_entra**: NonInteractiveUserSignInLogs
+- **azure_entra**: ServicePrincipalSignInLogs to an Event Hub or direct Graph pull.
 - **wineventlog**: Advanced Audit Policy configured (at minimum Process Creation, Logon, Account Management, Object Access, Policy Change, Privilege Use, Detailed Tracking). Without the matching subcategory the EventCodes below never fire.
 - **wineventlog**: Include command line in process creation events enabled for 4688 (Computer Configuration > Administrative Templates > System > Audit Process Creation).
 - **wineventlog**: PowerShell Script Block Logging (4104) and Module Logging (4103) enabled via GPO for the PowerShell/Operational channel.
 - **wineventlog**: Object access events (4656/4663/4657/4660/4670) require SACLs on the files/keys of interest.
 - **wineventlog**: Non-default channels (TaskScheduler, WMI-Activity, CodeIntegrity, Defender, Firewall, WinRM, SMBClient/Server...) must be listed as inputs in Splunk_TA_windows inputs.conf; several are disabled by default in Windows.
-- **azure_entra**: Diagnostic settings on the tenant streaming SignInLogs
-- **azure_entra**: AuditLogs
-- **azure_entra**: NonInteractiveUserSignInLogs
-- **azure_entra**: ServicePrincipalSignInLogs to an Event Hub or direct Graph pull.
 
-Review notes: `wineventlog` has 2 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *defaults*; `azure_entra` has 2 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *defaults*.
+Review notes: `azure_entra` has 2 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *defaults*; `wineventlog` has 2 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *defaults*.
 
 ## Splunk
 
 Eventtypes (literal constraints, see `dist/splunk/TA-mitre-attack-datacomponents/default/eventtypes.conf`):
 
 ```ini
+[mitre_dc0006_web_credential_creation__azure_entra]
+search = index=azure sourcetype IN ("azure:aad:audit", "azure:aad:signin")
+
 [mitre_dc0006_web_credential_creation__wineventlog]
 search = index=wineventlog source IN ("XmlWinEventLog:AD FS/Admin", "XmlWinEventLog:Security") EventCode IN (1200, 1202, 4662, 4769)
 
-[mitre_dc0006_web_credential_creation__azure_entra]
-search = index=azure sourcetype IN ("azure:aad:audit", "azure:aad:signin")
-disabled = 1
-
 [mitre_dc0006_web_credential_creation]
-search = eventtype=mitre_dc0006_web_credential_creation__wineventlog OR eventtype=mitre_dc0006_web_credential_creation__azure_entra
+search = eventtype=mitre_dc0006_web_credential_creation__azure_entra OR eventtype=mitre_dc0006_web_credential_creation__wineventlog
 ```
 
-Macros for analytics: `` `mitre_dc0006` `` (umbrella), `` `mitre_dc0006_wineventlog` ``, `` `mitre_dc0006_azure_entra` ``, `` `mitre_dc0006_filter` `` (site exclusions).
+Macros for analytics: `` `mitre_dc0006` `` (umbrella), `` `mitre_dc0006_azure_entra` ``, `` `mitre_dc0006_wineventlog` ``, `` `mitre_dc0006_filter` `` (site exclusions).
 CIM: no data model mapping; analytics on this component run as raw eventtype searches.
 
 ## Sigma

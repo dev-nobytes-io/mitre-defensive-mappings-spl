@@ -30,7 +30,7 @@ attack:
   - field: parent_process_name
     description: Baseline parent-child process lineage can help distinguish admin tools from malicious scripts
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: hunting
   suggested_tuning:
   - element: user_context

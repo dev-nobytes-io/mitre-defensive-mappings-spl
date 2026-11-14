@@ -36,7 +36,7 @@ attack:
   - field: TimeWindow
     description: Look for connections persisting outside of normal business hours
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: anomaly
   suggested_tuning:
   - element: ProcessName

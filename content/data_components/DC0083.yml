@@ -124,7 +124,6 @@ derived:
     - Instrumented app API trace and corresponding cloud-service audit/API telemetry
   feeds:
   - feed: azure_activity
-    have: false
     in_scope: true
     eventtype: mitre_dc0083_cloud_service_enumeration__azure_activity
     search: index=azure sourcetype="mscs:azure:audit"
@@ -134,7 +133,6 @@ derived:
     - (added by dc_defaults/curated)
     cim_tags: true
   - feed: azure_entra
-    have: false
     in_scope: true
     eventtype: mitre_dc0083_cloud_service_enumeration__azure_entra
     search: index=azure sourcetype="azure:aad:audit"
@@ -145,7 +143,6 @@ derived:
     - azure:signinlogs
     cim_tags: false
   - feed: aws
-    have: false
     in_scope: false
     eventtype: null
     search: null
@@ -155,7 +152,6 @@ derived:
     - AWS:CloudTrail
     cim_tags: false
   - feed: gcp
-    have: false
     in_scope: false
     eventtype: null
     search: null
@@ -165,7 +161,6 @@ derived:
     - gcp:secrets
     cim_tags: false
   - feed: m365_unified
-    have: false
     in_scope: false
     eventtype: null
     search: null
@@ -175,7 +170,6 @@ derived:
     - m365:unified
     cim_tags: false
   - feed: saas
-    have: false
     in_scope: false
     eventtype: null
     search: null

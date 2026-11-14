@@ -42,7 +42,7 @@ attack:
   - field: TimeWindow
     description: Controls how closely registry access must follow process creation for correlation.
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: hunting
   suggested_tuning:
   - element: TargetRegistryPath

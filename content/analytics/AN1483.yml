@@ -37,7 +37,7 @@ attack:
   - field: TimeWindow
     description: Correlate process creation with network connection within N seconds.
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: anomaly
   suggested_tuning:
   - element: AllowedTools

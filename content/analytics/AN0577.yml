@@ -52,7 +52,7 @@ attack:
   - field: HashBaseline
     description: Baseline hashes for legitimate DLLs used to detect substitution.
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: anomaly
   suggested_tuning:
   - element: AllowedDllPaths

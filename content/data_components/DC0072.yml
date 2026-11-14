@@ -110,7 +110,6 @@ derived:
     - create
   feeds:
   - feed: container_runtime
-    have: false
     in_scope: true
     eventtype: mitre_dc0072_container_creation__container_runtime
     search: index=k8s sourcetype IN ("containerd:events", "docker:daemon", "docker:events") (status=create)
@@ -122,7 +121,6 @@ derived:
     - docker:events
     cim_tags: false
   - feed: kubernetes_audit
-    have: false
     in_scope: true
     eventtype: mitre_dc0072_container_creation__kubernetes_audit
     search: >-

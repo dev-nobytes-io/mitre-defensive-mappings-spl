@@ -119,8 +119,16 @@ derived:
     channels:
     - permission change operations on datastores or VMs
   feeds:
+  - feed: azure_entra
+    in_scope: true
+    eventtype: mitre_dc0066_active_directory_object_modification__azure_entra
+    search: index=azure sourcetype="azure:aad:audit"
+    constraint_origin: defaults
+    broad_refs: 2
+    sources:
+    - azure:signinlogs
+    cim_tags: false
   - feed: wineventlog
-    have: true
     in_scope: true
     eventtype: mitre_dc0066_active_directory_object_modification__wineventlog
     search: >-
@@ -130,18 +138,7 @@ derived:
     sources:
     - WinEventLog:Security
     cim_tags: true
-  - feed: azure_entra
-    have: false
-    in_scope: true
-    eventtype: mitre_dc0066_active_directory_object_modification__azure_entra
-    search: index=azure sourcetype="azure:aad:audit"
-    constraint_origin: defaults
-    broad_refs: 2
-    sources:
-    - azure:signinlogs
-    cim_tags: false
   - feed: m365_unified
-    have: false
     in_scope: false
     eventtype: null
     search: null

@@ -538,32 +538,7 @@ derived:
       DeviceIoControl or raw socket creation to Industrial Control Systems (ICS) protocol port from process not
       in authorized ICS applications, bypassing documented vendor Software Development Kit (SDK) call pattern
   feeds:
-  - feed: sysmon
-    have: true
-    in_scope: true
-    eventtype: mitre_dc0021_os_api_execution__sysmon
-    search: index=sysmon source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode IN (8, 10, 25)
-    constraint_origin: defaults
-    broad_refs: 0
-    sources:
-    - EDR:file
-    - EDR:memory
-    - etw:Microsoft-Windows-Kernel-Process
-    cim_tags: false
-  - feed: wineventlog
-    have: true
-    in_scope: true
-    eventtype: mitre_dc0021_os_api_execution__wineventlog
-    search: index=wineventlog source="XmlWinEventLog:Security" EventCode IN (4656, 4663)
-    constraint_origin: defaults
-    broad_refs: 4
-    sources:
-    - WinEventLog:Application
-    - WinEventLog:Microsoft-Windows-COM/Operational
-    - WinEventLog:Security
-    cim_tags: false
   - feed: auditd
-    have: false
     in_scope: true
     eventtype: mitre_dc0021_os_api_execution__auditd
     search: >-
@@ -576,7 +551,6 @@ derived:
     - auditd:SYSCALL
     cim_tags: false
   - feed: edr_telemetry
-    have: false
     in_scope: true
     eventtype: mitre_dc0021_os_api_execution__edr_telemetry
     search: index=edr sourcetype="edr:telemetry"
@@ -588,7 +562,6 @@ derived:
     - EDR:memory
     cim_tags: false
   - feed: etw
-    have: false
     in_scope: true
     eventtype: mitre_dc0021_os_api_execution__etw
     search: index=etw sourcetype="etw:json" (ProviderName="Microsoft-Windows-Kernel-Process")
@@ -606,8 +579,29 @@ derived:
     - etw:Token
     - etw:generic
     cim_tags: false
+  - feed: sysmon
+    in_scope: true
+    eventtype: mitre_dc0021_os_api_execution__sysmon
+    search: index=sysmon source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode IN (8, 10, 25)
+    constraint_origin: defaults
+    broad_refs: 0
+    sources:
+    - EDR:file
+    - EDR:memory
+    - etw:Microsoft-Windows-Kernel-Process
+    cim_tags: false
+  - feed: wineventlog
+    in_scope: true
+    eventtype: mitre_dc0021_os_api_execution__wineventlog
+    search: index=wineventlog source="XmlWinEventLog:Security" EventCode IN (4656, 4663)
+    constraint_origin: defaults
+    broad_refs: 4
+    sources:
+    - WinEventLog:Application
+    - WinEventLog:Microsoft-Windows-COM/Operational
+    - WinEventLog:Security
+    cim_tags: false
   - feed: aws
-    have: false
     in_scope: false
     eventtype: null
     search: null
@@ -617,7 +611,6 @@ derived:
     - AWS:CloudTrail
     cim_tags: false
   - feed: macos
-    have: false
     in_scope: false
     eventtype: null
     search: null
@@ -629,7 +622,6 @@ derived:
     - macos:unifiedlog
     cim_tags: false
   - feed: mobile
-    have: false
     in_scope: false
     eventtype: null
     search: null
@@ -650,7 +642,7 @@ curated:
   requirements:
   - >-
     Treat the Sysmon-based eventtype as a partial proxy. The etw feed (Kernel-Process, Win32k, RPC, DotNETRuntime)
-    is the honest source and is unticked.
+    is the honest source.
   overrides:
     event_codes: {}
     cim: null

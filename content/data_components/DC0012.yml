@@ -70,8 +70,17 @@ derived:
     channels:
     - None
   feeds:
+  - feed: auditd
+    in_scope: true
+    eventtype: mitre_dc0012_scheduled_job_modification__auditd
+    search: >-
+      index=linux sourcetype="linux:audit" type IN (CONFIG_CHANGE, PATH) (name="/etc/cron*" OR name="/var/spool/cron/*")
+    constraint_origin: defaults
+    broad_refs: 0
+    sources:
+    - auditd:CONFIG_CHANGE
+    cim_tags: false
   - feed: wineventlog
-    have: true
     in_scope: true
     eventtype: mitre_dc0012_scheduled_job_modification__wineventlog
     search: >-
@@ -82,19 +91,7 @@ derived:
     sources:
     - WinEventLog:Security
     cim_tags: false
-  - feed: auditd
-    have: false
-    in_scope: true
-    eventtype: mitre_dc0012_scheduled_job_modification__auditd
-    search: >-
-      index=linux sourcetype="linux:audit" type IN (CONFIG_CHANGE, PATH) (name="/etc/cron*" OR name="/var/spool/cron/*")
-    constraint_origin: defaults
-    broad_refs: 0
-    sources:
-    - auditd:CONFIG_CHANGE
-    cim_tags: false
   - feed: m365_unified
-    have: false
     in_scope: false
     eventtype: null
     search: null

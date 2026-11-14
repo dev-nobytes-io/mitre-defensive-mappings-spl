@@ -187,32 +187,7 @@ derived:
     channels:
     - Unexpected changes in EFI or NVRAM variables controlling hardware boot state
   feeds:
-  - feed: palo_alto
-    have: true
-    in_scope: true
-    eventtype: mitre_dc0004_firmware_modification__palo_alto
-    search: index=pan_logs sourcetype="pan:system"
-    constraint_origin: defaults
-    broad_refs: 0
-    sources:
-    - networkdevice:config
-    - networkdevice:firmware
-    - networkdevice:syslog
-    cim_tags: false
-  - feed: wineventlog
-    have: true
-    in_scope: true
-    eventtype: mitre_dc0004_firmware_modification__wineventlog
-    search: >-
-      index=wineventlog source IN ("XmlWinEventLog:Microsoft-Windows-Kernel-Boot", "XmlWinEventLog:System") EventCode
-      IN (12, 13, 20, 1001)
-    constraint_origin: defaults
-    broad_refs: 2
-    sources:
-    - WinEventLog:Microsoft-Windows-Kernel-Boot
-    cim_tags: false
   - feed: auditd
-    have: false
     in_scope: true
     eventtype: mitre_dc0004_firmware_modification__auditd
     search: >-
@@ -224,7 +199,6 @@ derived:
     - auditd:SYSCALL
     cim_tags: false
   - feed: linux_osquery
-    have: false
     in_scope: true
     eventtype: mitre_dc0004_firmware_modification__linux_osquery
     search: index=osquery sourcetype="osquery:results"
@@ -235,7 +209,6 @@ derived:
     - firmware:smart
     cim_tags: false
   - feed: netdev_syslog
-    have: false
     in_scope: true
     eventtype: mitre_dc0004_firmware_modification__netdev_syslog
     search: index=netops sourcetype IN ("cisco:asa", "cisco:ios", syslog)
@@ -247,8 +220,18 @@ derived:
     - networkdevice:firmware
     - networkdevice:syslog
     cim_tags: false
+  - feed: palo_alto
+    in_scope: true
+    eventtype: mitre_dc0004_firmware_modification__palo_alto
+    search: index=pan_logs sourcetype="pan:system"
+    constraint_origin: defaults
+    broad_refs: 0
+    sources:
+    - networkdevice:config
+    - networkdevice:firmware
+    - networkdevice:syslog
+    cim_tags: false
   - feed: snmp
-    have: false
     in_scope: true
     eventtype: mitre_dc0004_firmware_modification__snmp
     search: index=netops sourcetype="sc4snmp:event"
@@ -260,7 +243,6 @@ derived:
     - networkdevice:firmware
     cim_tags: false
   - feed: windows_osquery
-    have: false
     in_scope: true
     eventtype: mitre_dc0004_firmware_modification__windows_osquery
     search: index=osquery sourcetype="osquery:results"
@@ -269,8 +251,18 @@ derived:
     sources:
     - firmware:integrity
     cim_tags: false
+  - feed: wineventlog
+    in_scope: true
+    eventtype: mitre_dc0004_firmware_modification__wineventlog
+    search: >-
+      index=wineventlog source IN ("XmlWinEventLog:Microsoft-Windows-Kernel-Boot", "XmlWinEventLog:System") EventCode
+      IN (12, 13, 20, 1001)
+    constraint_origin: defaults
+    broad_refs: 2
+    sources:
+    - WinEventLog:Microsoft-Windows-Kernel-Boot
+    cim_tags: false
   - feed: macos
-    have: false
     in_scope: false
     eventtype: null
     search: null

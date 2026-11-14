@@ -67,9 +67,9 @@ The TAs (Splunk_TA_windows, TA-microsoft-sysmon, Corelight, Palo Alto) already t
 
 ## 5. Collection prerequisites are part of coverage
 
-An eventtype with no events is false comfort. Each component page lists what has to be true at the source: audit subcategories and the 4688 command-line GPO, PowerShell Script Block Logging, SACLs for 4663/4657, Sysmon rule groups (ProcessAccess, ImageLoad, DNS, FileDelete are off in minimal configs), Corelight log set and sensor placement, PAN-OS log forwarding profiles on every rule, ePO event forwarding, auditd rule sets and ENRICHED format, ESXi remote syslog, Kubernetes audit policy, Entra diagnostic settings. Treat the list as the acceptance test when you tick a feed.
+An eventtype with no events is false comfort. Each component page lists what has to be true at the source: audit subcategories and the 4688 command-line GPO, PowerShell Script Block Logging, SACLs for 4663/4657, Sysmon rule groups (ProcessAccess, ImageLoad, DNS, FileDelete are off in minimal configs), Corelight log set and sensor placement, PAN-OS log forwarding profiles on every rule, ePO event forwarding, auditd rule sets and ENRICHED format, ESXi remote syslog, Kubernetes audit policy, Entra diagnostic settings. Treat the list as the acceptance test when you bring a feed in, and scope HEALTH0001 to your feeds with the `mitre_health_feeds` macro.
 
-Two generated health detections close this gap ([telemetry health](health.md)): HEALTH0001 lists every index and sourcetype or source a live eventtype depends on that has not arrived in 7 days or has gone silent, and HEALTH0002 flags hosts that stopped sending Sysmon or Security events and raises Host Status risk on them.
+Two generated health detections close this gap ([telemetry health](health.md)): HEALTH0001 lists every index and sourcetype or source an eventtype depends on (scoped by the `mitre_health_feeds` macro) that has not arrived in 7 days or has gone silent, and HEALTH0002 flags hosts that stopped sending Sysmon or Security events and raises Host Status risk on them.
 
 ## 6. Packaging and versioning
 

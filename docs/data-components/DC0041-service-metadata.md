@@ -2,7 +2,7 @@
 
 [ATT&CK](https://attack.mitre.org/datacomponents/DC0041) · version 2.0 · modified 2026-10-13 · ATT&CK release 20.1
 
-Status: **Live** · umbrella eventtype `mitre_dc0041_service_metadata`
+Umbrella eventtype `mitre_dc0041_service_metadata` over 6 feed(s)
 
 > Contextual data about a service/daemon, which may include information such as name, service executable, start type, etc.
 
@@ -47,37 +47,32 @@ flowchart LR
   LS8 --> F_palo_alto
   F_netdev_syslog["Router / switch / non-PAN firewall syslog, config change and AAA logs"]
   LS8 --> F_netdev_syslog
-  F_palo_alto --> ET_palo_alto[/"mitre_dc0041_service_metadata__palo_alto"/]
-  class F_palo_alto live
-  F_sysmon --> ET_sysmon[/"mitre_dc0041_service_metadata__sysmon"/]
-  class F_sysmon live
-  F_wineventlog --> ET_wineventlog[/"mitre_dc0041_service_metadata__wineventlog"/]
-  class F_wineventlog live
   F_auditd --> ET_auditd[/"mitre_dc0041_service_metadata__auditd"/]
-  class F_auditd ready
   F_esxi_syslog --> ET_esxi_syslog[/"mitre_dc0041_service_metadata__esxi_syslog"/]
-  class F_esxi_syslog ready
   F_linux_osquery --> ET_linux_osquery[/"mitre_dc0041_service_metadata__linux_osquery"/]
-  class F_linux_osquery ready
-  classDef live fill:#d4edda,stroke:#2e7d32,color:#1b1b1b
-  classDef ready fill:#fff3cd,stroke:#b26a00,color:#1b1b1b
+  F_palo_alto --> ET_palo_alto[/"mitre_dc0041_service_metadata__palo_alto"/]
+  F_sysmon --> ET_sysmon[/"mitre_dc0041_service_metadata__sysmon"/]
+  F_wineventlog --> ET_wineventlog[/"mitre_dc0041_service_metadata__wineventlog"/]
 ```
 
 ## Requirements
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
+| Feed | Schedule | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `palo_alto` | live | sourcetype=`pan:config`, sourcetype=`pan:system` | `(whole feed)` | defaults | Splunk Add-on for Palo Alto Networks (pan:*) |
-| `sysmon` | live | source=`XmlWinEventLog:Microsoft-Windows-Sysmon/Operational` | `EventCode IN (4)` | defaults | Splunk Add-on for Sysmon (needs Splunk_TA_windows for XML parsing) |
-| `wineventlog` | live | source=`XmlWinEventLog:System` | `EventCode IN (7034, 7035, 7036, 7040)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true) |
-| `auditd` | ready (tick in stack.yml) | sourcetype=`linux:audit` | `type IN (CONFIG_CHANGE)` | derived | Splunk Add-on for Unix and Linux (linux:audit) or auditd -> auditbeat/syslog |
-| `esxi_syslog` | ready (tick in stack.yml) | sourcetype=`vmware:esxlog:hostd` | `(whole feed)` | derived | Splunk Add-on for VMware ESXi Logs (vmware:esxlog:<log>) |
-| `linux_osquery` | ready (tick in stack.yml) | sourcetype=`osquery:results` | `(name=systemd_units OR name=startup_items)` | defaults | osquery TA |
+| `auditd` | scheduled | sourcetype=`linux:audit` | `type IN (CONFIG_CHANGE)` | derived | Splunk Add-on for Unix and Linux (linux:audit) or auditd -> auditbeat/syslog |
+| `esxi_syslog` | scheduled | sourcetype=`vmware:esxlog:hostd` | `(whole feed)` | derived | Splunk Add-on for VMware ESXi Logs (vmware:esxlog:<log>) |
+| `linux_osquery` | scheduled | sourcetype=`osquery:results` | `(name=systemd_units OR name=startup_items)` | defaults | osquery TA |
+| `palo_alto` | scheduled | sourcetype=`pan:config`, sourcetype=`pan:system` | `(whole feed)` | defaults | Splunk Add-on for Palo Alto Networks (pan:*) |
+| `sysmon` | scheduled | source=`XmlWinEventLog:Microsoft-Windows-Sysmon/Operational` | `EventCode IN (4)` | defaults | Splunk Add-on for Sysmon (needs Splunk_TA_windows for XML parsing) |
+| `wineventlog` | scheduled | source=`XmlWinEventLog:System` | `EventCode IN (7034, 7035, 7036, 7040)` | defaults | Splunk Add-on for Microsoft Windows (Splunk_TA_windows), XML rendering (renderXml = true) |
 
 Collection prerequisites:
 
+- **auditd**: audit rules for execve, connect, open/openat on sensitive paths, ptrace, module load, mount, setuid; a Neo23x0/auditd baseline or Florian Roth's rule set is a reasonable start.
+- **auditd**: log_format = ENRICHED in auditd.conf so syscall names and uids resolve (otherwise syscall numbers are architecture dependent).
+- **esxi_syslog**: Syslog.global.logHost set on every host; ESXi Shell/SSH audit enabled; consider Syslog.global.auditRecord (ESXi 8).
 - **palo_alto**: Log forwarding profiles attached to every security rule (traffic start+end, threat, url, wildfire, data).
 - **palo_alto**: System and Config logs forwarded from each firewall / Panorama; GlobalProtect logs enabled.
 - **palo_alto**: URL filtering and Threat Prevention licensed for pan:threat subtypes url/vulnerability/virus/spyware.
@@ -89,9 +84,6 @@ Collection prerequisites:
 - **wineventlog**: PowerShell Script Block Logging (4104) and Module Logging (4103) enabled via GPO for the PowerShell/Operational channel.
 - **wineventlog**: Object access events (4656/4663/4657/4660/4670) require SACLs on the files/keys of interest.
 - **wineventlog**: Non-default channels (TaskScheduler, WMI-Activity, CodeIntegrity, Defender, Firewall, WinRM, SMBClient/Server...) must be listed as inputs in Splunk_TA_windows inputs.conf; several are disabled by default in Windows.
-- **auditd**: audit rules for execve, connect, open/openat on sensitive paths, ptrace, module load, mount, setuid; a Neo23x0/auditd baseline or Florian Roth's rule set is a reasonable start.
-- **auditd**: log_format = ENRICHED in auditd.conf so syscall names and uids resolve (otherwise syscall numbers are architecture dependent).
-- **esxi_syslog**: Syslog.global.logHost set on every host; ESXi Shell/SSH audit enabled; consider Syslog.global.auditRecord (ESXi 8).
 
 Review notes: `linux_osquery` has 2 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *defaults*.
 
@@ -100,6 +92,15 @@ Review notes: `linux_osquery` has 2 ATT&CK reference(s) with no usable event fil
 Eventtypes (literal constraints, see `dist/splunk/TA-mitre-attack-datacomponents/default/eventtypes.conf`):
 
 ```ini
+[mitre_dc0041_service_metadata__auditd]
+search = index=linux sourcetype="linux:audit" type IN (CONFIG_CHANGE)
+
+[mitre_dc0041_service_metadata__esxi_syslog]
+search = index=vmware sourcetype="vmware:esxlog:hostd"
+
+[mitre_dc0041_service_metadata__linux_osquery]
+search = index=osquery sourcetype="osquery:results" (name=systemd_units OR name=startup_items)
+
 [mitre_dc0041_service_metadata__palo_alto]
 search = index=pan_logs sourcetype IN ("pan:config", "pan:system")
 
@@ -109,23 +110,11 @@ search = index=sysmon source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operationa
 [mitre_dc0041_service_metadata__wineventlog]
 search = index=wineventlog source="XmlWinEventLog:System" EventCode IN (7034, 7035, 7036, 7040)
 
-[mitre_dc0041_service_metadata__auditd]
-search = index=linux sourcetype="linux:audit" type IN (CONFIG_CHANGE)
-disabled = 1
-
-[mitre_dc0041_service_metadata__esxi_syslog]
-search = index=vmware sourcetype="vmware:esxlog:hostd"
-disabled = 1
-
-[mitre_dc0041_service_metadata__linux_osquery]
-search = index=osquery sourcetype="osquery:results" (name=systemd_units OR name=startup_items)
-disabled = 1
-
 [mitre_dc0041_service_metadata]
-search = eventtype=mitre_dc0041_service_metadata__palo_alto OR eventtype=mitre_dc0041_service_metadata__sysmon OR eventtype=mitre_dc0041_service_metadata__wineventlog OR eventtype=mitre_dc0041_service_metadata__auditd OR eventtype=mitre_dc0041_service_metadata__esxi_syslog OR eventtype=mitre_dc0041_service_metadata__linux_osquery
+search = eventtype=mitre_dc0041_service_metadata__auditd OR eventtype=mitre_dc0041_service_metadata__esxi_syslog OR eventtype=mitre_dc0041_service_metadata__linux_osquery OR eventtype=mitre_dc0041_service_metadata__palo_alto OR eventtype=mitre_dc0041_service_metadata__sysmon OR eventtype=mitre_dc0041_service_metadata__wineventlog
 ```
 
-Macros for analytics: `` `mitre_dc0041` `` (umbrella), `` `mitre_dc0041_palo_alto` ``, `` `mitre_dc0041_sysmon` ``, `` `mitre_dc0041_wineventlog` ``, `` `mitre_dc0041_auditd` ``, `` `mitre_dc0041_esxi_syslog` ``, `` `mitre_dc0041_linux_osquery` ``, `` `mitre_dc0041_filter` `` (site exclusions).
+Macros for analytics: `` `mitre_dc0041` `` (umbrella), `` `mitre_dc0041_auditd` ``, `` `mitre_dc0041_esxi_syslog` ``, `` `mitre_dc0041_linux_osquery` ``, `` `mitre_dc0041_palo_alto` ``, `` `mitre_dc0041_sysmon` ``, `` `mitre_dc0041_wineventlog` ``, `` `mitre_dc0041_filter` `` (site exclusions).
 CIM: `Endpoint.Services` via `` `mitre_dc0041_dm` `` / `` `mitre_dc0041_dm_where` `` for `tstats`. CIM tags emitted for: `wineventlog`.
 
 ## Sigma

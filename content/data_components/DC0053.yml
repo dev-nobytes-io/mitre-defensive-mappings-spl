@@ -52,7 +52,6 @@ derived:
       added blocking Industrial Control Systems (ICS) protocol ports by account not in authorized firewall admins
   feeds:
   - feed: palo_alto
-    have: true
     in_scope: true
     eventtype: mitre_dc0053_firewall_metadata__palo_alto
     search: index=pan_logs sourcetype IN ("pan:config", "pan:system")
@@ -62,7 +61,6 @@ derived:
     - (added by dc_defaults/curated)
     cim_tags: false
   - feed: wineventlog
-    have: true
     in_scope: true
     eventtype: mitre_dc0053_firewall_metadata__wineventlog
     search: >-

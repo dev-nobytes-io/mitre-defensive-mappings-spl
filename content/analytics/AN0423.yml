@@ -44,7 +44,7 @@ attack:
   - field: ParentProcessDenylist
     description: Processes that should not launch FTP/HTTP clients (e.g., winword.exe launching ftp.exe).
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: anomaly
   suggested_tuning:
   - element: UnencryptedProtocolList

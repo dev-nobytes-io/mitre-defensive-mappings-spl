@@ -38,7 +38,7 @@ attack:
   - field: DestinationIPBlocklist
     description: Define external IP ranges unauthorized to receive router/switch configs.
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: ttp
   suggested_tuning:
   - element: ProtocolCommandWatchlist

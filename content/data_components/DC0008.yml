@@ -55,7 +55,6 @@ derived:
     - WMI Object Creation Events
   feeds:
   - feed: sysmon
-    have: true
     in_scope: true
     eventtype: mitre_dc0008_wmi_creation__sysmon
     search: index=sysmon source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode IN (19, 20, 21)
@@ -65,7 +64,6 @@ derived:
     - (added by dc_defaults/curated)
     cim_tags: false
   - feed: wineventlog
-    have: true
     in_scope: true
     eventtype: mitre_dc0008_wmi_creation__wineventlog
     search: >-

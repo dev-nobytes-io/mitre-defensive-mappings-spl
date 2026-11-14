@@ -2,7 +2,7 @@
 
 [ATT&CK](https://attack.mitre.org/datacomponents/DC0020) · version 2.0 · modified 2025-11-12 · ATT&CK release 20.1
 
-Status: **Live** · umbrella eventtype `mitre_dc0020_process_modification`
+Umbrella eventtype `mitre_dc0020_process_modification` over 4 feed(s)
 
 > Changes made to a running process, such as writing data into memory, modifying execution behavior, or injecting code into an existing process. Adversaries frequently modify processes to execute malicious payloads, evade detection, or gain escalated privileges.
 
@@ -37,16 +37,10 @@ flowchart LR
   LS4 --> F_linux_osquery
   DC --> LS5["linux:procfs<br/>2 refs"]
   LS5 --> F_linux_osquery
-  F_sysmon --> ET_sysmon[/"mitre_dc0020_process_modification__sysmon"/]
-  class F_sysmon live
   F_auditd --> ET_auditd[/"mitre_dc0020_process_modification__auditd"/]
-  class F_auditd ready
   F_ebpf --> ET_ebpf[/"mitre_dc0020_process_modification__ebpf"/]
-  class F_ebpf ready
   F_etw --> ET_etw[/"mitre_dc0020_process_modification__etw"/]
-  class F_etw ready
-  classDef live fill:#d4edda,stroke:#2e7d32,color:#1b1b1b
-  classDef ready fill:#fff3cd,stroke:#b26a00,color:#1b1b1b
+  F_sysmon --> ET_sysmon[/"mitre_dc0020_process_modification__sysmon"/]
 ```
 
 ## Requirements
@@ -57,19 +51,19 @@ Component specific:
 
 Per feed (from `config/stack.yml` and `config/log_sources.yml`):
 
-| Feed | Status | Sourcetype or source | Constraint | Origin | TA / collector |
+| Feed | Schedule | Sourcetype or source | Constraint | Origin | TA / collector |
 |---|---|---|---|---|---|
-| `sysmon` | live | source=`XmlWinEventLog:Microsoft-Windows-Sysmon/Operational` | `EventCode IN (8, 10, 25)` | defaults | Splunk Add-on for Sysmon (needs Splunk_TA_windows for XML parsing) |
-| `auditd` | ready (tick in stack.yml) | sourcetype=`linux:audit` | `type IN (SYSCALL) (syscall IN (memfd_create, mprotect, process_vm_writev, ptrace) OR SYSCALL IN (memfd_create, mprotect, process_vm_writev, ptrace))` | defaults | Splunk Add-on for Unix and Linux (linux:audit) or auditd -> auditbeat/syslog |
-| `ebpf` | ready (tick in stack.yml) | sourcetype=`falco` | `(whole feed)` | derived | Vendor specific (falco JSON, tetragon) |
-| `etw` | ready (tick in stack.yml) | sourcetype=`etw:json` | `(ProviderName="Microsoft-Windows-Kernel-Process")` | derived | Requires a user-mode ETW consumer (SilkETW/Sealighter, Splunk Stream for NDIS, or an EDR that exposes the provider). No standard Splunk TA. |
+| `auditd` | scheduled | sourcetype=`linux:audit` | `type IN (SYSCALL) (syscall IN (memfd_create, mprotect, process_vm_writev, ptrace) OR SYSCALL IN (memfd_create, mprotect, process_vm_writev, ptrace))` | defaults | Splunk Add-on for Unix and Linux (linux:audit) or auditd -> auditbeat/syslog |
+| `ebpf` | scheduled | sourcetype=`falco` | `(whole feed)` | derived | Vendor specific (falco JSON, tetragon) |
+| `etw` | scheduled | sourcetype=`etw:json` | `(ProviderName="Microsoft-Windows-Kernel-Process")` | derived | Requires a user-mode ETW consumer (SilkETW/Sealighter, Splunk Stream for NDIS, or an EDR that exposes the provider). No standard Splunk TA. |
+| `sysmon` | scheduled | source=`XmlWinEventLog:Microsoft-Windows-Sysmon/Operational` | `EventCode IN (8, 10, 25)` | defaults | Splunk Add-on for Sysmon (needs Splunk_TA_windows for XML parsing) |
 
 Collection prerequisites:
 
-- **sysmon**: Sysmon deployed with a maintained modular configuration (e.g. sysmon-modular or SwiftOnSecurity). Event IDs referenced by a data component only exist if the config includes that rule group (ProcessAccess=10, ImageLoad=7, DNS=22, FileDelete=23/26, ClipboardChange=24, ProcessTampering=25, FileBlock=27/28 are off in minimal configs).
-- **sysmon**: Hashes configured (SHA256 at least, IMPHASH useful) for File/Process metadata components.
 - **auditd**: audit rules for execve, connect, open/openat on sensitive paths, ptrace, module load, mount, setuid; a Neo23x0/auditd baseline or Florian Roth's rule set is a reasonable start.
 - **auditd**: log_format = ENRICHED in auditd.conf so syscall names and uids resolve (otherwise syscall numbers are architecture dependent).
+- **sysmon**: Sysmon deployed with a maintained modular configuration (e.g. sysmon-modular or SwiftOnSecurity). Event IDs referenced by a data component only exist if the config includes that rule group (ProcessAccess=10, ImageLoad=7, DNS=22, FileDelete=23/26, ClipboardChange=24, ProcessTampering=25, FileBlock=27/28 are off in minimal configs).
+- **sysmon**: Hashes configured (SHA256 at least, IMPHASH useful) for File/Process metadata components.
 
 Review notes: `ebpf` has 2 ATT&CK reference(s) with no usable event filter (prose channel), constraint origin is *derived*.
 
@@ -78,26 +72,23 @@ Review notes: `ebpf` has 2 ATT&CK reference(s) with no usable event filter (pros
 Eventtypes (literal constraints, see `dist/splunk/TA-mitre-attack-datacomponents/default/eventtypes.conf`):
 
 ```ini
-[mitre_dc0020_process_modification__sysmon]
-search = index=sysmon source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode IN (8, 10, 25)
-
 [mitre_dc0020_process_modification__auditd]
 search = index=linux sourcetype="linux:audit" type IN (SYSCALL) (syscall IN (memfd_create, mprotect, process_vm_writev, ptrace) OR SYSCALL IN (memfd_create, mprotect, process_vm_writev, ptrace))
-disabled = 1
 
 [mitre_dc0020_process_modification__ebpf]
 search = index=linux sourcetype=falco
-disabled = 1
 
 [mitre_dc0020_process_modification__etw]
 search = index=etw sourcetype="etw:json" (ProviderName="Microsoft-Windows-Kernel-Process")
-disabled = 1
+
+[mitre_dc0020_process_modification__sysmon]
+search = index=sysmon source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode IN (8, 10, 25)
 
 [mitre_dc0020_process_modification]
-search = eventtype=mitre_dc0020_process_modification__sysmon OR eventtype=mitre_dc0020_process_modification__auditd OR eventtype=mitre_dc0020_process_modification__ebpf OR eventtype=mitre_dc0020_process_modification__etw
+search = eventtype=mitre_dc0020_process_modification__auditd OR eventtype=mitre_dc0020_process_modification__ebpf OR eventtype=mitre_dc0020_process_modification__etw OR eventtype=mitre_dc0020_process_modification__sysmon
 ```
 
-Macros for analytics: `` `mitre_dc0020` `` (umbrella), `` `mitre_dc0020_sysmon` ``, `` `mitre_dc0020_auditd` ``, `` `mitre_dc0020_ebpf` ``, `` `mitre_dc0020_etw` ``, `` `mitre_dc0020_filter` `` (site exclusions).
+Macros for analytics: `` `mitre_dc0020` `` (umbrella), `` `mitre_dc0020_auditd` ``, `` `mitre_dc0020_ebpf` ``, `` `mitre_dc0020_etw` ``, `` `mitre_dc0020_sysmon` ``, `` `mitre_dc0020_filter` `` (site exclusions).
 CIM: no data model mapping; analytics on this component run as raw eventtype searches.
 
 ## Sigma

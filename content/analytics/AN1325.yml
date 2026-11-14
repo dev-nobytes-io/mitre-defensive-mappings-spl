@@ -36,7 +36,7 @@ attack:
   - field: ParentProcess
     description: Used to suppress known admin scripts or automation jobs.
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: hunting
   suggested_tuning:
   - element: ProcessName

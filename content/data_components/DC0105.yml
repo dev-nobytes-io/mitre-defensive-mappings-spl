@@ -51,7 +51,6 @@ derived:
     - Enumerate ACLs/role bindings
   feeds:
   - feed: wineventlog
-    have: true
     in_scope: true
     eventtype: mitre_dc0105_group_metadata__wineventlog
     search: >-
@@ -63,7 +62,6 @@ derived:
     - (added by dc_defaults/curated)
     cim_tags: false
   - feed: m365_unified
-    have: false
     in_scope: false
     eventtype: null
     search: null

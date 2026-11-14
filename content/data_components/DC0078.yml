@@ -642,8 +642,18 @@ derived:
       Radio Frequency (RF) signal detected on Industrial Control Systems (ICS) wireless frequencies from Media Access
       Control (MAC) address not in approved wireless device inventory without completed association sequence
   feeds:
+  - feed: auditd
+    in_scope: true
+    eventtype: mitre_dc0078_network_traffic_flow__auditd
+    search: >-
+      index=linux sourcetype="linux:audit" type IN (SYSCALL) (syscall IN (connect, recvfrom, sendmsg, sendto) OR
+      SYSCALL IN (connect, recvfrom, sendmsg, sendto))
+    constraint_origin: defaults
+    broad_refs: 0
+    sources:
+    - auditd:SYSCALL
+    cim_tags: false
   - feed: corelight
-    have: true
     in_scope: true
     eventtype: mitre_dc0078_network_traffic_flow__corelight
     search: index=corelight sourcetype=corelight_conn
@@ -661,8 +671,60 @@ derived:
     - dns:query
     - netflow:ipfix
     cim_tags: true
+  - feed: edr_telemetry
+    in_scope: true
+    eventtype: mitre_dc0078_network_traffic_flow__edr_telemetry
+    search: index=edr sourcetype="edr:telemetry"
+    constraint_origin: derived
+    broad_refs: 2
+    sources:
+    - EDR:Telemetry
+    cim_tags: false
+  - feed: esxi_syslog
+    in_scope: true
+    eventtype: mitre_dc0078_network_traffic_flow__esxi_syslog
+    search: index=vmware sourcetype IN ("vmware:esxlog:hostd", "vmware:esxlog:vmkernel", "vmware:esxlog:vobd")
+    constraint_origin: defaults
+    broad_refs: 0
+    sources:
+    - esxi:hostd
+    - esxi:syslog
+    - esxi:vmkernel
+    - esxi:vobd
+    - esxi:vpxa
+    cim_tags: false
+  - feed: iptables
+    in_scope: true
+    eventtype: mitre_dc0078_network_traffic_flow__iptables
+    search: index=linux sourcetype=syslog ("IN=" "OUT=")
+    constraint_origin: derived
+    broad_refs: 5
+    sources:
+    - iptables:LOG
+    cim_tags: false
+  - feed: netdev_syslog
+    in_scope: true
+    eventtype: mitre_dc0078_network_traffic_flow__netdev_syslog
+    search: index=netops sourcetype IN ("cisco:asa", "cisco:ios", syslog)
+    constraint_origin: derived
+    broad_refs: 11
+    sources:
+    - WIDS:AssociationLogs
+    - networkdevice:syslog
+    - wireless:spectrum
+    cim_tags: false
+  - feed: netflow
+    in_scope: true
+    eventtype: mitre_dc0078_network_traffic_flow__netflow
+    search: index=netflow sourcetype="stream:netflow"
+    constraint_origin: derived
+    broad_refs: 26
+    sources:
+    - NSX:FlowLogs
+    - container:cni
+    - netflow:ipfix
+    cim_tags: true
   - feed: palo_alto
-    have: true
     in_scope: true
     eventtype: mitre_dc0078_network_traffic_flow__palo_alto
     search: index=pan_logs sourcetype="pan:traffic"
@@ -679,7 +741,6 @@ derived:
     - networkdevice:syslog
     cim_tags: true
   - feed: sysmon
-    have: true
     in_scope: true
     eventtype: mitre_dc0078_network_traffic_flow__sysmon
     search: index=sysmon source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode IN (3)
@@ -688,8 +749,25 @@ derived:
     sources:
     - dns:query
     cim_tags: false
+  - feed: vcenter
+    in_scope: true
+    eventtype: mitre_dc0078_network_traffic_flow__vcenter
+    search: index=vmware sourcetype="vmware:vclog:vpxd"
+    constraint_origin: derived
+    broad_refs: 10
+    sources:
+    - esxi:vpxd
+    cim_tags: false
+  - feed: windows_firewall_log
+    in_scope: true
+    eventtype: mitre_dc0078_network_traffic_flow__windows_firewall_log
+    search: index=wineventlog sourcetype=WinFirewall
+    constraint_origin: derived
+    broad_refs: 2
+    sources:
+    - windows:firewalllog
+    cim_tags: false
   - feed: wineventlog
-    have: true
     in_scope: true
     eventtype: mitre_dc0078_network_traffic_flow__wineventlog
     search: index=wineventlog source="XmlWinEventLog:Security" EventCode IN (5156, 5157)
@@ -700,7 +778,6 @@ derived:
     - WinEventLog:Security
     cim_tags: false
   - feed: wireshark
-    have: true
     in_scope: true
     eventtype: mitre_dc0078_network_traffic_flow__wireshark
     search: index=pcap sourcetype="wireshark:json"
@@ -709,98 +786,7 @@ derived:
     sources:
     - NSM:Content
     cim_tags: false
-  - feed: auditd
-    have: false
-    in_scope: true
-    eventtype: mitre_dc0078_network_traffic_flow__auditd
-    search: >-
-      index=linux sourcetype="linux:audit" type IN (SYSCALL) (syscall IN (connect, recvfrom, sendmsg, sendto) OR
-      SYSCALL IN (connect, recvfrom, sendmsg, sendto))
-    constraint_origin: defaults
-    broad_refs: 0
-    sources:
-    - auditd:SYSCALL
-    cim_tags: false
-  - feed: edr_telemetry
-    have: false
-    in_scope: true
-    eventtype: mitre_dc0078_network_traffic_flow__edr_telemetry
-    search: index=edr sourcetype="edr:telemetry"
-    constraint_origin: derived
-    broad_refs: 2
-    sources:
-    - EDR:Telemetry
-    cim_tags: false
-  - feed: esxi_syslog
-    have: false
-    in_scope: true
-    eventtype: mitre_dc0078_network_traffic_flow__esxi_syslog
-    search: index=vmware sourcetype IN ("vmware:esxlog:hostd", "vmware:esxlog:vmkernel", "vmware:esxlog:vobd")
-    constraint_origin: defaults
-    broad_refs: 0
-    sources:
-    - esxi:hostd
-    - esxi:syslog
-    - esxi:vmkernel
-    - esxi:vobd
-    - esxi:vpxa
-    cim_tags: false
-  - feed: iptables
-    have: false
-    in_scope: true
-    eventtype: mitre_dc0078_network_traffic_flow__iptables
-    search: index=linux sourcetype=syslog ("IN=" "OUT=")
-    constraint_origin: derived
-    broad_refs: 5
-    sources:
-    - iptables:LOG
-    cim_tags: false
-  - feed: netdev_syslog
-    have: false
-    in_scope: true
-    eventtype: mitre_dc0078_network_traffic_flow__netdev_syslog
-    search: index=netops sourcetype IN ("cisco:asa", "cisco:ios", syslog)
-    constraint_origin: derived
-    broad_refs: 11
-    sources:
-    - WIDS:AssociationLogs
-    - networkdevice:syslog
-    - wireless:spectrum
-    cim_tags: false
-  - feed: netflow
-    have: false
-    in_scope: true
-    eventtype: mitre_dc0078_network_traffic_flow__netflow
-    search: index=netflow sourcetype="stream:netflow"
-    constraint_origin: derived
-    broad_refs: 26
-    sources:
-    - NSX:FlowLogs
-    - container:cni
-    - netflow:ipfix
-    cim_tags: true
-  - feed: vcenter
-    have: false
-    in_scope: true
-    eventtype: mitre_dc0078_network_traffic_flow__vcenter
-    search: index=vmware sourcetype="vmware:vclog:vpxd"
-    constraint_origin: derived
-    broad_refs: 10
-    sources:
-    - esxi:vpxd
-    cim_tags: false
-  - feed: windows_firewall_log
-    have: false
-    in_scope: true
-    eventtype: mitre_dc0078_network_traffic_flow__windows_firewall_log
-    search: index=wineventlog sourcetype=WinFirewall
-    constraint_origin: derived
-    broad_refs: 2
-    sources:
-    - windows:firewalllog
-    cim_tags: false
   - feed: aws
-    have: false
     in_scope: false
     eventtype: null
     search: null
@@ -811,7 +797,6 @@ derived:
     - AWS:VPCFlowLogs
     cim_tags: false
   - feed: macos
-    have: false
     in_scope: false
     eventtype: null
     search: null
@@ -823,7 +808,6 @@ derived:
     - macos:unifiedlog
     cim_tags: false
   - feed: mobile
-    have: false
     in_scope: false
     eventtype: null
     search: null
@@ -835,7 +819,6 @@ derived:
     - iOS:NetworkExtension
     cim_tags: false
   - feed: saas
-    have: false
     in_scope: false
     eventtype: null
     search: null

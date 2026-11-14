@@ -34,7 +34,7 @@ attack:
   - field: ParentProcess
     description: Tuning based on whether discovery activity stems from suspicious versus approved management tools.
 derived:
-  coverage: live
+  coverage: mapped
   suggested_content_type: hunting
   suggested_tuning:
   - element: TimeWindow

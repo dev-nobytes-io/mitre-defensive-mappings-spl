@@ -65,18 +65,7 @@ derived:
     channels:
     - Remove-Mailbox, Set-Mailbox
   feeds:
-  - feed: wineventlog
-    have: true
-    in_scope: true
-    eventtype: mitre_dc0009_user_account_deletion__wineventlog
-    search: index=wineventlog source="XmlWinEventLog:Security" EventCode IN (4726)
-    constraint_origin: defaults
-    broad_refs: 0
-    sources:
-    - WinEventLog:Security
-    cim_tags: true
   - feed: esxi_syslog
-    have: false
     in_scope: true
     eventtype: mitre_dc0009_user_account_deletion__esxi_syslog
     search: index=vmware sourcetype="vmware:esxlog:hostd"
@@ -85,8 +74,16 @@ derived:
     sources:
     - esxi:hostd
     cim_tags: false
+  - feed: wineventlog
+    in_scope: true
+    eventtype: mitre_dc0009_user_account_deletion__wineventlog
+    search: index=wineventlog source="XmlWinEventLog:Security" EventCode IN (4726)
+    constraint_origin: defaults
+    broad_refs: 0
+    sources:
+    - WinEventLog:Security
+    cim_tags: true
   - feed: m365_unified
-    have: false
     in_scope: false
     eventtype: null
     search: null

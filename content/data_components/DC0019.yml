@@ -62,7 +62,6 @@ derived:
     - create
   feeds:
   - feed: kubernetes_audit
-    have: false
     in_scope: true
     eventtype: mitre_dc0019_pod_creation__kubernetes_audit
     search: index=k8s sourcetype="kube:apiserver-audit" verb IN (create) (objectRef.resource=pods)
@@ -72,7 +71,6 @@ derived:
     - kubernetes:audit
     cim_tags: false
   - feed: aws
-    have: false
     in_scope: false
     eventtype: null
     search: null

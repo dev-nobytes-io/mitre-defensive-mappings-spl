@@ -100,18 +100,7 @@ derived:
     channels:
     - usb_devices
   feeds:
-  - feed: sysmon
-    have: true
-    in_scope: true
-    eventtype: mitre_dc0054_drive_access__sysmon
-    search: index=sysmon source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode IN (9)
-    constraint_origin: defaults
-    broad_refs: 0
-    sources:
-    - WinEventLog:Sysmon
-    cim_tags: false
   - feed: auditd
-    have: false
     in_scope: true
     eventtype: mitre_dc0054_drive_access__auditd
     search: >-
@@ -122,8 +111,16 @@ derived:
     sources:
     - auditd:SYSCALL
     cim_tags: false
+  - feed: sysmon
+    in_scope: true
+    eventtype: mitre_dc0054_drive_access__sysmon
+    search: index=sysmon source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode IN (9)
+    constraint_origin: defaults
+    broad_refs: 0
+    sources:
+    - WinEventLog:Sysmon
+    cim_tags: false
   - feed: macos
-    have: false
     in_scope: false
     eventtype: null
     search: null
